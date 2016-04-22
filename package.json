@@ -9,6 +9,10 @@
     "build": "ntsc -p source -d && node sass_concat.js",
     "postinstall": "typings install"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Rocketmakers/rocket-deploy.git"
+  },
   "keywords": [
     "typescript",
     "React",
