@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Project Skeleton</title>
+  <link rel="stylesheet" type="text/css" href="styles.css" />
+
+  <script type="text/javascript">
+    var rmConfig = (function(){
+
+      var thisEnvironment = 'production'
+
+      return {
+        getEnvironment: function() {
+          return thisEnvironment;
+        }
+      };
+    })();
+  </script>
+
+</head>
+<body>
+
+  <!-- ROOT NODE -->
+  <div id="app-content"></div>
+
+  <!-- SCRIPTS -->
+  <script src="app.js"></script>
+</body>
+</html>

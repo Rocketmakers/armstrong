@@ -1,0 +1,18 @@
+%reset-appearance{
+    resize: none;
+    outline: none;
+    -webkit-appearance: none;
+    -ms-appearance: none;
+}
+
+@mixin responsive-behaviour-phone{
+    @media (max-width: $break-phone-point){
+        @content;
+    }
+}
+
+@mixin responsive-behaviour-tablet{
+    @media (max-width: $break-tablet-point){
+        @content;
+    }
+}
