@@ -64,6 +64,9 @@ export class MyComponent extends React.Component<{}, {}> {
 }
 ```
 
+## Workbench folder?
+Don't worry about this ;)
+
 ## Consumed Libraries
 
 #### [Underscore](http://underscorejs.org)
