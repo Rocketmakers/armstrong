@@ -10,6 +10,7 @@ export interface IImage extends LayoutProps {
   sampleUser?: boolean;
   height: number;
   width: number;
+  seed?: string;
 }
 export class Image extends React.Component<IImage, { profileUrl: string }>{
   constructor() {
@@ -18,7 +19,7 @@ export class Image extends React.Component<IImage, { profileUrl: string }>{
   }
   getRandomUser() {
     var _this = this;
-    var url = "http://api.randomuser.me/?exc=login,name,location,email,registered,dob,phone,cell,id,nat";
+    var url = `http://api.randomuser.me/?exc=login,name,location,email,registered,dob,phone,cell,id,nat${this.props.seed ? `&seed=${this.props.seed}` : ''}`;
     var xmlHttp = new XMLHttpRequest();
     xmlHttp.onreadystatechange = function() {
       if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
