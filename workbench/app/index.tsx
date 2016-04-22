@@ -4,10 +4,10 @@ import * as ReactDOM from 'react-dom';
 import { Router, Route, Link, hashHistory, IndexRoute } from 'react-router';
 
 // VIEWS
-import { Home } from "./views/home/home";
+import { Home } from "./views/home";
 
 // STYLES
-import "./theme/theme.scss";
+import "./theme/theme";
 
 // HISTORY
 //const hist = history();

@@ -1,13 +1,5 @@
-@import "./shared/vars";
-@import "./shared/uihelpers";
-@import "./shared/mixins";
-@import "./shared/icomoon";
-@import "./shared/normalize";
-
-@import "fonts";
-
 @import "./../../../source/style";
 
-body {
-  font-family: 'averta', Arial, Helvetica, sans-serif;
+body, main, html, #app-content {
+  height: 100%;
 }
