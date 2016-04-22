@@ -1,0 +1,51 @@
+//Colors
+$site-background: #ffffff;
+$brand: #a2c614;
+$complementary: #2d3b3d;
+$gray-title: #48535c;
+$gray-body: #4f5c69;
+$gray-medium: #879ead;
+$gray-light: #d5dfe5;
+$gray-subdued: #f0f3f5;
+
+//Measurements
+$interitem-spacing: 10px;
+$container-padding-small: $interitem-spacing;
+$container-padding-medium: $interitem-spacing * 2;
+$container-padding-large: $interitem-spacing * 3;
+$column-spacing: 50px;
+$screen-width-standard: 960px;
+
+//Font sizes
+$font-largest: 24px;
+$font-large: 18px;
+$font-normal: 14px;
+$font-small: 12px;
+
+//Corner radii
+$corner-radius-small: 5px;
+$corner-radius-large: 17px;
+
+//Responsive breaks
+$break-tablet-point: 860px;
+$break-phone-point: 480px;
+
+//UIConditions
+$ui-condition-positive-key: #00a388;
+$ui-condition-warning-key: #f78e52;
+$ui-condition-negative-key: #df5a49;
+$ui-condition-info-key: #3498d8;
+$ui-condition-brand-key: $brand;
+$ui-condition-none-key: $gray-title;
+$ui-condition-content-key: #ffffff;
+$ui-condition-lighten-offset: 10%;
+$ui-condition-darken-offset: 10%;
+
+//Shadow Effect
+@mixin shadow-effect($color, $height){
+    box-shadow: 0 $height 0 darken($color, $ui-condition-darken-offset);
+}
+$shadow-effect-height: 4px;
+
+
+$padding-size: $interitem-spacing * 0.5;

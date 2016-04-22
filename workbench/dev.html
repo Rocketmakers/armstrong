@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Project Skeleton ** DEV **</title>
+
+  <script type="text/javascript">
+    var rmConfig = (function(){
+
+      var thisEnvironment = 'development'
+
+      return {
+        getEnvironment: function() {
+          return thisEnvironment;
+        }
+      };
+    })();
+  </script>
+
+</head>
+<body>
+
+  <!-- ROOT NODE -->
+  <div id="app-content"></div>
+
+  <!-- SCRIPTS -->
+  <script src="app.js"></script>
+</body>
+</html>

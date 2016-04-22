@@ -1,0 +1,112 @@
+%ui-conditions-fill{
+    &.ui-condition.ui-condition-positive{
+        background-color: $ui-condition-positive-key;
+    }
+    &.ui-condition.ui-condition-warning{
+        background-color: $ui-condition-warning-key;
+    }
+    &.ui-condition.ui-condition-negative{
+        background-color: $ui-condition-negative-key;
+    }
+    &.ui-condition.ui-condition-info{
+        background-color: $ui-condition-info-key;
+    }
+    &.ui-condition.ui-condition-brand{
+        background-color: $ui-condition-brand-key;
+    }
+    &.ui-condition.ui-condition-none{
+        background-color: $ui-condition-none-key;
+    }
+}
+
+%ui-conditions-fill-button{
+    &.ui-condition.ui-condition-positive{
+        background-color: $ui-condition-positive-key;
+        &:before{
+          background-color: $ui-condition-positive-key/1.2;
+        }
+    }
+    &.ui-condition.ui-condition-warning{
+        background-color: $ui-condition-warning-key;
+    }
+    &.ui-condition.ui-condition-negative{
+        background-color: $ui-condition-negative-key;
+    }
+    &.ui-condition.ui-condition-info{
+        background-color: $ui-condition-info-key;
+    }
+    &.ui-condition.ui-condition-brand{
+        background-color: $ui-condition-brand-key;
+    }
+    &.ui-condition.ui-condition-none{
+        background-color: $ui-condition-none-key;
+    }
+}
+
+%ui-conditions-border-color{
+    &.ui-condition.ui-condition-positive{
+        border-color: darken($ui-condition-positive-key, $ui-condition-darken-offset);
+    }
+    &.ui-condition.ui-condition-warning{
+        border-color: darken($ui-condition-warning-key, $ui-condition-darken-offset);
+    }
+    &.ui-condition.ui-condition-negative{
+        border-color: darken($ui-condition-negative-key, $ui-condition-darken-offset);
+    }
+    &.ui-condition.ui-condition-info{
+        border-color: darken($ui-condition-info-key, $ui-condition-darken-offset);
+    }
+    &.ui-condition.ui-condition-brand{
+        border-color: darken($ui-condition-brand-key, $ui-condition-darken-offset);
+    }
+    &.ui-condition.ui-condition-none{
+        border-color: darken($ui-condition-none-key, $ui-condition-darken-offset);
+    }
+}
+
+%ui-conditions-text-color{
+    &.ui-condition.ui-condition-positive{
+        color: $ui-condition-positive-key;
+    }
+    &.ui-condition.ui-condition-warning{
+        color: $ui-condition-warning-key;
+    }
+    &.ui-condition.ui-condition-negative{
+        color: $ui-condition-negative-key;
+    }
+    &.ui-condition.ui-condition-info{
+        color: $ui-condition-info-key;
+    }
+    &.ui-condition.ui-condition-brand{
+        color: $ui-condition-brand-key;
+    }
+    &.ui-condition.ui-condition-none{
+        color: $ui-condition-none-key;
+    }
+}
+
+
+%ui-condition-shadow-effect{
+    &.shadow-effect.ui-condition{
+        margin-bottom: $shadow-effect-height;
+    }
+
+    &.shadow-effect.ui-condition.ui-condition-positive{
+        @include shadow-effect($ui-condition-positive-key, $shadow-effect-height);
+    }
+    &.shadow-effect.ui-condition.ui-condition-warning{
+        @include shadow-effect($ui-condition-warning-key, $shadow-effect-height);
+    }
+    &.shadow-effect.ui-condition.ui-condition-negative{
+        @include shadow-effect($ui-condition-negative-key, $shadow-effect-height);
+    }
+    &.shadow-effect.ui-condition.ui-condition-info{
+        @include shadow-effect($ui-condition-info-key, $shadow-effect-height);
+    }
+    &.shadow-effect.ui-condition.ui-condition-brand{
+        @include shadow-effect($ui-condition-brand-key, $shadow-effect-height);
+    }
+    &.shadow-effect.ui-condition.ui-condition-none{
+        @include shadow-effect($ui-condition-none-key, $shadow-effect-height);
+    }
+}
