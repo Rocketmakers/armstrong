@@ -1,0 +1,27 @@
+.btn {
+    padding: $spacing-small $spacing-medium;
+    transition: all 0.1s;
+    border: none;
+    border-radius: 4px;
+    outline: none;
+    background: $gray-light;
+    color: white;
+    @include button-shadow($gray-light);
+    margin-bottom: $spacing-small;
+    &:active {
+        transform: translateY(2px);
+    }
+    .left-icon{
+      margin-right: $spacing-xsmall;
+    }
+    .right-icon{
+      margin-left: $spacing-xsmall;
+    }
+    &.rounded{
+      border-radius: 30px;
+    }
+    +.btn{
+      margin-left: $spacing-xsmall;
+    }
+
+}

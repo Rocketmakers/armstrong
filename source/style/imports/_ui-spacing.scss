@@ -1,0 +1,18 @@
+$sides: top bottom left right;
+
+@each $size in $spacing-sizes{
+  .m-#{nth($size, 1)}{
+    margin: nth($size, 2);
+  }
+  .p-#{nth($size, 1)}{
+    padding: nth($size, 2);
+  }
+  @each $side in $sides{
+    .m-#{$side}-#{nth($size, 1)}{
+      margin-#{$side}: nth($size, 2);
+    }
+    .p-#{$side}-#{nth($size, 1)}{
+      padding-#{$side}: nth($size, 2);
+    }
+  }
+}

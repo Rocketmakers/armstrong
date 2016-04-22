@@ -1,0 +1,12 @@
+/***********************************************************************************
+  ARMSTRONG CORE SCSS
+  core styles go in here, these are imported before component styles.
+************************************************************************************/
+
+@import "./imports/_variables";
+@import "./imports/_mixins";
+
+@import './imports/_normalize';
+@import './imports/_ui-typography';
+@import './imports/_ui-spacing';
+@import './imports/_ui-colors';

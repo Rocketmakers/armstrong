@@ -1,0 +1,25 @@
+@mixin responsive-behaviour-phone {
+    @media (max-width: $screen-size-phone) {
+        @content;
+    }
+}
+
+@mixin responsive-behaviour-tablet {
+    @media (max-width: $screen-size-tablet) and (min-width: $screen-size-phone) {
+        @content;
+    }
+}
+
+@mixin reset-appearance {
+    resize: none;
+    outline: none;
+    -webkit-appearance: none;
+        -ms-appearance: none;
+}
+
+@mixin button-shadow($color) {
+    box-shadow: 0 4px 0 $color / 1.2;
+    &:active{
+      box-shadow: 0 2px 0 $color / 1.2;
+    }
+}

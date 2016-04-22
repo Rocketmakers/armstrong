@@ -1,0 +1,25 @@
+/***********************************************************************************
+  ARMSTRONG SCSS EXPORTS
+  all scss to be consumed must be exported here
+************************************************************************************/
+
+/*** CORE ***/
+
+@import "./style/armstrong";
+
+/*** COMPONENTS ***/
+
+// display
+@import "./components/display/image";
+
+// form
+@import "./components/form/inputs/checkboxInput";
+@import "./components/form/inputs/radioInput";
+@import "./components/form/inputs/selectInput";
+@import "./components/form/inputs/textInput";
+
+// interaction
+@import "./components/interaction/button";
+
+// layout
+@import "./components/layout/grid";

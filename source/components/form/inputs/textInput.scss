@@ -1,0 +1,93 @@
+%placeholder {
+    font-style: italic;
+    color: rgba(0,0,0,0.4);
+}
+
+textarea {
+    min-height: 120px;
+}
+
+input[type='text'], input[type='email'], input[type='number'], input[type='search'], input[type='password'], input[type='url'], select, textarea {
+    @include reset-appearance;
+    box-sizing: border-box;
+    width: 100%;
+    height: $form-field-height;
+    padding: 10px;
+    border: 1px solid $gray-light;
+    border-radius: $corner-radius-small;
+
+    &:focus {
+        border: 1px solid $condition-color-info;
+    }
+    // BUG : If all browser pfs extend placeholder, chrome stops working :(
+    &::-webkit-input-placeholder {
+        @extend %placeholder;
+    }
+    &::-moz-placeholder {
+        font-style: italic;
+        /* Firefox 19+ */
+
+        color: rgba(0,0,0,0.4);
+    }
+    &:-ms-input-placeholder {
+        font-style: italic;
+        color: rgba(0,0,0,0.4);
+    }
+
+    &:focus:required:invalid {
+        border-color: red;
+    }
+    &[readonly] {
+        background-color: rgba(255,255,255,0.4);
+        &:focus {
+            border: 1px solid rgba(255,255,255,0.3) !important;
+        }
+    }
+}
+
+
+
+textarea:focus {
+    // BUG : Text areas seem to need additional offset to stop pixel jumping
+    margin-bottom: 12px;
+}
+
+
+.text-input-disabled {
+    input[type='text'], input[type='email'], input[type='number'], input[type='search'], input[type='password'], input[type='url'], textarea {
+        color: rgba(0,0,0,0.3);
+        background-color: rgba(0,0,0,0.1);
+    }
+
+    i {
+        color: rgba(0,0,0,0.3);
+    }
+}
+
+.text-input {
+    position: relative;
+    padding-right: 1px;
+    &.text-input-icon-right, &.text-input-icon-left {
+        i {
+            position: absolute;
+            z-index: 5;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+    }
+
+
+
+    &.has-text-overlay {
+        input, textarea {
+            padding-right: 30px;
+        }
+    }
+}
+
+.input-overlay-text {
+    position: absolute;
+    top: 12px;
+    right: 10px;
+    opacity: 0.4;
+}

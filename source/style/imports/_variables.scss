@@ -1,0 +1,69 @@
+//// SCREEN SIZES
+$screen-size-phone: 480px !default;
+$screen-size-tablet: 860px !default;
+
+//// FONT FAMILIIES
+$primary-font: "averta", sans-serif !default;
+$secondary-font: "Caveat", cursive !default;
+
+//// FONT SIZES
+$font-size-xxsmall: 0.75rem !default;
+$font-size-xsmall: 0.85rem !default;
+$font-size-small: 1rem !default;
+$font-size-medium: 1.2rem !default;
+$font-size-large: 1.5rem !default;
+$font-size-xlarge: 2rem !default;
+
+//// SPACINGS
+// Note: If you're adding to this, make sure to update the value and the array
+$spacing-xxsmall: 0.25rem !default;
+$spacing-xsmall: 0.5rem !default;
+$spacing-small: 1rem !default;
+$spacing-medium: 2rem !default;
+$spacing-large: 3rem !default;
+$spacing-xlarge: 4rem !default;
+
+$spacing-sizes: (
+  xxsmall $spacing-xxsmall,
+  xsmall $spacing-xsmall,
+  small $spacing-small,
+  medium $spacing-medium,
+  large $spacing-large,
+  xlarge $spacing-xlarge,
+  none 0
+);
+
+//// COLORS
+$site-background: #ffffff !default;
+
+$brand-primary: #00a388 !default;
+$brand-secondary: #3d4144 !default;
+
+$gray-base: #4f5c69 !default;
+
+$gray-very-dark: darken($gray-base, 40%) !default;
+$gray-dark: darken($gray-base, 20%) !default;
+$gray-medium: $gray-base !default;
+$gray-light: lighten($gray-base, 20%) !default;
+$gray-very-light: lighten($gray-base, 40%) !default;
+
+$condition-color-positive: #00a388 !default;
+$condition-color-warning: #f78e52 !default;
+$condition-color-negative: #df5a49 !default;
+$condition-color-info: #3498d8 !default;
+$condition-color-brand: $brand-primary !default;
+
+$condition-colors: (
+  positive $condition-color-positive,
+  warning $condition-color-warning,
+  negative $condition-color-negative,
+  info $condition-color-info,
+  brand $condition-color-brand
+);
+
+//// CORNERS
+$corner-radius-small: 5px !default;
+$corner-radius-large: 15px !default;
+
+//// FORMS
+$form-field-height: 40px !default;
