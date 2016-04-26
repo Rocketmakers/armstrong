@@ -4,12 +4,12 @@ import { Color, LayoutHelpers, LayoutProps } from "./../../utilities/uiHelpers";
 import { Icons } from "./../../utilities/icons";
 
 
-export interface IIcon extends LayoutProps {
+export interface IIconProps extends LayoutProps {
   icon: string;
   condition?: Color;
   className?: string;
 }
-export class Icon extends React.Component<IIcon, {}>{
+export class Icon extends React.Component<IIconProps, {}>{
   static Icomoon = Icons.Icomoon;
 
   render(){

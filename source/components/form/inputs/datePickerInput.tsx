@@ -26,6 +26,9 @@ export class DatePickerInput extends React.Component<IDatePickerInputProps, IDat
   private inputElement;
   private bodyElement;
 
+  private inputElementId;
+  private bodyElementId;
+
   static defaultProps = {
     format: 'DD/MM/YYYY',
     date: moment().startOf('day'),
@@ -36,6 +39,9 @@ export class DatePickerInput extends React.Component<IDatePickerInputProps, IDat
     var todaysDate = moment().startOf('day');
     this.state = { displayedDate: todaysDate.clone(), selectedDate: todaysDate, pickerBodyVisible: false, showOnTop: false };
     moment.locale(props.locale);
+    const seed = Math.random().toFixed(4);
+    this.inputElementId = "date-picker-text-input-" + seed;
+    this.bodyElementId = "date-picker-body-" + seed;
   }
   onDaySelected(date: moment.Moment) {
     if (!this.fallsWithinRange(date)) {
@@ -132,8 +138,8 @@ export class DatePickerInput extends React.Component<IDatePickerInputProps, IDat
     window.removeEventListener('mousedown', this);
   }
   componentDidMount() {
-    this.inputElement = document.getElementById("date-picker-text-input");
-    this.bodyElement = document.getElementById("date-picker-body");
+    this.inputElement = document.getElementById(this.inputElementId);
+    this.bodyElement = document.getElementById(this.bodyElementId);
     window.addEventListener('mousedown', this);
   }
   handleEvent(e) {
@@ -170,13 +176,13 @@ export class DatePickerInput extends React.Component<IDatePickerInputProps, IDat
       <div className={rootClasses}
         onMouseDown={() => this.mouseDownOnCalendar = true}
         onMouseUp={() => this.mouseDownOnCalendar = false}>
-        <input id="date-picker-text-input"
+        <input id={this.inputElementId}
           type="text"
           defaultValue={this.state.selectedDate.format(this.props.format) }
           onBlur={e => this.checkDate((e.target as any).value) }
           onFocus={e => this.onInputFocus() }
           />
-        <div id="date-picker-body" className={classes}>
+        <div id={this.bodyElementId} className={classes}>
           <Grid className="date-picker-header">
             <Row>
               <Col onClick={() => this.changeMonth(-1) } fixed={true}>{`<`}</Col>

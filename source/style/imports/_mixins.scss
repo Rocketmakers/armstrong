@@ -24,3 +24,11 @@
       box-shadow: 0 2px 0 $color / 1.2;
     }
 }
+
+// This function allows for ultra flexible easing curves
+@mixin cubic-bezier($t1, $t2, $t3, $t4) {
+    -webkit-animation-timing-function: cubic-bezier($t1, $t2, $t3, $t4);
+       -moz-animation-timing-function: cubic-bezier($t1, $t2, $t3, $t4);
+         -o-animation-timing-function: cubic-bezier($t1, $t2, $t3, $t4);
+            animation-timing-function: cubic-bezier($t1, $t2, $t3, $t4);
+}

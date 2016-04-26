@@ -4,8 +4,9 @@
 ************************************************************************************/
 
 // display
-export { IIcon, Icon } from "./components/display/icon";
-export { IImage, Image } from "./components/display/image";
+export { IIconProps, Icon } from "./components/display/icon";
+export { IImageProps, Image } from "./components/display/image";
+export { IDialogProps, Dialog } from "./components/display/dialog";
 
 // form
 export { ICheckboxInputProps, CheckboxInput } from "./components/form/inputs/checkboxInput";
