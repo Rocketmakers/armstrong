@@ -27,3 +27,9 @@ export { IGrid, Grid, IRow, Row, ICol, Col, SingleColumnRow } from "./components
 // text
 export { HeadingElementType, HeadingStyleType, IHeadingProps, Heading } from "./components/text/heading";
 export { TextElementType, ITextProps, Text } from "./components/text/text";
+
+// ui helpers
+export { Responsiveness, Color, Size, Side, CenterContentVertical, CenterContentHorizontal, CenterBoth, CenterContent, Spacing, Background, Foreground, SpacingType, ColorType, DisplayProps, LayoutProps, LayoutHelpers } from "./utilities/uiHelpers";
+
+// icons
+export { Icons } from "./utilities/icons";
