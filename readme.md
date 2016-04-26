@@ -1,3 +1,7 @@
+<p align="center">
+<img src="http://armstrongcss.org/assets/logolarge.svg" width="256" height="256" />
+</p>
+
 # armstrong-react
 
 Armstrong React - [Rocketmakers](http://www.rocketmakers.com/) React component library.
@@ -63,6 +67,9 @@ export class MyComponent extends React.Component<{}, {}> {
   }
 }
 ```
+
+## Workbench folder?
+Don't worry about this ;)
 
 ## Consumed Libraries
 

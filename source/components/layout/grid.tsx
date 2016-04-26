@@ -66,8 +66,9 @@ export class Col extends React.Component<ICol, {}> {
     var layoutClasses = LayoutHelpers.HandleLayoutClasses(this.props.margin, this.props.padding);
     var displayClasses = LayoutHelpers.HandleDisplayClasses(this.props.background, this.props.foreground);
     var displayStyles = LayoutHelpers.HandleDisplayStyles(this.props.background, this.props.foreground);
+    var centerClasses = LayoutHelpers.GetAlignment(this.props.centerContent);
 
-    var classes = classNames("col", this.props.className, cd("no-flex", this.props.fixed !== undefined), cd(`col${this.props.spans}`, this.props.spans !== undefined), displayClasses, layoutClasses)
+    var classes = classNames("col", this.props.className, cd("no-flex", this.props.fixed !== undefined), cd(`col${this.props.spans}`, this.props.spans !== undefined), displayClasses, layoutClasses, centerClasses)
 
     var attrs = _.omit(this.props, "fixed", "spans");
 
