@@ -1,0 +1,78 @@
+$header-height: 40px;
+$width: 350px;
+
+.date-picker{
+  box-sizing: border-box;
+  overflow: visible;
+  position: relative;
+  display: inline-block;
+  input{
+    min-width: $width;
+    box-sizing: border-box;
+  }
+  .date-picker-header{
+    background-color: $gray-base;
+    height: $header-height;
+    line-height: $header-height;
+    color: white;
+    .row{
+      .col:first-of-type, .col:last-of-type{
+        padding: 0 15px;
+        cursor: pointer;
+        background-color: rgba(0,0,0,0.1);
+      }
+    }
+  }
+  .date-picker-week-day{
+    background-color: white !important;
+    cursor: default;
+  }
+
+  .date-picker-body{
+    box-sizing: border-box;
+    display: none;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    position: absolute;
+    width: 100%;
+    background-color: white;
+    z-index: 10;
+    &.date-picker-body-visible{
+      display: block;
+    }
+      > .grid .row .col{
+      text-align: center;
+    }
+  }
+  .date-picker-top{
+    transform: translateY(-100%);
+    top: -10px;
+  }
+
+  .date-picker-days{
+    box-sizing: border-box;
+    padding: 20px;
+    display: flex;
+    flex-flow: row wrap;
+
+    > div{
+      box-sizing: border-box;
+      cursor: pointer;
+      text-align: center;
+      padding: 5px;
+      flex-basis: percentage(1 / 7) !important;
+      &:hover{
+         background-color: rgba(0,0,0,0.1);
+      }
+      &.selected-day{
+        background-color: $brand-primary;
+        color: white;
+      }
+      &.not-in-month{
+        opacity: 0.5;
+      }
+      &.day-disabled{
+        opacity: 0.2;
+      }
+    }
+  }
+}
