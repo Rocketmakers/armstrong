@@ -1,13 +1,23 @@
 // IMPORTS
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
+import * as moment from 'moment';
 import { Grid, Row, Col, SingleColumnRow } from './../../../source/components/layout/grid';
 import { Heading } from './../../../source/components/text/heading';
 import { Button } from './../../../source/components/interaction/button';
 import { Text } from './../../../source/components/text/text';
 import { Image } from './../../../source/components/display/image';
+import { DatePickerInput } from './../../../source/components/form/inputs/datePickerInput';
 
-export class Home extends React.Component<{}, {}> {
+interface HomeState{
+  date: moment.Moment;
+}
+
+export class Home extends React.Component<{}, HomeState> {
+  constructor() {
+    super();
+    this.state = { date: moment() }
+  }
 
   public render() {
     return (
