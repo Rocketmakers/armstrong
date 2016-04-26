@@ -34,7 +34,10 @@ $spacing-sizes: (
 );
 
 //// COLORS
-$site-background: #ffffff !default;
+$black: #000000 !default;
+$white: #ffffff !default;
+
+$site-background: $white !default;
 
 $brand-primary: #00a388 !default;
 $brand-secondary: #3d4144 !default;

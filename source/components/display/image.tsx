@@ -3,7 +3,7 @@ import { classNames, cd } from "./../../utilities/classBuilder";
 import { Color, LayoutHelpers, LayoutProps } from "./../../utilities/uiHelpers";
 import { Icons } from "./../../utilities/icons";
 
-export interface IImage extends LayoutProps {
+export interface IImageProps extends LayoutProps {
   rounded?: boolean;
   className?: string;
   source?: string;
@@ -12,7 +12,7 @@ export interface IImage extends LayoutProps {
   width: number;
   seed?: string;
 }
-export class Image extends React.Component<IImage, { profileUrl: string }>{
+export class Image extends React.Component<IImageProps, { profileUrl: string }>{
   constructor() {
     super();
     this.state = { profileUrl: "" };

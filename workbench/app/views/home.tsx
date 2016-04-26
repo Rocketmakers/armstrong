@@ -8,31 +8,36 @@ import { Button } from './../../../source/components/interaction/button';
 import { Text } from './../../../source/components/text/text';
 import { Image } from './../../../source/components/display/image';
 import { DatePickerInput } from './../../../source/components/form/inputs/datePickerInput';
+import { Dialog } from './../../../source/components/display/dialog';
 
 interface HomeState{
-  date: moment.Moment;
+  date?: moment.Moment;
+  dialogOpen?: boolean;
 }
 
 export class Home extends React.Component<{}, HomeState> {
   constructor() {
     super();
-    this.state = { date: moment() }
+    this.state = { date: moment(), dialogOpen: false }
   }
 
   public render() {
     return (
-      <Grid responsive="none" debugMode={true}>
+      <Grid responsive="none" debugMode={false}>
+      <Dialog title="I am a dialog!" isOpen={this.state.dialogOpen} onClose={()=> this.setState({ dialogOpen: false })}>
+      hello world!
+      </Dialog>
         <Row fixed={true}>
           <Col padding="small" centerContent="both">
             <Heading elementType="h1" styleType="heading1">Armstrong Bench</Heading>
           </Col>
         </Row>
         <SingleColumnRow padding="medium">
-
           <Heading elementType="h1" styleType="heading1">Button</Heading>
           <Text margin={{ top: "none", bottom: "small" }}>Pretty self explanatory</Text>
           <Button text="Click me!"/>
           <Button text="Click me also!" condition="positive"/>
+          <Button text="Click me also!" condition="negative" rounded={true}/>
           <br/>
           <br/>
           <Heading elementType="h1" styleType="heading1">Text</Heading>
@@ -46,8 +51,17 @@ export class Home extends React.Component<{}, HomeState> {
           <Text margin={{ top: "none", bottom: "small" }}>Again pretty self explanatory</Text>
           <Image height={128} width={128} margin={{right: "medium"}}/>
           <Image height={128} width={128} margin={{right: "medium"}} rounded={true}/>
-          <Image height={128} width={128} margin={{right: "medium"}} rounded={true} sampleUser={true}/>
+          <Image height={128} width={128} margin={{right: "medium"}} rounded={true} sampleUser={true}/><br/>
+          <br/>
+          <br/>
+          <Heading elementType="h1" styleType="heading1">Datepicker</Heading>
+          <Text margin={{ top: "none", bottom: "small" }}>Picks dates</Text>
           <DatePickerInput/>
+          <br/>
+          <br/>
+          <Heading elementType="h1" styleType="heading1">Dialog</Heading>
+          <Text margin={{ top: "none", bottom: "small" }}>Is a dialog</Text>
+          <Button text="Click me also!" condition="positive" onClick={()=> this.setState({ dialogOpen: true })}/>
         </SingleColumnRow>
 
       </Grid>
