@@ -5,7 +5,7 @@ import { Grid, Row, Col } from "./../../layout/grid";
 import { classNames, cd } from "./../../../utilities/classBuilder";
 
 
-interface IDatePickerInputProps extends React.Props<DatePickerInput> {
+export interface IDatePickerInputProps extends React.Props<DatePickerInput> {
   className?: string;
   locale?: string;
   date?: moment.Moment | string;
@@ -15,7 +15,7 @@ interface IDatePickerInputProps extends React.Props<DatePickerInput> {
   onDateChanged?: (date: moment.Moment) => void;
 }
 
-interface IDatePickerInputState {
+export interface IDatePickerInputState {
   displayedDate?: moment.Moment;
   selectedDate?: moment.Moment;
   pickerBodyVisible?: boolean;
