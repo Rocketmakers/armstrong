@@ -6,7 +6,7 @@ $width: 350px;
   overflow: visible;
   position: relative;
   display: inline-block;
-  input{
+  input, .fake-input{
     min-width: $width;
     box-sizing: border-box;
   }
@@ -16,6 +16,9 @@ $width: 350px;
     line-height: $header-height;
     color: white;
     .row{
+      .col{
+        text-align: center;
+      }
       .col:first-of-type, .col:last-of-type{
         padding: 0 15px;
         cursor: pointer;
@@ -72,6 +75,34 @@ $width: 350px;
       }
       &.day-disabled{
         opacity: 0.2;
+      }
+    }
+  }
+}
+
+@include responsive-behaviour-phone {
+  .date-picker-body{
+    background-color: rgba(0,0,0,0.3) !important;
+    height: 100vh;
+    width: 100vw;
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    .date-picker-body-wrapper{
+      height: 350px;
+      width: calc(100% - 20px);
+      background-color: white;
+      position: absolute;
+      top: 50%;
+      left: 10px;
+      transform: translateY(-55%);
+      .date-picker-days{
+        height: calc(100% - #{$header-height});
+        >div{
+          line-height: 35px;
+        }
       }
     }
   }
