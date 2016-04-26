@@ -19,6 +19,7 @@ export interface IDatePickerInputState {
   selectedDate?: moment.Moment;
   pickerBodyVisible?: boolean;
   showOnTop?: boolean;
+  isMobile?: boolean;
 }
 
 export class DatePickerInput extends React.Component<IDatePickerInputProps, IDatePickerInputState> {
@@ -37,7 +38,7 @@ export class DatePickerInput extends React.Component<IDatePickerInputProps, IDat
   constructor(props: IDatePickerInputProps) {
     super(props);
     var todaysDate = moment().startOf('day');
-    this.state = { displayedDate: todaysDate.clone(), selectedDate: todaysDate, pickerBodyVisible: false, showOnTop: false };
+    this.state = { displayedDate: todaysDate.clone(), selectedDate: todaysDate, pickerBodyVisible: false, showOnTop: false, isMobile: false };
     moment.locale(props.locale);
     const seed = Math.random().toFixed(4);
     this.inputElementId = "date-picker-text-input-" + seed;
@@ -140,7 +141,17 @@ export class DatePickerInput extends React.Component<IDatePickerInputProps, IDat
   componentDidMount() {
     this.inputElement = document.getElementById(this.inputElementId);
     this.bodyElement = document.getElementById(this.bodyElementId);
+    this.checkMobile(window.innerWidth)
     window.addEventListener('mousedown', this);
+
+  }
+  checkMobile(width: number){
+    if (width < 500 && !this.state.isMobile){
+        this.setState({ isMobile: true });
+      }
+      if (width > 500 && this.state.isMobile){
+        this.setState({ isMobile: false });
+      }
   }
   handleEvent(e) {
     if (this.mouseDownOnCalendar) {
@@ -154,6 +165,9 @@ export class DatePickerInput extends React.Component<IDatePickerInputProps, IDat
     })
   }
   shouldShowOnTop() {
+    if (window.innerWidth < 480) {
+      return;
+    }
     var height = this.bodyElement.clientHeight + 25;
     var visibleBottom = (window.innerHeight + window.scrollY);
     var inputRect = this.inputElement.getBoundingClientRect();
@@ -164,7 +178,6 @@ export class DatePickerInput extends React.Component<IDatePickerInputProps, IDat
     } else {
       this.setState({ showOnTop: false })
     }
-
   }
   render() {
     var weekdays = _.range(0, 7).map(n => <div className="date-picker-week-day" key={`day_name_${n}`}>{moment().startOf('week').add(n, 'days').format('dd') }</div>)
@@ -176,23 +189,30 @@ export class DatePickerInput extends React.Component<IDatePickerInputProps, IDat
       <div className={rootClasses}
         onMouseDown={() => this.mouseDownOnCalendar = true}
         onMouseUp={() => this.mouseDownOnCalendar = false}>
+        {!this.state.isMobile &&
         <input id={this.inputElementId}
           type="text"
           defaultValue={this.state.selectedDate.format(this.props.format) }
           onBlur={e => this.checkDate((e.target as any).value) }
           onFocus={e => this.onInputFocus() }
           />
+        }
+        {this.state.isMobile &&
+          <div className="fake-input" onClick={()=> this.onInputFocus()}>{this.state.selectedDate.format(this.props.format)}</div>
+        }
         <div id={this.bodyElementId} className={classes}>
-          <Grid className="date-picker-header">
-            <Row>
-              <Col onClick={() => this.changeMonth(-1) } fixed={true}>{`<`}</Col>
-              <Col>{currentDisplayDate}</Col>
-              <Col onClick={() => this.changeMonth(1) } fixed={true}>{`>`}</Col>
-            </Row>
-          </Grid>
-          <div className="date-picker-days">
-            {weekdays}
-            {days}
+          <div className="date-picker-body-wrapper">
+            <Grid responsive="none" className="date-picker-header">
+              <Row>
+                <Col onClick={() => this.changeMonth(-1) } fixed={true}>{`<`}</Col>
+                <Col>{currentDisplayDate}</Col>
+                <Col onClick={() => this.changeMonth(1) } fixed={true}>{`>`}</Col>
+              </Row>
+            </Grid>
+            <div className="date-picker-days">
+              {weekdays}
+              {days}
+            </div>
           </div>
         </div>
       </div>

@@ -7,7 +7,7 @@ textarea {
     min-height: 120px;
 }
 
-input[type='text'], input[type='email'], input[type='number'], input[type='search'], input[type='password'], input[type='url'], select, textarea {
+input[type='text'], input[type='email'], input[type='number'], input[type='search'], input[type='password'], input[type='url'], select, textarea, .fake-input {
     @include reset-appearance;
     box-sizing: border-box;
     width: 100%;
