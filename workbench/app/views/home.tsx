@@ -47,6 +47,7 @@ export class Home extends React.Component<{}, HomeState> {
           <Image height={128} width={128} margin={{right: "medium"}}/>
           <Image height={128} width={128} margin={{right: "medium"}} rounded={true}/>
           <Image height={128} width={128} margin={{right: "medium"}} rounded={true} sampleUser={true}/>
+          <DatePickerInput/>
         </SingleColumnRow>
 
       </Grid>

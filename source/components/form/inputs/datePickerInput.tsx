@@ -4,7 +4,6 @@ import * as moment from "moment";
 import { Grid, Row, Col } from "./../../layout/grid";
 import { classNames, cd } from "./../../../utilities/classBuilder";
 
-
 export interface IDatePickerInputProps extends React.Props<DatePickerInput> {
   className?: string;
   locale?: string;
@@ -24,6 +23,8 @@ export interface IDatePickerInputState {
 
 export class DatePickerInput extends React.Component<IDatePickerInputProps, IDatePickerInputState> {
   private mouseDownOnCalendar = false;
+  private inputElement;
+  private bodyElement;
 
   static defaultProps = {
     format: 'DD/MM/YYYY',
@@ -41,7 +42,7 @@ export class DatePickerInput extends React.Component<IDatePickerInputProps, IDat
       return;
     }
     var newDate = date.clone();
-    (this.refs["date-picker-text-input"] as HTMLInputElement).value = newDate.format(this.props.format);
+    this.inputElement.value = newDate.format(this.props.format);
     this.setState({ selectedDate: newDate, displayedDate: newDate.clone(), pickerBodyVisible: false });
     if (this.props.onDateChanged) {
       this.props.onDateChanged(newDate.clone());
@@ -71,33 +72,33 @@ export class DatePickerInput extends React.Component<IDatePickerInputProps, IDat
         firstDay = true;
         var firstDayIndex = m.weekday();
         for (var i = firstDayIndex; i > 0; i--) {
-          days.push(this.getDayComponent(true, this.onDaySelected.bind(this),m.clone().subtract(i, 'days')));
+          days.push(this.getDayComponent(true, this.onDaySelected.bind(this), m.clone().subtract(i, 'days')));
         }
       }
-      days.push(this.getDayComponent(false, this.onDaySelected.bind(this),m.clone()));
+      days.push(this.getDayComponent(false, this.onDaySelected.bind(this), m.clone()));
       if (this.isEndOfMonth(m)) {
         var lastDayIndex = m.weekday();
         for (var i2 = 1; i2 < 7 - lastDayIndex; i2++) {
-          days.push(this.getDayComponent(true, this.onDaySelected.bind(this),m.clone().add(i2, 'days')));
+          days.push(this.getDayComponent(true, this.onDaySelected.bind(this), m.clone().add(i2, 'days')));
         }
       }
     }
     return days;
   }
-  getDayComponent(notInCurrentMonth: boolean, dayClicked: (d: moment.Moment)=> void, date: moment.Moment){
+  getDayComponent(notInCurrentMonth: boolean, dayClicked: (d: moment.Moment) => void, date: moment.Moment) {
     var d = date.clone();
     var dateWithinRange = this.fallsWithinRange(d);
     var isSelected = d.isSame(this.state.selectedDate, 'day');
     return <DatePickerDay
-            key={`datepicker_day_${date.format('DDMMYYYY')}`}
-            selected={isSelected}
-            withinRange={dateWithinRange}
-            notInCurrentMonth={notInCurrentMonth}
-            dayClicked={dayClicked}
-            date={d}/>;
+      key={`datepicker_day_${date.format('DDMMYYYY')}`}
+      selected={isSelected}
+      withinRange={dateWithinRange}
+      notInCurrentMonth={notInCurrentMonth}
+      dayClicked={dayClicked}
+      date={d}/>;
   }
   changeMonth(increment: number) {
-    this.setState({ displayedDate: this.state.displayedDate.add(increment, 'months') }, ()=>{
+    this.setState({ displayedDate: this.state.displayedDate.add(increment, 'months') }, () => {
       this.shouldShowOnTop();
     })
   }
@@ -105,74 +106,77 @@ export class DatePickerInput extends React.Component<IDatePickerInputProps, IDat
     var m = moment(dateString, this.props.format, false);
     if (m.isValid() && this.fallsWithinRange(m)) {
       var formattedDate = m.format(this.props.format);
-      (this.refs["date-picker-text-input"] as HTMLInputElement).value = formattedDate;
+      this.inputElement.value = formattedDate;
       this.setState({ selectedDate: m.clone(), displayedDate: m.clone() });
       if (this.props.onDateChanged) {
         this.props.onDateChanged(m.clone());
       }
     } else {
-      (this.refs["date-picker-text-input"] as HTMLInputElement).value = this.state.selectedDate.format(this.props.format);
+      this.inputElement.value = this.state.selectedDate.format(this.props.format);
     }
   }
-  componentWillMount(){
-    if (this.props.date){
-      if (typeof this.props.date === "string"){
+  componentWillMount() {
+    if (this.props.date) {
+      if (typeof this.props.date === "string") {
         var mDate = moment(this.props.date as string, "DD/MM/YYYY");
         this.setState({ selectedDate: mDate, displayedDate: mDate.clone() });
       }
-      else{
-        this.setState({ selectedDate: this.props.date as moment.Moment });
+      else {
+        var pDate = moment((this.props.date as moment.Moment)).startOf('day');
+        pDate.locale(this.props.locale);
+        this.setState({ selectedDate: pDate, displayedDate: pDate.clone() });
       }
     }
   }
-  componentWillUnmount(){
+  componentWillUnmount() {
     window.removeEventListener('mousedown', this);
   }
-  componentDidMount(){
+  componentDidMount() {
+    this.inputElement = document.getElementById("date-picker-text-input");
+    this.bodyElement = document.getElementById("date-picker-body");
     window.addEventListener('mousedown', this);
   }
-  handleEvent(e){
-      if (this.mouseDownOnCalendar) {
-        return;
+  handleEvent(e) {
+    if (this.mouseDownOnCalendar) {
+      return;
     }
     this.setState({ pickerBodyVisible: false });
   }
-  onInputFocus(){
-    this.setState({ pickerBodyVisible: true }, ()=>{
-       this.shouldShowOnTop();
-     })
+  onInputFocus() {
+    this.setState({ pickerBodyVisible: true }, () => {
+      this.shouldShowOnTop();
+    })
   }
-  shouldShowOnTop(){
-    // The 25 here is a temporary hack
-    var height = (this.refs["date-picker-body"] as HTMLDivElement).clientHeight + 25;
-       var visibleBottom = (window.innerHeight + window.scrollY);
-       var inputRect = (this.refs["date-picker-text-input"] as HTMLInputElement).getBoundingClientRect();
-       var remainingSpace = visibleBottom - inputRect.bottom;
+  shouldShowOnTop() {
+    var height = this.bodyElement.clientHeight + 25;
+    var visibleBottom = (window.innerHeight + window.scrollY);
+    var inputRect = this.inputElement.getBoundingClientRect();
+    var remainingSpace = visibleBottom - inputRect.bottom;
 
-      if (remainingSpace < height){
-        this.setState({ showOnTop: true })
-      }else{
-        this.setState({ showOnTop: false })
-      }
+    if (remainingSpace < height) {
+      this.setState({ showOnTop: true })
+    } else {
+      this.setState({ showOnTop: false })
+    }
 
   }
   render() {
-    var weekdays = _.range(0, 7).map(n => <div className="date-picker-week-day" key={`day_name_${n}`}>{moment().startOf('week').add(n, 'days').format('dd')}</div>)
+    var weekdays = _.range(0, 7).map(n => <div className="date-picker-week-day" key={`day_name_${n}`}>{moment().startOf('week').add(n, 'days').format('dd') }</div>)
     var days = this.getDaysInMonth();
     var currentDisplayDate = this.state.displayedDate.format("MMMM - YYYY");
-    var classes = classNames("date-picker-body", cd("date-picker-body-visible", this.state.pickerBodyVisible),cd("date-picker-top", this.state.showOnTop));
+    var classes = classNames("date-picker-body", cd("date-picker-body-visible", this.state.pickerBodyVisible), cd("date-picker-top", this.state.showOnTop));
     var rootClasses = classNames("date-picker", this.props.className);
     return (
       <div className={rootClasses}
-      onMouseDown={()=> this.mouseDownOnCalendar = true}
-      onMouseUp={() => this.mouseDownOnCalendar = false}>
-        <input ref="date-picker-text-input"
-        type="text"
-        defaultValue={this.state.selectedDate.format(this.props.format) }
-        onBlur={e => this.checkDate((e.target as any).value) }
-        onFocus={e=> this.onInputFocus()}
-        />
-        <div ref="date-picker-body" className={classes}>
+        onMouseDown={() => this.mouseDownOnCalendar = true}
+        onMouseUp={() => this.mouseDownOnCalendar = false}>
+        <input id="date-picker-text-input"
+          type="text"
+          defaultValue={this.state.selectedDate.format(this.props.format) }
+          onBlur={e => this.checkDate((e.target as any).value) }
+          onFocus={e => this.onInputFocus() }
+          />
+        <div id="date-picker-body" className={classes}>
           <Grid className="date-picker-header">
             <Row>
               <Col onClick={() => this.changeMonth(-1) } fixed={true}>{`<`}</Col>
