@@ -38,7 +38,7 @@ export class Dialog extends React.Component<IDialogProps, {}>{
     var style = { width: this.props.width || "500px", height: this.props.height || "auto" }
     return (
       <div className={classes}>
-        <div className="dialog" style={style}>
+        <div className="dialog" style={style} role="dialog" aria-hidden={ !this.props.isOpen } aria-labelledby={ this.props.title } aria-describedby={ this.props.subtitle }>
           <Grid>
             <Row className={classNames("dialog-header", cd("dialog-header-no-title", !this.props.title))} fixed={true}>
               <Col centerContent={{ vertical: "center" }}>
@@ -64,4 +64,3 @@ export class Dialog extends React.Component<IDialogProps, {}>{
     );
   }
 }
-
