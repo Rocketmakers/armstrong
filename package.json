@@ -8,7 +8,7 @@
   "scripts": {
     "build": "ntsc -p source -d && node sass_concat.js",
     "postinstall": "[ \"$NODE_ENV\" != production ] && typings install",
-    "publish": "[ \"$NODE_ENV\" != production ] && npm run build && npm publish"
+    "build-publish": "[ \"$NODE_ENV\" != production ] && npm run build && npm publish"
   },
   "repository": {
     "type": "git",
