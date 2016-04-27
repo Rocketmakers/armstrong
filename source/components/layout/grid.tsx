@@ -28,6 +28,9 @@ export class Grid extends React.Component<IGrid, any> {
   }
 }
 
+export interface IColRow extends IRow {
+  centerContent?: CenterContent | CenterBoth;
+}
 
 export interface IRow extends React.HTMLProps<Row>, LayoutProps, DisplayProps {
   fixed?: boolean | number;
@@ -80,14 +83,18 @@ export class Col extends React.Component<ICol, {}> {
   }
 }
 
-export class SingleColumnRow extends React.Component<IRow, any> {
+export class SingleColumnRow extends React.Component<IColRow, any> {
   render() {
     var layoutClasses = LayoutHelpers.HandleLayoutClasses(this.props.margin, this.props.padding);
     var displayClasses = LayoutHelpers.HandleDisplayClasses(this.props.background, this.props.foreground);
     var displayStyles = LayoutHelpers.HandleDisplayStyles(this.props.background, this.props.foreground);
+    var centerClasses = LayoutHelpers.GetAlignment(this.props.centerContent);
 
     var classes = classNames("row", cd("no-flex", this.props.fixed !== undefined), this.props.className, displayClasses, layoutClasses);
 
-    return <div {...this.props as any} className={classes} style={displayStyles}><div className="col">{this.props.children}</div></div>
+    return (
+      <div {...this.props as any} className={classes} style={displayStyles}>
+        <div className={classNames('col', centerClasses)}>{this.props.children}</div>
+      </div>)
   }
 }
