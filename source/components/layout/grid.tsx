@@ -40,7 +40,7 @@ export class Row extends React.Component<IRow, any> {
     var displayStyles = LayoutHelpers.HandleDisplayStyles(this.props.background, this.props.foreground);
 
     var attrs = _.omit(this.props, "className", "fixed");
-    var classes = classNames(this.props.className, "row", cd("no-flex", this.props.fixed !== null), displayClasses, layoutClasses);
+    var classes = classNames(this.props.className, "row", cd("no-flex", !!this.props.fixed), displayClasses, layoutClasses);
 
     if (typeof this.props.fixed === "number") {
       displayStyles = _.extend({ maxHeight: `${this.props.fixed}px`, height: "100%" }, displayStyles);

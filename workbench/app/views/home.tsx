@@ -23,7 +23,7 @@ export class Home extends React.Component<{}, HomeState> {
 
   public render() {
     return (
-      <Grid responsive="none" debugMode={false}>
+      <Grid responsive="none" debugMode={true}>
       <Dialog title="I am a dialog!" isOpen={this.state.dialogOpen} onClose={()=> this.setState({ dialogOpen: false })}>
       hello world!
       </Dialog>
