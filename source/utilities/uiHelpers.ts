@@ -2,7 +2,7 @@ import * as React from "react";
 
 export type Responsiveness = "tablet" | "phone" | "both" | "none";
 export type Color = "positive" | "negative" | "warning" | "info" | "brand";
-export type Size = "none" | "small" | "medium" | "large" | "xlarge";
+export type Size = "none" | "xxsmall" | "xsmall" | "small" | "medium" | "large" | "xlarge";
 export type Side = "top" | "left" | "right" | "bottom" | "all";
 export type CenterContentVertical = "top" | "center" | "bottom";
 export type CenterContentHorizontal = "left" | "center" | "right";
