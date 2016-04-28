@@ -1,6 +1,6 @@
 {
   "name": "armstrong-react",
-  "version": "0.1.4",
+  "version": "0.2.4",
   "dependencies": {
     "abbrev": {
       "version": "1.0.7",
@@ -282,6 +282,11 @@
       "from": "iconv-lite@>=0.4.13 <0.5.0",
       "resolved": "https://registry.npmjs.org/iconv-lite/-/iconv-lite-0.4.13.tgz"
     },
+    "import-resolve": {
+      "version": "0.2.6",
+      "from": "import-resolve@>=0.2.6 <0.3.0",
+      "resolved": "https://registry.npmjs.org/import-resolve/-/import-resolve-0.2.6.tgz"
+    },
     "imurmurhash": {
       "version": "0.1.4",
       "from": "imurmurhash@>=0.1.4 <0.2.0",
@@ -501,6 +506,11 @@
       "version": "1.0.10",
       "from": "nopt@>=1.0.10 <1.1.0",
       "resolved": "https://registry.npmjs.org/nopt/-/nopt-1.0.10.tgz"
+    },
+    "ntypescript": {
+      "version": "1.201604272206.1",
+      "from": "ntypescript@>=1.201604220008.1 <2.0.0",
+      "resolved": "https://registry.npmjs.org/ntypescript/-/ntypescript-1.201604272206.1.tgz"
     },
     "number-is-nan": {
       "version": "1.0.0",
@@ -743,6 +753,18 @@
       "from": "tough-cookie@>=2.0.0 <3.0.0",
       "resolved": "https://registry.npmjs.org/tough-cookie/-/tough-cookie-2.2.2.tgz"
     },
+    "ts-loader": {
+      "version": "0.8.2",
+      "from": "ts-loader@>=0.8.2 <0.9.0",
+      "resolved": "https://registry.npmjs.org/ts-loader/-/ts-loader-0.8.2.tgz",
+      "dependencies": {
+        "object-assign": {
+          "version": "2.1.1",
+          "from": "object-assign@>=2.0.0 <3.0.0",
+          "resolved": "https://registry.npmjs.org/object-assign/-/object-assign-2.1.1.tgz"
+        }
+      }
+    },
     "typedarray": {
       "version": "0.0.6",
       "from": "typedarray@>=0.0.5 <0.1.0",
@@ -752,6 +774,18 @@
       "version": "1.8.10",
       "from": "typescript@>=1.8.10 <2.0.0",
       "resolved": "https://registry.npmjs.org/typescript/-/typescript-1.8.10.tgz"
+    },
+    "typings": {
+      "version": "0.8.1",
+      "from": "typings@>=0.8.1 <0.9.0",
+      "resolved": "https://registry.npmjs.org/typings/-/typings-0.8.1.tgz",
+      "dependencies": {
+        "minimist": {
+          "version": "1.2.0",
+          "from": "minimist@>=1.2.0 <2.0.0",
+          "resolved": "https://registry.npmjs.org/minimist/-/minimist-1.2.0.tgz"
+        }
+      }
     },
     "typings-core": {
       "version": "0.3.0",
