@@ -33,8 +33,8 @@ export class Image extends React.Component<IImageProps, { profileUrl: string }>{
   }
   render() {
     var layoutClasses = LayoutHelpers.HandleLayoutClasses(this.props.margin, this.props.padding);
-    var source = source || `http://dummyimage.com/${this.props.height}x${this.props.width}/4f5c69/ffffff.png`;
-    if (this.props.sampleUser && !this.state.profileUrl) {
+    var source = this.props.source || `http://dummyimage.com/${this.props.height}x${this.props.width}/4f5c69/ffffff.png`;
+    if (!this.props.source && this.props.sampleUser && !this.state.profileUrl) {
       this.getRandomUser();
     }
     if (this.props.sampleUser && this.state.profileUrl){
