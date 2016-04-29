@@ -3,7 +3,7 @@ import { classNames, cd } from "./../../utilities/classBuilder";
 import { Color, LayoutHelpers, LayoutProps } from "./../../utilities/uiHelpers";
 import { Icons } from "./../../utilities/icons";
 
-export interface IImageProps extends LayoutProps {
+export interface IImageProps extends LayoutProps, React.HTMLProps<Image> {
   rounded?: boolean;
   className?: string;
   source?: string;
@@ -41,7 +41,7 @@ export class Image extends React.Component<IImageProps, { profileUrl: string }>{
       source = this.state.profileUrl;
     }
     return (
-      <img src={source} height={this.props.height} width={this.props.width} className={classNames(this.props.className, layoutClasses, cd("rounded", this.props.rounded)) }/>
+      <img src={source} { ...this.props as any } height={this.props.height} width={this.props.width} className={classNames(this.props.className, layoutClasses, cd("rounded", this.props.rounded)) }/>
     );
   }
 }

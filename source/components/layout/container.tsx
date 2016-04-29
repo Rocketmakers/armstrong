@@ -2,7 +2,7 @@ import * as React from "react";
 import { Size, LayoutHelpers, LayoutProps, DisplayProps } from "./../../utilities/uiHelpers";
 import { classNames, cd } from "./../../utilities/classBuilder"
 
-export interface IContainerProps extends React.Props<Container>, LayoutProps, DisplayProps {
+export interface IContainerProps extends React.Props<Container>, LayoutProps, DisplayProps, React.HTMLProps<Container> {
 }
 
 export class Container extends React.Component<IContainerProps, {}>{
@@ -15,6 +15,6 @@ export class Container extends React.Component<IContainerProps, {}>{
     if (!classes) {
       classes = null;
     }
-    return <div style={displayStyles} className={classes}>{this.props.children}</div>
+    return <div style={displayStyles} { ...this.props as any } className={classes}>{this.props.children}</div>
   }
 }

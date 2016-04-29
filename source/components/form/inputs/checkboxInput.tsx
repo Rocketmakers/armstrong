@@ -11,7 +11,7 @@ export class CheckboxInput extends React.Component<ICheckboxInputProps, {}> {
         var id = "radio_" + Math.random();
         return (
             <div className="checkbox">
-            <input id={id} {...this.props as any} type="checkbox"/>
+            <input id={id} { ...this.props as any } type="checkbox"/>
             <label htmlFor={id}>{this.props.label}</label>
             </div>
         );
