@@ -9,6 +9,7 @@ import { Text } from './../../../source/components/text/text';
 import { Image } from './../../../source/components/display/image';
 import { DatePickerInput } from './../../../source/components/form/inputs/datePickerInput';
 import { Dialog } from './../../../source/components/display/dialog';
+import { BurgerMenu } from './../../../source/components/navigation/burgerMenu';
 
 interface HomeState {
   date?: moment.Moment;
@@ -28,6 +29,13 @@ export class Home extends React.Component<{}, HomeState> {
           hello world!
         </Dialog>
         <Row fixed={100}>
+          <Col fixed={true}>
+            <BurgerMenu>
+              <a className="active" href="#">Home</a>
+              <a href="#">Thing</a>
+              <a href="#">Other Thing</a>
+            </BurgerMenu>
+          </Col>
           <Col padding="small" centerContent="both">
             <Heading elementType="h1" styleType="heading1">Armstrong Bench</Heading>
           </Col>
@@ -55,7 +63,7 @@ export class Home extends React.Component<{}, HomeState> {
           <Image height={128} width={128} margin={{ right: "medium" }}/>
           <Image height={128} width={128} margin={{ right: "medium" }} rounded={true}/>
           <Image height={128} width={128} margin={{ right: "medium" }} rounded={true} sampleUser={true}/>
-          <Image height={128} width={128} margin={{ right: "medium" }} rounded={true} source="http://www.famousbirthdays.com/headshots/jaden-smith-1.jpg"/><br/>
+          <Image height={512} width={512} margin={{ right: "medium" }} rounded={true} source="http://www.famousbirthdays.com/headshots/jaden-smith-1.jpg"/><br/>
           <br/>
           <br/>
           <Heading elementType="h1" styleType="heading1">Datepicker</Heading>
