@@ -3,7 +3,7 @@ import * as _ from "underscore";
 import { classNames, cd } from "./../../utilities/classBuilder";
 import { Spacing, LayoutProps, LayoutHelpers, DisplayProps, CenterContent, CenterBoth, Responsiveness } from "./../../utilities/uiHelpers";
 
-export interface IGrid extends React.Props<Grid>, LayoutProps, DisplayProps {
+export interface IGrid extends React.Props<Grid>, LayoutProps, DisplayProps, React.HTMLProps<Grid> {
   debugMode?: boolean;
   responsive?: Responsiveness;
   className?: string;
@@ -24,7 +24,7 @@ export class Grid extends React.Component<IGrid, any> {
     var attrs = _.omit(this.props, "className");
     var classes = classNames(originalClassName, "grid", "fill-container", responsiveClasses, cd("grid-debug", this.props.debugMode), cd("table-grid", this.props.table), displayClasses, layoutClasses);
 
-    return (<div {...attrs} className={classes} style={displayStyles} />);
+    return (<div {...attrs} { ...this.props as any } className={classes} style={displayStyles} />);
   }
 }
 
@@ -49,7 +49,7 @@ export class Row extends React.Component<IRow, any> {
       displayStyles = _.extend({ maxHeight: `${this.props.fixed}px`, height: "100%" }, displayStyles);
     }
 
-    return <div {...attrs} className={classes} style={displayStyles}/>
+    return <div {...attrs} { ...this.props as any } className={classes} style={displayStyles}/>
   }
 }
 
@@ -79,7 +79,7 @@ export class Col extends React.Component<ICol, {}> {
       displayStyles = _.extend({ maxWidth: `${this.props.fixed}px`, width: "100%" }, displayStyles);
     }
 
-    return <div {...attrs} className={classes} style={displayStyles} />
+    return <div {...attrs} { ...this.props as any } className={classes} style={displayStyles} />
   }
 }
 

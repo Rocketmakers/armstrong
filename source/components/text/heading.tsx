@@ -5,7 +5,7 @@ import { classNames, cd } from "./../../utilities/classBuilder"
 export type HeadingElementType = "h1" | "h2" | "h3" | "div";
 export type HeadingStyleType = "heading1" | "heading2" | "heading3";
 
-export interface IHeadingProps extends React.Props<Heading>, LayoutProps, DisplayProps {
+export interface IHeadingProps extends React.Props<Heading>, LayoutProps, DisplayProps, React.HTMLProps<Heading> {
   elementType?: HeadingElementType;
   styleType?: HeadingStyleType;
 }
@@ -27,13 +27,13 @@ export class Heading extends React.Component<IHeadingProps, {}>{
 
     switch (this.props.elementType) {
       case "h1":
-        return <h1 style={displayStyles} className={classes}>{this.props.children}</h1>
+        return <h1 { ...this.props as any } style={displayStyles} className={classes}>{this.props.children}</h1>
       case "h2":
-        return <h2 style={displayStyles} className={classes}>{this.props.children}</h2>
+        return <h2 { ...this.props as any } style={displayStyles} className={classes}>{this.props.children}</h2>
       case "h3":
-        return <h3 style={displayStyles} className={classes}>{this.props.children}</h3>
+        return <h3 { ...this.props as any } style={displayStyles} className={classes}>{this.props.children}</h3>
       case "div":
-        return <div style={displayStyles} className={classes}>{this.props.children}</div>
+        return <div { ...this.props as any } style={displayStyles} className={classes}>{this.props.children}</div>
     }
   }
 }
