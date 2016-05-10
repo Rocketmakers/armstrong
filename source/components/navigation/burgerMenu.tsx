@@ -14,7 +14,7 @@ export class BurgerMenu extends React.Component<IBurgerMenuProps, {}>{
   private appNode: HTMLElement;
   private portalNode : HTMLElement;
   private menuId : string;
-  private isOpen: boolean;
+  public isOpen: boolean;
 
   constructor() {
     super();
@@ -47,6 +47,7 @@ export class BurgerMenu extends React.Component<IBurgerMenuProps, {}>{
 
     if (node == null) {
       this.portalNode = node = document.createElement('nav');
+      this.portalNode.classList.add('burger-menu');
       if(this.props.navClass){
         this.portalNode.classList.add(this.props.navClass);
       }
@@ -82,7 +83,7 @@ export class BurgerMenu extends React.Component<IBurgerMenuProps, {}>{
   render() {
     return (
       <button className="burger-menu-button" onClick={() => this.toggleMenu() }>
-        <Icon icon={this.props.buttonIcon}/>
+        { this.props.buttonIcon && <Icon icon={this.props.buttonIcon}/> }
       </button>
     )
   }

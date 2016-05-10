@@ -2,7 +2,7 @@ body{
     overflow-x: hidden;
 }
 
-nav, main{
+nav.burger-menu, main{
     overflow: visible;
     transition: transform 0.3s;
     transition-timing-function: ease-out;
@@ -14,7 +14,7 @@ main{
 }
 
 .menu-open {
-    nav{
+    nav.burger-menu{
         transform: translate3d(0,0,0);
     }
     main{
@@ -23,7 +23,7 @@ main{
 }
 
 
-nav {
+nav.burger-menu {
     position: fixed;
     top: 0;
     bottom: 0;
