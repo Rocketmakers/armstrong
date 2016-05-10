@@ -18,7 +18,14 @@ import "./theme/theme";
 //const hist = history();
 
 // APP WRAPPER
-class App extends React.Component<any, {}> {
+class App extends React.Component<any, {nav: boolean}> {
+  /**
+   *
+   */
+  constructor() {
+    super();
+    this.state = { nav: true };
+  }
   public render() {
     const view = this.props.children;
     return (
@@ -26,15 +33,16 @@ class App extends React.Component<any, {}> {
         <Grid responsive="none" debugMode={true}>
           <Row fixed={100}>
             <Col fixed={true}>
+            {this.state.nav &&
               <BurgerMenu closeOnNavigate={true}>
-                <div>          <Image height={128} width={128} margin={{ right: "medium" }} rounded={true} source="http://www.famousbirthdays.com/headshots/jaden-smith-1.jpg"/><br/>
-</div>
-                <Link to="/" onlyActiveOnIndex={true} activeClassName="active">Home</Link>
-                <Link to="/test" activeClassName="active">Test</Link>
+                <Image height={128} width={128} margin={{ right: "medium" }} rounded={true} source="http://www.famousbirthdays.com/headshots/jaden-smith-1.jpg"/>
+                <Link data-close="true" to="/" onlyActiveOnIndex={true} activeClassName="active">Home</Link>
+                <Link data-close="true" to="/test" activeClassName="active">Test</Link>
               </BurgerMenu>
+            }
             </Col>
             <Col padding="small" centerContent="both">
-              <Heading elementType="h1" styleType="heading1">Armstrong Bench</Heading>
+              <Heading onClick={()=> this.setState({ nav: !this.state.nav })} elementType="h1" styleType="heading1">Armstrong Bench</Heading>
             </Col>
           </Row>
           <SingleColumnRow>
