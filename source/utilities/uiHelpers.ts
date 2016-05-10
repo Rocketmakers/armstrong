@@ -8,6 +8,9 @@ export type CenterContentVertical = "top" | "center" | "bottom";
 export type CenterContentHorizontal = "left" | "center" | "right";
 export type CenterBoth = "both";
 
+export type MarginClass = "m-none" | "m-xxsmall" | "m-xsmall" | "m-small" | "m-medium" | "m-large" | "m-xlarge";
+export type PaddingClass = "p-none" | "p-xxsmall" | "p-xsmall" | "p-small" | "p-medium" | "p-large" | "p-xlarge";
+
 export interface CenterContent {
   vertical?: CenterContentVertical;
   horizontal?: CenterContentHorizontal;

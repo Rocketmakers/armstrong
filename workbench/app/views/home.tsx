@@ -2,6 +2,7 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import * as moment from 'moment';
+import { Link } from "react-router";
 import { Grid, Row, Col, SingleColumnRow, FixedCentralColumnRow } from './../../../source/components/layout/grid';
 import { Heading } from './../../../source/components/text/heading';
 import { Button } from './../../../source/components/interaction/button';
@@ -24,22 +25,10 @@ export class Home extends React.Component<{}, HomeState> {
 
   public render() {
     return (
-      <Grid responsive="none" debugMode={true}>
+      <Grid responsive="none" debugMode={true} className="p-small">
         <Dialog title="I am a dialog!" isOpen={this.state.dialogOpen} onClose={() => this.setState({ dialogOpen: false }) }>
           hello world!
         </Dialog>
-        <Row fixed={100}>
-          <Col fixed={true}>
-            <BurgerMenu>
-              <a className="active" href="#">Home</a>
-              <a href="#">Thing</a>
-              <a href="#">Other Thing</a>
-            </BurgerMenu>
-          </Col>
-          <Col padding="small" centerContent="both">
-            <Heading elementType="h1" styleType="heading1">Armstrong Bench</Heading>
-          </Col>
-        </Row>
         <FixedCentralColumnRow>
           test
         </FixedCentralColumnRow>
@@ -63,7 +52,7 @@ export class Home extends React.Component<{}, HomeState> {
           <Image height={128} width={128} margin={{ right: "medium" }}/>
           <Image height={128} width={128} margin={{ right: "medium" }} rounded={true}/>
           <Image height={128} width={128} margin={{ right: "medium" }} rounded={true} sampleUser={true}/>
-          <Image height={512} width={512} margin={{ right: "medium" }} rounded={true} source="http://www.famousbirthdays.com/headshots/jaden-smith-1.jpg"/><br/>
+          <Image height={128} width={128} margin={{ right: "medium" }} rounded={true} source="http://www.famousbirthdays.com/headshots/jaden-smith-1.jpg"/><br/>
           <br/>
           <br/>
           <Heading elementType="h1" styleType="heading1">Datepicker</Heading>

@@ -1,12 +1,15 @@
 import * as React from "react";
 import * as _ from "underscore";
 import { classNames, cd } from "./../../utilities/classBuilder";
-import { Spacing, LayoutProps, LayoutHelpers, DisplayProps, CenterContent, CenterBoth, Responsiveness } from "./../../utilities/uiHelpers";
+import { Spacing, LayoutProps, LayoutHelpers, DisplayProps, CenterContent, CenterBoth, Responsiveness, MarginClass, PaddingClass } from "./../../utilities/uiHelpers";
+
+
 
 export interface IGrid extends React.Props<Grid>, LayoutProps, DisplayProps, React.HTMLProps<Grid> {
   debugMode?: boolean;
   responsive?: Responsiveness;
-  className?: string;
+  className?: string | MarginClass | PaddingClass;
+  armstrongClassName?: MarginClass;
   table?: boolean;
 }
 
@@ -16,15 +19,22 @@ export class Grid extends React.Component<IGrid, any> {
   }
   render() {
     var responsiveClasses = LayoutHelpers.HandleResponsivenessClasses(this.props.responsive);
-    var layoutClasses = LayoutHelpers.HandleLayoutClasses(this.props.margin, this.props.padding);
-    var displayClasses = LayoutHelpers.HandleDisplayClasses(this.props.background, this.props.foreground);
-    var displayStyles = LayoutHelpers.HandleDisplayStyles(this.props.background, this.props.foreground);
+    //var layoutClasses = LayoutHelpers.HandleLayoutClasses(this.props.margin, this.props.padding);
+    //var displayClasses = LayoutHelpers.HandleDisplayClasses(this.props.background, this.props.foreground);
+    //var displayStyles = LayoutHelpers.HandleDisplayStyles(this.props.background, this.props.foreground);
 
     var originalClassName = this.props.className;
     var attrs = _.omit(this.props, "className");
-    var classes = classNames(originalClassName, "grid", "fill-container", responsiveClasses, cd("grid-debug", this.props.debugMode), cd("table-grid", this.props.table), displayClasses, layoutClasses);
+    var classes = classNames(
+      originalClassName,
+      "grid",
+      "fill-container",
+      responsiveClasses,
+      cd("grid-debug", this.props.debugMode),
+      cd("table-grid", this.props.table)
+      );
 
-    return (<div {...attrs} { ...this.props as any } className={classes} style={displayStyles} />);
+    return (<div {...attrs} { ...this.props as any } className={classes} />);
   }
 }
 
