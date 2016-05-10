@@ -2,15 +2,17 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import * as moment from 'moment';
-import { Grid, Row, Col, SingleColumnRow } from './../../../source/components/layout/grid';
+import { Link } from "react-router";
+import { Grid, Row, Col, SingleColumnRow, FixedCentralColumnRow } from './../../../source/components/layout/grid';
 import { Heading } from './../../../source/components/text/heading';
 import { Button } from './../../../source/components/interaction/button';
 import { Text } from './../../../source/components/text/text';
 import { Image } from './../../../source/components/display/image';
 import { DatePickerInput } from './../../../source/components/form/inputs/datePickerInput';
 import { Dialog } from './../../../source/components/display/dialog';
+import { BurgerMenu } from './../../../source/components/navigation/burgerMenu';
 
-interface HomeState{
+interface HomeState {
   date?: moment.Moment;
   dialogOpen?: boolean;
 }
@@ -23,15 +25,13 @@ export class Home extends React.Component<{}, HomeState> {
 
   public render() {
     return (
-      <Grid responsive="none" debugMode={true}>
-      <Dialog title="I am a dialog!" isOpen={this.state.dialogOpen} onClose={()=> this.setState({ dialogOpen: false })}>
-      hello world!
-      </Dialog>
-        <Row fixed={true}>
-          <Col padding="small" centerContent="both">
-            <Heading elementType="h1" styleType="heading1">Armstrong Bench</Heading>
-          </Col>
-        </Row>
+      <Grid responsive="none" debugMode={true} className="p-small">
+        <Dialog title="I am a dialog!" isOpen={this.state.dialogOpen} onClose={() => this.setState({ dialogOpen: false }) }>
+          hello world!
+        </Dialog>
+        <FixedCentralColumnRow>
+          test
+        </FixedCentralColumnRow>
         <SingleColumnRow padding="medium">
           <Heading elementType="h1" styleType="heading1">Button</Heading>
           <Text margin={{ top: "none", bottom: "small" }}>Pretty self explanatory</Text>
@@ -49,9 +49,10 @@ export class Home extends React.Component<{}, HomeState> {
           <br/>
           <Heading elementType="h1" styleType="heading1">Image</Heading>
           <Text margin={{ top: "none", bottom: "small" }}>Again pretty self explanatory</Text>
-          <Image height={128} width={128} margin={{right: "medium"}}/>
-          <Image height={128} width={128} margin={{right: "medium"}} rounded={true}/>
-          <Image height={128} width={128} margin={{right: "medium"}} rounded={true} sampleUser={true}/><br/>
+          <Image height={128} width={128} margin={{ right: "medium" }}/>
+          <Image height={128} width={128} margin={{ right: "medium" }} rounded={true}/>
+          <Image height={128} width={128} margin={{ right: "medium" }} rounded={true} sampleUser={true}/>
+          <Image height={128} width={128} margin={{ right: "medium" }} rounded={true} source="http://www.famousbirthdays.com/headshots/jaden-smith-1.jpg"/><br/>
           <br/>
           <br/>
           <Heading elementType="h1" styleType="heading1">Datepicker</Heading>
@@ -61,7 +62,7 @@ export class Home extends React.Component<{}, HomeState> {
           <br/>
           <Heading elementType="h1" styleType="heading1">Dialog</Heading>
           <Text margin={{ top: "none", bottom: "small" }}>Is a dialog</Text>
-          <Button text="Click me also!" condition="positive" onClick={()=> this.setState({ dialogOpen: true })}/>
+          <Button text="Click me also!" condition="positive" onClick={() => this.setState({ dialogOpen: true }) }/>
         </SingleColumnRow>
 
       </Grid>

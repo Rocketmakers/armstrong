@@ -4,7 +4,7 @@ import { classNames, cd } from "./../../utilities/classBuilder"
 
 export type TextElementType = "p" | "span" | "label";
 
-export interface ITextProps extends React.Props<Text>, LayoutProps, DisplayProps {
+export interface ITextProps extends React.Props<Text>, LayoutProps, DisplayProps, React.HTMLProps<Text> {
   elementType?: TextElementType;
 }
 
@@ -24,11 +24,11 @@ export class Text extends React.Component<ITextProps, {}>{
 
     switch (this.props.elementType) {
       case "p":
-        return <p style={displayStyles} className={classes}>{this.props.children}</p>
+        return <p { ...this.props as any } style={displayStyles} className={classes}>{this.props.children}</p>
       case "span":
-        return <span style={displayStyles} className={classes}>{this.props.children}</span>
+        return <span { ...this.props as any } style={displayStyles} className={classes}>{this.props.children}</span>
       case "label":
-        return <label style={displayStyles} className={classes}>{this.props.children}</label>
+        return <label { ...this.props as any } style={displayStyles} className={classes}>{this.props.children}</label>
     }
   }
 }

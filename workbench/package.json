@@ -5,7 +5,9 @@
   "main": "server.js",
   "scripts": {
     "postinstall": "typings install",
-    "start": "parallelshell -v \"webpack --config config/webpack.config.dev.js --watch\" \"browser-sync start -s 'www' -f 'www' -c config/browsersync.config.js\"",
+    "serve": "browser-sync start --server ./www --files ./www --config ./config/browsersync.config.js",
+    "start": "parallelshell -v \"webpack --config config/webpack.config.dev.js --watch\" \"npm run serve\"",
+    "build-dev": "webpack --config config/webpack.config.dev.js",
     "build": "webpack --config config/webpack.config.prod.js"
   },
   "author": "Rocketmakers",
@@ -31,9 +33,9 @@
   },
   "dependencies": {
     "classnames": "^2.2.3",
-    "react-router": "2.1.1",
-     "react": "15.0.1",
-    "react-dom": "15.0.1",
-    "moment": "^2.13.0"
+    "moment": "^2.13.0",
+    "react": "15.0.1",
+    "react-dom": "^15.0.1",
+    "react-router": "2.1.1"
   }
 }

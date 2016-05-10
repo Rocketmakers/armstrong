@@ -8,6 +8,9 @@ export type CenterContentVertical = "top" | "center" | "bottom";
 export type CenterContentHorizontal = "left" | "center" | "right";
 export type CenterBoth = "both";
 
+export type MarginClass = "m-none" | "m-xxsmall" | "m-xsmall" | "m-small" | "m-medium" | "m-large" | "m-xlarge";
+export type PaddingClass = "p-none" | "p-xxsmall" | "p-xsmall" | "p-small" | "p-medium" | "p-large" | "p-xlarge";
+
 export interface CenterContent {
   vertical?: CenterContentVertical;
   horizontal?: CenterContentHorizontal;
@@ -21,12 +24,12 @@ export interface Spacing {
   right?: Size;
 }
 
-export interface Background{
+export interface Background {
   color?: Color;
   url?: string;
 }
 
-export interface Foreground{
+export interface Foreground {
   color?: Color;
   textAlignment?: string;
 }
@@ -53,18 +56,18 @@ export interface LayoutProps {
 }
 
 export class LayoutHelpers {
-  static GetBackgroundImage(background: Background): React.CSSProperties{
-    if (!background){
+  static GetBackgroundImage(background: Background): React.CSSProperties {
+    if (!background) {
       return null;
     }
-    var style : React.CSSProperties = {};
-    if (background.url){
+    var style: React.CSSProperties = {};
+    if (background.url) {
       style.backgroundImage = `url(${background.url})`;
     }
     return style;
   }
 
-  static HandleLayoutClasses(margins?: Spacing | Size, paddings?: Spacing | Size, contentCentering?: CenterContent | CenterBoth, textAlignment?: CenterContentHorizontal){
+  static HandleLayoutClasses(margins?: Spacing | Size, paddings?: Spacing | Size, contentCentering?: CenterContent | CenterBoth, textAlignment?: CenterContentHorizontal) {
     let ms = this.GetSpacings(margins, SpacingType.Margin);
     let ps = this.GetSpacings(paddings, SpacingType.Padding);
     let al = this.GetAlignment(contentCentering);
@@ -72,20 +75,20 @@ export class LayoutHelpers {
     return [ms, ps, al].filter(cl => cl != null).join(" ");
   }
 
-  static HandleResponsivenessClasses(responsiveness?: Responsiveness){
-    if (responsiveness === "both"){
+  static HandleResponsivenessClasses(responsiveness?: Responsiveness) {
+    if (responsiveness === "both") {
       return "responsive-phone responsive-tablet";
     }
     return `responsive-${responsiveness}`;
   }
 
-  static HandleDisplayClasses(background?: Background, foreground?: Foreground){
+  static HandleDisplayClasses(background?: Background, foreground?: Foreground) {
     let fgc = foreground ? this.GetColorClass(foreground.color, ColorType.Foreground) : null;
     let bgc = background ? this.GetColorClass(background.color, ColorType.Background) : null;
     return [bgc, fgc].filter(cl => cl != null).join(" ");
   }
 
-  static HandleDisplayStyles(background?: Background, foreground?: Foreground): React.CSSProperties{
+  static HandleDisplayStyles(background?: Background, foreground?: Foreground): React.CSSProperties {
     let bg = this.GetBackgroundImage(background);
     return bg;
   }
@@ -96,15 +99,15 @@ export class LayoutHelpers {
   static GetPadding(paddings: Spacing | Size) {
     return this.GetSpacings(paddings, SpacingType.Padding);
   }
-  static GetTextAlignment(textAlignment: CenterContentHorizontal){
+  static GetTextAlignment(textAlignment: CenterContentHorizontal) {
     return `t-al-${textAlignment}`;
   }
 
-  static GetAlignment(centerContent: CenterContent | CenterBoth){
-    if (!centerContent){
+  static GetAlignment(centerContent: CenterContent | CenterBoth) {
+    if (!centerContent) {
       return null
     }
-    if (typeof centerContent === "string"){
+    if (typeof centerContent === "string") {
       return "align-content-center-both";
     }
     var classes = [];
@@ -138,14 +141,14 @@ export class LayoutHelpers {
     }
   }
 
-  static GetColorClass(color: Color, colorType: ColorType): string{
-    if (colorType === ColorType.Foreground){
+  static GetColorClass(color: Color, colorType: ColorType): string {
+    if (colorType === ColorType.Foreground) {
       return `fg-${color}`;
     }
-    else if (colorType === ColorType.Background){
+    else if (colorType === ColorType.Background) {
       return `bg-${color}`;
     }
-    else{
+    else {
       throw new Error("Invalid color type specified");
     }
   }
@@ -154,7 +157,7 @@ export class LayoutHelpers {
     if (!size) {
       return null;
     }
-    if (side === "all"){
+    if (side === "all") {
       return type === SpacingType.Margin ? `m-${size}` : `p-${size}`;
     }
     return type === SpacingType.Margin ? `m-${side}-${size}` : `p-${side}-${size}`;

@@ -1,13 +1,13 @@
 {
   "name": "armstrong-react",
-  "version": "0.2.4",
+  "version": "0.3.4",
   "description": "Rocketmakers Armstrong library of React components",
   "main": "./dist/index.js",
   "style": "./dist/style.scss",
   "typings": "./dist/index.d.ts",
   "scripts": {
     "build": "ntsc -p source -d && node sass_concat.js",
-    "postinstall": "[ \"$NODE_ENV\" != production ] && typings install",
+    "postinstall": "typings install",
     "build-publish": "[ \"$NODE_ENV\" != production ] && npm run build && npm publish"
   },
   "repository": {
@@ -30,11 +30,13 @@
     "import-resolve": "^0.2.6",
     "ntypescript": "^1.201604220008.1",
     "react": "^15.0.1",
+    "react-dom": "^15.0.1",
     "ts-loader": "^0.8.2",
     "typescript": "^1.8.10",
     "typings": "^0.8.1"
   },
   "peerDependencies": {
-    "react": "15.x"
+    "react": "15.x",
+    "react-dom": "15.x"
   }
 }

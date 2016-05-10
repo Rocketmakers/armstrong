@@ -22,7 +22,7 @@ export { IButtonProps, Button } from "./components/interaction/button";
 
 // layout
 export { IContainerProps, Container } from "./components/layout/container";
-export { IGrid, Grid, IRow, Row, ICol, Col, SingleColumnRow } from "./components/layout/grid";
+export { IGrid, Grid, IRow, Row, ICol, Col, SingleColumnRow, FixedCentralColumnRow } from "./components/layout/grid";
 
 // text
 export { HeadingElementType, HeadingStyleType, IHeadingProps, Heading } from "./components/text/heading";
@@ -33,3 +33,6 @@ export { Responsiveness, Color, Size, Side, CenterContentVertical, CenterContent
 
 // icons
 export { Icons } from "./utilities/icons";
+
+// navigation
+export { BurgerMenu } from "./components/navigation/burgerMenu";
