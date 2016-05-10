@@ -36,12 +36,15 @@ export class BurgerMenu extends React.Component<IBurgerMenuProps, {}>{
   openMenu() {
     this.appNode.classList.add("menu-open");
     this.isOpen = true;
+
   }
   componentWillUnmount() {
     this.unmountPortalNode();
   }
 
   componentWillReceiveProps(newProps) {
+
+    console.log('will rp');
     this.renderToPortal(this.renderNav(newProps.children as any[]))
   }
 
@@ -75,14 +78,18 @@ export class BurgerMenu extends React.Component<IBurgerMenuProps, {}>{
   unmountPortalNode() {
     const unmounted = ReactDOM.unmountComponentAtNode(this.portalNode);
     if (unmounted) {
-      document.body.removeChild(this.portalNode);
+      document.getElementById(this.props.bodyId || "app-content").removeChild(this.portalNode);
     }
     delete this.portalNode;
     return unmounted;
   }
 
   renderNav(children: any[]) {
-    return <ul>{children.map((c, index) => <li onClick={() => this.props.closeOnNavigate ? this.closeMenu() : null } key={`nav_item_${index}`}>{c}</li>) }</ul>;
+    return (
+      <ul>{React.Children.map(children, (c, index) => {
+        return <li onClick={() => (c as any).props["data-close"] ? this.closeMenu() : null } key={`nav_item_${index}`}>{c}</li>
+      })}
+      </ul>);
   }
 
   render() {
