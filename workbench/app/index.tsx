@@ -5,6 +5,7 @@ import { Router, Route, Link, hashHistory, IndexRoute } from 'react-router';
 import { Grid, Row, Col, SingleColumnRow } from './../../source/components/layout/grid';
 import { BurgerMenu } from './../../source/components/navigation/burgerMenu';
 import { Heading } from './../../source/components/text/heading'
+import { Image } from './../../source/components/display/image';
 
 // VIEWS
 import { Home } from "./views/home";
@@ -25,7 +26,9 @@ class App extends React.Component<any, {}> {
         <Grid responsive="none" debugMode={true}>
           <Row fixed={100}>
             <Col fixed={true}>
-              <BurgerMenu>
+              <BurgerMenu closeOnNavigate={true}>
+                <div>          <Image height={128} width={128} margin={{ right: "medium" }} rounded={true} source="http://www.famousbirthdays.com/headshots/jaden-smith-1.jpg"/><br/>
+</div>
                 <Link to="/" onlyActiveOnIndex={true} activeClassName="active">Home</Link>
                 <Link to="/test" activeClassName="active">Test</Link>
               </BurgerMenu>

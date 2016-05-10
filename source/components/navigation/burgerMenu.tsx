@@ -6,14 +6,14 @@ import { Icons } from "./../../utilities/icons";
 export interface IBurgerMenuProps {
   buttonIcon?: string;
   bodyId?: string;
-  navClass?: string;
+  closeOnNavigate?: boolean;
 }
 
 export class BurgerMenu extends React.Component<IBurgerMenuProps, {}>{
   static Icomoon = Icons.Icomoon;
   private appNode: HTMLElement;
-  private portalNode : HTMLElement;
-  private menuId : string;
+  private portalNode: HTMLElement;
+  private menuId: string;
   public isOpen: boolean;
 
   constructor() {
@@ -22,12 +22,20 @@ export class BurgerMenu extends React.Component<IBurgerMenuProps, {}>{
   }
   toggleMenu() {
     if (!this.isOpen) {
-      this.appNode.classList.add("menu-open");
+      this.openMenu();
     }
     else {
-      this.appNode.classList.remove("menu-open");
+      this.closeMenu();
     }
-    this.isOpen = !this.isOpen;
+  }
+  closeMenu() {
+    this.appNode.classList.remove("menu-open");
+    this.isOpen = false;
+
+  }
+  openMenu() {
+    this.appNode.classList.add("menu-open");
+    this.isOpen = true;
   }
   componentWillUnmount() {
     this.unmountPortalNode();
@@ -48,9 +56,6 @@ export class BurgerMenu extends React.Component<IBurgerMenuProps, {}>{
     if (node == null) {
       this.portalNode = node = document.createElement('nav');
       this.portalNode.classList.add('burger-menu');
-      if(this.props.navClass){
-        this.portalNode.classList.add(this.props.navClass);
-      }
       node.id = this.menuId;
       this.appNode.insertBefore(node, this.appNode.firstChild);
     }
@@ -77,7 +82,7 @@ export class BurgerMenu extends React.Component<IBurgerMenuProps, {}>{
   }
 
   renderNav(children: any[]) {
-    return <ul>{children.map((c, index) => <li key={`nav_item_${index}`}>{c}</li>) }</ul>;
+    return <ul>{children.map((c, index) => <li onClick={() => this.props.closeOnNavigate ? this.closeMenu() : null } key={`nav_item_${index}`}>{c}</li>) }</ul>;
   }
 
   render() {
