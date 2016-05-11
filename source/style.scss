@@ -1,13 +1,11 @@
 /***********************************************************************************
-  ARMSTRONG SCSS EXPORTS
-  all scss to be consumed must be exported here
+  ARMSTRONG SCSS EXPORTS - CORE
+  all scss to be consumed must be exported here.
+  EVERYTHING IN HERE WILL ONLY BE IMPORTED ONCE AND SHOULD BE EXPORTING "REAL" CSS
 ************************************************************************************/
 
-/*** CORE ***/
-@import "./style/helpers/_normalize";
-@import "./style/armstrong";
-
 /*** HELPERS ***/
+@import "./style/helpers/_normalize";
 @import "./style/helpers/_colors";
 @import "./style/helpers/_helpers";
 @import "./style/helpers/_spacing";
