@@ -25,6 +25,10 @@
     flex-direction: row;
 }
 
+.wrap-row{
+    flex-wrap: wrap;
+}
+
 .align-content-horizontal-center {
     @extend %align;
     justify-content: center;
@@ -134,34 +138,3 @@ $grid_column-count: 12;
     }
 }
 
-@include responsive-behaviour-tablet {
-    .grid-debug.responsive-tablet:after{
-      content:'Tablet' !important;
-    }
-    .grid.responsive-tablet > .row {
-        display: block;
-        flex: none;
-    }
-    .grid.responsive-tablet > .row > .col {
-        margin-bottom: $spacing-small;
-        padding-right: 0;
-        padding-left: 0;
-        flex: none;
-    }
-};
-
-@include responsive-behaviour-phone {
-  .grid-debug.responsive-phone:after{
-      content:'Phone' !important;
-    }
-    .grid.responsive-phone > .row {
-        display: block;
-        flex: none;
-    }
-    .grid.responsive-phone > .row > .col {
-        margin-bottom: $spacing-small;
-        padding-right: 0;
-        padding-left: 0;
-        flex: none;
-    }
-};

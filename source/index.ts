@@ -21,7 +21,6 @@ export { IForm, Form } from "./components/form/form";
 export { IButtonProps, Button } from "./components/interaction/button";
 
 // layout
-export { IContainerProps, Container } from "./components/layout/container";
 export { IGrid, Grid, IRow, Row, ICol, Col, SingleColumnRow, FixedCentralColumnRow } from "./components/layout/grid";
 
 // text
@@ -29,7 +28,7 @@ export { HeadingElementType, HeadingStyleType, IHeadingProps, Heading } from "./
 export { TextElementType, ITextProps, Text } from "./components/text/text";
 
 // ui helpers
-export { Responsiveness, Color, Size, Side, CenterContentVertical, CenterContentHorizontal, CenterBoth, CenterContent, Spacing, Background, Foreground, SpacingType, ColorType, DisplayProps, LayoutProps, LayoutHelpers } from "./utilities/uiHelpers";
+export { Responsiveness, Color, Size, Side, CenterContentVertical, CenterContentHorizontal, CenterBoth, CenterContent, LayoutHelpers } from "./utilities/uiHelpers";
 
 // icons
 export { Icons } from "./utilities/icons";

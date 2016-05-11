@@ -1,12 +1,12 @@
 @each $c-color in $condition-colors{
   $color: nth($c-color, 2);
-  .fg-#{nth($c-color, 1)}{
+  %fg-#{nth($c-color, 1)}{
     color: #{$color};
   }
-  .bg-#{nth($c-color, 1)}{
+  %bg-#{nth($c-color, 1)}{
     background-color: #{$color};
   }
-  .btn.bg-#{nth($c-color, 1)}{
+  %btn.bg-#{nth($c-color, 1)}{
     color: white;
     @include button-shadow($color);
   }

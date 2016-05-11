@@ -32,12 +32,38 @@ export class Home extends React.Component<{}, HomeState> {
         <FixedCentralColumnRow>
           test
         </FixedCentralColumnRow>
+        <Row maxCols={4}>
+          <Col>
+            <Image height={128} width={128}/>
+          </Col>
+          <Col>
+            <Image height={128} width={128}/>
+          </Col>
+          <Col>
+            <Image height={128} width={128}/>
+          </Col>
+          <Col>
+            <Image height={128} width={128}/>
+          </Col>
+          <Col>
+            <Image height={128} width={128}/>
+          </Col>
+          <Col>
+            <Image height={128} width={128}/>
+          </Col>
+          <Col>
+            <Image height={128} width={128}/>
+          </Col>
+          <Col>
+            <Image height={128} width={128}/>
+          </Col>
+        </Row>
         <SingleColumnRow padding="medium">
           <Heading elementType="h1" styleType="heading1">Button</Heading>
           <Text margin={{ top: "none", bottom: "small" }}>Pretty self explanatory</Text>
           <Button text="Click me!"/>
-          <Button text="Click me also!" condition="positive"/>
-          <Button text="Click me also!" condition="negative" rounded={true}/>
+          <Button text="Click me also!" className="bg-positive"/>
+          <Button text="Click me also!" className="bg-negative" rounded={true}/>
           <br/>
           <br/>
           <Heading elementType="h1" styleType="heading1">Text</Heading>
@@ -62,7 +88,7 @@ export class Home extends React.Component<{}, HomeState> {
           <br/>
           <Heading elementType="h1" styleType="heading1">Dialog</Heading>
           <Text margin={{ top: "none", bottom: "small" }}>Is a dialog</Text>
-          <Button text="Click me also!" condition="positive" onClick={() => this.setState({ dialogOpen: true }) }/>
+          <Button text="Click me also!" className="bg-brand-primary" onClick={() => this.setState({ dialogOpen: true }) }/>
         </SingleColumnRow>
 
       </Grid>
