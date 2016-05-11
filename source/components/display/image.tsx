@@ -1,9 +1,9 @@
 import * as React from "react";
 import { classNames, cd } from "./../../utilities/classBuilder";
-import { Color, LayoutHelpers, LayoutProps } from "./../../utilities/uiHelpers";
+import { Color, LayoutHelpers } from "./../../utilities/uiHelpers";
 import { Icons } from "./../../utilities/icons";
 
-export interface IImageProps extends LayoutProps, React.HTMLProps<Image> {
+export interface IImageProps extends React.HTMLProps<Image> {
   rounded?: boolean;
   className?: string;
   source?: string;
@@ -32,7 +32,6 @@ export class Image extends React.Component<IImageProps, { profileUrl: string }>{
     xmlHttp.send(null);
   }
   render() {
-    var layoutClasses = LayoutHelpers.HandleLayoutClasses(this.props.margin, this.props.padding);
     var source = this.props.source || `http://dummyimage.com/${this.props.height}x${this.props.width}/4f5c69/ffffff.png`;
     if (!this.props.source && this.props.sampleUser && !this.state.profileUrl) {
       this.getRandomUser();
@@ -41,7 +40,7 @@ export class Image extends React.Component<IImageProps, { profileUrl: string }>{
       source = this.state.profileUrl;
     }
     return (
-      <img src={source} { ...this.props as any } height={this.props.height} width={this.props.width} className={classNames(this.props.className, layoutClasses, cd("rounded", this.props.rounded)) }/>
+      <img src={source} { ...this.props as any } height={this.props.height} width={this.props.width} className={classNames(this.props.className, cd("rounded", this.props.rounded)) }/>
     );
   }
 }

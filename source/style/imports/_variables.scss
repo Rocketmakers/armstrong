@@ -37,7 +37,6 @@ $spacing-sizes: (
 );
 
 //// COLORS
-$black: #000000 !default;
 $white: #ffffff !default;
 
 $site-background: $white !default;
@@ -50,21 +49,27 @@ $gray-base: #4f5c69 !default;
 $gray-very-dark: darken($gray-base, 40%) !default;
 $gray-dark: darken($gray-base, 20%) !default;
 $gray-medium: $gray-base !default;
-$gray-light: lighten($gray-base, 20%) !default;
-$gray-very-light: lighten($gray-base, 40%) !default;
+$gray-light: lighten($gray-base, 10%) !default;
+$gray-very-light: lighten($gray-base, 15%) !default;
 
 $condition-color-positive: #00a388 !default;
 $condition-color-warning: #f78e52 !default;
 $condition-color-negative: #df5a49 !default;
 $condition-color-info: #3498d8 !default;
-$condition-color-brand: $brand-primary !default;
 
 $condition-colors: (
   positive $condition-color-positive,
   warning $condition-color-warning,
   negative $condition-color-negative,
   info $condition-color-info,
-  brand $condition-color-brand
+  brand-primary $brand-primary,
+  brand-secondary $brand-secondary,
+  gray-very-dark $gray-very-dark,
+  gray-dark $gray-dark,
+  gray-medium $gray-medium,
+  gray-light $gray-light,
+  gray-very-light $gray-very-light,
+  white $white,
 );
 
 //// CORNERS

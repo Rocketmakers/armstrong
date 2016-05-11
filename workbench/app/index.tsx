@@ -31,7 +31,7 @@ class App extends React.Component<any, {nav: boolean}> {
     return (
       <main>
         <Grid responsive="none" debugMode={true}>
-          <Row fixed={100}>
+          <Row fixed={75}>
             <Col fixed={true}>
             {this.state.nav &&
               <BurgerMenu closeOnNavigate={true}>

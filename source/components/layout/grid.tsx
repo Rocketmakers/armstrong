@@ -1,14 +1,12 @@
 import * as React from "react";
 import * as _ from "underscore";
 import { classNames, cd } from "./../../utilities/classBuilder";
-import { Spacing, LayoutProps, LayoutHelpers, DisplayProps, CenterContent, CenterBoth, Responsiveness, MarginClass, PaddingClass } from "./../../utilities/uiHelpers";
+import { LayoutHelpers, CenterContent, CenterBoth, Responsiveness, MarginClass, PaddingClass, BgColorClass, FgColorClass } from "./../../utilities/uiHelpers";
 
-
-
-export interface IGrid extends React.Props<Grid>, LayoutProps, DisplayProps, React.HTMLProps<Grid> {
+export interface IGrid extends React.Props<Grid>, React.HTMLProps<Grid> {
   debugMode?: boolean;
   responsive?: Responsiveness;
-  className?: string | MarginClass | PaddingClass;
+  className?: string | MarginClass | PaddingClass | BgColorClass | FgColorClass;
   armstrongClassName?: MarginClass;
   table?: boolean;
 }
@@ -18,10 +16,6 @@ export class Grid extends React.Component<IGrid, any> {
     responsive: "both"
   }
   render() {
-    var responsiveClasses = LayoutHelpers.HandleResponsivenessClasses(this.props.responsive);
-    //var layoutClasses = LayoutHelpers.HandleLayoutClasses(this.props.margin, this.props.padding);
-    //var displayClasses = LayoutHelpers.HandleDisplayClasses(this.props.background, this.props.foreground);
-    //var displayStyles = LayoutHelpers.HandleDisplayStyles(this.props.background, this.props.foreground);
 
     var originalClassName = this.props.className;
     var attrs = _.omit(this.props, "className");
@@ -29,10 +23,9 @@ export class Grid extends React.Component<IGrid, any> {
       originalClassName,
       "grid",
       "fill-container",
-      responsiveClasses,
       cd("grid-debug", this.props.debugMode),
       cd("table-grid", this.props.table)
-      );
+    );
 
     return (<div {...attrs} { ...this.props as any } className={classes} />);
   }
@@ -40,87 +33,86 @@ export class Grid extends React.Component<IGrid, any> {
 
 export interface IColRow extends IRow {
   centerContent?: CenterContent | CenterBoth;
+  className?: string | MarginClass | PaddingClass | BgColorClass | FgColorClass;
 }
 
-export interface IRow extends React.HTMLProps<Row>, LayoutProps, DisplayProps {
+export interface IRow extends React.HTMLProps<Row> {
   fixed?: boolean | number;
+  className?: string | MarginClass | PaddingClass | BgColorClass | FgColorClass;
+  maxCols?: number;
 }
 
 export class Row extends React.Component<IRow, any> {
   render() {
-    var layoutClasses = LayoutHelpers.HandleLayoutClasses(this.props.margin, this.props.padding);
-    var displayClasses = LayoutHelpers.HandleDisplayClasses(this.props.background, this.props.foreground);
-    var displayStyles = LayoutHelpers.HandleDisplayStyles(this.props.background, this.props.foreground);
 
     var attrs = _.omit(this.props, "className", "fixed");
-    var classes = classNames(this.props.className, "row", cd("no-flex", !!this.props.fixed), displayClasses, layoutClasses);
+    var classes = classNames(this.props.className, "row", cd("no-flex", !!this.props.fixed), cd("wrap-row", !!this.props.maxCols));
+    var styles;
 
     if (typeof this.props.fixed === "number") {
-      displayStyles = _.extend({ maxHeight: `${this.props.fixed}px`, height: "100%" }, displayStyles);
+      styles = { height: `${this.props.fixed}px` };
     }
 
-    return <div {...attrs} { ...this.props as any } className={classes} style={displayStyles}/>
+    var maxColStyle : React.CSSProperties;
+    if (this.props.maxCols){
+      maxColStyle = { flexBasis: `${100/this.props.maxCols}%` };
+    }
+
+    return <div {...attrs} { ...this.props as any } className={classes} style={styles}>
+      {
+        React.Children.map(this.props.children, c => {
+          return React.cloneElement((c as React.ReactElement<any>), { style: maxColStyle })
+        })
+      }
+    </div>
   }
 }
 
-
-
-export interface ICol extends React.HTMLProps<Col>, LayoutProps, DisplayProps {
+export interface ICol extends React.HTMLProps<Col> {
   centerContent?: CenterContent | CenterBoth;
   spans?: number;
   fixed?: boolean | number;
+  className?: string | MarginClass | PaddingClass | BgColorClass | FgColorClass;
 }
 
-/**
-Represents a Column of a Row in the Grid Layout system
-*/
 export class Col extends React.Component<ICol, {}> {
   render() {
-    var layoutClasses = LayoutHelpers.HandleLayoutClasses(this.props.margin, this.props.padding);
-    var displayClasses = LayoutHelpers.HandleDisplayClasses(this.props.background, this.props.foreground);
-    var displayStyles = LayoutHelpers.HandleDisplayStyles(this.props.background, this.props.foreground);
     var centerClasses = LayoutHelpers.GetAlignment(this.props.centerContent);
-
-    var classes = classNames("col", this.props.className, cd("no-flex", this.props.fixed !== undefined), cd(`col${this.props.spans}`, this.props.spans !== undefined), displayClasses, layoutClasses, centerClasses)
+    var classes = classNames("col", this.props.className, cd("no-flex", this.props.fixed !== undefined), cd(`col${this.props.spans}`, this.props.spans !== undefined), centerClasses)
 
     var attrs = _.omit(this.props, "fixed", "spans");
+    var styles = this.props.style;
 
     if (typeof this.props.fixed === "number") {
-      displayStyles = _.extend({ maxWidth: `${this.props.fixed}px`, width: "100%" }, displayStyles);
+      styles = _.extend({ maxWidth: `${this.props.fixed}px`, width: "100%" }, styles);
     }
 
-    return <div {...attrs} { ...this.props as any } className={classes} style={displayStyles} />
+    return <div {...attrs} { ...this.props as any } className={classes} style={styles} />
   }
 }
 
 export class SingleColumnRow extends React.Component<IColRow, any> {
   render() {
-    var layoutClasses = LayoutHelpers.HandleLayoutClasses(this.props.margin, this.props.padding);
-    var displayClasses = LayoutHelpers.HandleDisplayClasses(this.props.background, this.props.foreground);
-    var displayStyles = LayoutHelpers.HandleDisplayStyles(this.props.background, this.props.foreground);
     var centerClasses = LayoutHelpers.GetAlignment(this.props.centerContent);
 
-    var classes = classNames("row", cd("no-flex", this.props.fixed !== undefined), this.props.className, displayClasses, layoutClasses);
+    var classes = classNames("row", cd("no-flex", this.props.fixed !== undefined), this.props.className);
 
     return (
-      <div {...this.props as any} className={classes} style={displayStyles}>
-        <div className={classNames('col', centerClasses)}>{this.props.children}</div>
+      <div {...this.props as any} className={classes}>
+        <div className={classNames('col', centerClasses) }>{this.props.children}</div>
       </div>)
   }
 }
 
 export class FixedCentralColumnRow extends React.Component<IColRow, any> {
   render() {
-    var layoutClasses = LayoutHelpers.HandleLayoutClasses(this.props.margin, this.props.padding);
-    var displayClasses = LayoutHelpers.HandleDisplayClasses(this.props.background, this.props.foreground);
-    var displayStyles = LayoutHelpers.HandleDisplayStyles(this.props.background, this.props.foreground);
     var centerClasses = LayoutHelpers.GetAlignment(this.props.centerContent);
 
-    var classes = classNames("row", "fixed-central-col-row", cd("no-flex", this.props.fixed !== undefined), this.props.className, displayClasses, layoutClasses);
+    var classes = classNames("row", "fixed-central-col-row", cd("no-flex", this.props.fixed !== undefined), this.props.className);
 
     return (
-      <div {...this.props as any} className={classes} style={displayStyles}>
-        <div className={classNames('col', 'fixed-central-col', centerClasses)}>{this.props.children}</div>
+      <div {...this.props as any} className={classes}>
+        <div className={classNames('col', 'fixed-central-col', centerClasses) }>{this.props.children}</div>
       </div>)
   }
 }
