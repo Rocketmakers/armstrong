@@ -8,7 +8,9 @@
   "scripts": {
     "build": "ntsc -p source -d && node sass_concat.js",
     "init": "typings install && npm run build",
-    "prepublish": "npm run build && npm version patch -m \"Upgrade to %s\""
+    "prepublish": "npm run build",
+    "patch": "npm version patch -m \"Upgrade to %s\"",
+    "patch-publish": "npm run patch && npm run publish"
   },
   "repository": {
     "type": "git",
