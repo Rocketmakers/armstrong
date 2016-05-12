@@ -61,7 +61,7 @@ export class Row extends React.Component<IRow, any> {
     return <div {...attrs} { ...this.props as any } className={classes} style={styles}>
       {
         React.Children.map(this.props.children, c => {
-          return React.cloneElement((c as React.ReactElement<any>), { style: maxColStyle })
+          return c ? React.cloneElement((c as React.ReactElement<any>), { style: maxColStyle }) : null
         })
       }
     </div>
