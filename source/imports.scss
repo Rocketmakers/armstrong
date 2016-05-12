@@ -6,7 +6,7 @@
 
 @import "./style/imports/_variables";
 @import "./style/imports/_mixins";
-
-@import './style/imports/_ui-typography';
 @import './style/imports/_ui-spacing';
 @import './style/imports/_ui-colors';
+
+@import './components/layout/_gridImports';
