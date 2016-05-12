@@ -1,6 +1,6 @@
 {
   "name": "armstrong-react",
-  "version": "0.4.0",
+  "version": "0.4.5",
   "description": "Rocketmakers Armstrong library of React components",
   "main": "./dist/index.js",
   "style": "./dist/style.scss",
@@ -8,7 +8,9 @@
   "scripts": {
     "build": "ntsc -p source -d && node sass_concat.js",
     "init": "typings install && npm run build",
-    "prepublish": "npm run build && npm version patch -m \"Upgrade to %s\""
+    "prepublish": "npm run build",
+    "patch": "npm version patch -m \"Upgrade to %s\"",
+    "patch-publish": "npm run patch && npm publish"
   },
   "repository": {
     "type": "git",
