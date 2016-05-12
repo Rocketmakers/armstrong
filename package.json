@@ -9,7 +9,7 @@
     "build": "ntsc -p source -d && node sass_concat.js",
     "init": "typings install && npm run build",
     "prepublish": "npm run build",
-    "patch": "npm version patch -m \"Upgrade to %s\"",
+    "patch": "npm --no-git-tag-version version patch -m \"Upgrade to %s\"",
     "patch-publish": "npm run patch && npm publish"
   },
   "repository": {

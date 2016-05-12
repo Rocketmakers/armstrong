@@ -1,6 +1,10 @@
 {
   "name": "armstrong-react",
+<<<<<<< HEAD
   "version": "0.4.5",
+=======
+  "version": "0.4.6",
+>>>>>>> develop
   "dependencies": {
     "abbrev": {
       "version": "1.0.7",
