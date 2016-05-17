@@ -1,20 +1,17 @@
 import * as React from "react";
 import * as _ from "underscore";
 import { classNames, cd } from "./../../utilities/classBuilder";
-import { LayoutHelpers, CenterContent, CenterBoth, Responsiveness, MarginClass, PaddingClass, BgColorClass, FgColorClass } from "./../../utilities/uiHelpers";
+import { LayoutHelpers, CenterContent, CenterBoth, MarginClass, PaddingClass, BgColorClass, FgColorClass } from "./../../utilities/uiHelpers";
 
 export interface IGrid extends React.Props<Grid>, React.HTMLProps<Grid> {
   debugMode?: boolean;
-  responsive?: Responsiveness;
   className?: string | MarginClass | PaddingClass | BgColorClass | FgColorClass;
   armstrongClassName?: MarginClass;
   table?: boolean;
+  fillContainer?: boolean;
 }
 
 export class Grid extends React.Component<IGrid, any> {
-  static defaultProps = {
-    responsive: "both"
-  }
   render() {
 
     var originalClassName = this.props.className;
@@ -22,7 +19,7 @@ export class Grid extends React.Component<IGrid, any> {
     var classes = classNames(
       originalClassName,
       "grid",
-      "fill-container",
+      cd("fill-container", this.props.fillContainer),
       cd("grid-debug", this.props.debugMode),
       cd("table-grid", this.props.table)
     );
