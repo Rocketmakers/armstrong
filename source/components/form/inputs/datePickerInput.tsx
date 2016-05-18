@@ -12,6 +12,8 @@ export interface IDatePickerInputProps extends React.Props<DatePickerInput> {
   minDate?: moment.Moment;
   maxDate?: moment.Moment;
   onDateChanged?: (date: moment.Moment) => void;
+  alwaysShowCalendar?: boolean;
+  fullScreenOnMobile?: boolean;
 }
 
 export interface IDatePickerInputState {
@@ -141,17 +143,19 @@ export class DatePickerInput extends React.Component<IDatePickerInputProps, IDat
   componentDidMount() {
     this.inputElement = document.getElementById(this.inputElementId);
     this.bodyElement = document.getElementById(this.bodyElementId);
-    this.checkMobile(window.innerWidth)
+    if (this.props.fullScreenOnMobile) {
+      this.checkMobile(window.innerWidth);
+    }
     window.addEventListener('mousedown', this);
 
   }
-  checkMobile(width: number){
-    if (width < 500 && !this.state.isMobile){
-        this.setState({ isMobile: true });
-      }
-      if (width > 500 && this.state.isMobile){
-        this.setState({ isMobile: false });
-      }
+  checkMobile(width: number) {
+    if (width < 500 && !this.state.isMobile) {
+      this.setState({ isMobile: true });
+    }
+    if (width > 500 && this.state.isMobile) {
+      this.setState({ isMobile: false });
+    }
   }
   handleEvent(e) {
     if (this.mouseDownOnCalendar) {
@@ -165,13 +169,13 @@ export class DatePickerInput extends React.Component<IDatePickerInputProps, IDat
     })
   }
   shouldShowOnTop() {
-    if (window.innerWidth < 480) {
+    if (this.props.fullScreenOnMobile && window.innerWidth < 480) {
       return;
     }
-    var height = this.bodyElement.clientHeight + 25;
+    var height = this.bodyElement.clientHeight + 50;
     var visibleBottom = (window.innerHeight + window.scrollY);
     var inputRect = this.inputElement.getBoundingClientRect();
-    var remainingSpace = visibleBottom - inputRect.bottom;
+    var remainingSpace = Math.abs(visibleBottom - inputRect.bottom);
 
     if (remainingSpace < height) {
       this.setState({ showOnTop: true })
@@ -183,22 +187,26 @@ export class DatePickerInput extends React.Component<IDatePickerInputProps, IDat
     var weekdays = _.range(0, 7).map(n => <div className="date-picker-week-day" key={`day_name_${n}`}>{moment().startOf('week').add(n, 'days').format('dd') }</div>)
     var days = this.getDaysInMonth();
     var currentDisplayDate = this.state.displayedDate.format("MMMM - YYYY");
-    var classes = classNames("date-picker-body", cd("date-picker-body-visible", this.state.pickerBodyVisible), cd("date-picker-top", this.state.showOnTop));
+    var classes = classNames("date-picker-body",
+      cd("date-picker-body-visible", this.state.pickerBodyVisible && !this.props.alwaysShowCalendar),
+      cd("date-picker-top", this.state.showOnTop),
+      cd("always-show-calendar", this.props.alwaysShowCalendar),
+      cd("responsive", this.state.isMobile && this.props.fullScreenOnMobile));
     var rootClasses = classNames("date-picker", this.props.className);
     return (
       <div className={rootClasses}
         onMouseDown={() => this.mouseDownOnCalendar = true}
         onMouseUp={() => this.mouseDownOnCalendar = false}>
-        {!this.state.isMobile &&
-        <input id={this.inputElementId}
-          type="text"
-          defaultValue={this.state.selectedDate.format(this.props.format) }
-          onBlur={e => this.checkDate((e.target as any).value) }
-          onFocus={e => this.onInputFocus() }
-          />
+        {!this.state.isMobile && !this.props.alwaysShowCalendar &&
+          <input id={this.inputElementId}
+            type="text"
+            defaultValue={this.state.selectedDate.format(this.props.format) }
+            onBlur={e => this.checkDate((e.target as any).value) }
+            onFocus={e => this.onInputFocus() }
+            />
         }
-        {this.state.isMobile &&
-          <div className="fake-input" onClick={()=> this.onInputFocus()}>{this.state.selectedDate.format(this.props.format)}</div>
+        {this.state.isMobile && !this.props.alwaysShowCalendar &&
+          <div className="fake-input" onClick={() => this.onInputFocus() }>{this.state.selectedDate.format(this.props.format) }</div>
         }
         <div id={this.bodyElementId} className={classes}>
           <div className="date-picker-body-wrapper">

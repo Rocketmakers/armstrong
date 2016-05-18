@@ -6,6 +6,7 @@ $width: 350px;
   overflow: visible;
   position: relative;
   display: inline-block;
+  min-width: 325px;
   input, .fake-input{
     min-width: $width;
     box-sizing: border-box;
@@ -27,14 +28,18 @@ $width: 350px;
     }
   }
   .date-picker-week-day{
-    background-color: white !important;
+    background-color: white;
     cursor: default;
   }
 
   .date-picker-body{
     box-sizing: border-box;
-    display: none;
+      display: none;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    &.always-show-calendar{
+      display: block;
+    }
+    
     position: absolute;
     width: 100%;
     background-color: white;
@@ -62,7 +67,7 @@ $width: 350px;
       cursor: pointer;
       text-align: center;
       padding: 5px;
-      flex-basis: percentage(1 / 7) !important;
+      flex-basis: percentage(1 / 7);
       &:hover{
          background-color: rgba(0,0,0,0.1);
       }
@@ -80,9 +85,15 @@ $width: 350px;
   }
 }
 
+.date-picker{
+  .date-picker-body.always-show-calendar{    
+    box-shadow: none;
+  }
+}
+
 @include responsive-behaviour-phone {
-  .date-picker-body{
-    background-color: rgba(0,0,0,0.3) !important;
+  .date-picker-body.responsive{
+    background-color: rgba(0,0,0,0.3);
     height: 100vh;
     width: 100vw;
     position: fixed !important;
@@ -99,9 +110,8 @@ $width: 350px;
       left: 10px;
       transform: translateY(-55%);
       .date-picker-days{
-        height: calc(100% - #{$header-height});
         >div{
-          line-height: 35px;
+          line-height: 30px;
         }
       }
     }

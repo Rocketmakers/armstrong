@@ -73,22 +73,22 @@ export class Home extends React.Component<{}, HomeState> {
           </Text>
           <br/>
           <br/>
+          <Heading elementType="h1" styleType="heading1">Datepicker</Heading>
+          <Text margin={{ top: "none", bottom: "small" }}>Picks dates</Text>
+          <DatePickerInput alwaysShowCalendar={false}/>
+          <br/>
+          <br/>
+          <Heading elementType="h1" styleType="heading1">Dialog</Heading>
+          <Text margin={{ top: "none", bottom: "small" }}>Is a dialog</Text>
+          <Button text="Click me also!" className="bg-brand-primary" onClick={() => this.setState({ dialogOpen: true }) }/>
+          <br/>
+          <br/>
           <Heading elementType="h1" styleType="heading1">Image</Heading>
           <Text margin={{ top: "none", bottom: "small" }}>Again pretty self explanatory</Text>
           <Image height={128} width={128} margin={{ right: "medium" }}/>
           <Image height={128} width={128} margin={{ right: "medium" }} rounded={true}/>
           <Image height={128} width={128} margin={{ right: "medium" }} rounded={true} sampleUser={true}/>
           <Image height={128} width={128} margin={{ right: "medium" }} rounded={true} source="http://www.famousbirthdays.com/headshots/jaden-smith-1.jpg"/><br/>
-          <br/>
-          <br/>
-          <Heading elementType="h1" styleType="heading1">Datepicker</Heading>
-          <Text margin={{ top: "none", bottom: "small" }}>Picks dates</Text>
-          <DatePickerInput/>
-          <br/>
-          <br/>
-          <Heading elementType="h1" styleType="heading1">Dialog</Heading>
-          <Text margin={{ top: "none", bottom: "small" }}>Is a dialog</Text>
-          <Button text="Click me also!" className="bg-brand-primary" onClick={() => this.setState({ dialogOpen: true }) }/>
         </SingleColumnRow>
 
       </Grid>
