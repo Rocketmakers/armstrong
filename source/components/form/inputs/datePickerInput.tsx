@@ -51,7 +51,9 @@ export class DatePickerInput extends React.Component<IDatePickerInputProps, IDat
       return;
     }
     var newDate = date.clone();
-    this.inputElement.value = newDate.format(this.props.format);
+    if (this.inputElement) {
+      this.inputElement.value = newDate.format(this.props.format);
+    }
     this.setState({ selectedDate: newDate, displayedDate: newDate.clone(), pickerBodyVisible: false });
     if (this.props.onDateChanged) {
       this.props.onDateChanged(newDate.clone());
@@ -115,13 +117,17 @@ export class DatePickerInput extends React.Component<IDatePickerInputProps, IDat
     var m = moment(dateString, this.props.format, false);
     if (m.isValid() && this.fallsWithinRange(m)) {
       var formattedDate = m.format(this.props.format);
-      this.inputElement.value = formattedDate;
+      if (this.inputElement) {
+        this.inputElement.value = formattedDate;
+      }
       this.setState({ selectedDate: m.clone(), displayedDate: m.clone() });
       if (this.props.onDateChanged) {
         this.props.onDateChanged(m.clone());
       }
     } else {
-      this.inputElement.value = this.state.selectedDate.format(this.props.format);
+      if (this.inputElement) {
+        this.inputElement.value = this.state.selectedDate.format(this.props.format);
+      }
     }
   }
   componentWillMount() {
@@ -170,6 +176,9 @@ export class DatePickerInput extends React.Component<IDatePickerInputProps, IDat
   }
   shouldShowOnTop() {
     if (this.props.fullScreenOnMobile && window.innerWidth < 480) {
+      return;
+    }
+    if(!this.inputElement){
       return;
     }
     var height = this.bodyElement.clientHeight + 50;
