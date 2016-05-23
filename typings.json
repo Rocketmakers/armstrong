@@ -3,7 +3,7 @@
   "version": false,
   "dependencies": {},
   "main": "dist/index.d.ts",
-  "ambientDependencies": {
+  "globalDependencies": {
     "classnames": "registry:dt/classnames#0.0.0+20160316155526",
     "moment": "registry:dt/moment#2.8.0+20160316155526",
     "moment-node": "registry:dt/moment-node#2.11.1+20160417135035",
