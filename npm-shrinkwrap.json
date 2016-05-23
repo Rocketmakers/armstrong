@@ -1,16 +1,6 @@
 {
   "name": "armstrong-react",
-<<<<<<< 148b99db1f61dd1872044bc0c38a0a0400c766e7
   "version": "0.4.10",
-||||||| merged common ancestors
-<<<<<<< HEAD
-  "version": "0.4.5",
-=======
-  "version": "0.4.6",
->>>>>>> develop
-=======
-  "version": "0.4.6",
->>>>>>> fixed datepicker
   "dependencies": {
     "abbrev": {
       "version": "1.0.7",
