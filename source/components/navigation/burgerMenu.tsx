@@ -83,10 +83,10 @@ export class BurgerMenu extends React.Component<IBurgerMenuProps, {}>{
     return unmounted;
   }
   closeNav(e, handler) {
-    // THIS NEEDS FIXING
-    //if (this.props.closeOnNavigate && e.target.nodeName === "A") {
+    // There is a probably a nicer way to do this, but CBA right now
+    if (this.props.closeOnNavigate) {
       handler()
-    //}
+    }
   }
 
   renderNav(children: any[]) {
@@ -99,7 +99,7 @@ export class BurgerMenu extends React.Component<IBurgerMenuProps, {}>{
 
   render() {
     return (
-      <button className={`burger-menu-button${this.props.burgerButtonHidden ? " hidden" : "" }`} onClick={() => this.toggleMenu() }>
+      <button className={`burger-menu-button${this.props.burgerButtonHidden ? " hidden" : ""}`} onClick={() => this.toggleMenu() }>
         { this.props.buttonIcon && <Icon icon={this.props.buttonIcon}/> }
       </button>
     )
@@ -112,13 +112,18 @@ export interface IBurgerMenuItemProps extends React.Props<BurgerMenuItem> {
   icon?: string;
   onClick?: () => void;
   style?: any;
+  delayActionMs?: number;
 }
 
 export class BurgerMenuItem extends React.Component<IBurgerMenuItemProps, {}> {
   handleClick(handler) {
-    window.setTimeout(() => {
+    if (this.props.delayActionMs) {
+      window.setTimeout(() => {
+        handler()
+      }, 150)
+    } else {
       handler()
-    }, 150)
+    }
   }
   render() {
     return <div style={this.props.style} onClick={() => this.props.onClick ? this.handleClick(this.props.onClick) : null }>
