@@ -34,4 +34,4 @@ export { Responsiveness, Color, Size, Side, CenterContentVertical, CenterContent
 export { Icons } from "./utilities/icons";
 
 // navigation
-export { BurgerMenu } from "./components/navigation/burgerMenu";
+export { BurgerMenu, IBurgerMenuProps, BurgerMenuItem, IBurgerMenuItemProps } from "./components/navigation/burgerMenu";

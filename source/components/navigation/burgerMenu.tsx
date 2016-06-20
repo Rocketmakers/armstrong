@@ -7,6 +7,7 @@ export interface IBurgerMenuProps {
   buttonIcon?: string;
   bodyId?: string;
   closeOnNavigate?: boolean;
+  burgerButtonHidden?: boolean;
 }
 
 export class BurgerMenu extends React.Component<IBurgerMenuProps, {}>{
@@ -43,8 +44,6 @@ export class BurgerMenu extends React.Component<IBurgerMenuProps, {}>{
   }
 
   componentWillReceiveProps(newProps) {
-
-    console.log('will rp');
     this.renderToPortal(this.renderNav(newProps.children as any[]))
   }
 
@@ -83,20 +82,46 @@ export class BurgerMenu extends React.Component<IBurgerMenuProps, {}>{
     delete this.portalNode;
     return unmounted;
   }
+  closeNav(e, handler) {
+    if (this.props.closeOnNavigate && e.target.nodeName === "A") {
+      handler()
+    }
+  }
 
   renderNav(children: any[]) {
     return (
       <ul>{React.Children.map(children, (c, index) => {
-        return <li onClick={() => (c as any).props["data-close"] ? this.closeMenu() : null } key={`nav_item_${index}`}>{c}</li>
-      })}
+        return <li onClick={(e) => this.closeNav(e, () => this.closeMenu()) } key={`nav_item_${index}`}>{c}</li>
+      }) }
       </ul>);
   }
 
   render() {
     return (
-      <button className="burger-menu-button" onClick={() => this.toggleMenu() }>
+      <button className={`burger-menu-button${this.props.burgerButtonHidden ? " hidden" : "" }`} onClick={() => this.toggleMenu() }>
         { this.props.buttonIcon && <Icon icon={this.props.buttonIcon}/> }
       </button>
     )
+  }
+}
+
+
+export interface IBurgerMenuItemProps extends React.Props<BurgerMenuItem> {
+  title: string;
+  icon?: string;
+  onClick?: () => void;
+  style?: any;
+}
+
+export class BurgerMenuItem extends React.Component<IBurgerMenuItemProps, {}> {
+  handleClick(handler) {
+    window.setTimeout(() => {
+      handler()
+    }, 150)
+  }
+  render() {
+    return <div style={this.props.style} onClick={() => this.props.onClick ? this.handleClick(this.props.onClick) : null }>
+      {this.props.icon && <Icon icon={this.props.icon}/>}{this.props.title}
+    </div>
   }
 }

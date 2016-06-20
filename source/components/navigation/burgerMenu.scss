@@ -8,7 +8,6 @@ nav.burger-menu, main{
     transition-timing-function: ease-out;
 }
 main{
-    background-color: white;
     z-index: 1;
     position: relative;
 }
@@ -22,21 +21,20 @@ main{
     }
 }
 
-
 nav.burger-menu {
     position: fixed;
     top: 0;
     bottom: 0;
     left: 0;
     transform: translate3d(-250px,0,0);
-    background: $gray-dark;
     width: 250px;
-    z-index: 0;
+    z-index: 255;
+    background-color: $gray-medium;
     ul{
         list-style: none;
         padding: 0;
         margin: 0;
-        li a {
+        li div {
             list-style: none;
             display: block;
             padding: 20px;
@@ -65,4 +63,8 @@ nav.burger-menu {
     text-align: center;
     background: rgba(0,0,0,0.1);
     cursor: pointer;
+}
+
+.hidden{
+    display: none;
 }

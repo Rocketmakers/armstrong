@@ -18,7 +18,14 @@ export class Button extends React.Component<IButtonProps, {}>{
 
   render() {
     return (
-      <button onClick={this.props.onClick} { ...this.props as any } className={classNames("btn", cd("rounded", this.props.rounded), this.props.className)}>
+      <button onClick={this.props.onClick} { ...this.props as any }
+      className={
+        classNames("btn",
+        cd("rounded", this.props.rounded),
+        cd("icon-button-left", this.props.leftIcon !== undefined),
+        cd("icon-button-right", this.props.rightIcon !== undefined),
+        this.props.className)
+      }>
       {this.props.leftIcon && <Icon className="left-icon" icon={this.props.leftIcon}/>}
       {this.props.text}
       {this.props.rightIcon && <Icon className="right-icon" icon={this.props.rightIcon}/>}

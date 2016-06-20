@@ -1,5 +1,11 @@
 .btn {
     padding: $spacing-small $spacing-medium;
+    &.icon-button-left{
+      padding-left: ($spacing-small * 2) * 0.75;
+    }
+    &.icon-button-right{
+      padding-right: ($spacing-small * 2) * 0.75;
+    }
     transition: all 0.1s;
     border: none;
     border-radius: 4px;
@@ -20,8 +26,4 @@
     &.rounded{
       border-radius: 30px;
     }
-    +.btn{
-      margin-left: $spacing-xsmall;
-    }
-
 }

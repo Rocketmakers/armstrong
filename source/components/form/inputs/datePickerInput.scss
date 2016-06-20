@@ -1,99 +1,140 @@
 $header-height: 40px;
-$width: 350px;
 
-.date-picker{
+.date-picker {
   box-sizing: border-box;
   overflow: visible;
   position: relative;
   display: inline-block;
-  min-width: 325px;
-  input, .fake-input{
-    min-width: $width;
+  width: 100%;
+
+  &.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+
+    input {
+      pointer-events: none;
+      background-color: rgba(255, 255, 255, 0.4);
+
+      &:focus {
+        border: 1px solid rgba(255, 255, 255, 0.3) !important;
+      }
+    }
+  }
+
+  &.has-icon {
+    input {
+      padding-left: 33px;
+    }
+
+    i {
+      position: absolute;
+      z-index: 2;
+      transform: translateY(-50%);
+      top: 50%;
+      left: 10px;
+    }
+  }
+
+  input {
     box-sizing: border-box;
   }
-  .date-picker-header{
+
+  .date-picker-header {
     background-color: $gray-base;
     height: $header-height;
     line-height: $header-height;
     color: white;
-    .row{
-      .col{
+
+    .row {
+      .col {
         text-align: center;
       }
-      .col:first-of-type, .col:last-of-type{
+
+      .col:first-of-type,
+      .col:last-of-type {
         padding: 0 15px;
         cursor: pointer;
-        background-color: rgba(0,0,0,0.1);
+        background-color: rgba(0, 0, 0, 0.1);
       }
     }
   }
-  .date-picker-week-day{
+
+  .date-picker-week-day {
     background-color: white;
     cursor: default;
   }
 
-  .date-picker-body{
+  .date-picker-body {
+    min-width: 300px;
+    max-width: 350px;
     box-sizing: border-box;
-      display: none;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    &.always-show-calendar{
+    display: none;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+
+    &.always-show-calendar {
       display: block;
     }
-    
     position: absolute;
     width: 100%;
     background-color: white;
     z-index: 10;
-    &.date-picker-body-visible{
+
+    &.date-picker-body-visible {
       display: block;
     }
-      > .grid .row .col{
+
+    > .grid .row .col {
       text-align: center;
     }
   }
-  .date-picker-top{
+
+  .date-picker-top {
     transform: translateY(-100%);
     top: -10px;
   }
 
-  .date-picker-days{
+  .date-picker-days {
     box-sizing: border-box;
     padding: 20px;
     display: flex;
     flex-flow: row wrap;
 
-    > div{
+    > div {
       box-sizing: border-box;
       cursor: pointer;
       text-align: center;
       padding: 5px;
       flex-basis: percentage(1 / 7);
-      &:hover{
-         background-color: rgba(0,0,0,0.1);
+
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.1);
       }
-      &.selected-day{
+
+      &.selected-day {
         background-color: $brand-primary;
         color: white;
       }
-      &.not-in-month{
+
+      &.not-in-month {
         opacity: 0.5;
       }
-      &.day-disabled{
+
+      &.day-disabled {
         opacity: 0.2;
       }
     }
   }
 }
 
-.date-picker{
-  .date-picker-body.always-show-calendar{    
+.date-picker {
+  .date-picker-body.always-show-calendar {
     box-shadow: none;
   }
 }
 
 @include responsive-behaviour-phone {
-  .date-picker-body.responsive{
-    background-color: rgba(0,0,0,0.3);
+  .date-picker-body.responsive {
+    background-color: rgba(0, 0, 0, 0.3);
     height: 100vh;
     width: 100vw;
     position: fixed !important;
@@ -101,7 +142,8 @@ $width: 350px;
     left: 0;
     right: 0;
     bottom: 0;
-    .date-picker-body-wrapper{
+
+    .date-picker-body-wrapper {
       height: 350px;
       width: calc(100% - 20px);
       background-color: white;
@@ -109,8 +151,9 @@ $width: 350px;
       top: 50%;
       left: 10px;
       transform: translateY(-55%);
-      .date-picker-days{
-        >div{
+
+      .date-picker-days {
+        > div {
           line-height: 30px;
         }
       }

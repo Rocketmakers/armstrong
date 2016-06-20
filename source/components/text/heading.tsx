@@ -17,7 +17,7 @@ export class Heading extends React.Component<IHeadingProps, {}>{
   }
   render() {
 
-    var classes = classNames(cd(this.props.styleType, this.props.styleType as any !== this.props.elementType as any));
+    var classes = classNames(cd(this.props.styleType, this.props.styleType as any !== this.props.elementType as any), this.props.className);
     if (!classes){
       classes = null;
     }
