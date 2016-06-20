@@ -32,30 +32,30 @@ export class Home extends React.Component<{}, HomeState> {
         <FixedCentralColumnRow>
           test
         </FixedCentralColumnRow>
-        <Row maxCols={4}>
+        <Row maxCols={3}>
           <Col>
-            <Image height={128} width={128}/>
+            <div>Hello</div>
           </Col>
           <Col>
-            <Image height={128} width={128}/>
+            <div>Hello</div>
           </Col>
           <Col>
-            <Image height={128} width={128}/>
+            <div>Hello</div>
           </Col>
           <Col>
-            <Image height={128} width={128}/>
+            <div>Hello</div>
           </Col>
           <Col>
-            <Image height={128} width={128}/>
+            <div>Hello</div>
           </Col>
           <Col>
-            <Image height={128} width={128}/>
+            <div>Hello</div>
           </Col>
           <Col>
-            <Image height={128} width={128}/>
+            <div>Hello</div>
           </Col>
           <Col>
-            <Image height={128} width={128}/>
+            <div>Hello</div>
           </Col>
         </Row>
         <SingleColumnRow padding="medium">

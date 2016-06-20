@@ -52,7 +52,7 @@ export class Row extends React.Component<IRow, any> {
 
     var maxColStyle : React.CSSProperties;
     if (this.props.maxCols){
-      maxColStyle = { flexBasis: `${100/this.props.maxCols}%` };
+      maxColStyle = { flexBasis: `${100/this.props.maxCols}%`, maxWidth: `${100/this.props.maxCols}%` };
     }
 
     return <div {...attrs} { ...this.props as any } className={classes} style={styles}>

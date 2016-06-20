@@ -6,6 +6,11 @@ import { Grid, Row, Col, SingleColumnRow } from './../../source/components/layou
 import { BurgerMenu } from './../../source/components/navigation/burgerMenu';
 import { Heading } from './../../source/components/text/heading'
 import { Image } from './../../source/components/display/image';
+import { Button } from './../../source/components/interaction/button';
+import { BurgerLayout } from './../../source/components/layoutTemplates/burgerLayout';
+
+import {VelocityComponent, VelocityTransitionGroup} from 'velocity-react';
+
 
 // VIEWS
 import { Home } from "./views/home";
@@ -18,38 +23,32 @@ import "./theme/theme";
 //const hist = history();
 
 // APP WRAPPER
-class App extends React.Component<any, {nav: boolean}> {
-  /**
-   *
-   */
+class App extends React.Component<any, { nav: boolean }> {
   constructor() {
     super();
     this.state = { nav: true };
   }
   public render() {
-    const view = this.props.children;
+    const { pathname } = this.props.location;
+    const key = pathname.split('/')[1] || 'root';
+    const element = this.props.children || <div/>;
+    const elementToAnimate = React.cloneElement(element, { key });
     return (
-      <main>
-        <Grid responsive="none" debugMode={true}>
-          <Row fixed={75}>
-            <Col fixed={true}>
-            {this.state.nav &&
-              <BurgerMenu closeOnNavigate={true}>
-                <Image height={128} width={128} margin={{ right: "medium" }} rounded={true} source="http://www.famousbirthdays.com/headshots/jaden-smith-1.jpg"/>
-                <Link data-close="true" to="/" onlyActiveOnIndex={true} activeClassName="active">Home</Link>
-                <Link data-close="true" to="/test" activeClassName="active">Test</Link>
-              </BurgerMenu>
-            }
-            </Col>
-            <Col padding="small" centerContent="both">
-              <Heading onClick={()=> this.setState({ nav: !this.state.nav })} elementType="h1" styleType="heading1">Armstrong Bench</Heading>
-            </Col>
-          </Row>
-          <SingleColumnRow>
-            { this.props.children }
-          </SingleColumnRow>
-        </Grid>
-      </main>
+      <BurgerLayout
+        closeOnNavigate={true}
+        headerElement={<Heading elementType="h1" styleType="heading1">Armstrong Bench</Heading>}
+        navContent={
+          <div>
+            <Image height={128} width={128} margin={{ right: "medium" }} rounded={true} source="http://www.famousbirthdays.com/headshots/jaden-smith-1.jpg"/>
+            <Link data-close="true" to="/" onlyActiveOnIndex={true} activeClassName="active">Home</Link>
+            <Link data-close="true" to="/test" activeClassName="active">Test</Link>
+          </div>}>
+           <VelocityTransitionGroup
+          enter={{animation: "fadeIn"}}
+          leave={{animation: "fadeOut"}}>
+        {elementToAnimate}
+        </VelocityTransitionGroup>
+      </BurgerLayout>
     );
   }
 }
