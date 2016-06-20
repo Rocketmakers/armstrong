@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Button } from './../../../source/components/interaction/button';
 
-import {VelocityComponent, VelocityTransitionGroup} from 'velocity-react';
+import { VelocityComponent, VelocityTransitionGroup } from 'velocity-react';
 
 export class Test extends React.Component<{}, { showSubComponent: boolean }> {
   constructor() {

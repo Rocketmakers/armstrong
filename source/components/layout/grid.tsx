@@ -6,14 +6,12 @@ import { LayoutHelpers, CenterContent, CenterBoth, MarginClass, PaddingClass, Bg
 export interface IGrid extends React.Props<Grid>, React.HTMLProps<Grid> {
   debugMode?: boolean;
   className?: string | MarginClass | PaddingClass | BgColorClass | FgColorClass;
-  armstrongClassName?: MarginClass;
   table?: boolean;
   fillContainer?: boolean;
 }
 
 export class Grid extends React.Component<IGrid, any> {
   render() {
-
     var originalClassName = this.props.className;
     var attrs = _.omit(this.props, "className");
     var classes = classNames(
@@ -23,7 +21,6 @@ export class Grid extends React.Component<IGrid, any> {
       cd("grid-debug", this.props.debugMode),
       cd("table-grid", this.props.table)
     );
-
     return (<div {...attrs} { ...this.props as any } className={classes} />);
   }
 }
