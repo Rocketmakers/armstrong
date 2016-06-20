@@ -83,9 +83,10 @@ export class BurgerMenu extends React.Component<IBurgerMenuProps, {}>{
     return unmounted;
   }
   closeNav(e, handler) {
-    if (this.props.closeOnNavigate && e.target.nodeName === "A") {
+    // THIS NEEDS FIXING
+    //if (this.props.closeOnNavigate && e.target.nodeName === "A") {
       handler()
-    }
+    //}
   }
 
   renderNav(children: any[]) {
