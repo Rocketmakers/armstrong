@@ -106,7 +106,7 @@ export class BurgerMenu extends React.Component<IBurgerMenuProps, {}>{
 }
 
 
-interface IBurgerMenuItemProps extends React.Props<BurgerMenuItem> {
+export interface IBurgerMenuItemProps extends React.Props<BurgerMenuItem> {
   title: string;
   icon?: string;
   onClick?: () => void;
