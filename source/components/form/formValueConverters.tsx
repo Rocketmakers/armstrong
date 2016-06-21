@@ -92,7 +92,6 @@ export class NumericValueConverter implements IInputValueConverter<number> {
 
   convertBack(value: string){
     try{
-      console.log("value", value)
       if (!value.length) {
         return null;
       }

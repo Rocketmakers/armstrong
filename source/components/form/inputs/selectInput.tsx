@@ -11,7 +11,7 @@ export class SelectInput extends React.Component<ISelectInputProps, {}> {
         return (
           <div className="select-input">
             <select {...this.props as any}>
-            {this.props.options.map(op => <option value={op.id.toString()}>{op.name}</option>)}
+            {this.props.options.map((op,i) => <option key={ i } value={op.id.toString()}>{op.name}</option>)}
             </select>
             </div>
         );
