@@ -1,0 +1,23 @@
+p{
+  margin: 0;
+  margin-bottom: $p-spacing;
+}
+
+h1,h2,h3,h4,h5,h6{
+  margin: 0;
+  margin-bottom: $h-bottom-spacing;
+}
+
+ul, li{
+  margin: 0;
+  padding: 0;
+  -webkit-padding-start: 0;
+}
+
+ul{
+  margin-top: $spacing-xsmall;
+}
+
+li{
+  margin-left: $li-left-spacing;
+}

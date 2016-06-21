@@ -1,13 +1,16 @@
 // DO NOT IMPORT THIS MORE THAN ONCE
-@each $c-color in $condition-colors{
+@each $c-color in $condition-colors {
   $color: nth($c-color, 2);
-  .fg-#{nth($c-color, 1)}{
+
+  .fg-#{nth($c-color, 1)} {
     @extend %fg-#{nth($c-color, 1)};
   }
-  .bg-#{nth($c-color, 1)}{
+
+  .bg-#{nth($c-color, 1)} {
     @extend %bg-#{nth($c-color, 1)};
   }
-  .btn.bg-#{nth($c-color, 1)}{
+
+  .btn.bg-#{nth($c-color, 1)} {
     @extend %btn.bg-#{nth($c-color, 1)};
   }
 }

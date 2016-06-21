@@ -59,6 +59,9 @@ $dialog-header-height: 50px;
             .dialog-title {
                 font-size: $font-size-large;
             }
+            .col:first-of-type{
+                position: relative;
+            }
             .dialog-subtitle{
                 opacity: 0.75;
                 margin-top: 4px;

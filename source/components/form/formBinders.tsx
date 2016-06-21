@@ -173,6 +173,16 @@ export class FormBinder {
     return adaptorInjector;
   }
 
+  static range(dataName: string, options?: INumericOptions) {
+    let adaptorInjector = FormBinder.custom(new InputFormBinder(dataName, "value"));
+    if (options) {
+      adaptorInjector["min"] = options.min;
+      adaptorInjector["max"] = options.max;
+      adaptorInjector["step"] = options.step || 1;
+    }
+    return adaptorInjector;
+  }
+
   static defaultText<D>(dataName: string, valueConverter?: IInputValueConverter<D>){
     return FormBinder.custom(new InputFormBinder(dataName, "defaultValue", valueConverter, "value"));
   }

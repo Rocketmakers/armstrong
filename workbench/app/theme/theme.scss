@@ -6,4 +6,12 @@
 
 body, main, html, #app-content {
   height: 100%;
+  font-size: 16px;
+}
+
+pre{
+  display: inline-block;
+  font-size: 9pt;
+  background-color: rgba(0,0,0,0.1);
+  padding: 5px 10px;
 }

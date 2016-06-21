@@ -4,7 +4,6 @@ import * as ReactDOM from 'react-dom';
 import { Router, Route, Link, hashHistory, IndexRoute } from 'react-router';
 import { Grid, Row, Col, SingleColumnRow } from './../../source/components/layout/grid';
 import { BurgerMenu, BurgerMenuItem } from './../../source/components/navigation/burgerMenu';
-import { Heading } from './../../source/components/text/heading'
 import { Image } from './../../source/components/display/image';
 
 // VIEWS
@@ -42,7 +41,7 @@ class App extends React.Component<any, { nav: boolean }> {
               }
             </Col>
             <Col padding="small" centerContent="both">
-              <Heading onClick={() => this.setState({ nav: !this.state.nav }) } elementType="h1" styleType="heading1">Armstrong Bench</Heading>
+              <h1 onClick={() => this.setState({ nav: !this.state.nav }) }>Armstrong Bench</h1>
             </Col>
             <Col fixed={60}/>
           </Row>

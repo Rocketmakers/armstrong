@@ -79,6 +79,7 @@ export interface INumericOptions{
   decimals?: number;
   min?: number;
   max?: number;
+  step?: number;
 }
 
 export class NumericValueConverter implements IInputValueConverter<number> {

@@ -14,7 +14,7 @@ export { IRadioInputProps, RadioInput } from "./components/form/inputs/radioInpu
 export { ISelectInputProps, SelectInput } from "./components/form/inputs/selectInput";
 export { IDatePickerInputProps, DatePickerInput } from "./components/form/inputs/datePickerInput";
 export { ITextInputProps, TextInput } from "./components/form/inputs/textInput";
-
+export { ITimeSelectorProps, TimeSelector } from "./components/form/inputs/timeSelectorInput";
 export { IForm, Form } from "./components/form/form";
 
 // interaction
@@ -22,10 +22,6 @@ export { IButtonProps, Button } from "./components/interaction/button";
 
 // layout
 export { IGrid, Grid, IRow, Row, ICol, Col, SingleColumnRow, FixedCentralColumnRow } from "./components/layout/grid";
-
-// text
-export { HeadingElementType, HeadingStyleType, IHeadingProps, Heading } from "./components/text/heading";
-export { TextElementType, ITextProps, Text } from "./components/text/text";
 
 // ui helpers
 export { Responsiveness, Color, Size, Side, CenterContentVertical, CenterContentHorizontal, CenterBoth, CenterContent, LayoutHelpers } from "./utilities/uiHelpers";

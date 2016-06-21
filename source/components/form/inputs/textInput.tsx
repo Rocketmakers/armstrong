@@ -1,6 +1,6 @@
 import * as _ from "underscore";
 import * as React from "react";
-import {Form} from "../form";
+import { Form } from "../form";
 import { Icon } from "./../../display/icon";
 import { Icons } from "./../../../utilities/icons";
 import { classNames, cd } from "./../../../utilities/classBuilder";

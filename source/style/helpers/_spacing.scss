@@ -1,17 +1,19 @@
 // DO NOT IMPORT THIS MORE THAN ONCE
-
-@each $size in $spacing-sizes{
-  .m-#{nth($size, 1)}{
+@each $size in $spacing-sizes {
+  .m-#{nth($size, 1)} {
     @extend %m-#{nth($size, 1)};
   }
-  .p-#{nth($size, 1)}{
+
+  .p-#{nth($size, 1)} {
     @extend %p-#{nth($size, 1)};
   }
-  @each $side in $sides{
-    .m-#{$side}-#{nth($size, 1)}{
+
+  @each $side in $sides {
+    .m-#{$side}-#{nth($size, 1)} {
       @extend %m-#{$side}-#{nth($size, 1)};
     }
-    .p-#{$side}-#{nth($size, 1)}{
+
+    .p-#{$side}-#{nth($size, 1)} {
       @extend %p-#{$side}-#{nth($size, 1)};
     }
   }

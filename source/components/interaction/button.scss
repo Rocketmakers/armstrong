@@ -26,4 +26,7 @@
     &.rounded{
       border-radius: 30px;
     }
+    &:disabled{
+      opacity: 0.4;
+    }
 }

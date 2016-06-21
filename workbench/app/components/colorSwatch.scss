@@ -1,0 +1,41 @@
+.swatch-wrapper {
+  display: inline-block;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
+  padding: 10px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.1s;
+  position: relative;
+
+  &.selected {
+    transform: scale(1.01, 1.01);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  }
+
+  > div {
+    height: 128px;
+    width: 128px;
+    color: white;
+    position: relative;
+    >div{
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+  }
+
+  label {
+    display: block;
+    font-size: 9pt;
+    opacity: 0.7;
+
+    &:first-of-type {
+      text-transform: capitalize;
+      opacity: 1;
+      font-size: 12pt;
+    }
+  }
+}
