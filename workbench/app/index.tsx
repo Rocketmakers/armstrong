@@ -2,7 +2,7 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { Router, Route, Link, hashHistory, IndexRoute } from 'react-router';
-import { Grid, Row, Col, SingleColumnRow } from './../../source/components/layout/grid';
+import { Grid, Row, Col, SingleColumnRow, FixedCentralColumnRow } from './../../source/components/layout/grid';
 import { BurgerMenu, BurgerMenuItem } from './../../source/components/navigation/burgerMenu';
 import { Image } from './../../source/components/display/image';
 
@@ -29,25 +29,19 @@ class App extends React.Component<any, { nav: boolean }> {
     const view = this.props.children;
     return (
       <main>
-        <Grid debugMode={true} fillContainer={true}>
-          <Row fixed={60}>
-            <Col fixed={60}>
-              {this.state.nav &&
-                <BurgerMenu closeOnNavigate={true}>
-                  <Image height={128} width={128} margin={{ right: "medium" }} rounded={true} source="http://www.famousbirthdays.com/headshots/jaden-smith-1.jpg"/>
-                  <BurgerMenuItem title="Home" onClick={() => this.navigateTo("/") }/>
-                  <BurgerMenuItem title="Test" onClick={() => this.navigateTo("/test") }/>
-                </BurgerMenu>
-              }
+        <Grid debugMode={false} fillContainer={true}>
+          <Row fixed={60} className="bg-brand-primary fg-white header">
+            <Col centerContent="both">
+              <h1 className="m-none" onClick={() => this.setState({ nav: !this.state.nav }) }>Armstrong Bench</h1>
             </Col>
-            <Col padding="small" centerContent="both">
-              <h1 onClick={() => this.setState({ nav: !this.state.nav }) }>Armstrong Bench</h1>
-            </Col>
-            <Col fixed={60}/>
           </Row>
-          <SingleColumnRow>
-            { this.props.children }
-          </SingleColumnRow>
+          <Row>
+            <Col className="bg-gray-dark"/>
+            <Col fixed={1100} className="p-small">
+              { this.props.children }
+            </Col>
+            <Col className="bg-gray-dark"/>
+          </Row>
         </Grid>
       </main>
     );

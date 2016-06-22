@@ -44,116 +44,195 @@ export class Home extends React.Component<{}, HomeState> {
 
   public render() {
     return (
-      <Grid debugMode={false} className="p-small">
+      <div className="p-small">
         <Dialog title="I am a dialog!" isOpen={this.state.dialogOpen} onClose={() => this.setState({ dialogOpen: false }) }>
           hello world!
         </Dialog>
+        <h1>Whats all this then?</h1>
+        <h2>Background</h2>
+        <p>Armstrong is an awesome React/SASS framework for rapid UI development. It's an ongoing work by <a target="_blank" href="http://www.rocketmakers.com/">Rocketmakers</a> used in practically evey project we create.
+        The aim is to build a fast and flexible framework as a starting point for all web projects.
+        </p>
+        <p>This site is the beginnings of a combined development area for building new components as well as documenting them.</p>
+        <hr/>
+        <h1 className="m-top-large">Variables & helper classes</h1>
+        <h2>Colors</h2>
+        <pre className="m-bottom-small usage">{`<div className='bg-brand-primary fg-white' />`}</pre>
+        <p>All colors can be used to set both the foreground and background of any element.Use <pre>fg-[colorname]</pre> for foreground and <pre>bg-[colorname]</pre> for backgrounds.A full list is as follows:
+          <ul>
+            <li><pre>brand-primary</pre> - Set this to your brands main color and use where you need a brand accent (headers, logos etc) </li>
+            <li><pre>brand-secondary</pre> - Set this to your brands secondary color and use where you need a more minor brand accent (headers, logos etc) </li>
+            <li><pre>positive</pre> - This color should be used for affirmative actions or messages (eg an 'OK' button or a success message) </li>
+            <li><pre>negative</pre> - This color should be used for negative actions or messages (eg a 'Cancel' button or error message) </li>
+            <li><pre>info</pre> - This color should be used for informational messages (eg a contextual action button or message like 'something is happening') </li>
+            <li><pre>gray-very-dark</pre> - Use where it contrasts correctly with other colors</li>
+            <li><pre>gray-dark</pre> - Use where it contrasts correctly with other colors</li>
+            <li><pre>gray-medium</pre> - Use where it contrasts correctly with other colors</li>
+            <li><pre>gray-light</pre> - Use where it contrasts correctly with other colors</li>
+            <li><pre>gray-very-light</pre> - Use where it contrasts correctly with other colors</li>
+            <li><pre>white</pre> - Used mainly to make foreground text visible on dark backgrounds</li>
+          </ul>
+        </p>
+        {this.state.colorClasses.length !== 0 && this.state.colorClasses.map(cc => <ColorSwatch selected={cc === this.state.selectedColorClass} onClick={() => this.setState({ selectedColorClass: cc }) } className={cc} name={`${cc.replace('-', ' ')}`}/>) }
+        <h2 className="m-top-small">Font sizes</h2>
+        <pre className="m-bottom-small usage">{`<p className='f-size-small'>A small paragraph</p>`}</pre>
+        <p>Lets you adjust a fontsize on a per element basis: </p>
+        <p className="f-size-xxsmall">f-size-xxsmall</p>
+        <p className="f-size-xsmall">f-size-xsmall</p>
+        <p className="f-size-small">f-size-small</p>
+        <p className="f-size-medium">f-size-medium</p>
+        <p className="f-size-large">f-size-large</p>
+        <p className="f-size-xlarge">f-size-xlarge</p>
+        <hr/>
+        <h1 className="m-top-large">Components</h1>
         <h2>Grid</h2>
+        <pre className="m-bottom-small usage">{`<Grid className='(string)' fillContainer='(boolean)' debugMode='(boolean)' table='(boolean)'/>`}</pre>
         <p>Grid takes the following props specifically, and will also spread additional HTML props to the top level div:
           <ul>
-            <li><pre>className (string) </pre> - Css classnames. Works well with armstrongs bg, fg schemes</li>
+            <li><pre>className (string) </pre> - CSS classnames.Works well with armstrongs bg, fg schemes</li>
             <li><pre>fillContainer (boolean) </pre> - Makes the grid fill its container for subdividing</li>
             <li><pre>table (boolean) </pre> - Makes the grid render as a table.The first row is the headers</li>
+            <li><pre>debugMode (boolean) </pre> - Turns on debug mode, allowing you to see the current screen mode and cell rendering</li>
           </ul>
         </p>
         <h2>Row</h2>
+        <pre className="m-bottom-small usage">{`<Row className='(string)' fixed='(boolean|number)' maxCols='(number)' />`}</pre>
         <p>Row should be used directly inside a grid and takes the following specifically, and will also spread additional HTML props to the top level div:
           <ul>
-            <li><pre>className (string) </pre> - Css classnames.Works well with armstrongs bg, fg schemes</li>
+            <li><pre>className (string) </pre> - CSS classnames.Works well with armstrongs bg, fg schemes</li>
             <li><pre>maxCols (number) </pre> - After this number of cols is hit, they will wrap automatically</li>
-            <li><pre>fixed (number|boolean) </pre> - Fixes the rows height. A boolean value will grow to fit its content where as a number will be that height in pixels.</li>
+            <li><pre>fixed (number|boolean) </pre> - Fixes the rows height.A boolean value will grow to fit its content where as a number will be that height in pixels.</li>
           </ul>
         </p>
         <h2>Col</h2>
+        <pre className="m-bottom-small usage">{`<Col className='(string)' fixed='(boolean|number)' centerContent='(string|object)' />`}</pre>
         <p>Col should be used directly inside a row and takes the following props specifically, and will also spread additional HTML props to the top level div:
           <ul>
-            <li><pre>className (string) </pre> - Css classnames.Works well with armstrongs bg, fg schemes</li>
-            <li><pre>centerContent (string|centerContent) </pre> - Controls content alignment. a string value of <pre>both</pre> will center horizontally and vertically. An object like <pre>{ '{{ vertical: \'center\', horizontal: \'right\' }}'}</pre> for example, allows finer grain control</li>
-            <li><pre>fixed (number|boolean) </pre> - Fixes the columns width. A boolean value will grow to fit its content where as a number will be that width in pixels.</li>
+            <li><pre>className (string) </pre> - CSS classnames.Works well with armstrongs bg, fg schemes</li>
+            <li><pre>centerContent (string|centerContent) </pre> - Controls content alignment.a string value of <pre>both</pre> will center horizontally and vertically.An object like <pre>{ '{{ vertical: \'center\', horizontal: \'right\' }}'}</pre> for example, allows finer grain control</li>
+            <li><pre>fixed (number|boolean) </pre> - Fixes the columns width.A boolean value will grow to fit its content where as a number will be that width in pixels.</li>
           </ul>
         </p>
-        <FixedCentralColumnRow>
-          test
-        </FixedCentralColumnRow>
-        <Row maxCols={3}>
-          <Col>
-            <div>Hello</div>
-          </Col>
-          <Col>
-            <div>Hello</div>
-          </Col>
-          <Col>
-            <div>Hello</div>
-          </Col>
-          <Col>
-            <div>Hello</div>
-          </Col>
-          <Col>
-            <div>Hello</div>
-          </Col>
-          <Col>
-            <div>Hello</div>
-          </Col>
-          <Col>
-            <div>Hello</div>
-          </Col>
-          <Col>
-            <div>Hello</div>
-          </Col>
-        </Row>
-        <SingleColumnRow padding="medium">
-          <h2>Colors</h2>
-          <p>All colors can be used to set both the foreground and background of any element.Use <pre>fg-[colorname]</pre> for foreground and <pre>bg-[colorname]</pre> for backgrounds</p>
-          {this.state.colorClasses.length !== 0 && this.state.colorClasses.map(cc => <ColorSwatch selected={cc === this.state.selectedColorClass} onClick={() => this.setState({ selectedColorClass: cc }) } className={cc} name={`${cc.replace('-', ' ')}`}/>) }
-          <h2>Button</h2>
-          <p>Buttons take the following props:
-            <ul>
-              <li><pre>className</pre> - Css classnames.Works well with armstrongs bg, fg schemes</li>
-              <li><pre>leftIcon</pre> - An icon to the left of the text</li>
-              <li><pre>rightIcon</pre> - An icon to the right of the text</li>
-              <li><pre>text</pre> - The text in the button</li>
-              <li><pre>onClick</pre> - An event handler for clicking</li>
-            </ul>
-          </p>
-          <Button leftIcon={Button.Icomoon.aidKit2} text="Click me!" className={`bg-${this.state.selectedColorClass} m-right-xsmall`}/>
-          <Button rightIcon={Button.Icomoon.aidKit2} text="Click me!" className={`bg-${this.state.selectedColorClass} m-right-xsmall`}/>
-          <Button text="Click me also!" className={`bg-${this.state.selectedColorClass} m-right-xsmall`}/>
-          <Button disabled={true} text="Click me also!" className={`bg-${this.state.selectedColorClass} m-right-xsmall`} rounded={true}/>
-          <h2>Font sizes</h2>
-          <p>Lets you adjust a fontsize on a per element basis :</p>
-          <p className="f-size-xxsmall">f-size-xxsmall</p>
-          <p className="f-size-xsmall">f-size-xsmall</p>
-          <p className="f-size-small">f-size-small</p>
-          <p className="f-size-medium">f-size-medium</p>
-          <p className="f-size-large">f-size-large</p>
-          <p className="f-size-xlarge">f-size-xlarge</p>
-
-          <h2>Datepicker</h2>
-          <p>Picks dates</p>
-          <DatePickerInput disabled={true} nativeInput={true} onDateChanged={(d) => console.log(d) } icon={DatePickerInput.Icomoon.calendar2}/>
-          <br/>
-          <br/>
-          <h2>Dialog</h2>
-          <p>Is a dialog</p>
-          <Button text="Click me also!" className={`bg-${this.state.selectedColorClass} m-right-xsmall`} onClick={() => this.setState({ dialogOpen: true }) }/>
-          <br/>
-          <br/>
-          <h2>Image</h2>
-          <p>Again pretty self explanatory</p>
-          <Image height={128} width={128}/>
-          <Image height={128} width={128} rounded={true}/>
-          <Image height={128} width={128} rounded={true} sampleUser={true}/>
-          <Image height={128} width={128} rounded={true} source="http://www.famousbirthdays.com/headshots/jaden-smith-1.jpg"/><br/>
-          <br/>
-          <br/>
-          <h2>Checkbox</h2>
-          <p>Again pretty self explanatory</p>
-          <CheckboxInput label="Check me!"/>
-          <TextInput leftIcon={TextInput.Icomoon.alarm}/>
-          <TextInput rightIcon={TextInput.Icomoon.alarm}/>
-        </SingleColumnRow>
-
-      </Grid>
+        <Grid debugMode={true} className="m-bottom-medium">
+          <Row fixed={80}>
+            <Col>Waddup</Col>
+            <Col centerContent="both">Waddup</Col>
+            <Col centerContent={{ horizontal: "right", vertical: "bottom" }}>Waddup</Col>
+            <Col centerContent={{ horizontal: "left", vertical: "center" }}>Waddup</Col>
+          </Row>
+          <FixedCentralColumnRow>
+            test
+          </FixedCentralColumnRow>
+          <Row maxCols={3}>
+            <Col>
+              <div>Hello</div>
+            </Col>
+            <Col>
+              <div>Hello</div>
+            </Col>
+            <Col>
+              <div>Hello</div>
+            </Col>
+            <Col>
+              <div>Hello</div>
+            </Col>
+            <Col>
+              <div>Hello</div>
+            </Col>
+            <Col>
+              <div>Hello</div>
+            </Col>
+            <Col>
+              <div>Hello</div>
+            </Col>
+            <Col>
+              <div>Hello</div>
+            </Col>
+          </Row>
+        </Grid>
+        <h2 className="m-top-small">Button</h2>
+        <pre className="m-bottom-small usage">{`<Button className='(string)' onClick='(e?: SyntheticEvent)=> void' leftIcon='(string)' rightIcon='(string)' text='(string)' />`}</pre>
+        <p>Buttons take the following props:
+          <ul>
+            <li><pre>className (string)</pre> - CSS classnames.Works well with armstrongs bg, fg schemes</li>
+            <li><pre>leftIcon (string)</pre> - An icon to the left of the text</li>
+            <li><pre>rightIcon (string)</pre> - An icon to the right of the text</li>
+            <li><pre>text (string)</pre> - The text in the button</li>
+            <li><pre>onClick ((e: SyntheticEvent)=> void)</pre> - An event handler for clicking</li>
+            <li><pre>disabled (boolean)</pre> - Disallows user interaction</li>
+          </ul>
+        </p>
+        <Button leftIcon={Button.Icomoon.aidKit2} text="Click me!" className={`bg-${this.state.selectedColorClass} m-right-xsmall`}/>
+        <Button rightIcon={Button.Icomoon.aidKit2} text="Click me!" className={`bg-${this.state.selectedColorClass} m-right-xsmall`}/>
+        <Button text="Click me also!" className={`bg-${this.state.selectedColorClass} m-right-xsmall`}/>
+        <Button disabled={true} text="Click me also!" className={`bg-${this.state.selectedColorClass} m-right-xsmall`} rounded={true}/>
+        <h2>Dialog</h2>
+        <pre className="m-bottom-small usage">{`<Dialog title='(string)' subTitle='(string)' isOpen='(boolean)' layerClass='(string)' onOpen='(()=> void)' onClose='(()=> void)' onXClicked='(()=> void)'>I am some dialog content</Dialog>`}</pre>
+        <p>A multipurpose dialog, rendered high up into the DOM using subtree rendering to avoid any weird CSS positioning issues
+          <ul>
+            <li><pre>className (string)</pre> - CSS classnames.Works well with armstrongs bg, fg schemes</li>
+            <li><pre>isOpen (string)</pre> - A boolean for the current visible state of the dialog. Works well with state</li>
+            <li><pre>title (string)</pre> - The title in the header of the dialog</li>
+            <li><pre>subtitle (string)</pre> - A second smaller title</li>
+            <li><pre>layerClass (string)</pre> - This allows you to layer dialogs (a confirmation for example) by setting a class with a higher <pre>z-index</pre></li>
+            <li><pre>onOpen (()=> void))</pre> - Fires when the dialog opens</li>
+            <li><pre>onClose (()=> void))</pre> - Fires when the dialog closes</li>
+            <li><pre>onXClicked (()=> void))</pre> - Fires when the user clicks the 'X' in the topright of the dialog. Useful for confirmations</li>
+          </ul>
+        </p>
+        <Button text="Click for sick dialog" className={`bg-${this.state.selectedColorClass} m-right-xsmall`} onClick={() => this.setState({ dialogOpen: true }) }/>
+        <h2>Image</h2>
+        <pre className="m-bottom-small usage">{`<Image height='(number)' width='(number)' sampleUser='(boolean)' sampleUserSeed='(string)' rounded='(boolean)' noPlaceholder='(boolean)'/>`}</pre>
+        <p>Usable as both a placeholder (for users and generic) aswell as real images
+        <ul>
+            <li><pre>className (string)</pre> - CSS classnames.Works well with armstrongs bg, fg schemes</li>
+            <li><pre>rounded (boolean)</pre> - Makes the image into a circle</li>
+            <li><pre>source (string)</pre> - The source of the image</li>
+            <li><pre>height (number)</pre> - The height of the image. Will scale to aspect with width if not set.</li>
+            <li><pre>width (number)</pre> - The width of the image. Will scale to aspect with height if not set.</li>
+            <li><pre>sampleUser (boolean)</pre> - If true will pull a random user image from randomuser.me</li>
+            <li><pre>sampleUserSeed (string)</pre> - Set this to a static value to force the same sample user every time</li>
+            <li><pre>noPlaceholder (boolean)</pre> - If true will stop any usage of placeholder images</li>
+          </ul>
+        </p>
+        <Image className="m-right-xsmall" height={256} />
+        <Image className="m-right-xsmall" height={128} width={128} rounded={true}/>
+        <Image className="m-right-xsmall" height={128} width={128} rounded={true} sampleUser={true}/>
+        <Image className="m-right-xsmall" height={128} width={128} rounded={true} source="http://www.famousbirthdays.com/headshots/jaden-smith-1.jpg"/><br/>
+        <hr/>
+        <h1 className="m-top-large">Forms</h1>
+        <h2>Datepicker Input</h2>
+        <pre className="m-bottom-small usage">{`<DatePickerInput date='(moment)' locale='(string)' format='(string)' alwaysShowCalendar='(boolean)' nativeInput='(boolean)' disabled='(boolean)' onDateChanged='((date:moment)=> void)' icon='(string)' min='(moment)' max='(moment)'/>`}</pre>
+        <p>Allows you to pick dates.Supports many parameters:
+          <ul>
+            <li><pre>className (string) </pre> - CSS classnames</li>
+            <li><pre>locale (string) </pre> - The datepickers locale setting.Defaults to 'en-gb'.Takes other ISO formatted locale codes (see moment docs for more) </li>
+            <li><pre>date (moment) </pre> - The pickers current/initial date as a moment object</li>
+            <li><pre>format (string) </pre> - A string determining the displayed date format.Defaults to 'DD/MM/YYYY'</li>
+            <li><pre>min (moment) </pre> - The minimum date as a moment</li>
+            <li><pre>max (moment) </pre> - The maximum date as a moment</li>
+            <li><pre>onDateChanged (moment) => void</pre> - Fires when a new date is selected and returns a moment object</li>
+            <li><pre>alwaysShowCalendar (boolean) </pre> - Render the calendar all the time, even when not focused</li>
+            <li><pre>nativeInput (boolean) </pre> - Use a input type date instead of the picker.Using logic to determine mobile platform here is a good idea</li>
+            <li><pre>icon (string) </pre> - The icon to show on the left of the date ('DatePickerInput.Icomoon.Calendar2' for example) </li>
+            <li><pre>disabled (boolean) </pre> - Wether the control is interactable by the user</li>
+          </ul>
+        </p>
+        <DatePickerInput alwaysShowCalendar={false} nativeInput={false} onDateChanged={(d) => console.log(d) } icon={DatePickerInput.Icomoon.calendar2}/>
+        <h2 className="m-top-large">Checkbox</h2>
+        <p>Again pretty self explanatory</p>
+        <CheckboxInput label="Check me!"/>
+        <TextInput leftIcon={TextInput.Icomoon.alarm}/>
+        <TextInput rightIcon={TextInput.Icomoon.alarm}/>
+        <hr/>
+        <h1 className="m-top-large">FAQ's</h1>
+        <h2>'I don't agree with x/y/z' or 'this could be done better'</h2>
+        <p>Everything you see here is open source and on <a target="_blank" href="https://github.com/Rocketmakers/armstrong-react">GitHub</a> so please feel free to fork and make suggestions.</p>
+        <h2>'Why don't you have this component' or 'I've got an idea for a new component'</h2>
+        <p>We add components we use a lot in our day to day development. We try not to add very specific, project based components here. That said, if theres something obvbious just stick a feature request in on <a target="_blank" href="https://github.com/Rocketmakers/armstrong-react">GitHub</a></p>
+        <h2>'It looks very plain..'</h2>
+        <p>Armstrong is not and will never be anything like Bootstrap. It's intentionally styled very minimally so a dedicated designer can work with it, not against it. It's built on top of variables which are designed to be overridden.</p>
+      </div>
     );
   }
 }

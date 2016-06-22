@@ -10,7 +10,7 @@ export interface IDialogProps extends React.HTMLProps<Dialog> {
   isOpen: boolean;
   onClose?: () => void;
   onOpen?: () => void;
-  xClicked?: () => void;
+  onXClicked?: () => void;
 }
 
 export class Dialog extends React.Component<IDialogProps, {}>{
@@ -52,7 +52,7 @@ export class Dialog extends React.Component<IDialogProps, {}>{
                 }
               </Col>
               <Col fixed={true}>
-                <div className="close-dialog-button" onClick={() => this.props.xClicked ? this.props.xClicked() : this.closeClicked() }/>
+                <div className="close-dialog-button" onClick={() => this.props.onXClicked ? this.props.onXClicked() : this.closeClicked() }/>
               </Col>
             </Row>
             <SingleColumnRow id="dialog-content" className="dialog-content">

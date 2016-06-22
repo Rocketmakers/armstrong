@@ -1,11 +1,34 @@
 p{
   margin: 0;
-  margin-bottom: $p-spacing;
+  margin-bottom: $spacing-small;
+}
+
+pre{
+  -webkit-margin-before: 0;
+  -webkit-margin-after: 0;
+  margin: 0;
 }
 
 h1,h2,h3,h4,h5,h6{
+  -webkit-margin-before: 0;
+  -webkit-margin-after: 0;
   margin: 0;
-  margin-bottom: $h-bottom-spacing;
+  margin-bottom: $spacing-small;
+}
+
+h1{
+  font-size: $font-size-xlarge;
+  font-weight: bold;
+}
+
+h2{
+  font-size: $font-size-large;
+  font-weight: bold;
+}
+
+h3{
+  font-size: $font-size-medium;
+  font-weight: bold;
 }
 
 ul, li{
@@ -15,9 +38,10 @@ ul, li{
 }
 
 ul{
-  margin-top: $spacing-xsmall;
+  margin-top: $spacing-small;
 }
 
 li{
-  margin-left: $li-left-spacing;
+  margin-left: $spacing-small*1.1;
+  margin-bottom: $spacing-xxsmall
 }
