@@ -219,8 +219,9 @@ export class Home extends React.Component<{}, HomeState> {
           </ul>
         </p>
         <DatePickerInput alwaysShowCalendar={false} nativeInput={false} onDateChanged={(d) => console.log(d) } icon={DatePickerInput.Icomoon.calendar2}/>
-        <h2 className="m-top-large">Checkbox</h2>
-        <p>Again pretty self explanatory</p>
+        <p className="bg-info fg-white p-small m-top-medium t-align-center">Note - Docs from this point are very hazy as I haven't gotten this far yet ;)</p>
+        <h2 className="m-top-small">Checkbox</h2>
+        <p>some stuff here... blah</p>
         <CheckboxInput label="Check me!"/>
         <TextInput leftIcon={TextInput.Icomoon.alarm}/>
         <TextInput rightIcon={TextInput.Icomoon.alarm}/>
@@ -232,6 +233,8 @@ export class Home extends React.Component<{}, HomeState> {
         <p>We add components we use a lot in our day to day development. We try not to add very specific, project based components here. That said, if theres something obvbious just stick a feature request in on <a target="_blank" href="https://github.com/Rocketmakers/armstrong-react">GitHub</a></p>
         <h2>'It looks very plain..'</h2>
         <p>Armstrong is not and will never be anything like Bootstrap. It's intentionally styled very minimally so a dedicated designer can work with it, not against it. It's built on top of variables which are designed to be overridden.</p>
+        <h2>'Is it responsive?'</h2>
+        <p>At the moment thats up to you. We tried building responsiveness into some controls, but we realised the approach varies so much from project to project it didn't make sense to try and build it in. Obviously, this could change if we come up with something magical ;)</p>
       </div>
     );
   }
