@@ -1,5 +1,6 @@
 interface IVelocityComponentProps{
   animation: any;
+  easing: any;
   duration: number;
 }
 

@@ -1,4 +1,4 @@
-@each $c-color in $condition-colors{
+@each $c-color in $colors{
   $color: nth($c-color, 2);
   %fg-#{nth($c-color, 1)}{
     color: #{$color};

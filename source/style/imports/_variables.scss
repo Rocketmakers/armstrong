@@ -1,7 +1,7 @@
 //// SCREEN SIZES
 $screen-size-phone: 480px !default;
 $screen-size-tablet: 860px !default;
-$fixed-screen-size: 960px !default;
+$screen-size-computer: 960px !default;
 
 //// FONT SIZES
 $font-size-root: 16px !default;
@@ -44,8 +44,6 @@ $spacing-sizes: (
 //// COLORS
 $white: #ffffff !default;
 
-$site-background: $white !default;
-
 $brand-primary: #cd3939 !default;
 $brand-secondary: #3d4144 !default;
 
@@ -54,27 +52,27 @@ $gray-base: #4f5c69 !default;
 $gray-very-dark: darken($gray-base, 20%) !default;
 $gray-dark: darken($gray-base, 15%) !default;
 $gray-medium: $gray-base !default;
-$gray-light: lighten($gray-base, 15%) !default;
-$gray-very-light: lighten($gray-base, 25%) !default;
+$gray-light: lighten($gray-base, 50%) !default;
+$gray-very-light: lighten($gray-base, 60%) !default;
 
-$condition-color-positive: #00a388 !default;
-$condition-color-warning: #f78e52 !default;
-$condition-color-negative: #df5a49 !default;
-$condition-color-info: #3498d8 !default;
+$color-positive: #00a388 !default;
+$color-warning: #f78e52 !default;
+$color-negative: #df5a49 !default;
+$color-info: #3498d8 !default;
 
-$condition-colors: (
-  positive $condition-color-positive,
-  warning $condition-color-warning,
-  negative $condition-color-negative,
-  info $condition-color-info,
-  brand-primary $brand-primary,
-  brand-secondary $brand-secondary,
-  gray-very-dark $gray-very-dark,
-  gray-dark $gray-dark,
-  gray-medium $gray-medium,
-  gray-light $gray-light,
-  gray-very-light $gray-very-light,
-  white $white,
+$colors: (
+  'positive' $color-positive,
+  'warning' $color-warning,
+  'negative' $color-negative,
+  'info' $color-info,
+  'brand-primary' $brand-primary,
+  'brand-secondary' $brand-secondary,
+  'gray-very-dark' $gray-very-dark,
+  'gray-dark' $gray-dark,
+  'gray-medium' $gray-medium,
+  'gray-light' $gray-light,
+  'gray-very-light' $gray-very-light,
+  'white' $white
 );
 
 //// CORNERS

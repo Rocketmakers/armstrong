@@ -21,6 +21,7 @@
 $dialog-header-height: 50px;
 
 .dialog-layer {
+    pointer-events: none;
     position: fixed;
     top: 0;
     left: 0;
@@ -33,6 +34,7 @@ $dialog-header-height: 50px;
     z-index: 255;
     &.open {
         display: block;
+        pointer-events: all;
     }
     .dialog {
         box-shadow: 0 0 15px rgba(0,0,0,0.3);

@@ -1,6 +1,8 @@
 interface IVelocityComponentProps{
-  animation: any;
-  duration: number;
+  animation?: any;
+  duration?: number;
+  easing?: string;
+  complete?: ()=> void;
 }
 
 

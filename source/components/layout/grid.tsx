@@ -41,21 +41,21 @@ export class Row extends React.Component<IRow, any> {
 
     var attrs = _.omit(this.props, "className", "fixed");
     var classes = classNames(this.props.className, "row", cd("no-flex", !!this.props.fixed), cd("wrap-row", !!this.props.maxCols));
-    var styles;
+    var styles = this.props.style;
+    var colStyles;
 
     if (typeof this.props.fixed === "number") {
-      styles = { height: `${this.props.fixed}px` };
+      styles = _.extend({ height: `${this.props.fixed}px` }, styles);
     }
 
-    var maxColStyle: React.CSSProperties;
     if (this.props.maxCols) {
-      maxColStyle = { flexBasis: `${100 / this.props.maxCols}%`, maxWidth: `${100 / this.props.maxCols}%` };
+      colStyles = _.extend({ flexBasis: `${100 / this.props.maxCols}%`, maxWidth: `${100 / this.props.maxCols}%` }, colStyles);
     }
 
     return <div {...attrs} { ...this.props as any } className={classes} style={styles}>
       {
-        React.Children.map(this.props.children, c => {
-          return c ? React.cloneElement((c as React.ReactElement<any>), { style: maxColStyle }) : null
+        React.Children.map(this.props.children, (c: any) => {
+          return c ? React.cloneElement((c as React.ReactElement<any>), { style: _.extend(c.props.style, colStyles) }) : null
         })
       }
     </div>
@@ -74,11 +74,26 @@ export class Col extends React.Component<ICol, {}> {
     var centerClasses = LayoutHelpers.GetAlignment(this.props.centerContent);
     var classes = classNames("col", this.props.className, cd("no-flex", this.props.fixed !== undefined), cd(`col${this.props.spans}`, this.props.spans !== undefined), centerClasses)
 
-    var attrs = _.omit(this.props, "fixed", "spans");
+    var attrs = _.omit(this.props, "className", "fixed", "spans");
     var styles = this.props.style;
 
     if (typeof this.props.fixed === "number") {
       styles = _.extend({ maxWidth: `${this.props.fixed}px`, width: "100%" }, styles);
+    }
+
+    if (this.props.children) {
+      var elementOne;
+      if (_.isArray(this.props.children)) {
+        elementOne = this.props.children[0];
+      }
+      else{
+        elementOne = this.props.children;
+      }
+      if (elementOne && React.isValidElement(elementOne)) {
+        if (elementOne.props.className && (elementOne.props.className as string).indexOf("flex-override") !== -1) {
+          styles = _.extend({ position: "relative" }, styles);
+        }
+      }
     }
 
     return <div {...attrs} { ...this.props as any } className={classes} style={styles} />
@@ -90,6 +105,23 @@ export class SingleColumnRow extends React.Component<IColRow, any> {
     var centerClasses = LayoutHelpers.GetAlignment(this.props.centerContent);
 
     var classes = classNames("row", cd("no-flex", this.props.fixed !== undefined), this.props.className);
+
+    var styles = this.props.style;
+
+    if (this.props.children) {
+      var elementOne;
+      if (_.isArray(this.props.children)) {
+        elementOne = this.props.children[0];
+      }
+      else{
+        elementOne = this.props.children;
+      }
+      if (elementOne && React.isValidElement(elementOne)) {
+        if (elementOne.props.className && (elementOne.props.className as string).indexOf("flex-override") !== -1) {
+          styles = _.extend({ position: "relative" }, styles);
+        }
+      }
+    }
 
     return (
       <div {...this.props as any} className={classes}>

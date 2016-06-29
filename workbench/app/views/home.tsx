@@ -10,8 +10,11 @@ import { DatePickerInput } from './../../../source/components/form/inputs/datePi
 import { Dialog } from './../../../source/components/display/dialog';
 import { BurgerMenu } from './../../../source/components/navigation/burgerMenu';
 import { CheckboxInput } from './../../../source/components/form/inputs/checkboxInput';
+import { RadioInput } from './../../../source/components/form/inputs/radioInput';
 import { TextInput } from './../../../source/components/form/inputs/textInput';
+import { SelectInput } from './../../../source/components/form/inputs/selectInput';
 import { ColorSwatch } from './../components/colorSwatch';
+import { DropdownSelect } from './../../../source/components/form/dropdownSelect';
 
 interface HomeState {
   date?: moment.Moment;
@@ -56,6 +59,7 @@ export class Home extends React.Component<{}, HomeState> {
         <p>This site is the beginnings of a combined development area for building new components as well as documenting them.</p>
         <hr/>
         <h1 className="m-top-large">Variables & helper classes</h1>
+        <DropdownSelect placeholder="Select a value..." options={[{ id: 1, label: "India" }, { id: 2, label: "Super India" }, { id: 3, label: "United Kingdom" }, { id: 4, label: "United States" }, { id: 5, label: "Canada" }]}/>
         <h2>Colors</h2>
         <pre className="m-bottom-small usage">{`<div className='bg-brand-primary fg-white' />`}</pre>
         <p>All colors can be used to set both the foreground and background of any element.Use <pre>fg-[colorname]</pre> for foreground and <pre>bg-[colorname]</pre> for backgrounds.A full list is as follows:
@@ -92,7 +96,7 @@ export class Home extends React.Component<{}, HomeState> {
             <li><pre>className (string) </pre> - CSS classnames.Works well with armstrongs bg, fg schemes</li>
             <li><pre>fillContainer (boolean) </pre> - Makes the grid fill its container for subdividing</li>
             <li><pre>table (boolean) </pre> - Makes the grid render as a table.The first row is the headers</li>
-            <li><pre>debugMode (boolean) </pre> - Turns on debug mode, allowing you to see the current screen mode and cell rendering</li>
+            <li><pre>debugMode (boolean) </pre> - Turns on debug mode, allowing you to see individual cell rendering</li>
           </ul>
         </p>
         <h2>Row</h2>
@@ -114,7 +118,7 @@ export class Home extends React.Component<{}, HomeState> {
           </ul>
         </p>
         <Grid debugMode={true} className="m-bottom-medium">
-          <Row fixed={80}>
+          <Row fixed={80} style={{ backgroundColor: "red"}}>
             <Col>Waddup</Col>
             <Col centerContent="both">Waddup</Col>
             <Col centerContent={{ horizontal: "right", vertical: "bottom" }}>Waddup</Col>
@@ -123,8 +127,8 @@ export class Home extends React.Component<{}, HomeState> {
           <FixedCentralColumnRow>
             test
           </FixedCentralColumnRow>
-          <Row maxCols={3}>
-            <Col>
+          <Row maxCols={3} style={{ backgroundColor: "red"}}>
+            <Col style={{ backgroundColor: "red"}}>
               <div>Hello</div>
             </Col>
             <Col>
@@ -148,6 +152,23 @@ export class Home extends React.Component<{}, HomeState> {
             <Col>
               <div>Hello</div>
             </Col>
+          </Row>
+        </Grid>
+        <Grid debugMode={true} className="grid-p-inner-xsmall">
+          <Row>
+            <Col>a</Col>
+            <Col>b</Col>
+            <Col>c</Col>
+            <Col>d</Col>
+          </Row>
+          <Row>
+            <Col>a</Col>
+            <Col>b</Col>
+            <Col>c</Col>
+            <Col>d</Col>
+          </Row>
+          <Row>
+            <Col>a</Col>
           </Row>
         </Grid>
         <h2 className="m-top-small">Button</h2>
@@ -201,7 +222,49 @@ export class Home extends React.Component<{}, HomeState> {
         <Image className="m-right-xsmall" height={128} width={128} rounded={true} source="http://www.famousbirthdays.com/headshots/jaden-smith-1.jpg"/><br/>
         <hr/>
         <h1 className="m-top-large">Forms</h1>
-        <h2>Datepicker Input</h2>
+        <h2>Form</h2>
+        <pre className="m-bottom-small usage">{`<Form onDataChanged='((data:T)=> void)' dataBinder='(IDataBinder<T>)'/>`}</pre>
+        <p>The form control supports multiple inputs and allows simple editing of data via an entity:
+        <ul>
+            <li><pre>onDataChanged ((data:T>)=> void)</pre> - Fires when the data in the form changes. Normally you can just set to {`{this.forceUpdate()}`}</li>
+            <li><pre>dataBinder (IDateBinder of T)</pre> - This is  how you bind your entity to your form. Use something like <pre>Form.jsonDataBinder(YOUR_ENTITY);</pre></li>
+          </ul>
+        </p>
+        <h2>Text Input</h2>
+        <pre className="m-bottom-small usage">{`<TextInput {...Form.Bind.text("YOUR_PROPERTY_NAME") }/>`}</pre>
+        <p>
+        Used to edit text within your form. You can use the following Form.Bind values : <pre>text, textEmail, textNumeric, password</pre>
+         <ul>
+            <li><pre>className (string)</pre> - CSS classnames.Works well with armstrongs bg, fg schemes</li>
+            <li><pre>leftIcon (string)</pre> - An icon to the left of the text</li>
+            <li><pre>rightIcon (string)</pre> - An icon to the right of the text</li>
+            <li><pre>rightTextOverlay (string)</pre> - A text label to the right of the text</li>
+          </ul>
+        </p>
+        <TextInput placeholder="what is your rocket called?" leftIcon={TextInput.Icomoon.rocket}/>
+        <TextInput className="m-top-xsmall m-bottom-xsmall" placeholder="do you even lift?" rightIcon={TextInput.Icomoon.dumbbell}/>
+        <TextInput value="599" leftIcon={TextInput.Icomoon.coinDollar} rightOverlayText="US Dollars"/>
+        <h2 className="m-top-small">Checkbox Input</h2>
+        <pre className="m-bottom-small usage">{`<CheckboxInput {...Form.Bind.checkbox("YOUR_PROPERTY_NAME: boolean") }/>`}</pre>
+        <p>
+        Used to edit boolean values within your form. Use the following Form.Bind values : <pre>checkBox</pre>
+        </p>
+        <CheckboxInput label="Check me!"/>
+        <h2 className="m-top-small">Radio Input</h2>
+        <pre className="m-bottom-small usage">{`<RadioInput {...Form.Bind.radio("YOUR_PROPERTY_NAME: boolean") }/>`}</pre>
+        <p>
+        Used to edit linked boolean values within your form. Use the following Form.Bind values : <pre>radio</pre>
+        </p>
+        <RadioInput name="r-g" labelContent="Check me!"/>
+        <RadioInput name="r-g" labelContent="Check me!"/>
+        <RadioInput name="r-g" labelContent="Check me!"/>
+        <h2 className="m-top-small">Select Input</h2>
+        <pre className="m-bottom-small usage">{`<SelectInput options='(array)' {...Form.Bind.select("YOUR_PROPERTY_NAME") }/>`}</pre>
+        <p>
+        Used to edit a value via a dropdown list. Use the following Form.Bind values : <pre>select, selectId, selectNumeric</pre>
+        </p>
+        <SelectInput options={[{ id: 1, name: 'test item 1'},{ id: 2, name: 'test item 2'},{ id: 3, name: 'test item 3'}]}/>
+        <h2 className="m-top-small">Datepicker Input</h2>
         <pre className="m-bottom-small usage">{`<DatePickerInput date='(moment)' locale='(string)' format='(string)' alwaysShowCalendar='(boolean)' nativeInput='(boolean)' disabled='(boolean)' onDateChanged='((date:moment)=> void)' icon='(string)' min='(moment)' max='(moment)'/>`}</pre>
         <p>Allows you to pick dates.Supports many parameters:
           <ul>
@@ -220,11 +283,6 @@ export class Home extends React.Component<{}, HomeState> {
         </p>
         <DatePickerInput alwaysShowCalendar={false} nativeInput={false} onDateChanged={(d) => console.log(d) } icon={DatePickerInput.Icomoon.calendar2}/>
         <p className="bg-info fg-white p-small m-top-medium t-align-center">Note - Docs from this point are very hazy as I haven't gotten this far yet ;)</p>
-        <h2 className="m-top-small">Checkbox</h2>
-        <p>some stuff here... blah</p>
-        <CheckboxInput label="Check me!"/>
-        <TextInput leftIcon={TextInput.Icomoon.alarm}/>
-        <TextInput rightIcon={TextInput.Icomoon.alarm}/>
         <hr/>
         <h1 className="m-top-large">FAQ's</h1>
         <h2>'I don't agree with x/y/z' or 'this could be done better'</h2>

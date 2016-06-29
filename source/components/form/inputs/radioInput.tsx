@@ -3,7 +3,7 @@ import * as React from "react";
 import {Form} from "../form";
 
 export interface IRadioInputProps extends React.HTMLProps<RadioInput> {
-    label: string;
+    labelContent: string | JSX.Element;
 }
 
 export class RadioInput extends React.Component<IRadioInputProps, {}> {
@@ -12,7 +12,7 @@ export class RadioInput extends React.Component<IRadioInputProps, {}> {
         return (
             <div className="radio">
             <input id={id} {...this.props as any} type="radio"/>
-            <label htmlFor={id}>{this.props.label}</label>
+            <label htmlFor={id}>{this.props.labelContent}</label>
             </div>
         );
     }

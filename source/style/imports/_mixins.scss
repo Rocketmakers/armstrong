@@ -1,15 +1,3 @@
-@mixin responsive-behaviour-phone {
-    @media (max-width: $screen-size-phone) {
-        @content;
-    }
-}
-
-@mixin responsive-behaviour-tablet {
-    @media (max-width: $screen-size-tablet) and (min-width: $screen-size-phone) {
-        @content;
-    }
-}
-
 @mixin reset-appearance {
     resize: none;
     outline: none;

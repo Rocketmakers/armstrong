@@ -1,126 +1,151 @@
 .grid {
-    .row {
-        display: flex;
-        flex: 1;
+  .row {
+    display: flex;
+    flex: 1;
 
-        .col {
-            flex: 1;
-        }
+    .col {
+      flex: 1;
     }
+  }
 
-    &.fixed {
-        flex: none;
-    }
+  &.fixed {
+    flex: none;
+  }
 }
 
-.grid, .row, .col {
-    box-sizing: border-box;
-    background-repeat: no-repeat;
-    background-size: cover;
+.grid,
+.row,
+.col {
+  box-sizing: border-box;
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 %align {
-    display: flex;
-    flex-direction: row;
+  display: flex;
+  flex-direction: row;
 }
 
-.wrap-row{
-    @extend %wrap-row;
+.wrap-row {
+  @extend %wrap-row;
 }
 
 .align-content-horizontal-center {
-    @extend %align-content-horizontal-center;
+  @extend %align-content-horizontal-center;
 }
 
 .align-content-vertical-center {
-    @extend %align-content-vertical-center;
+  @extend %align-content-vertical-center;
 }
 
 .align-content-vertical-top {
-    @extend %align-content-vertical-top;
+  @extend %align-content-vertical-top;
 }
 
 .align-content-vertical-bottom {
-    @extend %align-content-vertical-bottom;
+  @extend %align-content-vertical-bottom;
 }
 
 .align-content-horizontal-left {
-    @extend %align-content-horizontal-left;
+  @extend %align-content-horizontal-left;
 }
 
 .align-content-horizontal-right {
-    @extend %align-content-horizontal-right;
+  @extend %align-content-horizontal-right;
 }
 
 .align-content-center-both {
-    @extend %align-content-center-both;
+  @extend %align-content-center-both;
 }
 
 .fill-container {
   @extend %fill-container;
 }
-
 $grid_column-count: 12;
+
 @for $i from 1 through $grid_column-count {
-    .grid > .row > .col#{$i} {
-        flex: $i;
-    }
+  .grid > .row > .col#{$i} {
+    flex: $i;
+  }
 }
 
 .table-grid {
-    > .row {
-        padding-top: 20px;
-        padding-bottom: 20px;
-        .col:first-of-type {
-            padding-left: 20px;
-        }
-        .col:last-of-type {
-            padding-right: 20px;
-        }
+  > .row {
+    padding-top: 20px;
+    padding-bottom: 20px;
+
+    .col:first-of-type {
+      padding-left: 20px;
     }
-    > .row:first-of-type {
-        background-color: rgba(0,0,0,0.8);
-        * {
-            color: white;
-        }
+
+    .col:last-of-type {
+      padding-right: 20px;
     }
-    > .row:nth-of-type(2n+3) {
-        background: rgba(0,0,0,0.1);
+  }
+
+  > .row:first-of-type {
+    background-color: rgba(0, 0, 0, 0.8);
+
+    * {
+      color: white;
     }
+  }
+
+  > .row:nth-of-type(2n+3) {
+    background: rgba(0, 0, 0, 0.1);
+  }
 }
 
 .grid-debug {
-    border: 1px dashed green;
-    position: relative;
-    .row {
-        border: 1px dashed blue;
-    }
-    .col {
-        border: 1px dashed red;
-    }
-    &:after{
-      content: 'Screen';
-      position: absolute;
-      top: 0;
-      left: 0;
-      background-color: rgba(0,0,0,0.6);
-      color: white;
-      padding: 5px;
-      font-size: 9pt;
-    }
+  border: 1px dashed green;
+  position: relative;
+
+  .row {
+    border: 1px dashed blue;
+  }
+
+  .col {
+    border: 1px dashed red;
+  }
 }
 
 .no-flex {
   @extend %no-flex;
 }
 
-.fixed-central-col-row{
-    display: flex;
-    flex-wrap: nowrap;
-    align-items: stretch;
-    align-content: stretch;
-    justify-content: center;
-    .col{
-        max-width: $fixed-screen-size;
+.fixed-central-col-row {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: stretch;
+  align-content: stretch;
+  justify-content: center;
+
+  .col {
+    max-width: $screen-size-computer;
+  }
+}
+
+@each $size in $spacing-sizes {
+  .grid-p-inner-#{nth($size, 1)} {
+    .row {
+      margin-bottom: nth($size, 2);
+
+      @include last(1){
+        margin-bottom: 0;
+      }
+
+      .col {
+        $new-size: nth($size, 2);
+        margin-left: $new-size / 2;
+        margin-right: $new-size / 2;
+
+        @include first(1) {
+          margin-left: 0;
+        }
+        @include last(1) {
+          margin-right: 0;
+        }
+      }
     }
+  }
 }

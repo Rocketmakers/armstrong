@@ -23,9 +23,10 @@ textarea {
   padding: 10px;
   border: 1px solid $gray-light;
   border-radius: $corner-radius-small;
+  text-align: left;
 
   &:focus {
-    border: 1px solid $condition-color-info;
+    border: 1px solid $color-info;
   }
 
   // BUG : If all browser pfs extend placeholder, chrome stops working :(
@@ -88,7 +89,7 @@ textarea:focus {
   &.text-input-icon-left {
     i {
       position: absolute;
-      z-index: 5;
+      z-index: 2;
       top: 50%;
       transform: translateY(-50%);
     }

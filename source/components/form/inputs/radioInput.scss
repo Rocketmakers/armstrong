@@ -41,7 +41,7 @@
 
         &:focus {
             & + label:before {
-              border-color: $condition-color-info;
+              border-color: $color-info;
             }
         }
     }

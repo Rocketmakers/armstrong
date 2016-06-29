@@ -2,6 +2,7 @@ import * as React from "react";
 import {classNames, cd} from "./../../utilities/classBuilder";
 import { Icon } from "./icon";
 import { Grid, Row, Col, SingleColumnRow } from './../layout/grid';
+import { VelocityComponent, VelocityTransitionGroup } from 'velocity-react';
 
 export interface IDialogProps extends React.HTMLProps<Dialog> {
   layerClass?: string;
