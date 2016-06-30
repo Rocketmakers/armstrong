@@ -11,13 +11,14 @@ export interface IDatePickerInputProps extends React.Props<DatePickerInput> {
   locale?: string;
   date?: moment.Moment | string;
   format?: string;
-  min?: moment.Moment;
-  max?: moment.Moment;
-  onDateChanged?: (date: moment.Moment) => void;
+  min?: moment.Moment | string;
+  max?: moment.Moment | string;
+  onDateChanged?: (date: moment.Moment | string) => void;
   alwaysShowCalendar?: boolean;
   nativeInput?: boolean;
   icon?: string;
   disabled?: boolean;
+  returnString?: boolean;
 }
 
 export interface IDatePickerInputState {
@@ -63,7 +64,7 @@ export class DatePickerInput extends React.Component<IDatePickerInputProps, IDat
     }
     this.setState({ selectedDate: newDate, displayedDate: newDate.clone(), pickerBodyVisible: false });
     if (this.props.onDateChanged) {
-      this.props.onDateChanged(newDate.clone());
+      this.props.onDateChanged(this.props.returnString ? newDate.format("YYYY-MM-DD") : newDate.clone());
     }
   }
   isEndOfMonth(date: moment.Moment): boolean {
@@ -71,10 +72,10 @@ export class DatePickerInput extends React.Component<IDatePickerInputProps, IDat
     return endOfMonth.isSame(date, 'day');
   }
   fallsWithinRange(date: moment.Moment) {
-    if (this.props.min && date.isBefore(this.props.min, 'day')) {
+    if (this.props.min && date.isBefore(this.getMinMaxAsMoment(this.props.min), 'day')) {
       return false;
     }
-    if (this.props.max && date.isAfter(this.props.max, 'day')) {
+    if (this.props.max && date.isAfter(this.getMinMaxAsMoment(this.props.max), 'day')) {
       return false;
     }
     return true;
@@ -120,8 +121,8 @@ export class DatePickerInput extends React.Component<IDatePickerInputProps, IDat
       this.shouldShowOnTop();
     })
   }
-  checkDate(dateString: string, ignoreFormat?: boolean) {
-    var m = moment(dateString, ignoreFormat ? null : this.format, false);
+  checkDate(dateString: string) {
+    var m = moment(dateString, this.format, false);
     if (m.isValid() && this.fallsWithinRange(m)) {
       var formattedDate = m.format(this.format);
       if (this.inputElement) {
@@ -129,7 +130,7 @@ export class DatePickerInput extends React.Component<IDatePickerInputProps, IDat
       }
       this.setState({ selectedDate: m.clone(), displayedDate: m.clone() });
       if (this.props.onDateChanged) {
-        this.props.onDateChanged(m.clone());
+        this.props.onDateChanged(this.props.returnString ? m.format("YYYY-MM-DD") : m.clone());
       }
     } else {
       if (this.inputElement) {
@@ -190,6 +191,20 @@ export class DatePickerInput extends React.Component<IDatePickerInputProps, IDat
       this.setState({ showOnTop: false })
     }
   }
+  getMinMaxAsMoment(input: moment.Moment | string): moment.Moment {
+    if (typeof input === "string") {
+      return moment(input, "YYYY-MM-DD", true)
+    } else {
+      return input;
+    }
+  }
+  getMinMaxAsString(input: moment.Moment | string): string {
+    if (typeof input === "string") {
+      return input;
+    } else {
+      return input.format("YYYY-MM-DD");
+    }
+  }
   render() {
     var weekdays = _.range(0, 7).map(n => <div className="date-picker-week-day" key={`day_name_${n}`}>{moment().startOf('week').add(n, 'days').format('dd') }</div>)
     var days = this.getDaysInMonth();
@@ -202,16 +217,16 @@ export class DatePickerInput extends React.Component<IDatePickerInputProps, IDat
     if (this.props.nativeInput) {
       return (
         <div className={rootClasses}>
-        {this.props.icon && <Icon icon={this.props.icon}/>}
-        <input id={this.inputElementId}
-          type="date"
-          min={this.props.min ? this.props.min.format("YYYY-MM-DD"): ''}
-          max={this.props.max ? this.props.max.format("YYYY-MM-DD"): ''}
-          onChange={e => this.checkDate((e.target as any).value) }
-          defaultValue={this.state.selectedDate.format(this.format) }
-          onBlur={e => this.checkDate((e.target as any).value) }
-          />
-          </div>
+          {this.props.icon && <Icon icon={this.props.icon}/>}
+          <input id={this.inputElementId}
+            type="date"
+            min={this.props.min ? this.getMinMaxAsString(this.props.min) : ''}
+            max={this.props.max ? this.getMinMaxAsString(this.props.max)  : ''}
+            onChange={e => this.checkDate((e.target as any).value) }
+            defaultValue={this.state.selectedDate.format(this.format) }
+            onBlur={e => this.checkDate((e.target as any).value) }
+            />
+        </div>
       )
     }
     return (

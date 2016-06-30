@@ -49,13 +49,13 @@ export class Row extends React.Component<IRow, any> {
     }
 
     if (this.props.maxCols) {
-      colStyles = _.extend({ flexBasis: `${100 / this.props.maxCols}%`, maxWidth: `${100 / this.props.maxCols}%` }, colStyles);
+      colStyles = { flexBasis: `${100 / this.props.maxCols}%`, maxWidth: `${100 / this.props.maxCols}%` };
     }
 
     return <div {...attrs} { ...this.props as any } className={classes} style={styles}>
       {
         React.Children.map(this.props.children, (c: any) => {
-          return c ? React.cloneElement((c as React.ReactElement<any>), { style: _.extend(c.props.style, colStyles) }) : null
+          return c ? React.cloneElement((c as React.ReactElement<any>), { style: colStyles ? _.extend(colStyles, c.props.style) : c.props.style }) : null
         })
       }
     </div>

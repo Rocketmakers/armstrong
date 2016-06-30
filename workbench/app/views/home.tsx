@@ -2,6 +2,7 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import * as moment from 'moment';
+import * as _ from 'underscore';
 import { Link } from "react-router";
 import { Grid, Row, Col, SingleColumnRow, FixedCentralColumnRow } from './../../../source/components/layout/grid';
 import { Button } from './../../../source/components/interaction/button';
@@ -15,6 +16,8 @@ import { TextInput } from './../../../source/components/form/inputs/textInput';
 import { SelectInput } from './../../../source/components/form/inputs/selectInput';
 import { ColorSwatch } from './../components/colorSwatch';
 import { DropdownSelect } from './../../../source/components/form/dropdownSelect';
+import { TimeSelector } from './../../../source/components/form/inputs/timeSelectorInput'
+import apiClient from './../api/apiClient.ts';
 
 interface HomeState {
   date?: moment.Moment;
@@ -59,7 +62,9 @@ export class Home extends React.Component<{}, HomeState> {
         <p>This site is the beginnings of a combined development area for building new components as well as documenting them.</p>
         <hr/>
         <h1 className="m-top-large">Variables & helper classes</h1>
-        <DropdownSelect placeholder="Select a value..." options={[{ id: 1, label: "India" }, { id: 2, label: "Super India" }, { id: 3, label: "United Kingdom" }, { id: 4, label: "United States" }, { id: 5, label: "Canada" }]}/>
+        <DropdownSelect placeholder="Search for an artist..."
+        onSelected={(item)=> console.log}
+        remoteQuery={(input)=> apiClient.searchForArtist(input).then((r)=> _.map(r.json.artists.items, (r: any)=> { return { id: r.id, name: r.name, data: r }}))}/>
         <h2>Colors</h2>
         <pre className="m-bottom-small usage">{`<div className='bg-brand-primary fg-white' />`}</pre>
         <p>All colors can be used to set both the foreground and background of any element.Use <pre>fg-[colorname]</pre> for foreground and <pre>bg-[colorname]</pre> for backgrounds.A full list is as follows:
@@ -243,7 +248,7 @@ export class Home extends React.Component<{}, HomeState> {
         </p>
         <TextInput placeholder="what is your rocket called?" leftIcon={TextInput.Icomoon.rocket}/>
         <TextInput className="m-top-xsmall m-bottom-xsmall" placeholder="do you even lift?" rightIcon={TextInput.Icomoon.dumbbell}/>
-        <TextInput value="599" leftIcon={TextInput.Icomoon.coinDollar} rightOverlayText="US Dollars"/>
+        <TextInput defaultValue="599" leftIcon={TextInput.Icomoon.coinDollar} rightOverlayText="US Dollars"/>
         <h2 className="m-top-small">Checkbox Input</h2>
         <pre className="m-bottom-small usage">{`<CheckboxInput {...Form.Bind.checkbox("YOUR_PROPERTY_NAME: boolean") }/>`}</pre>
         <p>
@@ -281,7 +286,7 @@ export class Home extends React.Component<{}, HomeState> {
             <li><pre>disabled (boolean) </pre> - Wether the control is interactable by the user</li>
           </ul>
         </p>
-        <DatePickerInput alwaysShowCalendar={false} nativeInput={false} onDateChanged={(d) => console.log(d) } icon={DatePickerInput.Icomoon.calendar2}/>
+        <DatePickerInput alwaysShowCalendar={false} nativeInput={true} returnString={true} onDateChanged={(d) => console.log(d) } icon={DatePickerInput.Icomoon.calendar2}/>
         <p className="bg-info fg-white p-small m-top-medium t-align-center">Note - Docs from this point are very hazy as I haven't gotten this far yet ;)</p>
         <hr/>
         <h1 className="m-top-large">FAQ's</h1>

@@ -17,7 +17,7 @@ export { IDatePickerInputProps, DatePickerInput } from "./components/form/inputs
 export { ITextInputProps, TextInput } from "./components/form/inputs/textInput";
 export { ITimeSelectorProps, TimeSelector } from "./components/form/inputs/timeSelectorInput";
 export { IForm, Form } from "./components/form/form";
-export { IDropdownSelectProps, IDropDownOption, DropdownSelect } from "./components/form/dropdownSelect";
+export { IDropdownSelectProps, IDropdownOption, DropdownSelect } from "./components/form/dropdownSelect";
 
 // interaction
 export { IButtonProps, Button } from "./components/interaction/button";
