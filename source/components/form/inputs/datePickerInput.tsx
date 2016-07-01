@@ -28,6 +28,8 @@ export interface IDatePickerInputState {
   showOnTop?: boolean;
 }
 
+const isoFormat = "YYYY-MM-DD";
+
 export class DatePickerInput extends React.Component<IDatePickerInputProps, IDatePickerInputState> {
   static Icomoon = Icons.Icomoon;
 
@@ -64,7 +66,7 @@ export class DatePickerInput extends React.Component<IDatePickerInputProps, IDat
     }
     this.setState({ selectedDate: newDate, displayedDate: newDate.clone(), pickerBodyVisible: false });
     if (this.props.onDateChanged) {
-      this.props.onDateChanged(this.props.returnString ? newDate.format("YYYY-MM-DD") : newDate.clone());
+      this.props.onDateChanged(this.props.returnString ? newDate.format(isoFormat) : newDate.clone());
     }
   }
   isEndOfMonth(date: moment.Moment): boolean {
@@ -130,7 +132,7 @@ export class DatePickerInput extends React.Component<IDatePickerInputProps, IDat
       }
       this.setState({ selectedDate: m.clone(), displayedDate: m.clone() });
       if (this.props.onDateChanged) {
-        this.props.onDateChanged(this.props.returnString ? m.format("YYYY-MM-DD") : m.clone());
+        this.props.onDateChanged(this.props.returnString ? m.format(isoFormat) : m.clone());
       }
     } else {
       if (this.inputElement) {
@@ -139,10 +141,10 @@ export class DatePickerInput extends React.Component<IDatePickerInputProps, IDat
     }
   }
   componentWillMount() {
-    this.format = this.props.nativeInput ? "YYYY-MM-DD" : this.props.format;
+    this.format = this.props.nativeInput ? isoFormat : this.props.format;
     if (this.props.date) {
       if (typeof this.props.date === "string") {
-        var mDate = moment(this.props.date as string, this.format);
+        var mDate = moment(this.props.date as string, isoFormat);
         this.setState({ selectedDate: mDate, displayedDate: mDate.clone() });
       }
       else {
@@ -193,7 +195,7 @@ export class DatePickerInput extends React.Component<IDatePickerInputProps, IDat
   }
   getMinMaxAsMoment(input: moment.Moment | string): moment.Moment {
     if (typeof input === "string") {
-      return moment(input, "YYYY-MM-DD", true)
+      return moment(input, isoFormat, true)
     } else {
       return input;
     }
@@ -202,7 +204,7 @@ export class DatePickerInput extends React.Component<IDatePickerInputProps, IDat
     if (typeof input === "string") {
       return input;
     } else {
-      return input.format("YYYY-MM-DD");
+      return input.format(isoFormat);
     }
   }
   render() {
