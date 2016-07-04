@@ -5,7 +5,7 @@ import { Icon } from "./../display/icon";
 import { Icons } from "./../../utilities/icons";
 
 export interface IButtonProps extends React.HTMLProps<Button> {
-  text: string;
+  text: string | JSX.Element;
   onClick?: (e?)=> void;
   leftIcon?: string;
   rightIcon?: string;

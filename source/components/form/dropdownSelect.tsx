@@ -16,9 +16,12 @@ export interface IDropdownSelectProps extends React.Props<DropdownSelect> {
   value?: IDropdownOption;
   minimumLength?: number;
   placeholder?: string;
+  searchPlaceholder?: string;
+  noResultsMessage?: string;
   options?: IDropdownOption[];
   remoteThrottle?: number;
   remoteQuery?: (query: string) => Promise<IDropdownOption[]>;
+  remoteQueryOnOpen?: boolean;
   hasGoButton?: boolean;
   goButtonContent?: JSX.Element | string;
   onSelected?: (selectedOption: IDropdownOption) => void;
@@ -43,7 +46,7 @@ export class DropdownSelect extends React.Component<IDropdownSelectProps, IDropd
     super();
     this.state = { filteredOptions: [], query: "", open: false, selectedValue: null, selectedIndex: 0, remoteSearching: false, offsetIndex: 0 };
   }
-  filterRemote(query: string) {
+  filterRemote(query: string, immediate?: boolean) {
     if (this.timer) {
       window.clearTimeout(this.timer);
     }
@@ -52,7 +55,7 @@ export class DropdownSelect extends React.Component<IDropdownSelectProps, IDropd
       this.props.remoteQuery(query).then((filteredOptions) => {
         this.setState({ filteredOptions, remoteSearching: false })
       })
-    }, this.props.remoteThrottle || 500)
+    }, immediate ? 0 : this.props.remoteThrottle || 500)
 
   }
   filter(query: string) {
@@ -73,7 +76,10 @@ export class DropdownSelect extends React.Component<IDropdownSelectProps, IDropd
     if (!this.state.open) {
       this.setState({ open: true }, () => {
         (ReactDOM.findDOMNode(this).querySelector("input") as any).focus()
-        document.addEventListener("click", this, false)
+        document.addEventListener("click", this, false);
+        if (this.props.remoteQueryOnOpen) {
+          this.filterRemote("", true);
+        }
       })
     } else {
       this.setState({ open: false, query: "", filteredOptions: this.props.options || [] })
@@ -139,8 +145,12 @@ export class DropdownSelect extends React.Component<IDropdownSelectProps, IDropd
     }
   }
   buttonClick() {
-    var selectedValue = this.state.filteredOptions[this.state.selectedIndex];
-    this.selectItem(selectedValue);
+    if (this.state.filteredOptions.length !== 0) {
+      var selectedValue = this.state.filteredOptions[this.state.selectedIndex];
+      if (selectedValue) {
+        this.selectItem(selectedValue);
+      }
+    }
   }
   selectItem(selectedValue: IDropdownOption) {
     this.setState({ selectedValue, open: false, query: "", filteredOptions: this.props.options || [], offsetIndex: 0 });
@@ -156,7 +166,7 @@ export class DropdownSelect extends React.Component<IDropdownSelectProps, IDropd
           <Row>
             <Col onClick={() => this.focusInput() }>{this.state.selectedValue ? <div>{this.state.selectedValue.name}</div> : <div className="placeholder">{this.props.placeholder}</div>}</Col>
             {this.state.selectedValue && this.props.canClear && <Col fixed={true} className="clear-selected p-right-xsmall" onClick={() => this.setState({ selectedValue: null, open: false, query: "", filteredOptions: this.props.options || [] }) }><Icon icon={Icon.Icomoon.cross}/></Col> }
-            {this.props.hasGoButton && <Col fixed={true}><Button text="Go" className="bg-positive" onClick={() => this.buttonClick() }/></Col> }
+            {this.props.hasGoButton && <Col fixed={true}><Button text={this.props.goButtonContent || "Go"} className="bg-positive" onClick={() => this.buttonClick() }/></Col> }
           </Row>
         </Grid>
         {this.state.open &&
@@ -165,13 +175,13 @@ export class DropdownSelect extends React.Component<IDropdownSelectProps, IDropd
               value={this.state.query}
               onKeyUp={(e) => this.checkKey(e) }
               onChange={(e) => this.setState({ query: (e.target as any).value }) }
-              placeholder="start typing to filter results..." />
+              placeholder={this.props.searchPlaceholder || "start typing to filter results..."} />
             {this.state.remoteSearching && <Icon className="spinner fg-info" icon={Icon.Icomoon.spinner2}/>}
             <div data-id="dropdown-select-list" className="dropdown-select-list" style={{ maxHeight: `${(this.props.visibleItems || 3) * this.itemHeight}` }}>
               {this.state.filteredOptions && this.state.filteredOptions.map((o, i) =>
                 <div data-index={i} key={`dd-item-${i}`} className={`dd-list-item${i === this.state.selectedIndex ? ' selected' : ''}`}
                   onClick={() => this.selectItem(o) }>{o.name}</div>) }
-              {this.state.filteredOptions.length === 0 && <div className="dd-list-item-no-select">No results...</div>}
+              {this.state.filteredOptions.length === 0 && <div className="dd-list-item-no-select">{this.props.noResultsMessage || "No results..."}</div>}
             </div>
           </div>
         }
