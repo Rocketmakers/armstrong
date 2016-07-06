@@ -91,7 +91,7 @@ export class BurgerMenu extends React.Component<IBurgerMenuProps, {}>{
 
   renderNav(children: any[]) {
     return (
-      <ul>{React.Children.map(children, (c, index) => {
+      <ul className="burger-menu-list" role="menu" aria-activedescendant aria-expanded={ this.isOpen } aria-hidden={ !this.isOpen }>{React.Children.map(children, (c, index) => {
         return <li onClick={(e) => this.closeNav(e, () => this.closeMenu()) } key={`nav_item_${index}`}>{c}</li>
       }) }
       </ul>);
@@ -113,6 +113,7 @@ export interface IBurgerMenuItemProps extends React.Props<BurgerMenuItem> {
   onClick?: () => void;
   style?: any;
   delayActionMs?: number;
+  active?: boolean;
 }
 
 export class BurgerMenuItem extends React.Component<IBurgerMenuItemProps, {}> {
@@ -120,13 +121,13 @@ export class BurgerMenuItem extends React.Component<IBurgerMenuItemProps, {}> {
     if (this.props.delayActionMs) {
       window.setTimeout(() => {
         handler()
-      }, 150)
+      }, this.props.delayActionMs)
     } else {
       handler()
     }
   }
   render() {
-    return <div style={this.props.style} onClick={() => this.props.onClick ? this.handleClick(this.props.onClick) : null }>
+    return <div role="menuitem" className={`burger-menu-item${this.props.active ? ' active' : ''}`} style={this.props.style} aria-selected={ this.props.active || false } onClick={() => this.props.onClick ? this.handleClick(this.props.onClick) : null }>
       {this.props.icon && <Icon icon={this.props.icon}/>}{this.props.title}
     </div>
   }

@@ -30,11 +30,11 @@ nav.burger-menu {
     width: 250px;
     z-index: 255;
     background-color: $gray-medium;
-    ul{
+    ul.burger-menu-list {
         list-style: none;
         padding: 0;
         margin: 0;
-        li div {
+        li div.burger-menu-item {
             list-style: none;
             display: block;
             padding: 20px;
