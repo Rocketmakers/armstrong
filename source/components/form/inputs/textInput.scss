@@ -1,5 +1,4 @@
 %placeholder {
-  font-style: italic;
   color: rgba(0, 0, 0, 0.4);
 }
 
@@ -17,10 +16,10 @@ input[type='date'],
 select,
 textarea {
   @include reset-appearance;
+  background-color: $white;
   box-sizing: border-box;
   width: 100%;
-  height: $form-field-height;
-  padding: 10px;
+  padding: $spacing-xsmall*1.2;
   border: 1px solid $gray-light;
   border-radius: $corner-radius-small;
   text-align: left;
@@ -35,19 +34,16 @@ textarea {
   }
 
   &::-moz-placeholder {
-    font-style: italic;
-
     /* Firefox 19+ */
     color: rgba(0, 0, 0, 0.4);
   }
 
   &:-ms-input-placeholder {
-    font-style: italic;
     color: rgba(0, 0, 0, 0.4);
   }
 
   &:focus:required:invalid {
-    border-color: red;
+    border-color: $color-negative;
   }
 
   &[readonly] {
@@ -61,7 +57,6 @@ textarea {
 
 textarea:focus {
   // BUG : Text areas seem to need additional offset to stop pixel jumping
-  margin-bottom: 12px;
 }
 
 .text-input-disabled {
@@ -73,7 +68,7 @@ textarea:focus {
   input[type='url'],
   textarea {
     color: rgba(0, 0, 0, 0.3);
-    background-color: rgba(0, 0, 0, 0.1);
+    background-color: $gray-very-light;
   }
 
   i {
@@ -83,7 +78,6 @@ textarea:focus {
 
 .text-input {
   position: relative;
-  padding-right: 1px;
 
   &.text-input-icon-right,
   &.text-input-icon-left {
@@ -115,17 +109,30 @@ textarea:focus {
     }
   }
 
-  &.has-text-overlay {
+  &.has-text-overlay-right {
     input,
     textarea {
-      padding-right: 30px;
+      padding-right: $spacing-large * 0.9;
+    }
+  }
+  &.has-text-overlay-left {
+    input,
+    textarea {
+      padding-left: $spacing-large * 0.9;
     }
   }
 }
 
-.input-overlay-text {
+.input-overlay-text-right {
   position: absolute;
   top: 12px;
-  right: 10px;
+  right: 18px;
+  opacity: 0.4;
+}
+
+.input-overlay-text-left {
+  position: absolute;
+  top: 12px;
+  left: 18px;
   opacity: 0.4;
 }

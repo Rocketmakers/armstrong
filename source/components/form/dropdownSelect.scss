@@ -1,85 +1,104 @@
-@keyframes spin{
-  0%{
-    transform: rotateZ(0deg)
+@keyframes spin {
+  0% {
+    transform: rotateZ(0deg);
   }
-  100%{
-    transform: rotateZ(360deg)
+
+  100% {
+    transform: rotateZ(360deg);
   }
 }
 
 .dropdown-select {
   position: relative;
 
+  .dropdown-select-list {
+    background-color: white;
+    overflow-x: hidden;
+    overflow-y: auto;
 
-.dropdown-select-list {
-  background-color: white;
-  overflow-x: hidden;
-  overflow-y: auto;
+    .dd-list-item {
+      padding: $spacing-small;
+      text-align: left;
+      cursor: pointer;
 
-  .dd-list-item {
-    padding: $spacing-small;
-    text-align: left;
-    cursor: pointer;
-    &:hover {
-      background-color: $gray-light;
+      &:hover {
+        background-color: $gray-light;
+      }
+
+      &.selected {
+        background-color: $gray-medium;
+        color: $white;
+      }
+
+      &.highlighted {
+        background-color: $gray-light;
+      }
     }
-    &.selected{
-      background-color: $gray-medium;
-      color: $white;
-    }
-    &.highlighted{
-      background-color: $gray-light;
+
+    .dd-list-item-no-select {
+      text-align: left;
+      padding: $spacing-small;
+      opacity: 0.5;
     }
   }
-  .dd-list-item-no-select{
-    text-align: left;
-    padding: $spacing-small;
-    opacity: 0.5;
-  }
-}
 
-.dropdown-select-list-wrapper{
-    position: absolute;
+  .dropdown-select-list-wrapper {
     width: 100%;
-    border: 1px solid $gray-light;
-    border-top: none;
-    box-shadow: 0 0 5px rgba(0,0,0,0.1);
 
-    .spinner{
+
+    .spinner {
       animation: spin 0.3s forwards infinite linear;
       position: absolute;
       right: $spacing-small;
       top: $spacing-small*0.75;
+      z-index: 2;
     }
 
-
-    }
-    .placeholder{
-      opacity: 0.5;
-    }
-
-    .btn{
-      padding: 0 $spacing-small;
-      height: $form-field-height;
-      box-shadow: none;
-      border-top-left-radius: 0;
-      border-bottom-left-radius: 0;
-    }
-
-    .dropdown-value-display {
-      box-sizing: border-box;
+    .dropdown-select-list {
       width: 100%;
-      height: $form-field-height;
-      line-height: $form-field-height;
-      padding-left: 10px;
+      position: absolute;
       border: 1px solid $gray-light;
-      border-radius: $corner-radius-small;
-      text-align: left;
-      position: relative;
+      border-top: none;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+      margin-top: -3px;
+      padding-top: 3px;
+      z-index: 0;
     }
-    input{
-      border-radius: 0;
-      border: none !important;
-      border-bottom: 1px solid $gray-light !important;
-    }
+  }
+
+  .placeholder {
+    opacity: 0.4;
+  }
+
+  .btn {
+    padding: 0 $spacing-small;
+    height: $form-field-height;
+    box-shadow: none;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+
+  .dropdown-value-display {
+    box-sizing: border-box;
+    width: 100%;
+    height: $form-field-height;
+    line-height: $form-field-height;
+    padding-left: 10px;
+    border: 1px solid $gray-light;
+    border-radius: $corner-radius-small;
+    text-align: left;
+    position: relative;
+  }
+  input{
+    position: relative;
+    z-index: 1;
+  }
+
+  .clear-selected{
+    cursor: pointer;
+  }
+  &.disabled{
+    background-color: $gray-very-light;
+    pointer-events: none;
+  }
 }

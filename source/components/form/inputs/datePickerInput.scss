@@ -8,12 +8,12 @@ $header-height: 40px;
   width: 100%;
 
   &.disabled {
-    opacity: 0.5;
+    opacity: 0.6;
     pointer-events: none;
 
     input {
       pointer-events: none;
-      background-color: rgba(255, 255, 255, 0.4);
+      background-color: $gray-very-light;
 
       &:focus {
         border: 1px solid rgba(255, 255, 255, 0.3) !important;

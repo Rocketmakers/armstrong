@@ -27,6 +27,7 @@ export interface IDropdownSelectProps extends React.Props<DropdownSelect> {
   onSelected?: (selectedOption: IDropdownOption) => void;
   visibleItems?: number;
   canClear?: boolean;
+  disabled?: boolean;
 }
 
 export interface IDropdownSelectState {
@@ -161,21 +162,22 @@ export class DropdownSelect extends React.Component<IDropdownSelectProps, IDropd
   }
   render() {
     return (
-      <div className={`dropdown-select${this.props.className ? ` ${this.props.className}` : ''}`}>
-        <Grid className="dropdown-value-display" >
+      <div className={`dropdown-select${this.props.className ? ` ${this.props.className}` : ''}${this.props.disabled ? ' disabled': ''}`}>
+        {!this.state.open && <Grid className="dropdown-value-display" >
           <Row>
-            <Col onClick={() => this.focusInput() }>{this.state.selectedValue ? <div>{this.state.selectedValue.name}</div> : <div className="placeholder">{this.props.placeholder}</div>}</Col>
+            <Col onClick={() => this.focusInput() }>{this.state.selectedValue ? <div>{this.state.selectedValue.name}</div> : <div className="placeholder">{this.props.placeholder || "start typing to filter results..."}</div>}</Col>
             {this.state.selectedValue && this.props.canClear && <Col fixed={true} className="clear-selected p-right-xsmall" onClick={() => this.setState({ selectedValue: null, open: false, query: "", filteredOptions: this.props.options || [] }) }><Icon icon={Icon.Icomoon.cross}/></Col> }
             {this.props.hasGoButton && <Col fixed={true}><Button text={this.props.goButtonContent || "Go"} className="bg-positive" onClick={() => this.buttonClick() }/></Col> }
           </Row>
         </Grid>
+        }
         {this.state.open &&
           <div className="dropdown-select-list-wrapper">
             <input type="text"
               value={this.state.query}
               onKeyUp={(e) => this.checkKey(e) }
               onChange={(e) => this.setState({ query: (e.target as any).value }) }
-              placeholder={this.props.searchPlaceholder || "start typing to filter results..."} />
+              placeholder={this.props.placeholder || "start typing to filter results..."} />
             {this.state.remoteSearching && <Icon className="spinner fg-info" icon={Icon.Icomoon.spinner2}/>}
             <div data-id="dropdown-select-list" className="dropdown-select-list" style={{ maxHeight: `${(this.props.visibleItems || 3) * this.itemHeight}` }}>
               {this.state.filteredOptions && this.state.filteredOptions.map((o, i) =>

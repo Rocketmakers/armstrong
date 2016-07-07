@@ -52,7 +52,7 @@ export class Home extends React.Component<{}, HomeState> {
     return (
       <div className="p-small">
         <Dialog title="I am a dialog!" isOpen={this.state.dialogOpen} onClose={() => this.setState({ dialogOpen: false }) }>
-          hello world!
+        <DatePickerInput alwaysShowCalendar={false} nativeInput={false} returnString={true} onDateChanged={(d) => console.log(d) } icon={DatePickerInput.Icomoon.calendar2}/>
         </Dialog>
         <h1>Whats all this then?</h1>
         <h2>Background</h2>
@@ -63,7 +63,9 @@ export class Home extends React.Component<{}, HomeState> {
         <hr/>
         <h1 className="m-top-large">Variables & helper classes</h1>
         <DropdownSelect placeholder="Search for an artist..."
+        disabled={true}
         onSelected={(item)=> console.log}
+        canClear={true}
         remoteQuery={(input)=> apiClient.searchForArtist(input).then((r)=> _.map(r.json.artists.items, (r: any)=> { return { id: r.id, name: r.name, data: r }}))}/>
         <h2>Colors</h2>
         <pre className="m-bottom-small usage">{`<div className='bg-brand-primary fg-white' />`}</pre>
@@ -71,9 +73,9 @@ export class Home extends React.Component<{}, HomeState> {
           <ul>
             <li><pre>brand-primary</pre> - Set this to your brands main color and use where you need a brand accent (headers, logos etc) </li>
             <li><pre>brand-secondary</pre> - Set this to your brands secondary color and use where you need a more minor brand accent (headers, logos etc) </li>
-            <li><pre>positive</pre> - This color should be used for affirmative actions or messages (eg an 'OK' button or a success message) </li>
-            <li><pre>negative</pre> - This color should be used for negative actions or messages (eg a 'Cancel' button or error message) </li>
-            <li><pre>info</pre> - This color should be used for informational messages (eg a contextual action button or message like 'something is happening') </li>
+            <li><pre>positive</pre> - This color should be used for affirmative actions or messages (eg an OK button or a success message) </li>
+            <li><pre>negative</pre> - This color should be used for negative actions or messages (eg a Cancel button or error message) </li>
+            <li><pre>info</pre> - This color should be used for informational messages (eg a contextual action button or message like something is happening) </li>
             <li><pre>gray-very-dark</pre> - Use where it contrasts correctly with other colors</li>
             <li><pre>gray-dark</pre> - Use where it contrasts correctly with other colors</li>
             <li><pre>gray-medium</pre> - Use where it contrasts correctly with other colors</li>
@@ -203,7 +205,7 @@ export class Home extends React.Component<{}, HomeState> {
             <li><pre>layerClass (string)</pre> - This allows you to layer dialogs (a confirmation for example) by setting a class with a higher <pre>z-index</pre></li>
             <li><pre>onOpen (()=> void))</pre> - Fires when the dialog opens</li>
             <li><pre>onClose (()=> void))</pre> - Fires when the dialog closes</li>
-            <li><pre>onXClicked (()=> void))</pre> - Fires when the user clicks the 'X' in the topright of the dialog. Useful for confirmations</li>
+            <li><pre>onXClicked (()=> void))</pre> - Fires when the user clicks the X in the topright of the dialog. Useful for confirmations</li>
           </ul>
         </p>
         <Button text="Click for sick dialog" className={`bg-${this.state.selectedColorClass} m-right-xsmall`} onClick={() => this.setState({ dialogOpen: true }) }/>
@@ -248,7 +250,9 @@ export class Home extends React.Component<{}, HomeState> {
         </p>
         <TextInput placeholder="what is your rocket called?" leftIcon={TextInput.Icomoon.rocket}/>
         <TextInput className="m-top-xsmall m-bottom-xsmall" placeholder="do you even lift?" rightIcon={TextInput.Icomoon.dumbbell}/>
-        <TextInput defaultValue="599" leftIcon={TextInput.Icomoon.coinDollar} rightOverlayText="US Dollars"/>
+        <TextInput className="m-bottom-xsmall" defaultValue="599" leftIcon={TextInput.Icomoon.coinDollar} rightOverlayText="%"/>
+        <TextInput disabled={true} className="m-bottom-xsmall" defaultValue="599" leftOverlayText="$"/>
+        <TextInput disabled={true}  multiLine={true}/>
         <h2 className="m-top-small">Checkbox Input</h2>
         <pre className="m-bottom-small usage">{`<CheckboxInput {...Form.Bind.checkbox("YOUR_PROPERTY_NAME: boolean") }/>`}</pre>
         <p>
@@ -260,7 +264,7 @@ export class Home extends React.Component<{}, HomeState> {
         <p>
         Used to edit linked boolean values within your form. Use the following Form.Bind values : <pre>radio</pre>
         </p>
-        <RadioInput name="r-g" labelContent="Check me!"/>
+        <RadioInput disabled={true}  name="r-g" labelContent="Check me!"/>
         <RadioInput name="r-g" labelContent="Check me!"/>
         <RadioInput name="r-g" labelContent="Check me!"/>
         <h2 className="m-top-small">Select Input</h2>
@@ -268,36 +272,36 @@ export class Home extends React.Component<{}, HomeState> {
         <p>
         Used to edit a value via a dropdown list. Use the following Form.Bind values : <pre>select, selectId, selectNumeric</pre>
         </p>
-        <SelectInput options={[{ id: 1, name: 'test item 1'},{ id: 2, name: 'test item 2'},{ id: 3, name: 'test item 3'}]}/>
+        <SelectInput disabled={true}  options={[{ id: 1, name: 'test item 1'},{ id: 2, name: 'test item 2'},{ id: 3, name: 'test item 3'}]}/>
         <h2 className="m-top-small">Datepicker Input</h2>
         <pre className="m-bottom-small usage">{`<DatePickerInput date='(moment)' locale='(string)' format='(string)' alwaysShowCalendar='(boolean)' nativeInput='(boolean)' disabled='(boolean)' onDateChanged='((date:moment)=> void)' icon='(string)' min='(moment)' max='(moment)'/>`}</pre>
         <p>Allows you to pick dates.Supports many parameters:
           <ul>
             <li><pre>className (string) </pre> - CSS classnames</li>
-            <li><pre>locale (string) </pre> - The datepickers locale setting.Defaults to 'en-gb'.Takes other ISO formatted locale codes (see moment docs for more) </li>
+            <li><pre>locale (string) </pre> - The datepickers locale setting.Defaults to en-gb.Takes other ISO formatted locale codes (see moment docs for more) </li>
             <li><pre>date (moment) </pre> - The pickers current/initial date as a moment object</li>
-            <li><pre>format (string) </pre> - A string determining the displayed date format.Defaults to 'DD/MM/YYYY'</li>
+            <li><pre>format (string) </pre> - A string determining the displayed date format.Defaults to DD/MM/YYYY</li>
             <li><pre>min (moment) </pre> - The minimum date as a moment</li>
             <li><pre>max (moment) </pre> - The maximum date as a moment</li>
             <li><pre>onDateChanged (moment) => void</pre> - Fires when a new date is selected and returns a moment object</li>
             <li><pre>alwaysShowCalendar (boolean) </pre> - Render the calendar all the time, even when not focused</li>
             <li><pre>nativeInput (boolean) </pre> - Use a input type date instead of the picker.Using logic to determine mobile platform here is a good idea</li>
-            <li><pre>icon (string) </pre> - The icon to show on the left of the date ('DatePickerInput.Icomoon.Calendar2' for example) </li>
+            <li><pre>icon (string) </pre> - The icon to show on the left of the date (DatePickerInput.Icomoon.Calendar2 for example) </li>
             <li><pre>disabled (boolean) </pre> - Wether the control is interactable by the user</li>
           </ul>
         </p>
-        <DatePickerInput alwaysShowCalendar={false} nativeInput={true} returnString={true} onDateChanged={(d) => console.log(d) } icon={DatePickerInput.Icomoon.calendar2}/>
+        <DatePickerInput disabled={true} alwaysShowCalendar={false} nativeInput={true} returnString={true} onDateChanged={(d) => console.log(d) } icon={DatePickerInput.Icomoon.calendar2}/>
         <p className="bg-info fg-white p-small m-top-medium t-align-center">Note - Docs from this point are very hazy as I haven't gotten this far yet ;)</p>
         <hr/>
-        <h1 className="m-top-large">FAQ's</h1>
-        <h2>'I don't agree with x/y/z' or 'this could be done better'</h2>
+        <h1 className="m-top-large">FAQs</h1>
+        <h2>I dont agree with x/y/z or this could be done better</h2>
         <p>Everything you see here is open source and on <a target="_blank" href="https://github.com/Rocketmakers/armstrong-react">GitHub</a> so please feel free to fork and make suggestions.</p>
-        <h2>'Why don't you have this component' or 'I've got an idea for a new component'</h2>
+        <h2>Why dont you have this component or Ive got an idea for a new component</h2>
         <p>We add components we use a lot in our day to day development. We try not to add very specific, project based components here. That said, if theres something obvbious just stick a feature request in on <a target="_blank" href="https://github.com/Rocketmakers/armstrong-react">GitHub</a></p>
-        <h2>'It looks very plain..'</h2>
-        <p>Armstrong is not and will never be anything like Bootstrap. It's intentionally styled very minimally so a dedicated designer can work with it, not against it. It's built on top of variables which are designed to be overridden.</p>
-        <h2>'Is it responsive?'</h2>
-        <p>At the moment thats up to you. We tried building responsiveness into some controls, but we realised the approach varies so much from project to project it didn't make sense to try and build it in. Obviously, this could change if we come up with something magical ;)</p>
+        <h2>It looks very plain..</h2>
+        <p>Armstrong is not and will never be anything like Bootstrap. Its intentionally styled very minimally so a dedicated designer can work with it, not against it. Its built on top of variables which are designed to be overridden.</p>
+        <h2>Is it responsive?</h2>
+        <p>At the moment thats up to you. We tried building responsiveness into some controls, but we realised the approach varies so much from project to project it didnt make sense to try and build it in. Obviously, this could change if we come up with something magical ;)</p>
       </div>
     );
   }

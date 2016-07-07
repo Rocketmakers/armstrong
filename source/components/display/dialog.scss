@@ -49,7 +49,6 @@ $dialog-header-height: 50px;
         transform: translate(-50%, -50%);
         animation-name: scale-down;
         animation-duration: 0.3s;
-        overflow: hidden;
 
         @include cubic-bezier(0.835, 0.305, 0.190, 1.250);
         .dialog-header {
@@ -107,7 +106,6 @@ $dialog-header-height: 50px;
             box-sizing: border-box;
             height: 100%;
             max-height: calc(100vh - 65px);
-            overflow-y: auto;
             padding: $spacing-small;
         }
 

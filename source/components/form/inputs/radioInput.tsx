@@ -12,7 +12,8 @@ export class RadioInput extends React.Component<IRadioInputProps, {}> {
         return (
             <div className="radio">
             <input id={id} {...this.props as any} type="radio"/>
-            <label htmlFor={id}>{this.props.labelContent}</label>
+            <label htmlFor={id}/>
+            <label className="radio-label" htmlFor={id}>{this.props.labelContent}</label>
             </div>
         );
     }
