@@ -1,6 +1,6 @@
 {
   "name": "armstrong-react",
-  "version": "0.4.51",
+  "version": "0.4.52",
   "dependencies": {
     "abbrev": {
       "version": "1.0.7",

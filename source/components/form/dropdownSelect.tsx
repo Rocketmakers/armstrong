@@ -8,12 +8,12 @@ import { Button } from './../interaction/button';
 export interface IDropdownOption {
   id: number;
   name: string;
-  data: any;
+  data?: any;
 }
 
 export interface IDropdownSelectProps extends React.Props<DropdownSelect> {
   className?: string;
-  value?: IDropdownOption;
+  value?: IDropdownOption | IDropdownOption[];
   minimumLength?: number;
   placeholder?: string;
   searchPlaceholder?: string;
@@ -24,17 +24,18 @@ export interface IDropdownSelectProps extends React.Props<DropdownSelect> {
   remoteQueryOnOpen?: boolean;
   hasGoButton?: boolean;
   goButtonContent?: JSX.Element | string;
-  onSelected?: (selectedOption: IDropdownOption) => void;
+  onSelected?: (selectedOption: IDropdownOption | IDropdownOption[]) => void;
   visibleItems?: number;
   canClear?: boolean;
   disabled?: boolean;
+  multiSelect?: boolean;
 }
 
 export interface IDropdownSelectState {
   filteredOptions?: IDropdownOption[];
   query?: string;
   open?: boolean;
-  selectedValue?: IDropdownOption;
+  selectedValue?: IDropdownOption | IDropdownOption[];
   selectedIndex?: number;
   remoteSearching?: boolean;
   offsetIndex?: number;
@@ -42,7 +43,12 @@ export interface IDropdownSelectState {
 
 export class DropdownSelect extends React.Component<IDropdownSelectProps, IDropdownSelectState> {
   private timer: number;
-  private itemHeight = 50;
+  // drive this through css ideally. Currently fixed height plus border (50 + 2px)
+  private itemHeight = 52;
+  static defaultProps = {
+    remoteThrottle: 500,
+    minimumLength: 1
+  }
   constructor() {
     super();
     this.state = { filteredOptions: [], query: "", open: false, selectedValue: null, selectedIndex: 0, remoteSearching: false, offsetIndex: 0 };
@@ -56,7 +62,7 @@ export class DropdownSelect extends React.Component<IDropdownSelectProps, IDropd
       this.props.remoteQuery(query).then((filteredOptions) => {
         this.setState({ filteredOptions, remoteSearching: false })
       })
-    }, immediate ? 0 : this.props.remoteThrottle || 500)
+    }, immediate ? 0 : this.props.remoteThrottle)
 
   }
   filter(query: string) {
@@ -65,7 +71,7 @@ export class DropdownSelect extends React.Component<IDropdownSelectProps, IDropd
       this.filterRemote(query);
     }
     else {
-      if (query.length <= this.props.minimumLength || 1) {
+      if (query.length < this.props.minimumLength) {
         this.setState({ filteredOptions: this.props.options, query }, () => this.constrainIndex());
       } else {
         this.setState({ filteredOptions: _.reject(this.props.options, o => o.name.toLowerCase().indexOf(q) === -1), query }, () => this.constrainIndex());;
@@ -73,8 +79,8 @@ export class DropdownSelect extends React.Component<IDropdownSelectProps, IDropd
     }
 
   }
-  focusInput() {
-    if (!this.state.open) {
+  focusInput(e) {
+    if (!this.state.open && !e.target.classList.contains("clear-selected")) {
       this.setState({ open: true }, () => {
         (ReactDOM.findDOMNode(this).querySelector("input") as any).focus()
         document.addEventListener("click", this, false);
@@ -83,22 +89,26 @@ export class DropdownSelect extends React.Component<IDropdownSelectProps, IDropd
         }
       })
     } else {
-      this.setState({ open: false, query: "", filteredOptions: this.props.options || [] })
-      document.removeEventListener("click", this, false);
+      // this.setState({ open: false, query: "", filteredOptions: this.props.options || [] })
+      // document.removeEventListener("click", this, false);
     }
   }
   handleEvent(e) {
-    if (ReactDOM.findDOMNode(this).contains(e.target)) {
+    // The second or check here is to allow for handling of deletion clicks on multi-select items after they have been removed from the dom
+    if (ReactDOM.findDOMNode(this).contains(e.target) || (e.target as HTMLDivElement).classList.contains("multi-select-item-part")) {
       return;
     }
     this.setState({ open: false, query: "", filteredOptions: this.props.options || [] })
     document.removeEventListener("click", this, false);
   }
   componentWillMount() {
-    this.setState({ filteredOptions: this.props.options || [] })
+    this.setState({ filteredOptions: this.props.options || [], selectedValue: this.props.multiSelect ? [] : null })
   }
   checkKey(e) {
     var currentIndex = this.state.selectedIndex;
+    if (e.keyCode === 27) {
+      this.setState({ open: false, query: "", filteredOptions: this.props.options || [] });
+    }
     if (e.keyCode === 40 && this.state.filteredOptions.length !== 0) {
       // DOWN ARROW
       var offsetIndex = Math.min((this.props.visibleItems || 3) - 1, this.state.offsetIndex + 1);
@@ -134,7 +144,7 @@ export class DropdownSelect extends React.Component<IDropdownSelectProps, IDropd
     if (e.keyCode === 13 && this.state.filteredOptions.length !== 0) {
       // ENTER
       var selectedValue = this.state.filteredOptions[this.state.selectedIndex];
-      this.selectItem(selectedValue);
+      this.handleSelection(selectedValue);
       e.preventDefault();
       return false;
     }
@@ -145,48 +155,95 @@ export class DropdownSelect extends React.Component<IDropdownSelectProps, IDropd
       this.setState({ selectedIndex: Math.max(this.state.filteredOptions.length - 1, 0) })
     }
   }
+  handleSelection(option: IDropdownOption) {
+    if (this.props.multiSelect) {
+      // Handle multiple selection
+      var ddOptions = (this.state.selectedValue as IDropdownOption[]);
+      if (ddOptions.length !== 0 && _.some(ddOptions, ddo => ddo.id === option.id)) {
+        // Remove
+        ddOptions = _.reject(ddOptions, ddo => ddo.id === option.id);
+      }
+      else {
+        // Add
+        ddOptions.push(option)
+      }
+      this.setState({ selectedValue: ddOptions })
+      if (this.props.onSelected) {
+        this.props.onSelected(ddOptions);
+      }
+      (ReactDOM.findDOMNode(this).querySelector("input") as any).focus()
+    } else {
+      // Handle single selection
+      this.setState({ selectedValue: option, open: false, query: "", filteredOptions: this.props.options || [], offsetIndex: 0 });
+      if (this.props.onSelected) {
+        this.props.onSelected(option);
+      }
+      document.removeEventListener("click", this, false);
+    }
+  }
   buttonClick() {
     if (this.state.filteredOptions.length !== 0) {
       var selectedValue = this.state.filteredOptions[this.state.selectedIndex];
       if (selectedValue) {
-        this.selectItem(selectedValue);
+        this.handleSelection(selectedValue);
       }
-    }
-  }
-  selectItem(selectedValue: IDropdownOption) {
-    this.setState({ selectedValue, open: false, query: "", filteredOptions: this.props.options || [], offsetIndex: 0 });
-    document.removeEventListener("click", this, false);
-    if (this.props.onSelected) {
-      this.props.onSelected(selectedValue);
     }
   }
   render() {
     return (
-      <div className={`dropdown-select${this.props.className ? ` ${this.props.className}` : ''}${this.props.disabled ? ' disabled': ''}`}>
-        {!this.state.open && <Grid className="dropdown-value-display" >
-          <Row>
-            <Col onClick={() => this.focusInput() }>{this.state.selectedValue ? <div>{this.state.selectedValue.name}</div> : <div className="placeholder">{this.props.placeholder || "start typing to filter results..."}</div>}</Col>
-            {this.state.selectedValue && this.props.canClear && <Col fixed={true} className="clear-selected p-right-xsmall" onClick={() => this.setState({ selectedValue: null, open: false, query: "", filteredOptions: this.props.options || [] }) }><Icon icon={Icon.Icomoon.cross}/></Col> }
-            {this.props.hasGoButton && <Col fixed={true}><Button text={this.props.goButtonContent || "Go"} className="bg-positive" onClick={() => this.buttonClick() }/></Col> }
-          </Row>
-        </Grid>
-        }
-        {this.state.open &&
-          <div className="dropdown-select-list-wrapper">
-            <input type="text"
-              value={this.state.query}
-              onKeyUp={(e) => this.checkKey(e) }
-              onChange={(e) => this.setState({ query: (e.target as any).value }) }
-              placeholder={this.props.placeholder || "start typing to filter results..."} />
-            {this.state.remoteSearching && <Icon className="spinner fg-info" icon={Icon.Icomoon.spinner2}/>}
-            <div data-id="dropdown-select-list" className="dropdown-select-list" style={{ maxHeight: `${(this.props.visibleItems || 3) * this.itemHeight}` }}>
-              {this.state.filteredOptions && this.state.filteredOptions.map((o, i) =>
-                <div data-index={i} key={`dd-item-${i}`} className={`dd-list-item${i === this.state.selectedIndex ? ' selected' : ''}`}
-                  onClick={() => this.selectItem(o) }>{o.name}</div>) }
-              {this.state.filteredOptions.length === 0 && <div className="dd-list-item-no-select">{this.props.noResultsMessage || "No results..."}</div>}
-            </div>
-          </div>
-        }
-      </div>)
+      <Grid
+        onClick={(e) => this.focusInput(e) }
+        className={`dropdown-select${this.props.className ? ` ${this.props.className}` : ''}${this.props.disabled ? ' disabled' : ''}${this.props.hasGoButton && !this.props.multiSelect ? ' has-go-button' : ''}${this.props.multiSelect && (this.state.selectedValue as IDropdownOption[]).length !== 0 ? ' has-multiple-options' : ''}`}>
+        <Row>
+          <Col className="drop-down-controls">
+            {(!this.state.open || this.props.multiSelect) && <Grid className="dropdown-value-display" >
+              <Row>
+                <Col>
+                  {this.state.selectedValue &&
+                    <div className="selected-value-wrapper">
+                      {this.props.multiSelect ? (this.state.selectedValue as IDropdownOption[]).map(ddo =>
+                        <div key={`multi-select-item-${ddo.id}`} className="multi-select-item multi-select-item-part" onClick={() => this.handleSelection(ddo) } >{ddo.name}<Icon className="multi-select-item-part" icon={Icon.Icomoon.cross}/></div>) : (this.state.selectedValue as IDropdownOption).name}
+                    </div>
+                  }
+                  { (this.props.multiSelect && (this.state.selectedValue as IDropdownOption[]).length === 0) &&
+                    <div className="placeholder">{this.props.placeholder || "start typing to filter results..."}</div>
+                  }
+                  { !this.props.multiSelect && this.state.selectedValue === null &&
+                    <div className="placeholder">{this.props.placeholder || "start typing to filter results..."}</div>
+                  }
+                </Col>
+                {!this.props.multiSelect && this.state.selectedValue && this.props.canClear &&
+                  <Col fixed={true} className="clear-selected p-right-xsmall" onClick={() => this.setState({ selectedValue: this.props.multiSelect ? [] : null, open: false, query: "", filteredOptions: this.props.options || [] }) }>
+                    <Icon icon={Icon.Icomoon.cross}/>
+                  </Col>
+                }
+                {this.props.multiSelect && (this.state.selectedValue as IDropdownOption[]).length !== 0 && this.props.canClear &&
+                  <Col fixed={true} className="clear-selected p-right-xsmall" onClick={() => this.setState({ selectedValue: this.props.multiSelect ? [] : null, open: false, query: "", filteredOptions: this.props.options || [] }) }>
+                    <Icon icon={Icon.Icomoon.cross}/>
+                  </Col>
+                }
+              </Row>
+            </Grid>
+            }
+            {this.state.open &&
+              <div className="dropdown-select-list-wrapper">
+                <input type="text"
+                  value={this.state.query}
+                  onKeyUp={(e) => this.checkKey(e) }
+                  onChange={(e) => this.setState({ query: (e.target as any).value }) }
+                  placeholder={this.props.placeholder || "start typing to filter results..."} />
+                {this.state.remoteSearching && <Icon className="spinner fg-info" icon={Icon.Icomoon.spinner2}/>}
+                <div data-id="dropdown-select-list" className="dropdown-select-list" style={{ maxHeight: `${(this.props.visibleItems || 3) * this.itemHeight}px` }}>
+                  {this.state.filteredOptions && this.state.filteredOptions.map((o, i) =>
+                    <div data-index={i} key={`dd-item-${i}`} className={`dd-list-item${i === this.state.selectedIndex ? ' selected' : ''}${(this.props.multiSelect && _.some((this.state.selectedValue as IDropdownOption[]), ddo => ddo.id === o.id)) ? ' in-selected-list' : ''}`}
+                      onClick={() => this.handleSelection(o) }>{o.name}</div>) }
+                  {this.state.filteredOptions.length === 0 && this.state.query && <div className="dd-list-item-no-select">{this.props.noResultsMessage || "No results..."}</div>}
+                </div>
+              </div>
+            }
+          </Col>
+          {this.props.hasGoButton && !this.props.multiSelect && <Col fixed={true}><Button text={this.props.goButtonContent || "Go"} className="bg-positive" onClick={() => this.buttonClick() }/></Col> }
+        </Row>
+      </Grid>)
   }
 }

@@ -11,6 +11,20 @@
 .dropdown-select {
   position: relative;
 
+  &.has-go-button {
+    input {
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+      border-right: none;
+    }
+
+    .dropdown-value-display {
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+      border-right: none;
+    }
+  }
+
   .dropdown-select-list {
     background-color: white;
     overflow-x: hidden;
@@ -20,18 +34,21 @@
       padding: $spacing-small;
       text-align: left;
       cursor: pointer;
+      border: 1px solid transparent;
+      transition: all 0.1s;
 
       &:hover {
         background-color: $gray-light;
       }
 
       &.selected {
-        background-color: $gray-medium;
-        color: $white;
+        border: 1px solid $color-info;
+        padding-left: $spacing-small * 1.2;
       }
 
-      &.highlighted {
-        background-color: $gray-light;
+      &.in-selected-list {
+        background-color: $color-positive;
+        color: $white;
       }
     }
 
@@ -42,9 +59,28 @@
     }
   }
 
+  .multi-select-item {
+    display: inline-block;
+    background-color: $gray-medium;
+    color: $white;
+    border-radius: 4px;
+    padding: $spacing-xsmall / 2 $spacing-xsmall;
+    line-height: normal;
+    margin-right: $spacing-xsmall;
+    margin-bottom: $spacing-xsmall;
+
+    i {
+      font-size: 9pt;
+      margin-left: $spacing-xsmall;
+    }
+  }
+
+  .drop-down-controls{
+    position: relative;
+  }
+
   .dropdown-select-list-wrapper {
     width: 100%;
-
 
     .spinner {
       animation: spin 0.3s forwards infinite linear;
@@ -68,36 +104,59 @@
 
   .placeholder {
     opacity: 0.4;
+    pointer-events: none;
   }
 
   .btn {
-    padding: 0 $spacing-small;
-    height: $form-field-height;
+    padding: $spacing-xsmall*1.2 $spacing-small;
+    padding-bottom: $spacing-xsmall*1.4;
     box-shadow: none;
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
+    position: relative;
+    z-index: 3;
+    margin: 0;
+    box-shadow: none;
+    cursor: pointer;
   }
 
   .dropdown-value-display {
     box-sizing: border-box;
     width: 100%;
-    height: $form-field-height;
-    line-height: $form-field-height;
-    padding-left: 10px;
+    padding: $spacing-xsmall*1.2;
     border: 1px solid $gray-light;
     border-radius: $corner-radius-small;
     text-align: left;
     position: relative;
+    cursor: text;
   }
-  input{
+
+  &.has-multiple-options{
+    .dropdown-value-display{
+      padding-bottom: 0;
+    }
+  }
+
+  input {
     position: relative;
     z-index: 1;
   }
 
-  .clear-selected{
+  .clear-selected {
     cursor: pointer;
+    position: absolute;
+    right: 1rem;
+    top: 0;
+    height: 100%;
+    i{
+      pointer-events: none;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+    }
   }
-  &.disabled{
+
+  &.disabled {
     background-color: $gray-very-light;
     pointer-events: none;
   }

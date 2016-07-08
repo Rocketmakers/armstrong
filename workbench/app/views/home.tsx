@@ -63,10 +63,11 @@ export class Home extends React.Component<{}, HomeState> {
         <hr/>
         <h1 className="m-top-large">Variables & helper classes</h1>
         <DropdownSelect placeholder="Search for an artist..."
-        disabled={true}
+        multiSelect={true}
         onSelected={(item)=> console.log}
         canClear={true}
-        remoteQuery={(input)=> apiClient.searchForArtist(input).then((r)=> _.map(r.json.artists.items, (r: any)=> { return { id: r.id, name: r.name, data: r }}))}/>
+        hasGoButton={true}
+        options={[ { id: 1, name: 'test' }, { id: 2, name: 'test' } , { id: 3, name: 'test' }  ]}/>
         <h2>Colors</h2>
         <pre className="m-bottom-small usage">{`<div className='bg-brand-primary fg-white' />`}</pre>
         <p>All colors can be used to set both the foreground and background of any element.Use <pre>fg-[colorname]</pre> for foreground and <pre>bg-[colorname]</pre> for backgrounds.A full list is as follows:
