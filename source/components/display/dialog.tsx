@@ -40,7 +40,7 @@ export class Dialog extends React.Component<IDialogProps, {}>{
     return (
       <div className={classes}>
         <div className="dialog" style={style} role="dialog" aria-hidden={ !this.props.isOpen } aria-labelledby={ this.props.title } aria-describedby={ this.props.subtitle } { ...this.props as any }>
-          <Grid>
+          <Grid fillContainer={true}>
             <Row className={classNames("dialog-header", cd("dialog-header-no-title", !this.props.title))} fixed={true}>
               <Col centerContent={{ vertical: "center" }}>
                 {this.props.title &&
