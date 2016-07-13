@@ -74,7 +74,7 @@ $header-height: 40px;
     &.always-show-calendar {
       display: block;
     }
-    position: absolute;
+    position: fixed;
     width: 100%;
     background-color: white;
     z-index: 10;

@@ -26,6 +26,7 @@ export interface IDatePickerInputState {
   selectedDate?: moment.Moment;
   pickerBodyVisible?: boolean;
   showOnTop?: boolean;
+  calendarOffset?: number;
 }
 
 const isoFormat = "YYYY-MM-DD";
@@ -34,7 +35,7 @@ export class DatePickerInput extends React.Component<IDatePickerInputProps, IDat
   static Icomoon = Icons.Icomoon;
 
   private mouseDownOnCalendar = false;
-  private inputElement;
+  private inputElement : HTMLInputElement;
   private bodyElement;
 
   private inputElementId;
@@ -51,7 +52,7 @@ export class DatePickerInput extends React.Component<IDatePickerInputProps, IDat
   constructor(props: IDatePickerInputProps) {
     super(props);
     const todaysDate = moment().startOf('day');
-    this.state = { displayedDate: todaysDate.clone(), selectedDate: todaysDate, pickerBodyVisible: false, showOnTop: false };
+    this.state = { displayedDate: todaysDate.clone(), selectedDate: todaysDate, pickerBodyVisible: false, showOnTop: false, calendarOffset: 0 };
     moment.locale(props.locale);
     const seed = Math.random().toFixed(4);
     this.inputElementId = "date-picker-text-input-" + seed;
@@ -85,6 +86,12 @@ export class DatePickerInput extends React.Component<IDatePickerInputProps, IDat
       return false;
     }
     return true;
+  }
+  calcTop(){
+    if (this.inputElement){
+      var bounds = this.inputElement.getBoundingClientRect();
+      this.setState({ calendarOffset: bounds.bottom  });
+    }
   }
 
   getDaysInMonth() {
@@ -171,7 +178,7 @@ export class DatePickerInput extends React.Component<IDatePickerInputProps, IDat
   }
 
   componentDidMount() {
-    this.inputElement = document.getElementById(this.inputElementId);
+    this.inputElement = document.getElementById(this.inputElementId) as HTMLInputElement;
     this.bodyElement = document.getElementById(this.bodyElementId);
     if (!this.props.nativeInput) {
       window.addEventListener('mousedown', this);
@@ -179,13 +186,17 @@ export class DatePickerInput extends React.Component<IDatePickerInputProps, IDat
   }
 
   handleEvent(e) {
-    if (this.mouseDownOnCalendar) {
+    if (this.mouseDownOnCalendar && e.type !== "mousewheel") {
       return;
     }
+    document.removeEventListener("mousewheel", this, false);
     this.setState({ pickerBodyVisible: false });
+    this.inputElement.blur();
   }
 
   onInputFocus() {
+    document.addEventListener("mousewheel", this, false);
+    this.calcTop();
     this.setState({ pickerBodyVisible: true }, () => {
       this.shouldShowOnTop();
     })
@@ -229,7 +240,6 @@ export class DatePickerInput extends React.Component<IDatePickerInputProps, IDat
     const currentDisplayDate = this.state.displayedDate.format("MMMM - YYYY");
     const classes = classNames("date-picker-body",
       cd("date-picker-body-visible", this.state.pickerBodyVisible && !this.props.alwaysShowCalendar),
-      cd("date-picker-top", this.state.showOnTop),
       cd("always-show-calendar", this.props.alwaysShowCalendar));
     const rootClasses = classNames("date-picker", this.props.className, cd('has-icon', this.props.icon !== null), cd('disabled', this.props.disabled));
     if (this.props.nativeInput) {
@@ -259,7 +269,7 @@ export class DatePickerInput extends React.Component<IDatePickerInputProps, IDat
             onBlur={e => this.checkDate((e.target as any).value) }
             onFocus={e => this.onInputFocus() }/>
         }
-        <div id={this.bodyElementId} className={classes}>
+        <div id={this.bodyElementId} className={classes} style={{ top: `${this.state.calendarOffset}px`}}>
           <div className="date-picker-body-wrapper">
             <Grid className="date-picker-header" dontFillContainer={true}>
               <Row>

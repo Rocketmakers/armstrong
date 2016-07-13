@@ -22,6 +22,7 @@ import apiClient from './../api/apiClient.ts';
 interface HomeState {
   date?: moment.Moment;
   dialogOpen?: boolean;
+  dialog2Open?: boolean;
   colorClasses?: string[];
   selectedColorClass?: string;
 }
@@ -29,7 +30,7 @@ interface HomeState {
 export class Home extends React.Component<{}, HomeState> {
   constructor() {
     super();
-    this.state = { date: moment(), dialogOpen: false, colorClasses: [], selectedColorClass: "" }
+    this.state = { date: moment(), dialogOpen: false, dialog2Open: false, colorClasses: [], selectedColorClass: "" }
   }
   componentWillMount() {
     var colors = [];
@@ -51,8 +52,26 @@ export class Home extends React.Component<{}, HomeState> {
   public render() {
     return (
       <div className="p-small">
-        <Dialog title="I am a dialog!" isOpen={this.state.dialogOpen} onClose={() => this.setState({ dialogOpen: false }) }>
-        <DatePickerInput alwaysShowCalendar={false} nativeInput={false} returnString={true} onDateChanged={(d) => console.log(d) } icon={DatePickerInput.Icomoon.calendar2}/>
+        <Dialog title="I am a dialog!" height={1000} width={1000} isOpen={this.state.dialogOpen} onClose={() => this.setState({ dialogOpen: false }) }
+        footerContent={
+          <div>
+          <Button text="Ok" className="bg-positive"/>
+          <Button text="Cancel" className="bg-negative"/>
+          </div>
+        }>
+          <h1>Hello. This is a dialog</h1>
+          <p>Not much going on tbh</p>
+          <DatePickerInput alwaysShowCalendar={false} nativeInput={false} returnString={true} onDateChanged={(d) => console.log(d) } icon={DatePickerInput.Icomoon.calendar2}/>
+          <div style={{ backgroundColor:  "red", height: "3000px" }}/>
+        </Dialog>
+        <Dialog title="I am another dialog!" isOpen={this.state.dialog2Open} onClose={() => this.setState({ dialog2Open: false }) }
+        footerContent={
+          <div>
+          <Button text="Ok" className="bg-positive"/>
+          <Button text="Cancel" className="bg-negative"/>
+          </div>
+        }>
+        <p>oh shit waddup?</p>
         </Dialog>
         <h1>Whats all this then?</h1>
         <h2>Background</h2>
@@ -210,6 +229,7 @@ export class Home extends React.Component<{}, HomeState> {
           </ul>
         </p>
         <Button text="Click for sick dialog" className={`bg-${this.state.selectedColorClass} m-right-xsmall`} onClick={() => this.setState({ dialogOpen: true }) }/>
+        <Button text="Click for other even sicker dialog" className={`bg-${this.state.selectedColorClass} m-right-xsmall`} onClick={() => this.setState({ dialog2Open: true }) }/>
         <h2>Image</h2>
         <pre className="m-bottom-small usage">{`<Image height='(number)' width='(number)' sampleUser='(boolean)' sampleUserSeed='(string)' rounded='(boolean)' noPlaceholder='(boolean)'/>`}</pre>
         <p>Usable as both a placeholder (for users and generic) aswell as real images
@@ -291,7 +311,7 @@ export class Home extends React.Component<{}, HomeState> {
             <li><pre>disabled (boolean) </pre> - Wether the control is interactable by the user</li>
           </ul>
         </p>
-        <DatePickerInput disabled={true} alwaysShowCalendar={false} nativeInput={true} returnString={true} onDateChanged={(d) => console.log(d) } icon={DatePickerInput.Icomoon.calendar2}/>
+        <DatePickerInput alwaysShowCalendar={false} nativeInput={false} returnString={true} onDateChanged={(d) => console.log(d) } icon={DatePickerInput.Icomoon.calendar2}/>
         <p className="bg-info fg-white p-small m-top-medium t-align-center">Note - Docs from this point are very hazy as I haven't gotten this far yet ;)</p>
         <hr/>
         <h1 className="m-top-large">FAQs</h1>

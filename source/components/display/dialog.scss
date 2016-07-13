@@ -1,120 +1,147 @@
 @keyframes fade-in {
-    0% {
-        opacity: 0;
-    }
-    100% {
-        opacity: 1;
-    }
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
 }
 
 @keyframes scale-down {
-    0% {
-        transform: scale(1.2,1.2) translate(-50%, -50%);
-        opacity: 0;
-    }
-    100% {
-        transform: scale(1,1) translate(-50%, -50%);
-        opacity: 1;
-    }
-}
+  0% {
+    transform: scale(1.2, 1.2);
+    opacity: 0;
+  }
 
+  100% {
+    transform: scale(1, 1);
+    opacity: 1;
+  }
+}
 $dialog-header-height: 50px;
 
 .dialog-layer {
-    pointer-events: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    height: 100%;
-    width: 100%;
-    background-color: rgba(0,0,0,0.2);
-    display: none;
-    z-index: 255;
-    &.open {
-        display: block;
-        pointer-events: all;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.2);
+  z-index: 255;
+  box-sizing: border-box;
+  padding: $spacing-medium;
+
+  .fill-container {
+    max-height: 100%;
+    max-width: 100%;
+
+    .fill-container {
+      min-height: 0;
     }
-    .dialog {
-        box-shadow: 0 0 15px rgba(0,0,0,0.3);
-        min-height: $dialog-header-height;
-        max-height: calc(100vh - 50px);
-        max-width: calc(100vw - 50px);
-        background-color: white;
+  }
+
+  .dialog-layout-col{
+     max-height: 100%;
+    max-width: 100%;
+  }
+
+  &.open {
+    display: block;
+    pointer-events: all;
+  }
+
+  .dialog {
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+    max-height: 100%;
+    max-width: 100%;
+    background-color: white;
+    animation-name: scale-down;
+    animation-duration: 0.3s;
+
+    @include cubic-bezier(0.835, 0.305, 0.190, 1.250);
+
+    .dialog-header {
+      background-color: $gray-base;
+      height: $dialog-header-height;
+      color: white;
+      z-index: 256;
+      padding-left: $spacing-small;
+
+      .dialog-title {
+        font-size: $font-size-large;
+      }
+
+      .col:first-of-type {
+        position: relative;
+      }
+
+      .dialog-subtitle {
+        opacity: 0.75;
+        margin-top: 4px;
+        font-size: $font-size-xxsmall;
+      }
+
+      &.dialog-header-no-title {
+        background: none;
+        position: absolute;
+        width: 100%;
+
+        .close-dialog-button {
+          position: absolute;
+          right: 0;
+        }
+      }
+    }
+
+    .dialog-footer {
+      padding: 0 $spacing-small;
+    }
+
+    .close-dialog-button {
+      text-align: center;
+      position: relative;
+
+      &:after {
+        font-size: 18pt;
+        content: '\2715';
+        font-weight: bold;
+        position: absolute;
+        top: 47%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+      background-color: rgba(0, 0, 0, 0.1);
+      width: $dialog-header-height;
+      height: $dialog-header-height;
+      cursor: pointer;
+
+      i {
         position: absolute;
         top: 50%;
         left: 50%;
-        transform-origin: 10% 40%;
         transform: translate(-50%, -50%);
-        animation-name: scale-down;
-        animation-duration: 0.3s;
-
-        @include cubic-bezier(0.835, 0.305, 0.190, 1.250);
-        .dialog-header {
-            background-color: $gray-base;
-            height: $dialog-header-height;
-            color: white;
-            z-index: 256;
-            padding-left: $spacing-small;
-            .dialog-title {
-                font-size: $font-size-large;
-            }
-            .col:first-of-type{
-                position: relative;
-            }
-            .dialog-subtitle{
-                opacity: 0.75;
-                margin-top: 4px;
-                font-size: $font-size-xxsmall;
-            }
-            &.dialog-header-no-title{
-                background: none;
-                position: absolute;
-                width: 100%;
-                .close-dialog-button{
-                    position: absolute;
-                    right: 0;
-                }
-            }
-        }
-        .close-dialog-button {
-          text-align: center;
-          position: relative;
-            &:after{
-              font-size: 18pt;
-              content: '\2715';
-              font-weight: bold;
-              position: absolute;
-              top: 47%;
-              left: 50%;
-              transform: translate(-50%, -50%);
-            }
-                background-color: rgba(0,0,0,0.1);
-                width: $dialog-header-height;
-                height: $dialog-header-height;
-                cursor: pointer;
-                i {
-                    position: absolute;
-                    top: 50%;
-                    left: 50%;
-                    transform: translate(-50%, -50%);
-                }
-            }
-
-        .dialog-content {
-            box-sizing: border-box;
-            height: 100%;
-            max-height: calc(100vh - 65px);
-            padding: $spacing-small;
-        }
-
+      }
     }
 
-.dialog-titles{
+    .dialog-content {
+      box-sizing: border-box;
+      height: 100%;
+      padding: $spacing-small;
+      overflow: hidden;
+      max-height: calc(100vh - #{$dialog-header-height*4});
+
+      > div {
+        overflow: auto;
+      }
+    }
+  }
+
+  .dialog-titles {
     position: relative;
     top: 50%;
     transform: translateY(-50%);
-}
-
+  }
 }
