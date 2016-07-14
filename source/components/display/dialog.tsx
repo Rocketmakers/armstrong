@@ -1,15 +1,12 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import {classNames, cd} from "./../../utilities/classBuilder";
 import { Icon } from "./icon";
 import { Grid, Row, Col, SingleColumnRow } from './../layout/grid';
-import { VelocityComponent, VelocityTransitionGroup } from 'velocity-react';
 
 export interface IDialogProps extends React.HTMLProps<Dialog> {
   bodyId?: string;
   layerClass?: string;
   title?: string;
-  subtitle?: string;
   isOpen: boolean;
   onClose?: () => void;
   onOpen?: () => void;
@@ -30,9 +27,11 @@ export class Dialog extends React.Component<IDialogProps, {}>{
     }
     this.unmountPortalNode();
   }
+
   public scrollToTop() {
     this.dialogContentElement.scrollTop = 0;
   }
+
   componentDidMount() {
     this.dialogContentElement = document.getElementById("dialog-content");
     this.appNode = document.getElementById(this.props.bodyId || "host");
@@ -40,6 +39,7 @@ export class Dialog extends React.Component<IDialogProps, {}>{
       this.renderToPortal(this.renderDialog(this.props.children as any[]))
     }
   }
+
   componentWillReceiveProps(newProps: IDialogProps) {
     var open = newProps.isOpen;
     if (open && open != this.props.isOpen && this.props.onOpen) {
@@ -47,8 +47,6 @@ export class Dialog extends React.Component<IDialogProps, {}>{
     }
     if (open) {
       this.renderToPortal(this.renderDialog(newProps.children as any[]))
-    }
-    else {
     }
   }
 
@@ -59,6 +57,9 @@ export class Dialog extends React.Component<IDialogProps, {}>{
     if (node == null) {
       this.portalNode = node = document.createElement('div');
       this.portalNode.classList.add('dialog-layer');
+      if (this.props.layerClass) {
+        this.portalNode.classList.add(this.props.layerClass);
+      }
       node.id = this.dialogId || `dialog-layer-${Math.random()}`;
       this.appNode.appendChild(node);
     }
@@ -93,37 +94,21 @@ export class Dialog extends React.Component<IDialogProps, {}>{
   renderDialog(children) {
     var style = { width: this.props.width || "500px", height: this.props.height || "auto" }
     return (
-      <Grid fillContainer={true}>
-        <Row>
-          <Col centerContent="both" className="dialog-layout-col">
-            <div className="dialog" style={style} role="dialog" aria-hidden={ !this.props.isOpen } aria-labelledby={ this.props.title } aria-describedby={ this.props.subtitle } { ...this.props as any }>
-              <Grid fillContainer={true}>
-                <Row className={classNames("dialog-header", cd("dialog-header-no-title", !this.props.title)) } fixed={true}>
-                  <Col centerContent={{ vertical: "center" }}>
-                    {this.props.title &&
-                      <div className="flex-override">
-                        <div className="dialog-titles">
-                          {this.props.title && <div className="dialog-title">{this.props.title}</div>}
-                          {this.props.subtitle && <div className="dialog-subtitle">{this.props.subtitle}</div> }
-                        </div>
-                      </div>
-                    }
-                  </Col>
-                  <Col fixed={true}>
-                    <div className="close-dialog-button" onClick={() => this.props.onXClicked ? this.props.onXClicked() : this.closeClicked() }/>
-                  </Col>
-                </Row>
-                <SingleColumnRow id="dialog-content" className="dialog-content">
-                  {children}
-                </SingleColumnRow>
-                <SingleColumnRow className="dialog-footer" fixed={true}>
-                  {this.props.footerContent}
-                </SingleColumnRow>
-              </Grid>
+      <div className={`dialog${this.props.className ? ` ${this.props.className}` : ''}`} style={style} id={this.dialogId}>
+        {this.props.title &&
+          <div className="dialog-header">
+            {this.props.title}
+            <div className="dialog-close-button" onClick={() => this.props.onXClicked ? this.props.onXClicked() : this.closeClicked() }>
+              <Icon icon={Icon.Icomoon.cross}/>
             </div>
-          </Col>
-        </Row>
-      </Grid>)
+          </div>
+        }
+        <div className="dialog-content" id="dialog-content">
+          {children}
+        </div>
+        {this.props.footerContent && <div className="dialog-footer">{this.props.footerContent}</div> }
+      </div>
+    )
   }
 
   render() {

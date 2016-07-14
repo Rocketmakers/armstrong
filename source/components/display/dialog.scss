@@ -22,122 +22,71 @@
 $dialog-header-height: 50px;
 
 .dialog-layer {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  box-sizing: border-box;
   height: 100%;
   width: 100%;
-  background-color: rgba(0, 0, 0, 0.2);
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: $spacing-small;
   z-index: 255;
-  box-sizing: border-box;
-  padding: $spacing-medium;
-
-  .fill-container {
-    max-height: 100%;
-    max-width: 100%;
-
-    .fill-container {
-      min-height: 0;
-    }
-  }
-
-  .dialog-layout-col{
-     max-height: 100%;
-    max-width: 100%;
-  }
-
-  &.open {
-    display: block;
-    pointer-events: all;
-  }
+  animation-name: fade-in;
+  animation-duration: 0.2s;
 
   .dialog {
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
-    max-height: 100%;
-    max-width: 100%;
+    max-height: calc(100% - #{$spacing-small * 2});
+    width: 400px;
     background-color: white;
+    display: flex;
+    flex-direction: column;
     animation-name: scale-down;
     animation-duration: 0.3s;
-
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
     @include cubic-bezier(0.835, 0.305, 0.190, 1.250);
 
-    .dialog-header {
-      background-color: $gray-base;
-      height: $dialog-header-height;
-      color: white;
-      z-index: 256;
-      padding-left: $spacing-small;
-
-      .dialog-title {
-        font-size: $font-size-large;
-      }
-
-      .col:first-of-type {
-        position: relative;
-      }
-
-      .dialog-subtitle {
-        opacity: 0.75;
-        margin-top: 4px;
-        font-size: $font-size-xxsmall;
-      }
-
-      &.dialog-header-no-title {
-        background: none;
-        position: absolute;
-        width: 100%;
-
-        .close-dialog-button {
-          position: absolute;
-          right: 0;
-        }
+    .dialog-content {
+      overflow: auto;
+      flex: 1;
+      padding: $spacing-small;
+      box-sizing: content-box;
+      p:only-of-type{
+        margin: 0;
       }
     }
 
     .dialog-footer {
-      padding: 0 $spacing-small;
-    }
-
-    .close-dialog-button {
-      text-align: center;
-      position: relative;
-
-      &:after {
-        font-size: 18pt;
-        content: '\2715';
-        font-weight: bold;
-        position: absolute;
-        top: 47%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-      }
-      background-color: rgba(0, 0, 0, 0.1);
-      width: $dialog-header-height;
-      height: $dialog-header-height;
-      cursor: pointer;
-
-      i {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-      }
-    }
-
-    .dialog-content {
-      box-sizing: content-box;
-      height: 100%;
+      flex: 0 0 auto;
       padding: $spacing-small;
-      overflow: auto;
-      display: block;
+      .btn{
+        margin-bottom: 0;
+      }
     }
-  }
 
-  .dialog-titles {
-    position: relative;
-    top: 50%;
-    transform: translateY(-50%);
+    .dialog-header {
+      flex: 0 0 auto;
+      background-color: $gray-base;
+      color: $white;
+      padding: $spacing-small;
+      position: relative;
+      .dialog-close-button{
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: rgba(0,0,0,0.1);
+        height: 100%;
+        width: $dialog-header-height;
+        position: absolute;
+        right: 0;
+        top: 0;
+      }
+    }
   }
 }
+
