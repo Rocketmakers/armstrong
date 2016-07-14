@@ -127,14 +127,11 @@ $dialog-header-height: 50px;
     }
 
     .dialog-content {
-      box-sizing: border-box;
+      box-sizing: content-box;
       height: 100%;
       padding: $spacing-small;
-      overflow: hidden;
-
-      > div {
-        overflow: auto;
-      }
+      overflow: auto;
+      display: block;
     }
   }
 

@@ -65,12 +65,7 @@ export class Home extends React.Component<{}, HomeState> {
           <div style={{ backgroundColor:  "red", height: "3000px" }}/>
         </Dialog>
         <Dialog title="I am another dialog!" isOpen={this.state.dialog2Open} onClose={() => this.setState({ dialog2Open: false }) }
-        footerContent={
-          <div>
-          <Button text="Ok" className="bg-positive"/>
-          <Button text="Cancel" className="bg-negative"/>
-          </div>
-        }>
+        >
         <p>oh shit waddup?</p>
         </Dialog>
         <h1>Whats all this then?</h1>

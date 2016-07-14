@@ -80,7 +80,7 @@ export class Dialog extends React.Component<IDialogProps, {}>{
   }
 
   unmountPortalNode() {
-    if (!this.portalNode){
+    if (!this.portalNode) {
       return;
     }
     const unmounted = ReactDOM.unmountComponentAtNode(this.portalNode);
@@ -114,9 +114,7 @@ export class Dialog extends React.Component<IDialogProps, {}>{
                   </Col>
                 </Row>
                 <SingleColumnRow id="dialog-content" className="dialog-content">
-                  <div>
-                    {children}
-                  </div>
+                  {children}
                 </SingleColumnRow>
                 <SingleColumnRow className="dialog-footer" fixed={true}>
                   {this.props.footerContent}
