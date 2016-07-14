@@ -64,9 +64,8 @@ export class Home extends React.Component<{}, HomeState> {
           <DatePickerInput alwaysShowCalendar={false} nativeInput={false} returnString={true} onDateChanged={(d) => console.log(d) } icon={DatePickerInput.Icomoon.calendar2}/>
           <div style={{ backgroundColor:  "red", height: "3000px" }}/>
         </Dialog>
-        <Dialog title="I am another dialog!" isOpen={this.state.dialog2Open} onClose={() => this.setState({ dialog2Open: false }) }
-        >
-        <p>oh shit waddup?</p>
+        <Dialog title="I am another dialog!" isOpen={this.state.dialog2Open} onClose={() => this.setState({ dialog2Open: false }) }>
+       <div style={{ height: "200px"}}>Hello world</div>
         </Dialog>
         <h1>Whats all this then?</h1>
         <h2>Background</h2>

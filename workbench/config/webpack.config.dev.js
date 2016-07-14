@@ -13,7 +13,8 @@ var tsConfigPath = path.join(__dirname, '../tsconfig.json');
 var scssLoaders = [
   "style-loader",
   "css-loader?sourceMap",
-  "postcss-loader",
+  "autoprefixer-loader?browsers=last 4 version",
+  "resolve-url-loader",
   "sass-loader?sourceMap&indentedSyntax=false&includePaths[]=" + APP_DIR,
 ];
 
@@ -43,8 +44,5 @@ module.exports = {
     new CopyWebpackPlugin([
       { from: path.resolve('./dev.html'), to: 'index.html' }
     ])
-  ],
-  postcss: function () {
-      return [ require('autoprefixer') ];
-  }
+  ]
 };
