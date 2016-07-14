@@ -56,4 +56,4 @@ ReactDOM.render((
       <Route path="test" component={ Test } />
     </Route>
   </Router>
-), document.getElementById('app-content'));
+), document.getElementById('host'));

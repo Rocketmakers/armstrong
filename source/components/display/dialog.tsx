@@ -35,7 +35,7 @@ export class Dialog extends React.Component<IDialogProps, {}>{
   }
   componentDidMount() {
     this.dialogContentElement = document.getElementById("dialog-content");
-    this.appNode = document.getElementById(this.props.bodyId || "app-content");
+    this.appNode = document.getElementById(this.props.bodyId || "host");
     if (this.props.isOpen) {
       this.renderToPortal(this.renderDialog(this.props.children as any[]))
     }
@@ -82,7 +82,7 @@ export class Dialog extends React.Component<IDialogProps, {}>{
   unmountPortalNode() {
     const unmounted = ReactDOM.unmountComponentAtNode(this.portalNode);
     if (unmounted) {
-      document.getElementById(this.props.bodyId || "app-content").removeChild(this.portalNode);
+      document.getElementById(this.props.bodyId || "host").removeChild(this.portalNode);
     }
     delete this.portalNode;
     return unmounted;

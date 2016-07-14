@@ -131,7 +131,6 @@ $dialog-header-height: 50px;
       height: 100%;
       padding: $spacing-small;
       overflow: hidden;
-      max-height: calc(100vh - #{$dialog-header-height*4});
 
       > div {
         overflow: auto;
