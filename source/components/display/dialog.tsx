@@ -48,6 +48,12 @@ export class Dialog extends React.Component<IDialogProps, {}>{
     if (open) {
       this.renderToPortal(this.renderDialog(newProps.children as any[]))
     }
+    if (!open && this.props.isOpen) {
+      if (this.props.onClose) {
+        this.props.onClose();
+      }
+      this.unmountPortalNode();
+    }
   }
 
   renderToPortal(element) {
