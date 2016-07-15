@@ -114,7 +114,7 @@ export class DropdownSelect extends React.Component<IDropdownSelectProps, IDropd
     this.setState({ filteredOptions: this.props.options || [], selectedValue: initialValue })
   }
   componentWillReceiveProps(newProps: IDropdownSelectProps) {
-    if (newProps.value) {
+    if (newProps.value && newProps.value !== this.props.value) {
       this.handleSelection(newProps.value)
     }
   }
