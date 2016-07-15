@@ -49,9 +49,9 @@ export class DropdownSelect extends React.Component<IDropdownSelectProps, IDropd
     remoteThrottle: 500,
     minimumLength: 1
   }
-  constructor() {
-    super();
-    this.state = { filteredOptions: [], query: "", open: false, selectedValue: null, selectedIndex: 0, remoteSearching: false, offsetIndex: 0 };
+  constructor(props: IDropdownSelectProps) {
+    super(props);
+    this.state = { filteredOptions: [], query: "", open: false, selectedValue: props.multiSelect ? []: null , selectedIndex: 0, remoteSearching: false, offsetIndex: 0 };
   }
   filterRemote(query: string, immediate?: boolean) {
     if (this.timer) {
@@ -102,20 +102,27 @@ export class DropdownSelect extends React.Component<IDropdownSelectProps, IDropd
     document.removeEventListener("click", this, false);
   }
   componentWillMount() {
-    let initialValue;
+    let selectedValue: any = this.props.multiSelect ? [] : null;
     if (this.props.value) {
-      initialValue = this.props.value;
-      if (this.props.multiSelect && !_.isArray(this.props.value)) {
-        initialValue = [this.props.value];
-      }
-    } else {
-      initialValue = this.props.multiSelect ? [] : null;
+      selectedValue = this.props.value;
     }
-    this.setState({ filteredOptions: this.props.options || [], selectedValue: initialValue })
+    this.setState({ filteredOptions: this.props.options || [], selectedValue })
   }
   componentWillReceiveProps(newProps: IDropdownSelectProps) {
-    if (newProps.value && newProps.value !== this.state.selectedValue) {
-      this.handleSelection(newProps.value)
+    if (this.props.multiSelect){
+      var newMultiValue = newProps.value as IDropdownOption[];
+      var oldMultiValue = this.state.selectedValue as IDropdownOption[];
+
+      if (!_.isEqual(newMultiValue.map(v => v.id), oldMultiValue.map(v => v.id))){
+        this.setState({ selectedValue: newMultiValue })
+      }
+    } else {
+      var newSingleValue = newProps.value as IDropdownOption;
+      var oldSingleValue = this.state.selectedValue as IDropdownOption;
+
+      if (newSingleValue.id !== oldSingleValue.id){
+        this.setState({ selectedValue: newSingleValue })
+      }
     }
   }
   checkKey(e) {
