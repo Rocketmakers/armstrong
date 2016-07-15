@@ -102,7 +102,21 @@ export class DropdownSelect extends React.Component<IDropdownSelectProps, IDropd
     document.removeEventListener("click", this, false);
   }
   componentWillMount() {
-    this.setState({ filteredOptions: this.props.options || [], selectedValue: this.props.multiSelect ? [] : null })
+    let initialValue;
+    if (this.props.value) {
+      initialValue = this.props.value;
+      if (this.props.multiSelect && !_.isArray(this.props.value)) {
+        initialValue = [this.props.value];
+      }
+    } else {
+      initialValue = this.props.multiSelect ? [] : null;
+    }
+    this.setState({ filteredOptions: this.props.options || [], selectedValue: initialValue })
+  }
+  componentWillReceiveProps(newProps: IDropdownSelectProps) {
+    if (newProps.value) {
+      this.handleSelection(newProps.value)
+    }
   }
   checkKey(e) {
     var currentIndex = this.state.selectedIndex;
@@ -155,24 +169,32 @@ export class DropdownSelect extends React.Component<IDropdownSelectProps, IDropd
       this.setState({ selectedIndex: Math.max(this.state.filteredOptions.length - 1, 0) })
     }
   }
-  handleSelection(option: IDropdownOption) {
+  handleSelection(options: IDropdownOption | IDropdownOption[]) {
     if (this.props.multiSelect) {
       // Handle multiple selection
+      var newOptions = options;
+      if (!_.isArray(options)) {
+        newOptions = [options];
+      }
       var ddOptions = (this.state.selectedValue as IDropdownOption[]);
-      if (ddOptions.length !== 0 && _.some(ddOptions, ddo => ddo.id === option.id)) {
-        // Remove
-        ddOptions = _.reject(ddOptions, ddo => ddo.id === option.id);
-      }
-      else {
-        // Add
-        ddOptions.push(option)
-      }
+      (newOptions as IDropdownOption[]).forEach(option => {
+        if (ddOptions.length !== 0 && _.some(ddOptions, ddo => ddo.id === option.id)) {
+          // Remove
+          ddOptions = _.reject(ddOptions, ddo => ddo.id === option.id);
+        }
+        else {
+          // Add
+          ddOptions.push(option)
+        }
+      })
+
       this.setState({ selectedValue: ddOptions })
       if (this.props.onSelected) {
         this.props.onSelected(ddOptions);
       }
       (ReactDOM.findDOMNode(this).querySelector("input") as any).focus()
     } else {
+      let option = options as IDropdownOption;
       // Handle single selection
       this.setState({ selectedValue: option, open: false, query: "", filteredOptions: this.props.options || [], offsetIndex: 0 });
       if (this.props.onSelected) {

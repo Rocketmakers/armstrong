@@ -80,7 +80,13 @@ export class Home extends React.Component<{}, HomeState> {
         onSelected={(item)=> console.log}
         canClear={true}
         hasGoButton={true}
-        options={[ { id: 1, name: 'test' }, { id: 2, name: 'test' } , { id: 3, name: 'test' }  ]}/>
+        value={{ id: 1, name: 'test' }}
+        options={[ { id: 1, name: 'test 1' }, { id: 2, name: 'test 2' } , { id: 3, name: 'test 3' }  ]}/>
+         <DropdownSelect placeholder="Search for an artist..."
+        multiSelect={false}
+        onSelected={(item)=> console.log}
+        value={{ id: 3, name: 'test 3' }}
+        options={[ { id: 1, name: 'test 1' }, { id: 2, name: 'test 2' } , { id: 3, name: 'test 3' }  ]}/>
         <h2>Colors</h2>
         <pre className="m-bottom-small usage">{`<div className='bg-brand-primary fg-white' />`}</pre>
         <p>All colors can be used to set both the foreground and background of any element.Use <pre>fg-[colorname]</pre> for foreground and <pre>bg-[colorname]</pre> for backgrounds.A full list is as follows:
