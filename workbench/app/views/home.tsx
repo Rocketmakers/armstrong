@@ -76,12 +76,11 @@ export class Home extends React.Component<{}, HomeState> {
         <hr/>
         <h1 className="m-top-large">Variables & helper classes</h1>
         <DropdownSelect placeholder="Search for an artist..."
-        multiSelect={true}
+        multiSelect={false}
         onSelected={(item)=> console.log}
         canClear={true}
         hasGoButton={true}
-        value={{ id: 1, name: 'test' }}
-        options={[ { id: 1, name: 'test 1' }, { id: 2, name: 'test 2' } , { id: 3, name: 'test 3' }  ]}/>
+        remoteQuery={(input)=> apiClient.searchForArtist(input).then((r)=> _.map(r.json.artists.items, (r: any)=> { return { id: r.id, name: r.name, data: r }}))}/>
          <DropdownSelect placeholder="Search for an artist..."
         multiSelect={false}
         onSelected={(item)=> console.log}
