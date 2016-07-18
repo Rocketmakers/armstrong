@@ -123,8 +123,12 @@ export class DropdownSelect extends React.Component<IDropdownSelectProps, IDropd
     } else {
       var newSingleValue = newProps.value as IDropdownOption;
       var oldSingleValue = this.state.selectedValue as IDropdownOption;
-
-      if (!oldSingleValue || newSingleValue.id !== oldSingleValue.id){
+      if (!newSingleValue){
+        if (oldSingleValue != newSingleValue){
+          this.setState({ selectedValue: null })
+        }
+      }
+      else if (!oldSingleValue || newSingleValue.id !== oldSingleValue.id){
         this.setState({ selectedValue: newSingleValue })
       }
     }
