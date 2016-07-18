@@ -6,6 +6,7 @@ import { Grid, Row, Col, SingleColumnRow } from './../layout/grid';
 export interface IDialogProps extends React.HTMLProps<Dialog> {
   bodyId?: string;
   layerClass?: string;
+  className?: string;
   title?: string;
   isOpen: boolean;
   onClose?: () => void;
