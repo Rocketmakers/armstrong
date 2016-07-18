@@ -82,7 +82,7 @@ export class Home extends React.Component<{}, HomeState> {
         hasGoButton={true}
         remoteQuery={(input)=> apiClient.searchForArtist(input).then((r)=> _.map(r.json.artists.items, (r: any)=> { return { id: r.id, name: r.name, data: r }}))}/>
          <DropdownSelect placeholder="Search for an artist..."
-        multiSelect={false}
+        multiSelect={true}
         onSelected={(item)=> console.log}
         value={{ id: 3, name: 'test 3' }}
         options={[ { id: 1, name: 'test 1' }, { id: 2, name: 'test 2' } , { id: 3, name: 'test 3' }  ]}/>

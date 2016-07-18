@@ -104,7 +104,11 @@ export class DropdownSelect extends React.Component<IDropdownSelectProps, IDropd
   componentWillMount() {
     let selectedValue: any = this.props.multiSelect ? [] : null;
     if (this.props.value) {
-      selectedValue = this.props.value;
+      if (this.props.multiSelect){
+        selectedValue = [this.props.value];
+      }else{
+        selectedValue = this.props.value;
+      }
     }
     this.setState({ filteredOptions: this.props.options || [], selectedValue })
   }
@@ -230,7 +234,7 @@ export class DropdownSelect extends React.Component<IDropdownSelectProps, IDropd
                 <Col>
                   {this.state.selectedValue &&
                     <div className="selected-value-wrapper">
-                      {this.props.multiSelect ? (this.state.selectedValue as IDropdownOption[]).map(ddo =>
+                      {this.state.selectedValue && this.props.multiSelect ? (this.state.selectedValue as IDropdownOption[]).map(ddo =>
                         <div key={`multi-select-item-${ddo.id}`} className="multi-select-item multi-select-item-part" onClick={() => this.handleSelection(ddo) } >{ddo.name}<Icon className="multi-select-item-part" icon={Icon.Icomoon.cross}/></div>) : (this.state.selectedValue as IDropdownOption).name}
                     </div>
                   }
