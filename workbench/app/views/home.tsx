@@ -75,17 +75,20 @@ export class Home extends React.Component<{}, HomeState> {
         <p>This site is the beginnings of a combined development area for building new components as well as documenting them.</p>
         <hr/>
         <h1 className="m-top-large">Variables & helper classes</h1>
-        <DropdownSelect placeholder="Search for an artist..."
+        <DropdownSelect placeholder="Search for an artist and something else to make this box way to long and it will break..."
         multiSelect={false}
         onSelected={(item)=> console.log}
         canClear={true}
         hasGoButton={true}
         remoteQuery={(input)=> apiClient.searchForArtist(input).then((r)=> _.map(r.json.artists.items, (r: any)=> { return { id: r.id, name: r.name, data: r }}))}/>
-         <DropdownSelect placeholder="Search for an artist..."
+        <br/>
+        <br/>
+        <br/>
+        <DropdownSelect placeholder="Search for an artist..."
         multiSelect={true}
         onSelected={(item)=> console.log}
         value={{ id: 3, name: 'test 3' }}
-        options={[ { id: 1, name: 'test 1' }, { id: 2, name: 'test 2' } , { id: 3, name: 'test 3' }  ]}/>
+        options={[ { id: 1, name: 'test 1fdgdfgdfgdfgdfgfdgdf' }, { id: 2, name: 'test 2gerg dfgdfgdfgfdgdf' } , { id: 3, name: 'test 3 fdgfd gfdgfdgfdgfdgf' }  ]}/>
         <h2>Colors</h2>
         <pre className="m-bottom-small usage">{`<div className='bg-brand-primary fg-white' />`}</pre>
         <p>All colors can be used to set both the foreground and background of any element.Use <pre>fg-[colorname]</pre> for foreground and <pre>bg-[colorname]</pre> for backgrounds.A full list is as follows:

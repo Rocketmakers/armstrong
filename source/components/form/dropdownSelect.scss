@@ -106,6 +106,11 @@
   .placeholder {
     opacity: 0.4;
     pointer-events: none;
+    position: absolute;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 100%;
   }
 
   .btn {
@@ -126,11 +131,13 @@
     box-sizing: border-box;
     width: 100%;
     padding: $spacing-xsmall*1.2;
+    min-height: 39px;
     border: 1px solid $gray-light;
     border-radius: $corner-radius-small;
     text-align: left;
     position: relative;
     cursor: text;
+
   }
 
   &.has-multiple-options{
