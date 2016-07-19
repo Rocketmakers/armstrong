@@ -37,7 +37,7 @@ class App extends React.Component<any, { nav: boolean }> {
           </Row>
           <Row>
             <Col className="bg-gray-dark"/>
-            <Col fixed={1100} className="p-small">
+            <Col fixed={1100} className="p-large">
               { this.props.children }
             </Col>
             <Col className="bg-gray-dark"/>

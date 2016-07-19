@@ -7,6 +7,11 @@
     left: 0;
     right: 0;
     bottom: 0;
+    padding-left: inherit;
+    padding-right: inherit;
+    padding-top: inherit;
+    padding-bottom: inherit;
+    box-sizing: border-box;
 }
 
 .t-align-center{
