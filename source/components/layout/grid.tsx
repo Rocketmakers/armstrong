@@ -13,7 +13,7 @@ export interface IGrid extends React.Props<Grid>, React.HTMLProps<Grid> {
 export class Grid extends React.Component<IGrid, any> {
   render() {
     var originalClassName = this.props.className;
-    var attrs = _.omit(this.props, "className");
+    var attrs = _.omit(this.props, "className", "debugMode", "table", "fillContainer");
     var classes = classNames(
       originalClassName,
       "grid",
@@ -21,7 +21,7 @@ export class Grid extends React.Component<IGrid, any> {
       cd("grid-debug", this.props.debugMode),
       cd("table-grid", this.props.table)
     );
-    return (<div {...attrs} { ...this.props as any } className={classes} />);
+    return (<div {...attrs} className={classes} />);
   }
 }
 
@@ -38,8 +38,7 @@ export interface IRow extends React.HTMLProps<Row> {
 
 export class Row extends React.Component<IRow, any> {
   render() {
-
-    var attrs = _.omit(this.props, "className", "fixed");
+    var attrs = _.omit(this.props, "className", "fixed", "maxCols", "centerContent");
     var classes = classNames(this.props.className, "row", cd("no-flex", !!this.props.fixed), cd("wrap-row", !!this.props.maxCols));
     var styles = this.props.style;
     var colStyles;
@@ -52,7 +51,7 @@ export class Row extends React.Component<IRow, any> {
       colStyles = { flexBasis: `${100 / this.props.maxCols}%`, maxWidth: `${100 / this.props.maxCols}%` };
     }
 
-    return <div {...attrs} { ...this.props as any } className={classes} style={styles}>
+    return <div {...attrs} className={classes} style={styles}>
       {
         React.Children.map(this.props.children, (c: any) => {
           return c ? React.cloneElement((c as React.ReactElement<any>), { style: colStyles ? _.extend(colStyles, c.props.style) : c.props.style }) : null
@@ -74,7 +73,7 @@ export class Col extends React.Component<ICol, {}> {
     var centerClasses = LayoutHelpers.GetAlignment(this.props.centerContent);
     var classes = classNames("col", this.props.className, cd("no-flex", this.props.fixed !== undefined), cd(`col${this.props.spans}`, this.props.spans !== undefined), centerClasses)
 
-    var attrs = _.omit(this.props, "className", "fixed", "spans");
+    var attrs = _.omit(this.props, "className", "fixed", "spans", "centerContent");
     var styles = this.props.style;
 
     if (typeof this.props.fixed === "number") {
@@ -96,7 +95,7 @@ export class Col extends React.Component<ICol, {}> {
       }
     }
 
-    return <div {...attrs} { ...this.props as any } className={classes} style={styles} />
+    return <div {...attrs} className={classes} style={styles} />
   }
 }
 
@@ -107,6 +106,8 @@ export class SingleColumnRow extends React.Component<IColRow, any> {
     var classes = classNames("row", cd("no-flex", this.props.fixed !== undefined), this.props.className);
 
     var styles = this.props.style;
+
+    var attrs = _.omit(this.props, "className", "fixed", "spans", "centerContent");
 
     if (this.props.children) {
       var elementOne;
@@ -124,7 +125,7 @@ export class SingleColumnRow extends React.Component<IColRow, any> {
     }
 
     return (
-      <div {...this.props as any} className={classes}>
+      <div {...attrs} className={classes}>
         <div className={classNames('col', centerClasses) }>{this.props.children}</div>
       </div>)
   }
@@ -136,8 +137,10 @@ export class FixedCentralColumnRow extends React.Component<IColRow, any> {
 
     var classes = classNames("row", "fixed-central-col-row", cd("no-flex", this.props.fixed !== undefined), this.props.className);
 
+    var attrs = _.omit(this.props, "className", "fixed", "spans", "centerContent");
+
     return (
-      <div {...this.props as any} className={classes}>
+      <div {...attrs} className={classes}>
         <div className={classNames('col', 'fixed-central-col', centerClasses) }>{this.props.children}</div>
       </div>)
   }

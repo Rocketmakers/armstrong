@@ -1,4 +1,5 @@
 import * as React from "react";
+import * as _ from "underscore";
 import { Size, LayoutHelpers, Color, FgColorClass, BgColorClass, MarginClass, PaddingClass } from "./../../utilities/uiHelpers";
 import { classNames, cd } from "./../../utilities/classBuilder";
 import { Icon } from "./../display/icon";
@@ -17,8 +18,9 @@ export class Button extends React.Component<IButtonProps, {}>{
   static Icomoon = Icons.Icomoon;
 
   render() {
+    var attrs = _.omit(this.props, "text", "onClick", "leftIcon", "rightIcon", "className", "rounded");
     return (
-      <button onClick={this.props.onClick} { ...this.props as any }
+      <button onClick={this.props.onClick} { ...attrs }
       className={
         classNames("btn",
         cd("rounded", this.props.rounded),

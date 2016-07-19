@@ -271,7 +271,7 @@ export class DatePickerInput extends React.Component<IDatePickerInputProps, IDat
         }
         <div id={this.bodyElementId} className={classes} style={{ top: `${this.state.calendarOffset}px`}}>
           <div className="date-picker-body-wrapper">
-            <Grid className="date-picker-header" dontFillContainer={true}>
+            <Grid className="date-picker-header">
               <Row>
                 <Col onClick={() => this.changeMonth(-1) } fixed={true}>{`<`}</Col>
                 <Col>{currentDisplayDate}</Col>

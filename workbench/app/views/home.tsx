@@ -103,7 +103,7 @@ export class Home extends React.Component<{}, HomeState> {
             <li><pre>white</pre> - Used mainly to make foreground text visible on dark backgrounds</li>
           </ul>
         </p>
-        {this.state.colorClasses.length !== 0 && this.state.colorClasses.map(cc => <ColorSwatch selected={cc === this.state.selectedColorClass} onClick={() => this.setState({ selectedColorClass: cc }) } className={cc} name={`${cc.replace('-', ' ')}`}/>) }
+        {this.state.colorClasses.length !== 0 && this.state.colorClasses.map(cc => <ColorSwatch key={cc} selected={cc === this.state.selectedColorClass} onClick={() => this.setState({ selectedColorClass: cc }) } className={cc} name={`${cc.replace('-', ' ')}`}/>) }
         <h2 className="m-top-small">Font sizes</h2>
         <pre className="m-bottom-small usage">{`<p className='f-size-small'>A small paragraph</p>`}</pre>
         <p>Lets you adjust a fontsize on a per element basis: </p>

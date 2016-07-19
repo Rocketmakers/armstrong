@@ -26,13 +26,13 @@ export class TextInput extends React.Component<ITextInputProps, {}> {
             cd("text-input-icon-left", this.props.leftIcon !== undefined),
             cd("text-input-icon-right", this.props.rightIcon !== undefined),
             this.props.className);
-            var ps = _.omit(this.props, "className")
+            var ps = _.omit(this.props, "className", "readOnly", "rightOverlayText", "leftOverlayText", "type", "leftIcon", "rightIcon", "multiLine")
         return (
             <div className={classes}>
                 { this.props.leftIcon && <Icon className="left-icon" icon={this.props.leftIcon}/>}
                 { this.props.leftOverlayText && <div className="input-overlay-text-left">{this.props.leftOverlayText}</div> }
-                { !this.props.multiLine && <input type={this.props.type || "text"} readOnly={this.props.readonly} {...ps as any} placeholder={this.props.placeholder} required={this.props.required} />}
-                { this.props.multiLine && <textarea readOnly={this.props.readonly} {...this.props as any} placeholder={this.props.placeholder}  />}
+                { !this.props.multiLine && <input type={this.props.type || "text"} readOnly={this.props.readonly} {...ps} placeholder={this.props.placeholder} required={this.props.required} />}
+                { this.props.multiLine && <textarea readOnly={this.props.readonly} {...ps} placeholder={this.props.placeholder}  />}
                 { this.props.rightOverlayText && <div className="input-overlay-text-right">{this.props.rightOverlayText}</div> }
                 { this.props.rightIcon && <Icon className="right-icon" icon={this.props.rightIcon}/>}
             </div>
