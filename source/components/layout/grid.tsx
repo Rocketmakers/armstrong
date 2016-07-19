@@ -1,4 +1,5 @@
 import * as React from "react";
+import * as ReactDOM from "react-dom";
 import * as _ from "underscore";
 import { classNames, cd } from "./../../utilities/classBuilder";
 import { LayoutHelpers, CenterContent, CenterBoth, MarginClass, PaddingClass, BgColorClass, FgColorClass } from "./../../utilities/uiHelpers";
@@ -21,7 +22,17 @@ export class Grid extends React.Component<IGrid, any> {
       cd("grid-debug", this.props.debugMode),
       cd("table-grid", this.props.table)
     );
-    return (<div {...attrs} className={classes} />);
+    if (this.props.fillContainer){
+      return (<div className="flex-override"><div {...attrs} className={classes} /></div>);
+    }
+    else{
+      return (<div {...attrs} className={classes} />);
+    }
+  }
+  componentDidMount(){
+    if (this.props.fillContainer){
+      (ReactDOM.findDOMNode(this).parentElement as HTMLElement).style.position = "relative";
+    }
   }
 }
 
@@ -80,21 +91,6 @@ export class Col extends React.Component<ICol, {}> {
       styles = _.extend({ maxWidth: `${this.props.fixed}px`, width: "100%" }, styles);
     }
 
-    if (this.props.children) {
-      var elementOne;
-      if (_.isArray(this.props.children)) {
-        elementOne = this.props.children[0];
-      }
-      else{
-        elementOne = this.props.children;
-      }
-      if (elementOne && React.isValidElement(elementOne)) {
-        if (elementOne.props.className && (elementOne.props.className as string).indexOf("flex-override") !== -1) {
-          styles = _.extend({ position: "relative" }, styles);
-        }
-      }
-    }
-
     return <div {...attrs} className={classes} style={styles} />
   }
 }
@@ -102,27 +98,9 @@ export class Col extends React.Component<ICol, {}> {
 export class SingleColumnRow extends React.Component<IColRow, any> {
   render() {
     var centerClasses = LayoutHelpers.GetAlignment(this.props.centerContent);
-
     var classes = classNames("row", cd("no-flex", this.props.fixed !== undefined), this.props.className);
-
     var styles = this.props.style;
-
     var attrs = _.omit(this.props, "className", "fixed", "spans", "centerContent");
-
-    if (this.props.children) {
-      var elementOne;
-      if (_.isArray(this.props.children)) {
-        elementOne = this.props.children[0];
-      }
-      else{
-        elementOne = this.props.children;
-      }
-      if (elementOne && React.isValidElement(elementOne)) {
-        if (elementOne.props.className && (elementOne.props.className as string).indexOf("flex-override") !== -1) {
-          styles = _.extend({ position: "relative" }, styles);
-        }
-      }
-    }
 
     return (
       <div {...attrs} className={classes}>

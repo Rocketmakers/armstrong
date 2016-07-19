@@ -11,7 +11,8 @@ export class Test extends React.Component<{}, { showSubComponent: boolean }> {
   }
 
   public render() {
-    return <Grid fillContainer={true} debugMode={true} style={{ backgroundColor: "red" }}>
+    return(
+    <Grid fillContainer={true} debugMode={true} style={{ backgroundColor: "red" }}>
       <Row style={{ backgroundColor: "green" }}>
         <Col style={{ backgroundColor: "yellow" }}>
           <Button text="click me" onClick={() => this.setState({ showSubComponent: !this.state.showSubComponent }) }/>
@@ -20,6 +21,6 @@ export class Test extends React.Component<{}, { showSubComponent: boolean }> {
         300!
         </Col>
       </Row>
-    </Grid>;
+    </Grid>);
   }
 }
