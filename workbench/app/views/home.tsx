@@ -274,7 +274,7 @@ export class Home extends React.Component<{}, HomeState> {
         <TextInput placeholder="what is your rocket called?" leftIcon={TextInput.Icomoon.rocket}/>
         <TextInput className="m-top-xsmall m-bottom-xsmall" placeholder="do you even lift?" rightIcon={TextInput.Icomoon.dumbbell}/>
         <TextInput className="m-bottom-xsmall" defaultValue="599" leftIcon={TextInput.Icomoon.coinDollar} rightOverlayText="%"/>
-        <TextInput disabled={true} className="m-bottom-xsmall" defaultValue="599" leftOverlayText="$"/>
+        <TextInput readonly={true} className="m-bottom-xsmall" defaultValue="599" leftOverlayText="$"/>
         <TextInput disabled={true}  multiLine={true}/>
         <h2 className="m-top-small">Checkbox Input</h2>
         <pre className="m-bottom-small usage">{`<CheckboxInput {...Form.Bind.checkbox("YOUR_PROPERTY_NAME: boolean") }/>`}</pre>
