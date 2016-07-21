@@ -6,6 +6,7 @@ import { LayoutHelpers, CenterContent, CenterBoth, MarginClass, PaddingClass, Bg
 
 export interface IGrid extends React.Props<Grid>, React.HTMLProps<Grid> {
   debugMode?: boolean;
+  disableFlexOverride?: boolean;
   className?: string | MarginClass | PaddingClass | BgColorClass | FgColorClass;
   table?: boolean;
   fillContainer?: boolean;
@@ -22,7 +23,7 @@ export class Grid extends React.Component<IGrid, any> {
       cd("grid-debug", this.props.debugMode),
       cd("table-grid", this.props.table)
     );
-    if (this.props.fillContainer){
+    if (this.props.fillContainer && !this.props.disableFlexOverride){
       return (<div className="flex-override"><div {...attrs} className={classes} /></div>);
     }
     else{
@@ -30,7 +31,7 @@ export class Grid extends React.Component<IGrid, any> {
     }
   }
   componentDidMount(){
-    if (this.props.fillContainer){
+    if (this.props.fillContainer && !this.props.disableFlexOverride){
       (ReactDOM.findDOMNode(this).parentElement as HTMLElement).style.position = "relative";
     }
   }
