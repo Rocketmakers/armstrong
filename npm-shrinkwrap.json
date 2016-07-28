@@ -1,6 +1,6 @@
 {
   "name": "armstrong-react",
-  "version": "0.4.79",
+  "version": "0.4.80",
   "dependencies": {
     "asap": {
       "version": "2.0.4",
