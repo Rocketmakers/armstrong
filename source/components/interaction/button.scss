@@ -1,5 +1,6 @@
 .btn {
     padding: $spacing-small $spacing-medium;
+    cursor: pointer;
     &.icon-button-left{
       padding-left: ($spacing-small * 2) * 0.75;
     }
@@ -28,5 +29,6 @@
     }
     &:disabled{
       opacity: 0.4;
+      cursor: default;
     }
 }
