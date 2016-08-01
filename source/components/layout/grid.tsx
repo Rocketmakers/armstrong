@@ -109,18 +109,3 @@ export class SingleColumnRow extends React.Component<IColRow, any> {
       </div>)
   }
 }
-
-export class FixedCentralColumnRow extends React.Component<IColRow, any> {
-  render() {
-    var centerClasses = LayoutHelpers.GetAlignment(this.props.centerContent);
-
-    var classes = classNames("row", "fixed-central-col-row", cd("no-flex", this.props.fixed !== undefined), this.props.className);
-
-    var attrs = _.omit(this.props, "className", "fixed", "spans", "centerContent");
-
-    return (
-      <div {...attrs} className={classes}>
-        <div className={classNames('col', 'fixed-central-col', centerClasses) }>{this.props.children}</div>
-      </div>)
-  }
-}

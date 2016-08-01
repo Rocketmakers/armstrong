@@ -2,7 +2,7 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { Router, Route, Link, hashHistory, IndexRoute } from 'react-router';
-import { Grid, Row, Col, SingleColumnRow, FixedCentralColumnRow } from './../../source/components/layout/grid';
+import { Grid, Row, Col, SingleColumnRow } from './../../source/components/layout/grid';
 import { BurgerMenu, BurgerMenuItem } from './../../source/components/navigation/burgerMenu';
 import { Image } from './../../source/components/display/image';
 

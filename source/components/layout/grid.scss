@@ -113,18 +113,6 @@ $grid_column-count: 12;
   @extend %no-flex;
 }
 
-.fixed-central-col-row {
-  display: flex;
-  flex-wrap: nowrap;
-  align-items: stretch;
-  align-content: stretch;
-  justify-content: center;
-
-  .col {
-    max-width: $screen-size-computer;
-  }
-}
-
 @each $size in $spacing-sizes {
   .grid-p-inner-#{nth($size, 1)} {
     .row {

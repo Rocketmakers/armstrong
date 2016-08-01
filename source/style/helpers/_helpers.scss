@@ -25,3 +25,8 @@
 .t-align-right{
     text-align: right;
 }
+
+.width-wrapper{
+    width: $fixed-site-width;
+    margin: 0 auto;
+}

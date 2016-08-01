@@ -4,7 +4,7 @@ import * as ReactDOM from 'react-dom';
 import * as moment from 'moment';
 import * as _ from 'underscore';
 import { Link } from "react-router";
-import { Grid, Row, Col, SingleColumnRow, FixedCentralColumnRow } from './../../../source/components/layout/grid';
+import { Grid, Row, Col, SingleColumnRow } from './../../../source/components/layout/grid';
 import { Button } from './../../../source/components/interaction/button';
 import { Image } from './../../../source/components/display/image';
 import { DatePickerInput } from './../../../source/components/form/inputs/datePickerInput';
@@ -159,9 +159,6 @@ export class Home extends React.Component<{}, HomeState> {
             <Col centerContent={{ horizontal: "right", vertical: "bottom" }}>Waddup</Col>
             <Col centerContent={{ horizontal: "left", vertical: "center" }}>Waddup</Col>
           </Row>
-          <FixedCentralColumnRow>
-            test
-          </FixedCentralColumnRow>
           <Row maxCols={3} style={{ backgroundColor: "red"}}>
             <Col style={{ backgroundColor: "red"}}>
               <div>Hello</div>
