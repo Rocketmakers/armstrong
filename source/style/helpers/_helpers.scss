@@ -27,6 +27,6 @@
 }
 
 .width-wrapper{
-    width: $fixed-site-width;
+    max-width: $fixed-site-width;
     margin: 0 auto;
 }
