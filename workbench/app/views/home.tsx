@@ -84,6 +84,12 @@ export class Home extends React.Component<{}, HomeState> {
         <br/>
         <br/>
         <br/>
+         <DropdownSelect placeholder="Search for an artist and something else to make this box way to long and it will break..."
+        multiSelect={false}
+        onSelected={(item)=> console.log}
+        canClear={true}
+        hasGoButton={true}
+        remoteQuery={(input)=> apiClient.searchForArtist(input).then((r)=> _.map(r.json.artists.items, (r: any)=> { return { id: r.id, name: r.name, data: r }}))}/>
         <DropdownSelect placeholder="Search for an artist..."
         multiSelect={true}
         onSelected={(item)=> console.log}
