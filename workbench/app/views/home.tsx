@@ -93,7 +93,7 @@ export class Home extends React.Component<{}, HomeState> {
         <DropdownSelect placeholder="Search for an artist..."
         multiSelect={true}
         onSelected={(item)=> console.log}
-        value={{ id: 3, name: 'test 3' }}
+        value={[{ id: 3, name: 'test 3' }]}
         options={[ { id: 1, name: 'test 1fdgdfgdfgdfgdfgfdgdf' }, { id: 2, name: 'test 2gerg dfgdfgdfgfdgdf' } , { id: 3, name: 'test 3 fdgfd gfdgfdgfdgfdgf' }  ]}/>
         <h2>Colors</h2>
         <pre className="m-bottom-small usage">{`<div className='bg-brand-primary fg-white' />`}</pre>

@@ -105,7 +105,11 @@ export class DropdownSelect extends React.Component<IDropdownSelectProps, IDropd
     let selectedValue: any = this.props.multiSelect ? [] : null;
     if (this.props.value) {
       if (this.props.multiSelect){
-        selectedValue = [this.props.value];
+        if (_.isArray(this.props.value)){
+          selectedValue = this.props.value;
+        }else{
+          selectedValue = [this.props.value];
+        }
       }else{
         selectedValue = this.props.value;
       }
