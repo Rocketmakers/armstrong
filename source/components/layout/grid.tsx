@@ -33,6 +33,7 @@ export class Grid extends React.Component<IGrid, any> {
   componentDidMount(){
     if (this.props.fillContainer && !this.props.disableFlexOverride){
       (ReactDOM.findDOMNode(this).parentElement as HTMLElement).style.position = "relative";
+      (ReactDOM.findDOMNode(this).parentElement as HTMLElement).style.height = "100%";
     }
   }
 }
