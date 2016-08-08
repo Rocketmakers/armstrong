@@ -186,6 +186,14 @@ export class Home extends React.Component<{}, HomeState> {
             </Col>
           </Row>
         </Grid>
+        <Grid debugMode={true}>
+          <Row>
+            <Col>hello</Col>
+            <Col fixed={true}>
+            <p>fjdwe9rjw390-fjer09gerjgf er jfger90-gi er0-9 gierm-0g9remg0[rtm90y[prt9mg0[rt9gi0frgbkjfgobkfgopbkrf0- gfgib0-fg bk0fg- hkfg0- b,fg obfg,b grfo0 bigrf0p bkfghbkfgobk</p>
+            </Col>
+          </Row>
+        </Grid>
         <Grid debugMode={true} className="grid-p-inner-xsmall">
           <Row>
             <Col>a</Col>

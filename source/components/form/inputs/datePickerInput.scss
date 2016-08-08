@@ -89,7 +89,7 @@ $header-height: 40px;
   }
 
   .date-picker-top {
-    transform: translateY(-100%);
+    transform: translateY(calc(-100% - 40px));
     top: -10px;
   }
 

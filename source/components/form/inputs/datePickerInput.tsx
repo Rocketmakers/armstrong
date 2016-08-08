@@ -202,19 +202,22 @@ export class DatePickerInput extends React.Component<IDatePickerInputProps, IDat
     })
   }
 
-  shouldShowOnTop() {
+  shouldShowOnTop(): boolean {
     if (this.props.nativeInput || !this.inputElement) {
       return;
     }
     const height = this.bodyElement.clientHeight + 50;
     const visibleBottom = (window.innerHeight + window.scrollY);
     const inputRect = this.inputElement.getBoundingClientRect();
-    const remainingSpace = Math.abs(visibleBottom - inputRect.bottom);
-
+    //const remainingSpace = Math.abs(visibleBottom - inputRect.bottom);
+    const remainingSpace = window.innerHeight - inputRect.bottom;
+    console.log(`height: ${height}, window height ${window.innerHeight}, remainingSpace ${remainingSpace}`);
     if (remainingSpace < height) {
-      this.setState({ showOnTop: true })
+      this.setState({ showOnTop: true });
+      return true;
     } else {
       this.setState({ showOnTop: false })
+      return false;
     }
   }
 
@@ -240,6 +243,7 @@ export class DatePickerInput extends React.Component<IDatePickerInputProps, IDat
     const currentDisplayDate = this.state.displayedDate.format("MMMM - YYYY");
     const classes = classNames("date-picker-body",
       cd("date-picker-body-visible", this.state.pickerBodyVisible && !this.props.alwaysShowCalendar),
+      cd("date-picker-top", this.state.showOnTop),
       cd("always-show-calendar", this.props.alwaysShowCalendar));
     const rootClasses = classNames("date-picker", this.props.className, cd('has-icon', this.props.icon !== null), cd('disabled', this.props.disabled));
     if (this.props.nativeInput) {
