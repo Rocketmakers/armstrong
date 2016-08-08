@@ -23,7 +23,7 @@ export interface IDropdownSelectProps extends React.Props<DropdownSelect> {
   remoteQuery?: (query: string) => Promise<IDropdownOption[]>;
   remoteQueryOnOpen?: boolean;
   hasGoButton?: boolean;
-  goButtonContent?: JSX.Element | string;
+  goButtonContent?: React.ReactElement<any> | string;
   onSelected?: (selectedOption: IDropdownOption | IDropdownOption[]) => void;
   visibleItems?: number;
   canClear?: boolean;
@@ -188,15 +188,16 @@ export class DropdownSelect extends React.Component<IDropdownSelectProps, IDropd
       this.setState({ selectedIndex: Math.max(this.state.filteredOptions.length - 1, 0) })
     }
   }
+
+  private isArray<T>(itemOrArray: T | T[]) : itemOrArray is T[]{
+    return _.isArray(itemOrArray)
+  }
   handleSelection(options: IDropdownOption | IDropdownOption[]) {
     if (this.props.multiSelect) {
       // Handle multiple selection
-      var newOptions = options;
-      if (!_.isArray(options)) {
-        newOptions = [options];
-      }
+      const items: IDropdownOption[] = this.isArray(options) ? options : [options]
       var ddOptions = (this.state.selectedValue as IDropdownOption[]);
-      (newOptions as IDropdownOption[]).forEach(option => {
+      items.forEach(option => {
         if (ddOptions.length !== 0 && _.some(ddOptions, ddo => ddo.id === option.id)) {
           // Remove
           ddOptions = _.reject(ddOptions, ddo => ddo.id === option.id);

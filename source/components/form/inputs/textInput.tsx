@@ -26,7 +26,7 @@ export class TextInput extends React.Component<ITextInputProps, {}> {
             cd("text-input-icon-left", this.props.leftIcon !== undefined),
             cd("text-input-icon-right", this.props.rightIcon !== undefined),
             this.props.className);
-            var ps = _.omit(this.props, "className", "readOnly", "rightOverlayText", "leftOverlayText", "type", "leftIcon", "rightIcon", "multiLine")
+            var ps = _.omit(this.props, "className", "readonly", "rightOverlayText", "leftOverlayText", "type", "leftIcon", "rightIcon", "multiLine")
         return (
             <div className={classes}>
                 { this.props.leftIcon && <Icon className="left-icon" icon={this.props.leftIcon}/>}

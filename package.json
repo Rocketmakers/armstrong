@@ -1,6 +1,6 @@
 {
   "name": "armstrong-react",
-  "version": "0.4.85",
+  "version": "0.4.86",
   "description": "Rocketmakers Armstrong library of React components",
   "main": "./dist/index.js",
   "style": "./dist/style.scss",
@@ -10,7 +10,7 @@
     "init": "typings install && npm run build",
     "prepublish": "typings install && npm run build",
     "patch": "npm --no-git-tag-version version patch -m \"Upgrade to %s\"",
-    "patch-publish": "git pull && npm run patch && npm publish"
+    "patch-publish": "npm run patch && npm publish"
   },
   "repository": {
     "type": "git",
@@ -26,8 +26,6 @@
   "dependencies": {
     "classnames": "^2.2.5",
     "moment": "^2.14.1",
-    "react": "^15.3.0",
-    "react-dom": "^15.3.0",
     "underscore": "^1.8.3"
   },
   "peerDependencies": {

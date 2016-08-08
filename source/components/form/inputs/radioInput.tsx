@@ -3,7 +3,7 @@ import * as React from "react";
 import {Form} from "../form";
 
 export interface IRadioInputProps extends React.HTMLProps<RadioInput> {
-    labelContent: string | JSX.Element;
+    labelContent: string | React.ReactElement<any>;
 }
 
 export class RadioInput extends React.Component<IRadioInputProps, {}> {

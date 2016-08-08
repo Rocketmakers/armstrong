@@ -64,10 +64,10 @@ export class Form extends React.Component<IForm,{}>{
       let props: React.DOMAttributes = _.extend({}, element.props);
       let children = element.props.children;
 
-      const fai = props as IFormBinderInjector<any>;
-      const formBinder = fai.__formBinder;
+      const fbi = props as IFormBinderInjector<any>;
+      const formBinder = fbi.__formBinder;
       if (formBinder) {
-        delete fai.__formBinder;
+        delete fbi.__formBinder
         formBinder.setElementProperty(props, this.props.dataBinder);
         formBinder.handleValueChanged(props, this.props.dataBinder, () => this.notifyChange());
         if (formBinder.extender) {

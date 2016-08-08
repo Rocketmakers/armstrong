@@ -12,7 +12,7 @@ export interface IDialogProps extends React.HTMLProps<Dialog> {
   onClose?: () => void;
   onOpen?: () => void;
   onXClicked?: () => void;
-  footerContent?: JSX.Element;
+  footerContent?: React.ReactElement<any>;
 }
 
 export class Dialog extends React.Component<IDialogProps, {}>{
