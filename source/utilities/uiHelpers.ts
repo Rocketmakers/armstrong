@@ -1,4 +1,5 @@
 import * as React from "react";
+import * as classNames from "classnames";
 
 export type Responsiveness = "tablet" | "phone" | "both" | "none";
 export type Size = "none" | "xxsmall" | "xsmall" | "small" | "medium" | "large" | "xlarge";
@@ -24,21 +25,19 @@ export class LayoutHelpers {
     if (!centerContent) {
       return null
     }
-    if (typeof centerContent === "string") {
+
+    if (this.isCenterBoth(centerContent)) {
       return "align-content-center-both";
     }
-    var classes = [];
-
-    classes.push((centerContent as CenterContent).horizontal ? LayoutHelpers.GetHorizontalAlignment((centerContent as CenterContent).horizontal) : null);
-    classes.push((centerContent as CenterContent).vertical ? LayoutHelpers.GetVerticalAlignment((centerContent as CenterContent).vertical) : null);
-    return classes.filter(c => c != null).join(" ");
+    else {
+      return classNames({
+        [`align-content-horizontal-${centerContent.horizontal}`]: !!centerContent.horizontal,
+        [`align-content-horizontal-${centerContent.vertical}`]: !!centerContent.vertical
+      });
+    }
   }
 
-  static GetHorizontalAlignment(alignment: CenterContentHorizontal) {
-    return `align-content-horizontal-${alignment}`;
+  static isCenterBoth(center: CenterContent | CenterBoth): center is CenterBoth {
+    return center === "both";
   }
-  static GetVerticalAlignment(alignment: CenterContentVertical) {
-    return `align-content-vertical-${alignment}`;
-  }
-
 }
