@@ -1,8 +1,8 @@
 import * as React from "react";
 import * as _ from "underscore";
 import * as moment from "moment";
+import * as classNames from "classnames";
 import { Grid, Row, Col } from "./../../layout/grid";
-import { classNames, cd } from "./../../../utilities/classBuilder";
 import { Icons } from './../../../utilities/icons';
 import { Icon } from './../../display/icon';
 
@@ -241,11 +241,22 @@ export class DatePickerInput extends React.Component<IDatePickerInputProps, IDat
     const weekdays = _.range(0, 7).map(n => <div className="date-picker-week-day" key={`day_name_${n}`}>{moment().startOf('week').add(n, 'days').format('dd') }</div>)
     const days = this.getDaysInMonth();
     const currentDisplayDate = this.state.displayedDate.format("MMMM - YYYY");
-    const classes = classNames("date-picker-body",
-      cd("date-picker-body-visible", this.state.pickerBodyVisible && !this.props.alwaysShowCalendar),
-      cd("date-picker-top", this.state.showOnTop),
-      cd("always-show-calendar", this.props.alwaysShowCalendar));
-    const rootClasses = classNames("date-picker", this.props.className, cd('has-icon', this.props.icon !== null), cd('disabled', this.props.disabled));
+    const classes = classNames(
+      "date-picker-body",
+      {
+        "date-picker-body-visible": this.state.pickerBodyVisible && !this.props.alwaysShowCalendar,
+        "date-picker-top": this.state.showOnTop,
+        "always-show-calendar": this.props.alwaysShowCalendar
+      }
+    );
+    const rootClasses = classNames(
+      "date-picker",
+      this.props.className,
+      {
+        "has-icon": this.props.icon !== null,
+        "disabled": this.props.disabled
+      }
+    );
     if (this.props.nativeInput) {
       return (
         <div className={rootClasses}>
@@ -303,7 +314,13 @@ interface IDatePickerDayProps extends React.Props<DatePickerDay> {
 
 class DatePickerDay extends React.Component<IDatePickerDayProps, {}> {
   render() {
-    const classes = classNames(cd('not-in-month', this.props.notInCurrentMonth), cd('selected-day', this.props.selected), cd("day-disabled", !this.props.withinRange));
+    const classes = classNames(
+      {
+        "not-in-month": this.props.notInCurrentMonth,
+        "selected-day": this.props.selected,
+        "day-disabled": !this.props.withinRange
+      }
+    );
     return <div className={classes} onClick={() => this.props.dayClicked(this.props.date) }>{this.props.date.format('DD') }</div>
   }
 }

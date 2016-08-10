@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as _ from "underscore";
-import { classNames, cd } from "./../../utilities/classBuilder";
+import * as classNames from "classnames";
 import { Color, LayoutHelpers } from "./../../utilities/uiHelpers";
 import { Icons } from "./../../utilities/icons";
 
@@ -58,7 +58,7 @@ export class Image extends React.Component<IImageProps, { source?: string }>{
   render() {
     var attrs = _.omit(this.props, "height", "width", "noPlaceholder", "sampleUserSeed", "sampleUser", "source", "className", "rounded");
     return (
-      <img src={this.state.source} { ...attrs } height={this.props.height} width={this.props.width} className={classNames(this.props.className, cd("rounded", this.props.rounded)) }/>
+      <img src={this.state.source} { ...attrs } height={this.props.height} width={this.props.width} className={classNames(this.props.className, { "rounded": this.props.rounded }) }/>
     );
   }
 }
