@@ -1,7 +1,7 @@
 import * as React from "react";
 import { IDataBinder } from "../../form/formCore";
 import { FormBinderBase } from "../../form/formBinders";
-import { Form} from "../form";
+import { Form } from "../form";
 import { Grid, Row, Col, SingleColumnRow } from "./../../layout/grid";
 import * as _ from "underscore";
 
@@ -11,7 +11,6 @@ export interface ITimeSelectorProps extends React.HTMLProps<TimeSelector> {
 }
 
 export class TimeSelector extends React.Component<ITimeSelectorProps, {}>{
-
   render(){
     var hours = [];
     var minutes = [];

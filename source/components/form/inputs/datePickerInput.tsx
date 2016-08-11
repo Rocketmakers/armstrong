@@ -209,7 +209,6 @@ export class DatePickerInput extends React.Component<IDatePickerInputProps, IDat
     const height = this.bodyElement.clientHeight + 50;
     const visibleBottom = (window.innerHeight + window.scrollY);
     const inputRect = this.inputElement.getBoundingClientRect();
-    //const remainingSpace = Math.abs(visibleBottom - inputRect.bottom);
     const remainingSpace = window.innerHeight - inputRect.bottom;
     console.log(`height: ${height}, window height ${window.innerHeight}, remainingSpace ${remainingSpace}`);
     if (remainingSpace < height) {

@@ -39,6 +39,8 @@ export interface IDropdownSelectState {
   selectedIndex?: number;
   remoteSearching?: boolean;
   offsetIndex?: number;
+  showOnTop?: boolean;
+  topOffset?: number;
 }
 
 export class DropdownSelect extends React.Component<IDropdownSelectProps, IDropdownSelectState> {
@@ -51,7 +53,17 @@ export class DropdownSelect extends React.Component<IDropdownSelectProps, IDropd
   }
   constructor(props: IDropdownSelectProps) {
     super(props);
-    this.state = { filteredOptions: [], query: "", open: false, selectedValue: props.multiSelect ? []: null , selectedIndex: 0, remoteSearching: false, offsetIndex: 0 };
+    this.state = {
+      filteredOptions: [],
+      query: "",
+      open: false,
+      selectedValue: props.multiSelect ? []: null ,
+      selectedIndex: 0,
+      remoteSearching: false,
+      offsetIndex: 0,
+      showOnTop: false,
+      topOffset: -35
+     };
   }
   filterRemote(query: string, immediate?: boolean) {
     if (this.timer) {
@@ -81,16 +93,13 @@ export class DropdownSelect extends React.Component<IDropdownSelectProps, IDropd
   }
   focusInput(e) {
     if (!this.state.open && !e.target.classList.contains("clear-selected")) {
-      this.setState({ open: true }, () => {
+      this.setState({ open: true, showOnTop: this.shouldShowOnTop() }, () => {
         (ReactDOM.findDOMNode(this).querySelector("input") as any).focus()
         document.addEventListener("click", this, false);
         if (this.props.remoteQueryOnOpen) {
           this.filterRemote("", true);
         }
       })
-    } else {
-      // this.setState({ open: false, query: "", filteredOptions: this.props.options || [] })
-      // document.removeEventListener("click", this, false);
     }
   }
   handleEvent(e) {
@@ -137,6 +146,20 @@ export class DropdownSelect extends React.Component<IDropdownSelectProps, IDropd
       }
     }
   }
+
+  shouldShowOnTop(): boolean {
+    const height = (this.itemHeight *3) + 50;
+    const inputRect = ReactDOM.findDOMNode(this).getBoundingClientRect();
+    this.setState({ topOffset: this.props.multiSelect ? -inputRect.height*2 : -inputRect.height });
+    const remainingSpace = window.innerHeight - inputRect.bottom;
+    console.log(`height: ${height}, window height ${window.innerHeight}, remainingSpace ${remainingSpace}`);
+    if (remainingSpace < height) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   checkKey(e) {
     var currentIndex = this.state.selectedIndex;
     if (e.keyCode === 27) {
@@ -223,6 +246,7 @@ export class DropdownSelect extends React.Component<IDropdownSelectProps, IDropd
       document.removeEventListener("click", this, false);
     }
   }
+
   buttonClick() {
     if (this.state.filteredOptions.length !== 0) {
       var selectedValue = this.state.filteredOptions[this.state.selectedIndex];
@@ -275,7 +299,9 @@ export class DropdownSelect extends React.Component<IDropdownSelectProps, IDropd
                   onChange={(e) => this.setState({ query: (e.target as any).value }) }
                   placeholder={this.props.placeholder || "start typing to filter results..."} />
                 {this.state.remoteSearching && <Icon className="spinner fg-info" icon={Icon.Icomoon.spinner2}/>}
-                <div data-id="dropdown-select-list" className="dropdown-select-list" style={{ maxHeight: `${(this.props.visibleItems || 3) * this.itemHeight}px` }}>
+                <div data-id="dropdown-select-list"
+                className={`dropdown-select-list${this.state.showOnTop ? ' on-top' : ''}`}
+                style={{ maxHeight: `${(this.props.visibleItems || 3) * this.itemHeight}px`, marginTop: `${this.state.showOnTop ? this.state.topOffset : 0 }px` }}>
                   {this.state.filteredOptions && this.state.filteredOptions.map((o, i) =>
                     <div data-index={i} key={`dd-item-${i}`} className={`dd-list-item${i === this.state.selectedIndex ? ' selected' : ''}${(this.props.multiSelect && _.some((this.state.selectedValue as IDropdownOption[]), ddo => ddo.id === o.id)) ? ' in-selected-list' : ''}`}
                       onClick={() => this.handleSelection(o) }>{o.name}</div>) }

@@ -16,7 +16,9 @@ import { TextInput } from './../../../source/components/form/inputs/textInput';
 import { SelectInput } from './../../../source/components/form/inputs/selectInput';
 import { ColorSwatch } from './../components/colorSwatch';
 import { DropdownSelect } from './../../../source/components/form/dropdownSelect';
-import { TimeSelector } from './../../../source/components/form/inputs/timeSelectorInput'
+import { TimeSelector } from './../../../source/components/form/inputs/timeSelectorInput';
+import { DateInput, DateInputFormBinder } from './../../../source/components/form/inputs/dateInput';
+import { Form } from './../../../source/components/form/form';
 import apiClient from './../api/apiClient.ts';
 
 interface HomeState {
@@ -75,6 +77,9 @@ export class Home extends React.Component<{}, HomeState> {
         <p>This site is the beginnings of a combined development area for building new components as well as documenting them.</p>
         <hr/>
         <h1 className="m-top-large">Variables & helper classes</h1>
+        <Form ref="form" dataBinder={Form.jsonDataBinder({ date: "2016-02-02"})} onDataChanged={(d)=> console.log(JSON.stringify(d))}>
+        <DateInput {...Form.Bind.custom(DateInputFormBinder.customValue("date"))} />
+        </Form>
         <DropdownSelect placeholder="Search for an artist and something else to make this box way to long and it will break..."
         multiSelect={false}
         onSelected={(item)=> console.log}
