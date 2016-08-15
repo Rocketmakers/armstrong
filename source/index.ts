@@ -13,6 +13,7 @@ export { IDialogProps, Dialog } from "./components/display/dialog";
 export { ICheckboxInputProps, CheckboxInput } from "./components/form/inputs/checkboxInput";
 export { IRadioInputProps, RadioInput } from "./components/form/inputs/radioInput";
 export { ISelectInputProps, SelectInput } from "./components/form/inputs/selectInput";
+export { DateInput, IDateInputProps } from "./components/form/inputs/dateInput";
 export { IDatePickerInputProps, DatePickerInput } from "./components/form/inputs/datePickerInput";
 export { ITextInputProps, TextInput } from "./components/form/inputs/textInput";
 export { ITimeSelectorProps, TimeSelector } from "./components/form/inputs/timeSelectorInput";

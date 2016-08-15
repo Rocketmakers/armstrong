@@ -47,29 +47,17 @@ export interface IColRow extends IRow {
 export interface IRow extends React.HTMLProps<Row> {
   fixed?: boolean | number;
   className?: string | MarginClass | PaddingClass | BgColorClass | FgColorClass;
-  maxCols?: number;
 }
 
 export class Row extends React.Component<IRow, any> {
   render() {
-    const attrs = _.omit(this.props, "className", "fixed", "maxCols", "centerContent");
-    const classes = classNames(
-      this.props.className,
-      "row",
-      {
-        "no-flex": !!this.props.fixed,
-        "wrap-row": !!this.props.maxCols
-      }
-    );
-    let styles = this.props.style;
-    let colStyles;
+    var attrs = _.omit(this.props, "className", "fixed", "maxCols", "centerContent");
+    var classes = classNames(this.props.className, "row", cd("no-flex", !!this.props.fixed));
+    var styles = this.props.style;
+    var colStyles;
 
     if (typeof this.props.fixed === "number") {
       styles = _.extend({ height: `${this.props.fixed}px` }, styles);
-    }
-
-    if (this.props.maxCols) {
-      colStyles = { flexBasis: `${100 / this.props.maxCols}%`, maxWidth: `${100 / this.props.maxCols}%` };
     }
 
     return <div {...attrs} className={classes} style={styles}>
