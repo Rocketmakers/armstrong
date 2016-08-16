@@ -52,7 +52,7 @@ export interface IRow extends React.HTMLProps<Row> {
 export class Row extends React.Component<IRow, any> {
   render() {
     var attrs = _.omit(this.props, "className", "fixed", "maxCols", "centerContent");
-    var classes = classNames(this.props.className, "row", cd("no-flex", !!this.props.fixed));
+    var classes = classNames(this.props.className, "row", this.props.fixed ? "no-flex" : "");
     var styles = this.props.style;
     var colStyles;
 
