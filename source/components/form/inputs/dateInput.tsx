@@ -4,6 +4,8 @@ import { IDataBinder } from "../../form/formCore";
 import { FormBinderBase } from "../../form/formBinders";
 import { Grid, Row, Col } from "./../../layout/grid";
 import { Form } from "../form";
+import * as _ from "underscore";
+import { DateHelpers } from './../../../utilities/dateHelpers';
 
 export interface IDateInputProps extends React.Props<DateInput> {
   date?: string;
@@ -26,17 +28,7 @@ export class DateInput extends React.Component<IDateInputProps, IDateInputState>
     this.state = { day: null, month: null, year: null, date: null };
   }
   getDaysArrayByMonth(): string[] {
-    let activeMoment = this.state.date ? moment(this.state.date, "YYYY-MM-DD") : moment();
-    if (this.state.month) {
-      activeMoment.set("month", this.state.month - 1)
-    }
-    let daysInMonth = activeMoment.daysInMonth();
-    let arrDays = [];
-
-    for (var d = 1; d < daysInMonth + 1; d++) {
-      arrDays.push(d.toString());
-    }
-    return arrDays;
+    return DateHelpers.getDaysArrayByMonth(this.state.date, this.state.month)
   }
   dayChanged(day: string) {
     this.setState({ day: parseInt(day) }, () => {
@@ -55,20 +47,16 @@ export class DateInput extends React.Component<IDateInputProps, IDateInputState>
   }
   componentWillMount() {
     if (this.props.date) {
-      let d = moment(this.props.date);
-      this.setState({ day: d.day(), month: d.month(), year: d.year() });
+      this.setState(DateHelpers.getDateParts(this.props.date));
     }
   }
   componentWillReceiveProps(newProps: IDateInputProps){
     if(newProps.date){
       if (!this.state.date){
-        let d = moment(newProps.date);
-        this.setState({ day: d.day(), month: d.month(), year: d.year(), date: newProps.date })
+        this.setState(DateHelpers.getDateParts(newProps.date, true))
       }else{
-        let d = moment(this.state.date);
-        let d2 = moment(newProps.date);
-        if (!d.isSame(d2)){
-          this.setState({ day: d2.day(), month: d2.month(), year: d2.year(), date: newProps.date })
+        if (!DateHelpers.areSame(this.state.date, newProps.date)){
+          this.setState(DateHelpers.getDateParts(newProps.date, true))
         }
       }
     }else{
@@ -84,12 +72,7 @@ export class DateInput extends React.Component<IDateInputProps, IDateInputState>
     })
   }
   createDate(): string {
-    let s = this.state;
-    let d;
-    if (s.day && s.month && s.year) {
-      d = moment().set("day", s.day).set("month", s.month-1).set("year", s.year).format("YYYY-MM-DD");
-    }
-    return d;
+    return DateHelpers.toDateFormat(this.state);
   }
   render() {
     let dayOptions = [<option value="" disabled={true}>Day</option>];
@@ -98,17 +81,10 @@ export class DateInput extends React.Component<IDateInputProps, IDateInputState>
     })
 
     let monthOptions = [<option value="" disabled={true}>Month</option>];
-    for (var i = 0; i < 12; i++) {
-      var month = moment().month(i)
-      monthOptions.push(<option key={`${this.cId}_month_${i}`} value={month.format("M") }>{month.format("MMMM") }</option>);
-    }
+    monthOptions.push(...DateHelpers.getMonthValues().map((v, i) => <option key={`${this.cId}_month_${i}`} value={v.value}>{v.label}</option>))
 
     let yearOptions = [<option value="" disabled={true}>Year</option>];
-    for (var i = 0; i < (this.props.yearsFromNow || 110); i++) {
-      var year = this.props.futureDates ? moment().add(i, 'years').year() : moment().subtract(i, 'years').year();
-      yearOptions.push(<option key={`${this.cId}_year_${year}`} value={year.toString() }>{year}</option>);
-    }
-
+    yearOptions.push(...DateHelpers.getYearValues(this.props.futureDates, this.props.yearsFromNow).map(year => <option key={`${this.cId}_year_${year}`} value={year.toString() }>{year}</option>))
     return <Form dataBinder={Form.jsonDataBinder(this.props.date)} onDataChanged={(d) => this.props.onChange(d)}>
    <Grid>
       <Row>

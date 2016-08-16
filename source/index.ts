@@ -24,10 +24,10 @@ export { IDropdownSelectProps, IDropdownOption, DropdownSelect } from "./compone
 export { IButtonProps, Button } from "./components/interaction/button";
 
 // layout
-export { IGrid, Grid, IRow, Row, ICol, Col, SingleColumnRow } from "./components/layout/grid";
+export { IGrid, Grid, IRow, Row, ICol, Col } from "./components/layout/grid";
 
 // ui helpers
-export { Responsiveness, Color, Size, Side, CenterContentVertical, CenterContentHorizontal, CenterBoth, CenterContent, LayoutHelpers } from "./utilities/uiHelpers";
+export { Responsiveness, Color, Size, Side, HorizontalAlignment, VerticalAlignment, LayoutHelpers } from "./utilities/uiHelpers";
 
 // icons
 export { Icons } from "./utilities/icons";

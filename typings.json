@@ -1,10 +1,6 @@
 {
   "name": "armstrong-react",
   "version": false,
-  "dependencies": {
-    "react": "registry:npm/react#15.0.1+20160601175240",
-    "react-dom": "registry:npm/react-dom#15.0.1+20160705210405"
-  },
   "main": "dist/index.d.ts",
   "globalDependencies": {
     "classnames": "registry:dt/classnames#0.0.0+20160316155526",
@@ -12,6 +8,8 @@
     "moment": "registry:dt/moment#2.8.0+20160316155526",
     "moment-node": "registry:dt/moment-node#2.11.1+20160511043338",
     "node": "registry:dt/node#6.0.0+20160805072842",
+    "react": "registry:dt/react#0.14.0+20160805125551",
+    "react-dom": "registry:dt/react-dom#0.14.0+20160412154040",
     "underscore": "registry:dt/underscore#1.7.0+20160720002543"
   }
 }

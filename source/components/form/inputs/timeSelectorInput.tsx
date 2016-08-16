@@ -2,7 +2,7 @@ import * as React from "react";
 import { IDataBinder } from "../../form/formCore";
 import { FormBinderBase } from "../../form/formBinders";
 import { Form } from "../form";
-import { Grid, Row, Col, SingleColumnRow } from "./../../layout/grid";
+import { Grid, Row, Col } from "./../../layout/grid";
 import * as _ from "underscore";
 
 export interface ITimeSelectorProps extends React.HTMLProps<TimeSelector> {

@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 import { Icon } from "./icon";
-import { Grid, Row, Col, SingleColumnRow } from './../layout/grid';
+import { Grid, Row, Col } from './../layout/grid';
 
 export interface IDialogProps extends React.HTMLProps<Dialog> {
   bodyId?: string;

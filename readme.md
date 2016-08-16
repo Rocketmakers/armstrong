@@ -6,6 +6,22 @@
 
 Armstrong React - [Rocketmakers](http://www.rocketmakers.com/) React component library.
 
+## 1.0 Breaking changes
+
+### Grid
+
+#### CenterContent
+
+Center content has been deprecated and is replaced with 2 new properties. HorizontalAlignment and Vertical alignment.
+
+#### Fixed on row and col
+
+Rows now take a height prop which supports either a number or the string 'auto'. Cols are the same but with a width property
+
+#### SingleColumnRow
+
+This is no more! Just write the markup `<Row><Col></Col></Row>` or make your own component. It was messy and unmaintainable before
+
 ## Introduction
 
 A library of components for React/SCSS interface development.
