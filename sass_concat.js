@@ -31,3 +31,10 @@ importResolve({
     "pathToMain": "./source/responsive.scss",
     "output": "./dist/responsive.scss"
 });
+
+// NAVIGATION CONTROLS
+importResolve({
+    "ext": "scss",
+    "pathToMain": "./source/navigation.scss",
+    "output": "./dist/navigation.scss"
+});
