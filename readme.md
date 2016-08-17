@@ -39,6 +39,10 @@ Button no longer has a text property. You can pass anything, be it text or a com
 
 DatepickerInput has been renamed CalendarInput. There are also now DateInput and TimeInput controls
 
+#### Form - Dropdownselect
+
+Dropdownselect has been renamed to AutoCompleteInput to better reflect what it actually does
+
 ## Introduction
 
 A library of components for React/SCSS interface development.

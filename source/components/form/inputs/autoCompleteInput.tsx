@@ -1,41 +1,42 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 import * as _ from "underscore";
-import { Icon } from './../display/icon';
-import { Grid, Row, Col } from './../layout/grid';
-import { Button } from './../interaction/button';
+import { Icon } from './../../display/icon';
+import { Grid, Row, Col } from './../../layout/grid';
+import { Button } from './../../interaction/button';
 
-export interface IDropdownOption {
+export interface IAutoCompleteOption {
   id: number;
   name: string;
   data?: any;
 }
 
-export interface IDropdownSelectProps extends React.Props<DropdownSelect> {
+export interface IAutoCompleteInputProps extends React.Props<AutoCompleteInput> {
   className?: string;
-  value?: IDropdownOption | IDropdownOption[];
+  value?: IAutoCompleteOption | IAutoCompleteOption[];
   minimumLength?: number;
   placeholder?: string;
   searchPlaceholder?: string;
   noResultsMessage?: string;
-  options?: IDropdownOption[];
+  options?: IAutoCompleteOption[];
   remoteThrottle?: number;
-  remoteQuery?: (query: string) => Promise<IDropdownOption[]>;
+  remoteQuery?: (query: string) => Promise<IAutoCompleteOption[]>;
   remoteQueryOnOpen?: boolean;
   hasGoButton?: boolean;
   goButtonContent?: React.ReactElement<any> | string;
-  onSelected?: (selectedOption: IDropdownOption | IDropdownOption[]) => void;
+  onSelected?: (selectedOption: IAutoCompleteOption | IAutoCompleteOption[]) => void;
   visibleItems?: number;
   canClear?: boolean;
   disabled?: boolean;
   multiSelect?: boolean;
+  icon?: string;
 }
 
-export interface IDropdownSelectState {
-  filteredOptions?: IDropdownOption[];
+export interface IAutoCompleteInputState {
+  filteredOptions?: IAutoCompleteOption[];
   query?: string;
   open?: boolean;
-  selectedValue?: IDropdownOption | IDropdownOption[];
+  selectedValue?: IAutoCompleteOption | IAutoCompleteOption[];
   selectedIndex?: number;
   remoteSearching?: boolean;
   offsetIndex?: number;
@@ -43,7 +44,7 @@ export interface IDropdownSelectState {
   topOffset?: number;
 }
 
-export class DropdownSelect extends React.Component<IDropdownSelectProps, IDropdownSelectState> {
+export class AutoCompleteInput extends React.Component<IAutoCompleteInputProps, IAutoCompleteInputState> {
   private timer: number;
   // drive this through css ideally. Currently fixed height plus border (50 + 2px)
   private itemHeight = 52;
@@ -51,7 +52,7 @@ export class DropdownSelect extends React.Component<IDropdownSelectProps, IDropd
     remoteThrottle: 500,
     minimumLength: 1
   }
-  constructor(props: IDropdownSelectProps) {
+  constructor(props: IAutoCompleteInputProps) {
     super(props);
     this.state = {
       filteredOptions: [],
@@ -125,17 +126,17 @@ export class DropdownSelect extends React.Component<IDropdownSelectProps, IDropd
     }
     this.setState({ filteredOptions: this.props.options || [], selectedValue })
   }
-  componentWillReceiveProps(newProps: IDropdownSelectProps) {
+  componentWillReceiveProps(newProps: IAutoCompleteInputProps) {
     if (this.props.multiSelect){
-      var newMultiValue = newProps.value as IDropdownOption[];
-      var oldMultiValue = this.state.selectedValue as IDropdownOption[];
+      var newMultiValue = newProps.value as IAutoCompleteOption[];
+      var oldMultiValue = this.state.selectedValue as IAutoCompleteOption[];
 
       if (oldMultiValue.length === 0 || !_.isEqual(newMultiValue.map(v => v.id), oldMultiValue.map(v => v.id))){
         this.setState({ selectedValue: newMultiValue })
       }
     } else {
-      var newSingleValue = newProps.value as IDropdownOption;
-      var oldSingleValue = this.state.selectedValue as IDropdownOption;
+      var newSingleValue = newProps.value as IAutoCompleteOption;
+      var oldSingleValue = this.state.selectedValue as IAutoCompleteOption;
       if (!newSingleValue){
         if (oldSingleValue != newSingleValue){
           this.setState({ selectedValue: null })
@@ -169,7 +170,7 @@ export class DropdownSelect extends React.Component<IDropdownSelectProps, IDropd
       // DOWN ARROW
       var offsetIndex = Math.min((this.props.visibleItems || 3) - 1, this.state.offsetIndex + 1);
       var selectedIndex = Math.min(this.state.selectedIndex + 1, this.state.filteredOptions.length - 1);
-      var listElement = ReactDOM.findDOMNode(this).querySelector(".dropdown-select-list");
+      var listElement = ReactDOM.findDOMNode(this).querySelector(".autocomplete-select-list");
       this.setState({ offsetIndex });
 
       if (offsetIndex >= 2) {
@@ -185,7 +186,7 @@ export class DropdownSelect extends React.Component<IDropdownSelectProps, IDropd
       // UP ARROW
       var offsetIndex = Math.max(this.state.offsetIndex - 1, 0);
       var selectedIndex = Math.max(this.state.selectedIndex - 1, 0);
-      var listElement = ReactDOM.findDOMNode(this).querySelector(".dropdown-select-list");
+      var listElement = ReactDOM.findDOMNode(this).querySelector(".autocomplete-select-list");
       this.setState({ offsetIndex });
 
       if (offsetIndex === 0) {
@@ -215,11 +216,11 @@ export class DropdownSelect extends React.Component<IDropdownSelectProps, IDropd
   private isArray<T>(itemOrArray: T | T[]) : itemOrArray is T[]{
     return _.isArray(itemOrArray)
   }
-  handleSelection(options: IDropdownOption | IDropdownOption[]) {
+  handleSelection(options: IAutoCompleteOption | IAutoCompleteOption[]) {
     if (this.props.multiSelect) {
       // Handle multiple selection
-      const items: IDropdownOption[] = this.isArray(options) ? options : [options]
-      var ddOptions = (this.state.selectedValue as IDropdownOption[]);
+      const items: IAutoCompleteOption[] = this.isArray(options) ? options : [options]
+      var ddOptions = (this.state.selectedValue as IAutoCompleteOption[]);
       items.forEach(option => {
         if (ddOptions.length !== 0 && _.some(ddOptions, ddo => ddo.id === option.id)) {
           // Remove
@@ -237,7 +238,7 @@ export class DropdownSelect extends React.Component<IDropdownSelectProps, IDropd
       }
       (ReactDOM.findDOMNode(this).querySelector("input") as any).focus()
     } else {
-      let option = options as IDropdownOption;
+      let option = options as IAutoCompleteOption;
       // Handle single selection
       this.setState({ selectedValue: option, open: false, query: "", filteredOptions: this.props.options || [], offsetIndex: 0 });
       if (this.props.onSelected) {
@@ -259,19 +260,19 @@ export class DropdownSelect extends React.Component<IDropdownSelectProps, IDropd
     return (
       <Grid
         onClick={(e) => this.focusInput(e) }
-        className={`dropdown-select${this.props.className ? ` ${this.props.className}` : ''}${this.props.disabled ? ' disabled' : ''}${this.props.hasGoButton && !this.props.multiSelect ? ' has-go-button' : ''}${this.props.multiSelect && (this.state.selectedValue as IDropdownOption[]).length !== 0 ? ' has-multiple-options' : ''}`}>
+        className={`autocomplete-select${this.props.className ? ` ${this.props.className}` : ''}${this.props.disabled ? ' disabled' : ''}${this.props.hasGoButton && !this.props.multiSelect ? ' has-go-button' : ''}${this.props.multiSelect && (this.state.selectedValue as IAutoCompleteOption[]).length !== 0 ? ' has-multiple-options' : ''}`}>
         <Row>
           <Col className="drop-down-controls">
-            {(!this.state.open || this.props.multiSelect) && <Grid className="dropdown-value-display" >
+            {(!this.state.open || this.props.multiSelect) && <Grid className="autocomplete-value-display" >
               <Row>
                 <Col>
                   {this.state.selectedValue &&
                     <div className="selected-value-wrapper">
-                      {this.state.selectedValue && this.props.multiSelect ? (this.state.selectedValue as IDropdownOption[]).map(ddo =>
-                        <div key={`multi-select-item-${ddo.id}`} className="multi-select-item multi-select-item-part" onClick={() => this.handleSelection(ddo) } >{ddo.name}<Icon className="multi-select-item-part" icon={Icon.Icomoon.cross}/></div>) : (this.state.selectedValue as IDropdownOption).name}
+                      {this.state.selectedValue && this.props.multiSelect ? (this.state.selectedValue as IAutoCompleteOption[]).map(ddo =>
+                        <div key={`multi-select-item-${ddo.id}`} className="multi-select-item multi-select-item-part" onClick={() => this.handleSelection(ddo) } >{ddo.name}<Icon className="multi-select-item-part" icon={Icon.Icomoon.cross}/></div>) : (this.state.selectedValue as IAutoCompleteOption).name}
                     </div>
                   }
-                  { (this.props.multiSelect && (this.state.selectedValue as IDropdownOption[]).length === 0) &&
+                  { (this.props.multiSelect && (this.state.selectedValue as IAutoCompleteOption[]).length === 0) &&
                     <div className="placeholder">
                     &nbsp;
                     <div className="placeholder-value">{this.props.placeholder || "start typing to filter results..."}</div>
@@ -289,7 +290,7 @@ export class DropdownSelect extends React.Component<IDropdownSelectProps, IDropd
                     <Icon icon={Icon.Icomoon.cross}/>
                   </Col>
                 }
-                {this.props.multiSelect && (this.state.selectedValue as IDropdownOption[]).length !== 0 && this.props.canClear &&
+                {this.props.multiSelect && (this.state.selectedValue as IAutoCompleteOption[]).length !== 0 && this.props.canClear &&
                   <Col fixed={true} className="clear-selected p-right-xsmall" onClick={() => this.setState({ selectedValue: this.props.multiSelect ? [] : null, open: false, query: "", filteredOptions: this.props.options || [] }) }>
                     <Icon icon={Icon.Icomoon.cross}/>
                   </Col>
@@ -298,18 +299,18 @@ export class DropdownSelect extends React.Component<IDropdownSelectProps, IDropd
             </Grid>
             }
             {this.state.open &&
-              <div className="dropdown-select-list-wrapper">
+              <div className="autocomplete-select-list-wrapper">
                 <input type="text"
                   value={this.state.query}
                   onKeyUp={(e) => this.checkKey(e) }
                   onChange={(e) => this.setState({ query: (e.target as any).value }) }
                   placeholder={this.props.placeholder || "start typing to filter results..."} />
                 {this.state.remoteSearching && <Icon className="spinner fg-info" icon={Icon.Icomoon.spinner2}/>}
-                <div data-id="dropdown-select-list"
-                className={`dropdown-select-list${this.state.showOnTop ? ' on-top' : ''}`}
+                <div data-id="autocomplete-select-list"
+                className={`autocomplete-select-list${this.state.showOnTop ? ' on-top' : ''}`}
                 style={{ maxHeight: `${(this.props.visibleItems || 3) * this.itemHeight}px`, marginTop: `${this.state.showOnTop ? this.state.topOffset : 0 }px` }}>
                   {this.state.filteredOptions && this.state.filteredOptions.map((o, i) =>
-                    <div data-index={i} key={`dd-item-${i}`} className={`dd-list-item${i === this.state.selectedIndex ? ' selected' : ''}${(this.props.multiSelect && _.some((this.state.selectedValue as IDropdownOption[]), ddo => ddo.id === o.id)) ? ' in-selected-list' : ''}`}
+                    <div data-index={i} key={`dd-item-${i}`} className={`dd-list-item${i === this.state.selectedIndex ? ' selected' : ''}${(this.props.multiSelect && _.some((this.state.selectedValue as IAutoCompleteOption[]), ddo => ddo.id === o.id)) ? ' in-selected-list' : ''}`}
                       onClick={() => this.handleSelection(o) }>{o.name}</div>) }
                   {this.state.filteredOptions.length === 0 && this.state.query && <div className="dd-list-item-no-select">{this.props.noResultsMessage || "No results..."}</div>}
                 </div>

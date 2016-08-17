@@ -15,7 +15,7 @@ import { RadioInput } from './../../../source/components/form/inputs/radioInput'
 import { TextInput } from './../../../source/components/form/inputs/textInput';
 import { SelectInput } from './../../../source/components/form/inputs/selectInput';
 import { ColorSwatch } from './../components/colorSwatch';
-import { DropdownSelect } from './../../../source/components/form/dropdownSelect';
+import { AutoCompleteInput } from './../../../source/components/form/autoCompleteInput';
 import { DateInput, DateInputFormBinder } from './../../../source/components/form/inputs/dateInput';
 import { TimeInput, TimeInputFormBinder } from './../../../source/components/form/inputs/TimeInput';
 import { Form } from './../../../source/components/form/form';
@@ -46,7 +46,7 @@ export class Home extends React.Component<{}, { dialogOpen: boolean }> {
           </Row>
           <Row>
             <Col>
-              <DropdownSelect disabled={false} placeholder="Search for an artist and something else to make this box way to long and it will break..."
+              <AutoCompleteInput disabled={false} placeholder="Search for an artist and something else to make this box way to long and it will break..."
                 multiSelect={false}
                 onSelected={(item) => console.log}
                 canClear={true}
