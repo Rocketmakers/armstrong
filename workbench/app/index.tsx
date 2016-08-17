@@ -1,6 +1,7 @@
 // LIBS
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
+import { CalendarTest } from "./views/calendarTest";
 import { Router, Route, Link, hashHistory, IndexRoute } from 'react-router';
 import { Grid, Row, Col } from './../../source/components/layout/grid';
 import { BurgerMenu, BurgerMenuItem } from './../../source/components/navigation/burgerMenu';
@@ -43,10 +44,4 @@ class App extends React.Component<any, { nav: boolean }> {
 }
 
 // ROUTER
-ReactDOM.render((
-  <Router history={ hashHistory }>
-    <Route path="/" component={ App }>
-      <IndexRoute component={ Home } />
-    </Route>
-  </Router>
-), document.getElementById('host'));
+ReactDOM.render(<App><CalendarTest /></App>, document.getElementById('host'));

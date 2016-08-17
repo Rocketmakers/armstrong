@@ -1,4 +1,5 @@
 import * as React from "react";
+import * as ReactDOM from "react-dom";
 import * as _ from "underscore";
 import * as moment from "moment";
 import * as classNames from "classnames";
@@ -12,21 +13,20 @@ import { Icon } from './../../display/icon';
 export interface ICalendarInputProps extends React.Props<CalendarInput> {
   className?: string;
   locale?: string;
-  date?: moment.Moment | string;
+  date?: string;
   format?: string;
-  min?: moment.Moment | string;
-  max?: moment.Moment | string;
-  onDateChanged?: (date: moment.Moment | string) => void;
+  min?: string;
+  max?: string;
+  onDateChanged?: (date: string) => void;
   alwaysShowCalendar?: boolean;
   nativeInput?: boolean;
   icon?: string;
   disabled?: boolean;
-  returnString?: boolean;
 }
 
 export interface ICalendarInputState {
-  displayedDate?: moment.Moment;
-  selectedDate?: moment.Moment;
+  inputValue?: string;
+  selectedMonthStart?: moment.Moment;
   pickerBodyVisible?: boolean;
   showOnTop?: boolean;
   calendarOffset?: number;
@@ -37,29 +37,22 @@ const isoFormat = "YYYY-MM-DD";
 export class CalendarInput extends React.Component<ICalendarInputProps, ICalendarInputState> {
   static Icomoon = Icons.Icomoon;
 
-  private mouseDownOnCalendar = false;
-  private inputElement: HTMLInputElement;
-  private bodyElement;
-
-  private inputElementId;
-  private bodyElementId;
-
   private format: string;
+
+  private inputElement: HTMLInputElement;
+  private bodyElement: HTMLDivElement;
 
   static defaultProps = {
     format: 'DD/MM/YYYY',
-    date: moment().startOf('day'),
+    date: moment().startOf('day').format(isoFormat),
     locale: 'en-gb'
   }
 
   constructor(props: ICalendarInputProps) {
     super(props);
-    const todaysDate = moment().startOf('day');
-    this.state = { displayedDate: todaysDate.clone(), selectedDate: todaysDate, pickerBodyVisible: false, showOnTop: false, calendarOffset: 0 };
     moment.locale(props.locale);
-    const seed = Math.random().toFixed(4);
-    this.inputElementId = "date-picker-text-input-" + seed;
-    this.bodyElementId = "date-picker-body-" + seed;
+    const initialDate = moment(props.date, isoFormat, true);
+    this.state = { inputValue: initialDate.format(props.format), pickerBodyVisible: false, showOnTop: false, calendarOffset: 0, selectedMonthStart: initialDate.clone().startOf('month') };
   }
 
   onDaySelected(date: moment.Moment) {
@@ -67,12 +60,9 @@ export class CalendarInput extends React.Component<ICalendarInputProps, ICalenda
       return;
     }
     const newDate = date.clone();
-    if (this.inputElement) {
-      this.inputElement.value = newDate.format(this.format);
-    }
-    this.setState({ selectedDate: newDate, displayedDate: newDate.clone(), pickerBodyVisible: false });
+    this.setState({ pickerBodyVisible: false });
     if (this.props.onDateChanged) {
-      this.props.onDateChanged(this.props.returnString ? newDate.format(isoFormat) : newDate.clone());
+      this.props.onDateChanged(newDate.format(isoFormat));
     }
   }
 
@@ -82,10 +72,10 @@ export class CalendarInput extends React.Component<ICalendarInputProps, ICalenda
   }
 
   fallsWithinRange(date: moment.Moment) {
-    if (this.props.min && date.isBefore(this.getMinMaxAsMoment(this.props.min), 'day')) {
+    if (this.props.min && date.isBefore(moment(this.props.min, isoFormat, true), 'day')) {
       return false;
     }
-    if (this.props.max && date.isAfter(this.getMinMaxAsMoment(this.props.max), 'day')) {
+    if (this.props.max && date.isAfter(moment(this.props.max, isoFormat, true), 'day')) {
       return false;
     }
     return true;
@@ -99,7 +89,7 @@ export class CalendarInput extends React.Component<ICalendarInputProps, ICalenda
 
   getDaysInMonth() {
     const days = [];
-    const a = this.state.displayedDate.clone().startOf('month').startOf('day');
+    const a = this.state.selectedMonthStart.clone().startOf('month').startOf('day');
     const b = a.clone().endOf('month');
     let firstDay = false;
 
@@ -125,7 +115,7 @@ export class CalendarInput extends React.Component<ICalendarInputProps, ICalenda
   getDayComponent(notInCurrentMonth: boolean, dayClicked: (d: moment.Moment) => void, date: moment.Moment) {
     const d = date.clone();
     const dateWithinRange = this.fallsWithinRange(d);
-    const isSelected = d.isSame(this.state.selectedDate, 'day');
+    const isSelected = d.format(isoFormat) === this.props.date;
     return <CalendarDay
       key={`Calendar_day_${date.format('DDMMYYYY')}`}
       selected={isSelected}
@@ -136,42 +126,24 @@ export class CalendarInput extends React.Component<ICalendarInputProps, ICalenda
   }
 
   changeMonth(increment: number) {
-    this.setState({ displayedDate: this.state.displayedDate.add(increment, 'months') }, () => {
+    this.setState({ selectedMonthStart: this.state.selectedMonthStart.clone().add(increment, 'months') }, () => {
       this.shouldShowOnTop();
-    })
+    });
   }
 
   checkDate(dateString: string) {
     const m = moment(dateString, this.format, false);
     if (m.isValid() && this.fallsWithinRange(m)) {
       const formattedDate = m.format(this.format);
-      if (this.inputElement) {
-        this.inputElement.value = formattedDate;
-      }
-      this.setState({ selectedDate: m.clone(), displayedDate: m.clone() });
       if (this.props.onDateChanged) {
-        this.props.onDateChanged(this.props.returnString ? m.format(isoFormat) : m.clone());
-      }
-    } else {
-      if (this.inputElement) {
-        this.inputElement.value = this.state.selectedDate.format(this.format);
+        this.props.onDateChanged(m.format(isoFormat));
       }
     }
+    // TODO: reset back to original date
   }
 
   componentWillMount() {
     this.format = this.props.nativeInput ? isoFormat : this.props.format;
-    if (this.props.date) {
-      if (typeof this.props.date === "string") {
-        const mDate = moment(this.props.date as string, isoFormat);
-        this.setState({ selectedDate: mDate, displayedDate: mDate.clone() });
-      }
-      else {
-        const pDate = moment((this.props.date as moment.Moment)).startOf('day');
-        pDate.locale(this.props.locale);
-        this.setState({ selectedDate: pDate, displayedDate: pDate.clone() });
-      }
-    }
   }
 
   componentWillUnmount() {
@@ -181,20 +153,37 @@ export class CalendarInput extends React.Component<ICalendarInputProps, ICalenda
   }
 
   componentDidMount() {
-    this.inputElement = document.getElementById(this.inputElementId) as HTMLInputElement;
-    this.bodyElement = document.getElementById(this.bodyElementId);
     if (!this.props.nativeInput) {
       window.addEventListener('mousedown', this);
     }
   }
 
+  componentWillReceiveProps(nextProps: ICalendarInputProps): void {
+    if (this.props.date === nextProps.date) {
+      return;
+    }
+
+    const selectedDate = moment(nextProps.date, isoFormat, true);
+    this.setState({
+      pickerBodyVisible: false,
+      inputValue: selectedDate.format(nextProps.format),
+      selectedMonthStart: selectedDate.clone().startOf('month')
+    });
+  }
+
   handleEvent(e) {
-    if (this.mouseDownOnCalendar && e.type !== "mousewheel") {
+    const domNode = ReactDOM.findDOMNode(this);
+    if (domNode.contains(e.target) && e.type !== "mousewheel") {
       return;
     }
     document.removeEventListener("mousewheel", this, false);
-    this.setState({ pickerBodyVisible: false });
-    this.inputElement.blur();
+
+    const selectedDate = moment(this.props.date, isoFormat, true);
+    this.setState({
+      pickerBodyVisible: false,
+      inputValue: selectedDate.format(this.props.format),
+      selectedMonthStart: selectedDate.clone().startOf('month')
+    });
   }
 
   onInputFocus() {
@@ -213,7 +202,6 @@ export class CalendarInput extends React.Component<ICalendarInputProps, ICalenda
     const visibleBottom = (window.innerHeight + window.scrollY);
     const inputRect = this.inputElement.getBoundingClientRect();
     const remainingSpace = window.innerHeight - inputRect.bottom;
-    console.log(`height: ${height}, window height ${window.innerHeight}, remainingSpace ${remainingSpace}`);
     if (remainingSpace < height) {
       this.setState({ showOnTop: true });
       return true;
@@ -223,26 +211,14 @@ export class CalendarInput extends React.Component<ICalendarInputProps, ICalenda
     }
   }
 
-  getMinMaxAsMoment(input: moment.Moment | string): moment.Moment {
-    if (typeof input === "string") {
-      return moment(input, isoFormat, true)
-    } else {
-      return input;
-    }
-  }
-
-  getMinMaxAsString(input: moment.Moment | string): string {
-    if (typeof input === "string") {
-      return input;
-    } else {
-      return input.format(isoFormat);
-    }
+  propsDateAsMoment(): moment.Moment {
+    return moment(this.props.date, isoFormat, true);
   }
 
   render() {
     const weekdays = _.range(0, 7).map(n => <div className="date-picker-week-day" key={`day_name_${n}`}>{moment().startOf('week').add(n, 'days').format('dd') }</div>)
     const days = this.getDaysInMonth();
-    const currentDisplayDate = this.state.displayedDate.format("MMMM - YYYY");
+    const currentDisplayDate = this.state.selectedMonthStart.format("MMMM - YYYY");
     const classes = classNames(
       "date-picker-body",
       {
@@ -263,31 +239,30 @@ export class CalendarInput extends React.Component<ICalendarInputProps, ICalenda
       return (
         <div className={rootClasses}>
           {this.props.icon && <Icon icon={this.props.icon}/>}
-          <input id={this.inputElementId}
+          <input ref={i => this.inputElement = i}
             type="date"
-            min={this.props.min ? this.getMinMaxAsString(this.props.min) : ''}
-            max={this.props.max ? this.getMinMaxAsString(this.props.max) : ''}
-            onChange={e => this.checkDate((e.target as any).value) }
-            defaultValue={this.state.selectedDate.format(this.format) }
-            onBlur={e => this.checkDate((e.target as any).value) }
+            min={this.props.min || ''}
+            max={this.props.max || ''}
+            onChange={e => this.checkDate(e.target["value"]) }
+            value={this.propsDateAsMoment().format(this.format) }
+            onBlur={e => this.checkDate(e.target["value"]) }
             />
         </div>
       )
     }
     return (
-      <div className={rootClasses}
-        onMouseDown={() => this.mouseDownOnCalendar = true}
-        onMouseUp={() => this.mouseDownOnCalendar = false}>
+      <div className={rootClasses}>
         <Icon icon={this.props.icon || Icons.Icomoon.calendar2}/>
         {!this.props.alwaysShowCalendar &&
-          <input id={this.inputElementId}
+          <input ref={i => this.inputElement = i}
             disabled={this.props.disabled}
             type="text"
-            defaultValue={this.state.selectedDate.format(this.format) }
-            onBlur={e => this.checkDate((e.target as any).value) }
+            value={this.state.inputValue}
+            onChange={e => this.setState({ inputValue: e.target["value"] })}
+            onBlur={e => this.checkDate(e.target["value"]) }
             onFocus={e => this.onInputFocus() }/>
         }
-        <div id={this.bodyElementId} className={classes} style={{ top: `${this.state.calendarOffset}px` }}>
+        <div ref={b => this.bodyElement = b} className={classes} style={{ top: `${this.state.calendarOffset}px` }}>
           <div className="date-picker-body-wrapper">
             <Grid className="date-picker-header">
               <Row>
@@ -334,12 +309,6 @@ export class CalendarInputFormBinder extends FormBinderBase<ICalendarInputProps,
   }
 
   handleValueChanged(props: ICalendarInputProps, dataBinder: IDataBinder<any>, notifyChanged: () => void) {
-    props.onDateChanged = (e) => {
-      if (typeof e === 'string') {
-        this.onChanged(dataBinder, e, notifyChanged);
-      } else {
-        this.onChanged(dataBinder, e.format("YYYY-MM-DD"), notifyChanged);
-      }
-    };
+    props.onDateChanged = (e) => this.onChanged(dataBinder, e, notifyChanged);
   }
 }
