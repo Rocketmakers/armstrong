@@ -1,17 +1,24 @@
 import * as React from "react";
 import * as moment from "moment";
+import * as classNames from "classnames";
+import * as _ from "underscore";
 import { IDataBinder } from "../../form/formCore";
 import { FormBinderBase } from "../../form/formBinders";
 import { Grid, Row, Col } from "./../../layout/grid";
 import { Form } from "../form";
-import * as _ from "underscore";
 import { DateHelpers } from './../../../utilities/dateHelpers';
 
 export interface IDateInputProps extends React.Props<DateInput> {
+  /** (string) Date string in YYYY-MM-DD format */
   date?: string;
+  /** ((string) => void) Event which returns the date when it changes and is valid */
   onChange?: (date: string) => void;
+  /** (number) How many years from the current year to display in the year dropdown */
   yearsFromNow?: number;
+  /** (boolean) Should the picker let you choose years from the future rather than the past */
   futureDates?: boolean;
+  /** (boolean) Should the picker disallow user interaction */
+  disabled?: boolean;
 }
 
 export interface IDateInputState {
@@ -85,21 +92,21 @@ export class DateInput extends React.Component<IDateInputProps, IDateInputState>
 
     let yearOptions = [<option value="" disabled={true}>Year</option>];
     yearOptions.push(...DateHelpers.getYearValues(this.props.futureDates, this.props.yearsFromNow).map(year => <option key={`${this.cId}_year_${year}`} value={year.toString() }>{year}</option>))
-    return <Form dataBinder={Form.jsonDataBinder(this.props.date)} onDataChanged={(d) => this.props.onChange(d)}>
+    return <Form className={classNames("date-input", this.props.disabled? "input-disabled" : null)} dataBinder={Form.jsonDataBinder(this.props.date)} onDataChanged={(d) => this.props.onChange(d)}>
    <Grid>
       <Row>
         <Col>
-          <select onChange={(e) => this.dayChanged((e.target as HTMLOptionElement).value) } value={this.state.day ? this.state.day.toString() : ""}>
+          <select disabled={this.props.disabled} onChange={(e) => this.dayChanged((e.target as HTMLOptionElement).value) } value={this.state.day ? this.state.day.toString() : ""}>
             {dayOptions}
           </select>
         </Col>
         <Col>
-          <select onChange={(e) => this.monthChanged((e.target as HTMLOptionElement).value) } value={this.state.month ? this.state.month.toString() : ""}>
+          <select disabled={this.props.disabled} onChange={(e) => this.monthChanged((e.target as HTMLOptionElement).value) } value={this.state.month ? this.state.month.toString() : ""}>
             {monthOptions}
           </select>
         </Col>
         <Col>
-          <select onChange={(e) => this.yearChanged((e.target as HTMLOptionElement).value) } value={this.state.year ? this.state.year.toString() : ""}>
+          <select disabled={this.props.disabled} onChange={(e) => this.yearChanged((e.target as HTMLOptionElement).value) } value={this.state.year ? this.state.year.toString() : ""}>
             {yearOptions}
           </select>
         </Col>

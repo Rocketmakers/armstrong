@@ -272,10 +272,16 @@ export class DropdownSelect extends React.Component<IDropdownSelectProps, IDropd
                     </div>
                   }
                   { (this.props.multiSelect && (this.state.selectedValue as IDropdownOption[]).length === 0) &&
-                    <div className="placeholder">{this.props.placeholder || "start typing to filter results..."}</div>
+                    <div className="placeholder">
+                    &nbsp;
+                    <div className="placeholder-value">{this.props.placeholder || "start typing to filter results..."}</div>
+                    </div>
                   }
                   { !this.props.multiSelect && this.state.selectedValue === null &&
-                    <div className="placeholder">{this.props.placeholder || "start typing to filter results..."}</div>
+                    <div className="placeholder">
+                    &nbsp;
+                    <div className="placeholder-value">{this.props.placeholder || "start typing to filter results..."}</div>
+                    </div>
                   }
                 </Col>
                 {!this.props.multiSelect && this.state.selectedValue && this.props.canClear &&

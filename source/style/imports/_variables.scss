@@ -1,6 +1,13 @@
 //// FIXED WIDTH SITE WIDTH
 $fixed-site-width: 960px !default;
 
+
+//// RESPONSIVE SIZES
+$responsive-large: 70rem !default;
+$responsive-medium: 55rem !default;
+$responsive-small: 45rem !default;
+$responsive-xsmall: 35rem !default;
+
 //// FONT SIZES
 $font-size-root: 16px !default;
 
@@ -38,6 +45,10 @@ $spacing-sizes: (
   xlarge $spacing-xlarge,
   none 0
 );
+
+//// BUTTON & INPUT SPACINGS
+$field-padding-vertical: 0.75em !default;
+$field-padding-horizontal: 1em !default;
 
 //// COLORS
 $white: #ffffff !default;

@@ -1,4 +1,6 @@
 @import "icomoon";
+@import "icomoon";
+@import "icomoon";
 
 @import "./../../../source/imports";
 @import "./../../../source/style";
@@ -6,20 +8,6 @@
 body, main, html, #host {
   height: 100%;
   font-size: 16px;
-}
-
-pre{
-  display: inline-block;
-  font-size: 9pt;
-  background-color: rgba(0,0,0,0.1);
-  padding: 5px 10px;
-  white-space: pre-wrap;
-}
-
-pre.usage{
-  background-color: $gray-medium;
-  color: $white;
-
 }
 
 .header{

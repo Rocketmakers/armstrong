@@ -8,6 +8,9 @@
   }
   %btn.bg-#{nth($c-color, 1)}{
     color: white;
-    @include button-shadow($color);
+    background-color: $color;
+    &.shadow{
+      @include button-shadow($color);
+    }
   }
 }

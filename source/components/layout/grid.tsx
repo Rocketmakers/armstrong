@@ -5,10 +5,15 @@ import * as classNames from "classnames";
 import { LayoutHelpers, MarginClass, PaddingClass, BgColorClass, FgColorClass, VerticalAlignment, HorizontalAlignment } from "./../../utilities/uiHelpers";
 
 export interface IGrid extends React.HTMLProps<Grid> {
+  /** (boolean) Wether to render borders around grid parts */
   debugMode?: boolean;
+  /** (boolean) ADVANCED: Turns of automatic fix of safari6 compat wrapper */
   disableFlexOverride?: boolean;
+  /** (string) CSS classname property */
   className?: string | MarginClass | PaddingClass | BgColorClass | FgColorClass;
+  /** (boolean) Render the first row to simulate a table header */
   table?: boolean;
+  /** (boolean) Wether the table should expand and divide to fill its container */
   fillContainer?: boolean;
 }
 
@@ -40,7 +45,9 @@ export class Grid extends React.Component<IGrid, {}> {
 }
 
 export interface IRow extends React.HTMLProps<Row> {
+  /** (number | string) Sets a fixed height for the row, or 'auto' to grow to fit its content */
   height?: number | "auto";
+  /** (string) CSS classname property */
   className?: string | MarginClass | PaddingClass | BgColorClass | FgColorClass;
 }
 
@@ -66,9 +73,13 @@ export class Row extends React.Component<IRow, any> {
 }
 
 export interface ICol extends React.HTMLProps<Col> {
+  /** (HorizontalAlignment(string)) How to align content horizontally in this column */
   horizontalAlignment?: HorizontalAlignment;
+  /** (HorizontalAlignment(string)) How to align content vertically in this column */
   verticalAlignment?: VerticalAlignment;
+  /** (number | string) Sets a fixed width for the column, or 'auto' to grow to fit its content */
   width?: number | "auto";
+  /** (string) CSS classname property */
   className?: string | MarginClass | PaddingClass | BgColorClass | FgColorClass;
 }
 

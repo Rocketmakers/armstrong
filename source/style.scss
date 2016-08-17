@@ -11,6 +11,7 @@
 @import "./style/helpers/_helpers";
 @import "./style/helpers/_spacing";
 @import "./style/helpers/_fontsizes";
+@import "./style/helpers/_responsive";
 
 /*** COMPONENTS ***/
 
@@ -23,8 +24,7 @@
 @import "./components/form/inputs/radioInput";
 @import "./components/form/inputs/selectInput";
 @import "./components/form/inputs/textInput";
-@import "./components/form/inputs/datePickerInput";
-@import "./components/form/inputs/timeSelectorInput";
+@import "./components/form/inputs/calendarInput";
 @import "./components/form/dropdownSelect";
 
 // interaction

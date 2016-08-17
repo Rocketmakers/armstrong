@@ -6,7 +6,9 @@ import { Icons } from "./../../utilities/icons";
 
 
 export interface IIconProps extends React.HTMLProps<Icon> {
+  /** (string) The icons 'classname' eg Icon.Icomoon.Rocket */
   icon: string;
+  /** (string) CSS classname property */
   className?: string;
 }
 export class Icon extends React.Component<IIconProps, {}>{

@@ -8,19 +8,26 @@ Armstrong React - [Rocketmakers](http://www.rocketmakers.com/) React component l
 
 ## 1.0 Breaking changes
 
-### Grid
-
-#### CenterContent
+#### Grid - CenterContent
 
 Center content has been deprecated and is replaced with 2 new properties. HorizontalAlignment and Vertical alignment.
 
-#### Fixed on row and col
+#### Grid - Fixed on row and col
 
 Rows now take a height prop which supports either a number or the string 'auto'. Cols are the same but with a width property
 
-#### SingleColumnRow
+#### Grid - SingleColumnRow
 
 This is no more! Just write the markup `<Row><Col></Col></Row>` or make your own component. It was messy and unmaintainable before
+
+
+#### Button
+
+Button no longer has a text property. You can pass anything, be it text or a component as its child. Shadows have been removed by default, if you want them add the class `shadow`
+
+#### Form - Calendar & Datepickers
+
+DatepickerInput has been renamed CalendarInput. There are also now DateInput and TimeInput controls
 
 ## Introduction
 
