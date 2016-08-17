@@ -38,7 +38,9 @@ Button no longer has a text property. You can pass anything, be it text or a com
 
 #### Form - Calendar & Datepickers
 
-DatepickerInput has been renamed CalendarInput. There are also now DateInput and TimeInput controls
+ - DatepickerInput has been renamed CalendarInput.
+ - There are also now DateInput and TimeInput controls.
+ - CalendarInput now only takes strings, so moment.js is now just an implementation detail
 
 #### Form - Dropdownselect
 
