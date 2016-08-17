@@ -8,6 +8,17 @@ Armstrong React - [Rocketmakers](http://www.rocketmakers.com/) React component l
 
 ## 1.0 Breaking changes
 
+#### Imports
+
+All virtual classes have been removed. Don't extend armstrong classes in your css or you WILL get duplication issues. This is due to how TSX and SCSS imports work.
+There are also now more files to import to cut down on size. They are self explanatory and as follows:
+```
+@import "~armstrong-react/dist/imports";
+@import "~armstrong-react/dist/style";
+@import "~armstrong-react/dist/form";
+@import "~armstrong-react/dist/responsive";
+```
+
 #### Grid - CenterContent
 
 Center content has been deprecated and is replaced with 2 new properties. HorizontalAlignment and Vertical alignment.
@@ -19,7 +30,6 @@ Rows now take a height prop which supports either a number or the string 'auto'.
 #### Grid - SingleColumnRow
 
 This is no more! Just write the markup `<Row><Col></Col></Row>` or make your own component. It was messy and unmaintainable before
-
 
 #### Button
 
