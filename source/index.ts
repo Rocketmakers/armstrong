@@ -17,7 +17,7 @@ export { TimeInput, ITimeInputProps } from "./components/form/inputs/timeInput";
 export { CalendarInput, ICalendarInputProps } from "./components/form/inputs/calendarInput";
 export { ITextInputProps, TextInput } from "./components/form/inputs/textInput";
 export { IAutoCompleteInputProps,  AutoCompleteInput, IAutoCompleteOption } from "./components/form/inputs/autoCompleteInput";
-export { IForm, Form } from "./components/form/form";
+export { IFormProps, Form } from "./components/form/form";
 
 // interaction
 export { IButtonProps, Button } from "./components/interaction/button";
