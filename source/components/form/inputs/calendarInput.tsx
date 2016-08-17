@@ -51,8 +51,9 @@ export class CalendarInput extends React.Component<ICalendarInputProps, ICalenda
   constructor(props: ICalendarInputProps) {
     super(props);
     moment.locale(props.locale);
+    this.format = this.props.nativeInput ? isoFormat : props.format;
     const initialDate = moment(props.date, isoFormat, true);
-    this.state = { inputValue: initialDate.format(props.format), pickerBodyVisible: false, showOnTop: false, calendarOffset: 0, selectedMonthStart: initialDate.clone().startOf('month') };
+    this.state = { inputValue: initialDate.format(this.format), pickerBodyVisible: false, showOnTop: false, calendarOffset: 0, selectedMonthStart: initialDate.clone().startOf('month') };
   }
 
   onDaySelected(date: moment.Moment) {
@@ -144,10 +145,6 @@ export class CalendarInput extends React.Component<ICalendarInputProps, ICalenda
     }
   }
 
-  componentWillMount() {
-    this.format = this.props.nativeInput ? isoFormat : this.props.format;
-  }
-
   componentWillUnmount() {
     if (!this.props.nativeInput) {
       window.removeEventListener('mousedown', this);
@@ -180,7 +177,7 @@ export class CalendarInput extends React.Component<ICalendarInputProps, ICalenda
     const selectedDate = moment(props.date, isoFormat, true);
     this.setState({
       pickerBodyVisible: false,
-      inputValue: selectedDate.format(props.format),
+      inputValue: selectedDate.format(this.format),
       selectedMonthStart: selectedDate.clone().startOf('month')
     });
   }
