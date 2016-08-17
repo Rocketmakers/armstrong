@@ -20,7 +20,7 @@ export interface IGrid extends React.HTMLProps<Grid> {
 export class Grid extends React.Component<IGrid, {}> {
   render() {
     const originalClassName = this.props.className;
-    const attrs = _.omit(this.props, "className", "debugMode", "table", "fillContainer");
+    const attrs = _.omit(this.props, "className", "debugMode", "disableFlexOverride", "fillContainer");
     const classes = classNames(
       originalClassName,
       "grid",
@@ -53,7 +53,7 @@ export interface IRow extends React.HTMLProps<Row> {
 
 export class Row extends React.Component<IRow, any> {
   render() {
-    var attrs = _.omit(this.props, "className", "fixed", "centerContent");
+    var attrs = _.omit(this.props, "className", "height");
     var classes = classNames(this.props.className, "row", this.props.height ? "no-flex" : "");
     var styles = this.props.style;
     var colStyles;
@@ -95,7 +95,7 @@ export class Col extends React.Component<ICol, {}> {
       }
     );
 
-    const attrs = _.omit(this.props, "className", "fixed", "horizontalAlignment", "verticalAlignment");
+    const attrs = _.omit(this.props, "className", "width", "horizontalAlignment", "verticalAlignment");
     let styles = this.props.style;
 
     if (typeof this.props.width === "number") {
