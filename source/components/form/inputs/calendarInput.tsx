@@ -139,7 +139,9 @@ export class CalendarInput extends React.Component<ICalendarInputProps, ICalenda
         this.props.onDateChanged(m.format(isoFormat));
       }
     }
-    // TODO: reset back to original date
+    else {
+      this.resetState(this.props);
+    }
   }
 
   componentWillMount() {
@@ -159,16 +161,9 @@ export class CalendarInput extends React.Component<ICalendarInputProps, ICalenda
   }
 
   componentWillReceiveProps(nextProps: ICalendarInputProps): void {
-    if (this.props.date === nextProps.date) {
-      return;
+    if (this.props.date !== nextProps.date) {
+      this.resetState(nextProps);
     }
-
-    const selectedDate = moment(nextProps.date, isoFormat, true);
-    this.setState({
-      pickerBodyVisible: false,
-      inputValue: selectedDate.format(nextProps.format),
-      selectedMonthStart: selectedDate.clone().startOf('month')
-    });
   }
 
   handleEvent(e) {
@@ -178,10 +173,14 @@ export class CalendarInput extends React.Component<ICalendarInputProps, ICalenda
     }
     document.removeEventListener("mousewheel", this, false);
 
-    const selectedDate = moment(this.props.date, isoFormat, true);
+    this.resetState(this.props);
+  }
+
+  resetState(props: ICalendarInputProps): void {
+    const selectedDate = moment(props.date, isoFormat, true);
     this.setState({
       pickerBodyVisible: false,
-      inputValue: selectedDate.format(this.props.format),
+      inputValue: selectedDate.format(props.format),
       selectedMonthStart: selectedDate.clone().startOf('month')
     });
   }
@@ -260,7 +259,8 @@ export class CalendarInput extends React.Component<ICalendarInputProps, ICalenda
             value={this.state.inputValue}
             onChange={e => this.setState({ inputValue: e.target["value"] })}
             onBlur={e => this.checkDate(e.target["value"]) }
-            onFocus={e => this.onInputFocus() }/>
+            onFocus={e => this.onInputFocus() }
+            />
         }
         <div ref={b => this.bodyElement = b} className={classes} style={{ top: `${this.state.calendarOffset}px` }}>
           <div className="date-picker-body-wrapper">
