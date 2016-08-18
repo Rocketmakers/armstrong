@@ -15,7 +15,7 @@ import { RadioInput } from './../../../source/components/form/inputs/radioInput'
 import { TextInput } from './../../../source/components/form/inputs/textInput';
 import { SelectInput } from './../../../source/components/form/inputs/selectInput';
 import { ColorSwatch } from './../components/colorSwatch';
-import { AutoCompleteInput } from './../../../source/components/form/autoCompleteInput';
+import { AutoCompleteInput } from './../../../source/components/form/inputs/autoCompleteInput';
 import { DateInput, DateInputFormBinder } from './../../../source/components/form/inputs/dateInput';
 import { TimeInput, TimeInputFormBinder } from './../../../source/components/form/inputs/TimeInput';
 import { Form } from './../../../source/components/form/form';

@@ -7,7 +7,6 @@
     border: none;
     border-radius: $corner-radius-small;
     outline: none;
-    margin-bottom: $spacing-small;
     &:active:not(:disabled) {
         transform: translateY(2px);
     }

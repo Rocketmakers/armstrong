@@ -20,3 +20,7 @@ body, main, html, #host {
     padding-top: 60px;
   }
 }
+
+.bg-gray-semi{
+  background-color: transparentize($color: $gray-dark, $amount: 0.2)
+}

@@ -44,4 +44,4 @@ class App extends React.Component<any, { nav: boolean }> {
 }
 
 // ROUTER
-ReactDOM.render(<App><CalendarTest /></App>, document.getElementById('host'));
+ReactDOM.render(<App><Home /></App>, document.getElementById('host'));

@@ -34,7 +34,8 @@ This is no more! Just write the markup `<Row><Col></Col></Row>` or make your own
 
 #### Button
 
-Button no longer has a text property. You can pass anything, be it text or a component as its child. Shadows have been removed by default, if you want them add the class `shadow`
+Button no longer has a text property. You can pass anything, be it text or a component as its child. Shadows have been removed by default, if you want them add the class `shadow`.
+The default bottom margin has been removed to make it more flexible. Just pad your container or add `m-bottom-small` if you'd like a margin.
 
 #### Form - Calendar & Datepickers
 
