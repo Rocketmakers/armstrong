@@ -35,11 +35,7 @@ export class Home extends React.Component<{}, { dialogOpen: boolean }> {
   }
   public render() {
     return (
-      <div className="p-small">
-        <Dialog title="It's dat boi" isOpen={this.state.dialogOpen}>
-          <p>oh shit, waddup!</p>
-        </Dialog>
-        <Grid>
+        <Grid debugMode={true} fillContainer={true}>
           <Row>
             <Col><TextInput placeholder="rustle my jimmies"/></Col>
             <Col><Button disabled={true} className="shadow bg-positive" onClick={() => this.setState({ dialogOpen: true }) } ref={b => this.button = b}>Hello world!</Button></Col>
@@ -54,13 +50,12 @@ export class Home extends React.Component<{}, { dialogOpen: boolean }> {
             <Col><TextInput value="Some text" disabled={true}/></Col>
           </Row>
           <Row>
-            <Col><TextInput value="Some text" disabled={true}/></Col>
+            <Col width="2*"><TextInput value="Some text" disabled={true}/></Col>
             <Col><DateInput date="01/02/03" disabled={true}/></Col>
             <Col><TimeInput time="14:30" disabled={true}/></Col>
             <Col><CalendarInput disabled={true}/></Col>
           </Row>
         </Grid>
-      </div>
     );
   }
 }
