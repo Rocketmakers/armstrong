@@ -39,6 +39,7 @@ The default bottom margin has been removed to make it more flexible. Just pad yo
 
 #### Form - Calendar & Datepickers
 
+ - TimeSelector is no more
  - DatepickerInput has been renamed CalendarInput.
  - There are also now DateInput and TimeInput controls.
  - CalendarInput now only takes strings, so moment.js is now just an implementation detail
