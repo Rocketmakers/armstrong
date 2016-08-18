@@ -12,7 +12,6 @@ import { Icon } from './../../display/icon';
 
 export interface ICalendarInputProps extends React.Props<CalendarInput> {
   className?: string;
-  locale?: string;
   date?: string;
   format?: string;
   min?: string;
@@ -43,14 +42,13 @@ export class CalendarInput extends React.Component<ICalendarInputProps, ICalenda
   private bodyElement: HTMLDivElement;
 
   static defaultProps = {
-    format: 'DD/MM/YYYY',
+    format: 'L',
     date: moment().startOf('day').format(isoFormat),
     locale: 'en-gb'
   }
 
   constructor(props: ICalendarInputProps) {
     super(props);
-    moment.locale(props.locale);
     this.format = this.props.nativeInput ? isoFormat : props.format;
     const initialDate = moment(props.date, isoFormat, true);
     this.state = { inputValue: initialDate.format(this.format), pickerBodyVisible: false, showOnTop: false, calendarOffset: 0, selectedMonthStart: initialDate.clone().startOf('month') };

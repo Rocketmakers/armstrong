@@ -10,6 +10,8 @@ import { Image } from './../../source/components/display/image';
 // VIEWS
 import { Home } from "./views/home";
 
+import { setLocale } from "../../source/config/config";
+
 // STYLES
 import "./theme/theme";
 
@@ -43,5 +45,6 @@ class App extends React.Component<any, { nav: boolean }> {
   }
 }
 
-// ROUTER
-ReactDOM.render(<App><Home /></App>, document.getElementById('host'));
+setLocale("en-GB");
+
+ReactDOM.render(<App><CalendarTest /></App>, document.getElementById('host'));

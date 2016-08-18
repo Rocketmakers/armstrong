@@ -16,7 +16,7 @@ export { DateInput, IDateInputProps } from "./components/form/inputs/dateInput";
 export { TimeInput, ITimeInputProps } from "./components/form/inputs/timeInput";
 export { CalendarInput, ICalendarInputProps } from "./components/form/inputs/calendarInput";
 export { ITextInputProps, TextInput } from "./components/form/inputs/textInput";
-export { IAutoCompleteInputProps,  AutoCompleteInput, IAutoCompleteOption } from "./components/form/inputs/autoCompleteInput";
+export { IAutoCompleteInputProps, AutoCompleteInput, IAutoCompleteOption } from "./components/form/inputs/autoCompleteInput";
 export { IFormProps, Form } from "./components/form/form";
 
 // interaction
@@ -33,3 +33,6 @@ export { Icons } from "./utilities/icons";
 
 // navigation
 export { BurgerMenu, IBurgerMenuProps, BurgerMenuItem, IBurgerMenuItemProps } from "./components/navigation/burgerMenu";
+
+import * as ArmstrongConfig from "./config/config"
+export { ArmstrongConfig };

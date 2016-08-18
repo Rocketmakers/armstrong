@@ -42,6 +42,7 @@ The default bottom margin has been removed to make it more flexible. Just pad yo
  - DatepickerInput has been renamed CalendarInput.
  - There are also now DateInput and TimeInput controls.
  - CalendarInput now only takes strings, so moment.js is now just an implementation detail
+ - CalendarInput no longer takes a locale prop. Instead import `ArmstrongConfig` and call `setLocale` once, probably on app startup.
 
 #### Form - Dropdownselect
 
