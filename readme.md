@@ -26,7 +26,8 @@ Center content has been deprecated and is replaced with 2 new properties. Horizo
 
 #### Grid - Fixed on row and col
 
-Rows now take a height prop which supports either a number or the string 'auto'. Cols are the same but with a width property
+Rows now take a height prop which supports either a number or the string 'auto'. Cols are the same but with a width property.
+You can now also use XAML-style star widths/heights. For example a 2 col layout with `width='1*'` and a `width='2*'` would split into a 1 3rd 2 3rds ratio
 
 #### Grid - SingleColumnRow
 

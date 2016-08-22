@@ -1,6 +1,7 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 import * as _ from "underscore";
+import * as classNames from "classnames";
 import { Icon } from './../../display/icon';
 import { Grid, Row, Col } from './../../layout/grid';
 import { Button } from './../../interaction/button';
@@ -12,24 +13,38 @@ export interface IAutoCompleteOption {
 }
 
 export interface IAutoCompleteInputProps extends React.Props<AutoCompleteInput> {
+  /** (string) CSS classname property */
   className?: string;
+  /** (IAutoCompleteOption | IAutoCompleteOption[]) The current/returned value or values if multi select */
   value?: IAutoCompleteOption | IAutoCompleteOption[];
+  /** (number) No query will get executed until this is met. Defaults to 1 */
   minimumLength?: number;
+  /** (string) The text to use a placeholder when no value is present */
   placeholder?: string;
-  searchPlaceholder?: string;
+  /** (string) The text show when no results were found */
   noResultsMessage?: string;
+  /** (IAutoCompleteOption[]) If you are using local rather than remote options, specify them here */
   options?: IAutoCompleteOption[];
+  /** (number) How long to wait after every key press before executing a remote query */
   remoteThrottle?: number;
+  /** ((string) => Promise<IAutoCompleteOption[]>) A promise and mapping to IAutoCompleteOption to handle querying remote data */
   remoteQuery?: (query: string) => Promise<IAutoCompleteOption[]>;
+  /** (boolean) If set to true, a blank query will be executed as soon as the control is focused */
   remoteQueryOnOpen?: boolean;
+  /** (boolean) If set to true, a button will appear along side the box which selects the currently hilighted option on click */
   hasGoButton?: boolean;
+  /** (React.ReactElement<any> | string) The content of the go button. Can be text or any element */
   goButtonContent?: React.ReactElement<any> | string;
+  /** ((IAutoCompleteOption | IAutoCompleteOption[]) => void) Fires when the selection is changed. Returns a single value or an array dependent on multiselect */
   onSelected?: (selectedOption: IAutoCompleteOption | IAutoCompleteOption[]) => void;
+  /** (number) How many items to show before scrolling. Defaults to 3 */
   visibleItems?: number;
+  /** (boolean) If true, shows an X icon to clear selection */
   canClear?: boolean;
+  /** (boolean) Wether the control is disabled */
   disabled?: boolean;
+  /** (boolean) Wether the control should function like a tagging control, returning an array of options or a single select, returning one option */
   multiSelect?: boolean;
-  icon?: string;
 }
 
 export interface IAutoCompleteInputState {
@@ -58,13 +73,13 @@ export class AutoCompleteInput extends React.Component<IAutoCompleteInputProps, 
       filteredOptions: [],
       query: "",
       open: false,
-      selectedValue: props.multiSelect ? []: null ,
+      selectedValue: props.multiSelect ? [] : null,
       selectedIndex: 0,
       remoteSearching: false,
       offsetIndex: 0,
       showOnTop: false,
       topOffset: -35
-     };
+    };
   }
   filterRemote(query: string, immediate?: boolean) {
     if (this.timer) {
@@ -114,51 +129,58 @@ export class AutoCompleteInput extends React.Component<IAutoCompleteInputProps, 
   componentWillMount() {
     let selectedValue: any = this.props.multiSelect ? [] : null;
     if (this.props.value) {
-      if (this.props.multiSelect){
-        if (_.isArray(this.props.value)){
+      if (this.props.multiSelect) {
+        if (_.isArray(this.props.value)) {
           selectedValue = this.props.value;
-        }else{
+        } else {
           selectedValue = [this.props.value];
         }
-      }else{
+      } else {
         selectedValue = this.props.value;
       }
     }
     this.setState({ filteredOptions: this.props.options || [], selectedValue })
   }
   componentWillReceiveProps(newProps: IAutoCompleteInputProps) {
-    if (this.props.multiSelect){
+    if (this.props.multiSelect) {
       var newMultiValue = newProps.value as IAutoCompleteOption[];
       var oldMultiValue = this.state.selectedValue as IAutoCompleteOption[];
 
-      if (oldMultiValue.length === 0 || !_.isEqual(newMultiValue.map(v => v.id), oldMultiValue.map(v => v.id))){
+      if (oldMultiValue.length === 0 || !_.isEqual(newMultiValue.map(v => v.id), oldMultiValue.map(v => v.id))) {
         this.setState({ selectedValue: newMultiValue })
       }
     } else {
       var newSingleValue = newProps.value as IAutoCompleteOption;
       var oldSingleValue = this.state.selectedValue as IAutoCompleteOption;
-      if (!newSingleValue){
-        if (oldSingleValue != newSingleValue){
+      if (!newSingleValue) {
+        if (oldSingleValue != newSingleValue) {
           this.setState({ selectedValue: null })
         }
       }
-      else if (!oldSingleValue || newSingleValue.id !== oldSingleValue.id){
+      else if (!oldSingleValue || newSingleValue.id !== oldSingleValue.id) {
         this.setState({ selectedValue: newSingleValue })
       }
     }
   }
 
   shouldShowOnTop(): boolean {
-    const height = (this.itemHeight *3) + 50;
+    const height = (this.itemHeight * 3) + 50;
     const inputRect = ReactDOM.findDOMNode(this).getBoundingClientRect();
-    this.setState({ topOffset: this.props.multiSelect ? -inputRect.height*2 : -inputRect.height });
     const remainingSpace = window.innerHeight - inputRect.bottom;
-    console.log(`height: ${height}, window height ${window.innerHeight}, remainingSpace ${remainingSpace}`);
+    let shouldShowOnTop = false;
     if (remainingSpace < height) {
-      return true;
+      shouldShowOnTop = true;
     } else {
-      return false;
+      shouldShowOnTop = false;
     }
+    let offset = this.props.multiSelect ?  -inputRect.height*2 : -inputRect.height;
+    let additionalOffset = 0;
+    if (this.props.multiSelect && !shouldShowOnTop){
+      additionalOffset = inputRect.height;
+    }
+    this.setState({ topOffset: shouldShowOnTop ? offset : additionalOffset });
+
+    return shouldShowOnTop;
   }
 
   checkKey(e) {
@@ -213,7 +235,7 @@ export class AutoCompleteInput extends React.Component<IAutoCompleteInputProps, 
     }
   }
 
-  private isArray<T>(itemOrArray: T | T[]) : itemOrArray is T[]{
+  private isArray<T>(itemOrArray: T | T[]): itemOrArray is T[] {
     return _.isArray(itemOrArray)
   }
   handleSelection(options: IAutoCompleteOption | IAutoCompleteOption[]) {
@@ -274,24 +296,24 @@ export class AutoCompleteInput extends React.Component<IAutoCompleteInputProps, 
                   }
                   { (this.props.multiSelect && (this.state.selectedValue as IAutoCompleteOption[]).length === 0) &&
                     <div className="placeholder">
-                    &nbsp;
-                    <div className="placeholder-value">{this.props.placeholder || "start typing to filter results..."}</div>
+                      &nbsp;
+                      <div className="placeholder-value">{!this.state.open && (this.props.placeholder || "start typing to filter results...")}</div>
                     </div>
                   }
                   { !this.props.multiSelect && this.state.selectedValue === null &&
                     <div className="placeholder">
-                    &nbsp;
-                    <div className="placeholder-value">{this.props.placeholder || "start typing to filter results..."}</div>
+                      &nbsp;
+                      <div className="placeholder-value">{this.props.placeholder || "start typing to filter results..."}</div>
                     </div>
                   }
                 </Col>
                 {!this.props.multiSelect && this.state.selectedValue && this.props.canClear &&
-                  <Col fixed={true} className="clear-selected p-right-xsmall" onClick={() => this.setState({ selectedValue: this.props.multiSelect ? [] : null, open: false, query: "", filteredOptions: this.props.options || [] }) }>
+                  <Col width="auto" className="clear-selected p-right-xsmall" onClick={() => this.setState({ selectedValue: this.props.multiSelect ? [] : null, open: false, query: "", filteredOptions: this.props.options || [] }) }>
                     <Icon icon={Icon.Icomoon.cross}/>
                   </Col>
                 }
                 {this.props.multiSelect && (this.state.selectedValue as IAutoCompleteOption[]).length !== 0 && this.props.canClear &&
-                  <Col fixed={true} className="clear-selected p-right-xsmall" onClick={() => this.setState({ selectedValue: this.props.multiSelect ? [] : null, open: false, query: "", filteredOptions: this.props.options || [] }) }>
+                  <Col width="auto" className="clear-selected p-right-xsmall" onClick={() => this.setState({ selectedValue: this.props.multiSelect ? [] : null, open: false, query: "", filteredOptions: this.props.options || [] }) }>
                     <Icon icon={Icon.Icomoon.cross}/>
                   </Col>
                 }
@@ -299,16 +321,17 @@ export class AutoCompleteInput extends React.Component<IAutoCompleteInputProps, 
             </Grid>
             }
             {this.state.open &&
-              <div className="autocomplete-select-list-wrapper">
+              <div className={classNames("autocomplete-select-list-wrapper", this.props.multiSelect ? 'multi-select' : '') }>
                 <input type="text"
+                  style={{ marginTop: `${this.props.multiSelect && this.state.showOnTop && `${this.state.topOffset}px`}` }}
                   value={this.state.query}
                   onKeyUp={(e) => this.checkKey(e) }
                   onChange={(e) => this.setState({ query: (e.target as any).value }) }
                   placeholder={this.props.placeholder || "start typing to filter results..."} />
                 {this.state.remoteSearching && <Icon className="spinner fg-info" icon={Icon.Icomoon.spinner2}/>}
                 <div data-id="autocomplete-select-list"
-                className={`autocomplete-select-list${this.state.showOnTop ? ' on-top' : ''}`}
-                style={{ maxHeight: `${(this.props.visibleItems || 3) * this.itemHeight}px`, marginTop: `${this.state.showOnTop ? this.state.topOffset : 0 }px` }}>
+                  className={`autocomplete-select-list${this.state.showOnTop ? ' on-top' : ''}`}
+                  style={{ maxHeight: `${(this.props.visibleItems || 3) * this.itemHeight}px`, marginTop: `${this.state.topOffset}px` }}>
                   {this.state.filteredOptions && this.state.filteredOptions.map((o, i) =>
                     <div data-index={i} key={`dd-item-${i}`} className={`dd-list-item${i === this.state.selectedIndex ? ' selected' : ''}${(this.props.multiSelect && _.some((this.state.selectedValue as IAutoCompleteOption[]), ddo => ddo.id === o.id)) ? ' in-selected-list' : ''}`}
                       onClick={() => this.handleSelection(o) }>{o.name}</div>) }
@@ -317,7 +340,7 @@ export class AutoCompleteInput extends React.Component<IAutoCompleteInputProps, 
               </div>
             }
           </Col>
-          {this.props.hasGoButton && !this.props.multiSelect && <Col fixed={true}><Button text={this.props.goButtonContent || "Go"} className="bg-positive" onClick={() => this.buttonClick() }/></Col> }
+          {this.props.hasGoButton && !this.props.multiSelect && <Col width="auto"><Button text={this.props.goButtonContent || "Go"} className="bg-positive" onClick={() => this.buttonClick() }/></Col> }
         </Row>
       </Grid>)
   }

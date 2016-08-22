@@ -35,7 +35,7 @@ export class Home extends React.Component<{}, { dialogOpen: boolean }> {
   }
   public render() {
     return (
-        <Grid debugMode={true} fillContainer={true}>
+        <Grid debugMode={false} fillContainer={false}>
           <Row>
             <Col><TextInput placeholder="rustle my jimmies"/></Col>
             <Col><Button disabled={true} className="shadow bg-positive" onClick={() => this.setState({ dialogOpen: true }) } ref={b => this.button = b}>Hello world!</Button></Col>
@@ -44,6 +44,15 @@ export class Home extends React.Component<{}, { dialogOpen: boolean }> {
             <Col>
               <AutoCompleteInput disabled={false} placeholder="Search for an artist and something else to make this box way to long and it will break..."
                 multiSelect={false}
+                onSelected={(item) => console.log}
+                canClear={true}
+                remoteQuery={(input) => apiClient.searchForArtist(input).then((r) => _.map(r.json.artists.items, (r: any) => { return { id: r.id, name: r.name, data: r } })) }/></Col>
+            <Col><TextInput value="Some text" disabled={true}/></Col>
+          </Row>
+          <Row>
+            <Col>
+              <AutoCompleteInput disabled={false} placeholder="Search for some artists..."
+                multiSelect={true}
                 onSelected={(item) => console.log}
                 canClear={true}
                 remoteQuery={(input) => apiClient.searchForArtist(input).then((r) => _.map(r.json.artists.items, (r: any) => { return { id: r.id, name: r.name, data: r } })) }/></Col>

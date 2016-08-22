@@ -67,8 +67,8 @@
     border-radius: 4px;
     padding: $spacing-xsmall / 2 $spacing-xsmall;
     line-height: normal;
-    margin-right: $spacing-xsmall;
-    margin-bottom: $spacing-xsmall;
+    margin-right: $field-padding-horizontal/5;
+    margin-bottom: $field-padding-horizontal/5;
 
     i {
       font-size: 9pt;
@@ -148,9 +148,14 @@
 
   &.has-multiple-options {
     .autocomplete-value-display {
-      padding-bottom: 0;
+      padding: 0.45em;
+      padding-bottom: 0.3em;
     }
   }
+
+  .autocomplete-select-list-wrapper.multi-select input{
+      position: absolute;
+    }
 
   input {
     position: relative;

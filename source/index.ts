@@ -26,7 +26,7 @@ export { IButtonProps, Button } from "./components/interaction/button";
 export { IGrid, Grid, IRow, Row, ICol, Col } from "./components/layout/grid";
 
 // ui helpers
-export { Responsiveness, Color, Size, Side, HorizontalAlignment, VerticalAlignment, LayoutHelpers } from "./utilities/uiHelpers";
+export { Color, Size, Side, HorizontalAlignment, VerticalAlignment, LayoutHelpers } from "./utilities/uiHelpers";
 
 // icons
 export { Icons } from "./utilities/icons";

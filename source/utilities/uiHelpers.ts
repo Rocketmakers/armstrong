@@ -1,7 +1,6 @@
 import * as React from "react";
 import * as classNames from "classnames";
 
-export type Responsiveness = "tablet" | "phone" | "both" | "none";
 export type Size = "none" | "xxsmall" | "xsmall" | "small" | "medium" | "large" | "xlarge";
 export type Side = "top" | "left" | "right" | "bottom" | "all";
 export type VerticalAlignment = "top" | "center" | "bottom";
