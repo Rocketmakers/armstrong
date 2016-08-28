@@ -31,8 +31,11 @@ class App extends React.Component<any, { nav: boolean }> {
     const view = this.props.children;
     return (
       <main>
-        <Grid debugMode={false} fillContainer={true}>
+        <Grid debugMode={true} fillContainer={true}>
           <Row>
+          <Col horizontalAlignment="center" verticalAlignment="center">
+          <div>hello</div>
+          </Col>
             <Col className="bg-gray-dark"/>
             <Col width={1100} className="p-large">
               { this.props.children }
@@ -47,4 +50,4 @@ class App extends React.Component<any, { nav: boolean }> {
 
 setLocale("en-GB");
 
-ReactDOM.render(<App><CalendarTest /></App>, document.getElementById('host'));
+ReactDOM.render(<App><Home /></App>, document.getElementById('host'));

@@ -19,10 +19,10 @@ export class LayoutHelpers {
   static GetAlignmentClasses(vertical: VerticalAlignment, horizontal: HorizontalAlignment): string {
     let classes = [];
     if (vertical){
-      classes.push(`align-content-vertical-${vertical}`)
+      classes.push(`align-con-v-${vertical}`)
     }
     if (horizontal){
-      classes.push(`align-content-horizontal-${horizontal}`)
+      classes.push(`align-con-h-${horizontal}`)
     }
     return classNames(classes);
   }
