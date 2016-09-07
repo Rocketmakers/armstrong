@@ -10,6 +10,7 @@ export interface IAutoCompleteOption {
   id: number;
   name: string;
   data?: any;
+  className?: string;
 }
 
 export interface IAutoCompleteInputProps extends React.Props<AutoCompleteInput> {
@@ -291,7 +292,7 @@ export class AutoCompleteInput extends React.Component<IAutoCompleteInputProps, 
                   {this.state.selectedValue &&
                     <div className="selected-value-wrapper">
                       {this.state.selectedValue && this.props.multiSelect ? (this.state.selectedValue as IAutoCompleteOption[]).map(ddo =>
-                        <div key={`multi-select-item-${ddo.id}`} className="multi-select-item multi-select-item-part" onClick={() => this.handleSelection(ddo) } >{ddo.name}<Icon className="multi-select-item-part" icon={Icon.Icomoon.cross}/></div>) : (this.state.selectedValue as IAutoCompleteOption).name}
+                        <div key={`multi-select-item-${ddo.id}`} className={`multi-select-item multi-select-item-part${ddo.className ? ` ${ddo.className}`: ''}`} onClick={() => this.handleSelection(ddo) } >{ddo.name}<Icon className="multi-select-item-part" icon={Icon.Icomoon.cross}/></div>) : (this.state.selectedValue as IAutoCompleteOption).name}
                     </div>
                   }
                   { (this.props.multiSelect && (this.state.selectedValue as IAutoCompleteOption[]).length === 0) &&

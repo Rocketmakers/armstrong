@@ -72,7 +72,7 @@ export class Row extends React.Component<IRow, any> {
     var colStyles;
     if (this.props.height) {
       if (typeof this.props.height === "number") {
-        styles = _.extend({ maxHeight: `${this.props.height}px`, height: "100%" }, styles);
+        styles = _.extend({ height: `${this.props.height}px` }, styles);
       } else {
         let hString = (this.props.height as string);
         let starIndex = hString.indexOf('*');
