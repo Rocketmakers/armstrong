@@ -21,6 +21,7 @@ export interface ICalendarInputProps extends React.Props<CalendarInput> {
   nativeInput?: boolean;
   icon?: string;
   disabled?: boolean;
+  disableClear?: boolean;
 }
 
 export interface ICalendarInputState {
@@ -43,15 +44,20 @@ export class CalendarInput extends React.Component<ICalendarInputProps, ICalenda
 
   static defaultProps = {
     format: 'L',
-    date: moment().startOf('day').format(isoFormat),
     locale: 'en-gb'
   }
 
   constructor(props: ICalendarInputProps) {
     super(props);
     this.format = this.props.nativeInput ? isoFormat : props.format;
-    const initialDate = moment(props.date, isoFormat, true);
-    this.state = { inputValue: initialDate.format(this.format), pickerBodyVisible: false, showOnTop: false, calendarOffset: 0, selectedMonthStart: initialDate.clone().startOf('month') };
+    const initialDate = props.date ? moment(props.date, isoFormat, true) : null;
+    let inputValue = "";
+    let selectedMonthStart = moment().startOf('month');
+    if (initialDate) {
+      inputValue = initialDate.format(this.format);
+      selectedMonthStart = initialDate.clone().startOf('month');
+    }
+    this.state = { inputValue, pickerBodyVisible: false, showOnTop: false, calendarOffset: 0, selectedMonthStart };
   }
 
   onDaySelected(date: moment.Moment) {
@@ -59,7 +65,7 @@ export class CalendarInput extends React.Component<ICalendarInputProps, ICalenda
       return;
     }
     const newDate = date.clone();
-    this.setState({ pickerBodyVisible: false });
+    this.setState({ pickerBodyVisible: false, inputValue: newDate.format(this.format) });
     if (this.props.onDateChanged) {
       this.props.onDateChanged(newDate.format(isoFormat));
     }
@@ -131,6 +137,9 @@ export class CalendarInput extends React.Component<ICalendarInputProps, ICalenda
   }
 
   checkDate(dateString: string) {
+    if (dateString === this.state.inputValue){
+      return;
+    }
     const m = moment(dateString, this.format, false);
     if (m.isValid() && this.fallsWithinRange(m)) {
       const formattedDate = m.format(this.format);
@@ -163,21 +172,37 @@ export class CalendarInput extends React.Component<ICalendarInputProps, ICalenda
 
   handleEvent(e) {
     const domNode = ReactDOM.findDOMNode(this);
-    if (domNode.contains(e.target) && e.type !== "mousewheel") {
+    if (domNode.contains(e.target) && e.type !== "mousewheel" && e.type !== "keydown") {
+      return;
+    }
+    if (e.type === "keydown" && e.keyCode !== 9){
       return;
     }
     document.removeEventListener("mousewheel", this, false);
-
-    this.resetState(this.props);
+    if (!this.state.inputValue){
+      this.resetState(this.props);
+    }
+    else{
+      this.setState({ pickerBodyVisible: false });
+    }
   }
 
   resetState(props: ICalendarInputProps): void {
-    const selectedDate = moment(props.date, isoFormat, true);
-    this.setState({
-      pickerBodyVisible: false,
-      inputValue: selectedDate.format(this.format),
-      selectedMonthStart: selectedDate.clone().startOf('month')
-    });
+    const selectedDate = props.date ? moment(props.date, isoFormat, true) : null;
+    if (selectedDate) {
+      this.setState({
+        pickerBodyVisible: false,
+        inputValue: selectedDate.format(this.format),
+        selectedMonthStart: selectedDate.clone().startOf('month')
+      });
+    } else {
+      this.setState({
+        pickerBodyVisible: false,
+        inputValue: "",
+        selectedMonthStart: moment().startOf('month')
+      });
+    }
+
   }
 
   onInputFocus() {
@@ -239,7 +264,6 @@ export class CalendarInput extends React.Component<ICalendarInputProps, ICalenda
             max={this.props.max || ''}
             onChange={e => this.checkDate(e.target["value"]) }
             value={this.propsDateAsMoment().format(this.format) }
-            onBlur={e => this.checkDate(e.target["value"]) }
             />
         </div>
       )
@@ -248,14 +272,15 @@ export class CalendarInput extends React.Component<ICalendarInputProps, ICalenda
       <div className={rootClasses}>
         <Icon icon={this.props.icon || Icons.Icomoon.calendar2}/>
         {!this.props.alwaysShowCalendar &&
-          <input ref={i => this.inputElement = i}
+          <input className="cal-input" ref={i => this.inputElement = i}
             disabled={this.props.disabled}
             type="text"
             value={this.state.inputValue}
-            onChange={e => this.setState({ inputValue: e.target["value"] })}
-            onBlur={e => this.checkDate(e.target["value"]) }
-            onFocus={e => this.onInputFocus() }
-            />
+            onKeyDown={e => this.handleEvent(e)}
+            onFocus={e => this.onInputFocus() }/>
+        }
+        {!this.props.alwaysShowCalendar && this.props.date && !this.props.disableClear &&
+          <div className="clear-date-button" onClick={()=> this.props.onDateChanged(null)}><Icon icon={Icon.Icomoon.cross}/></div>
         }
         <div ref={b => this.bodyElement = b} className={classes} style={{ top: `${this.state.calendarOffset}px` }}>
           <div className="date-picker-body-wrapper">

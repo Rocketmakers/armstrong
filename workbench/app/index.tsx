@@ -1,7 +1,6 @@
 // LIBS
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { CalendarTest } from "./views/calendarTest";
 import { Router, Route, Link, hashHistory, IndexRoute } from 'react-router';
 import { Grid, Row, Col } from './../../source/components/layout/grid';
 import { BurgerMenu, BurgerMenuItem } from './../../source/components/navigation/burgerMenu';
@@ -9,6 +8,7 @@ import { Image } from './../../source/components/display/image';
 
 // VIEWS
 import { Home } from "./views/home";
+import { CalendarTest } from "./views/calendarTest";
 
 import { setLocale } from "../../source/config/config";
 
@@ -50,4 +50,4 @@ class App extends React.Component<any, { nav: boolean }> {
 
 setLocale("en-GB");
 
-ReactDOM.render(<App><Home /></App>, document.getElementById('host'));
+ReactDOM.render(<App><CalendarTest /></App>, document.getElementById('host'));
