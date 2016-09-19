@@ -82,16 +82,18 @@ export class DateInput extends React.Component<IDateInputProps, IDateInputState>
     return DateHelpers.toDateFormat(this.state);
   }
   render() {
-    let dayOptions = [<option value="" disabled={true}>Day</option>];
+    let dayOptions = [<option key={`${this.cId}_day_blank`} value="" disabled={true}>Day</option>];
     this.getDaysArrayByMonth().forEach(d => {
       dayOptions.push(<option key={`${this.cId}_day_${d}`} value={d}>{parseInt(d) < 10 ? `0${d}` : d.toString() }</option>);
     })
 
-    let monthOptions = [<option value="" disabled={true}>Month</option>];
-    monthOptions.push(...DateHelpers.getMonthValues().map((v, i) => <option key={`${this.cId}_month_${i}`} value={v.value}>{v.label}</option>))
+    let monthOptions = [<option key={`${this.cId}_month_blank`} value="" disabled={true}>Month</option>];
+    monthOptions.push(...DateHelpers.getMonthValues().map((v, i) =>
+    <option key={`${this.cId}_month_${i}`} value={v.value}>{v.label}</option>))
 
-    let yearOptions = [<option value="" disabled={true}>Year</option>];
-    yearOptions.push(...DateHelpers.getYearValues(this.props.futureDates, this.props.yearsFromNow).map(year => <option key={`${this.cId}_year_${year}`} value={year.toString() }>{year}</option>))
+    let yearOptions = [<option key={`${this.cId}_year_blank`}  value="" disabled={true}>Year</option>];
+    yearOptions.push(...DateHelpers.getYearValues(this.props.futureDates, this.props.yearsFromNow).map(year =>
+    <option key={`${this.cId}_year_${year}`} value={year.toString() }>{year}</option>))
     return <Form className={classNames("date-input", this.props.disabled? "input-disabled" : null)} dataBinder={Form.jsonDataBinder(this.props.date)} onDataChanged={(d) => this.props.onChange(d)}>
    <Grid>
       <Row>

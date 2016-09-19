@@ -259,7 +259,10 @@ export class AutoCompleteInput extends React.Component<IAutoCompleteInputProps, 
       if (this.props.onSelected) {
         this.props.onSelected(ddOptions);
       }
-      (ReactDOM.findDOMNode(this).querySelector("input") as any).focus()
+      let input = ReactDOM.findDOMNode(this).querySelector("input") as HTMLInputElement;
+      if (input){
+        input.focus()
+      }
     } else {
       let option = options as IAutoCompleteOption;
       // Handle single selection
