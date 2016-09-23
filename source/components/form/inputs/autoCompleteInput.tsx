@@ -344,7 +344,7 @@ export class AutoCompleteInput extends React.Component<IAutoCompleteInputProps, 
               </div>
             }
           </Col>
-          {this.props.hasGoButton && !this.props.multiSelect && <Col width="auto"><Button text={this.props.goButtonContent || "Go"} className="bg-positive" onClick={() => this.buttonClick() }/></Col> }
+          {this.props.hasGoButton && !this.props.multiSelect && <Col width="auto"><Button className="bg-positive" onClick={() => this.buttonClick() }>{this.props.goButtonContent || "Go"}</Button></Col> }
         </Row>
       </Grid>)
   }

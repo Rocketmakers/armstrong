@@ -7,7 +7,7 @@ import { Icons } from "./../../utilities/icons";
 
 export interface IButtonProps extends React.HTMLProps<Button> {
   /** ((React.MouseEvent) => void) Event to fire when the button is clicked */
-  onClick?: (e?: React.MouseEvent)=> void;
+  onClick?: (e?: React.MouseEvent<{}>)=> void;
   /** (string) An icon to show on the left of the buttons content */
   leftIcon?: string;
   /** (string) An icon to show on the right of the buttons content */
@@ -33,7 +33,7 @@ export class Button extends React.Component<IButtonProps, {}>{
       }
     );
     return (
-      <button type={this.props.type || 'button'} onClick={this.props.onClick} { ...attrs } className={classes}>
+      <button type={this.props.type || 'button'} onClick={e => this.props.onClick(e)} { ...attrs } className={classes}>
       {this.props.leftIcon && <Icon className="left-icon" icon={this.props.leftIcon}/>}
       {this.props.children}
       {this.props.rightIcon && <Icon className="right-icon" icon={this.props.rightIcon}/>}

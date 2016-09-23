@@ -95,8 +95,8 @@ export class ValueChangeBinder<T> extends FormBinderBase<IValueChangeBinderProps
 }
 
 /** An input FormBinder that sets native 'value' and 'onChange: (e) => void' properties */
-export class InputFormBinder<TDataPropValue,TComponentPropValue> extends FormBinderBase<React.DOMAttributes,TDataPropValue,TComponentPropValue> {
-  handleValueChanged(props: React.DOMAttributes, dataBinder:IDataBinder<any>, notifyChanged: () => void) {
+export class InputFormBinder<TDataPropValue,TComponentPropValue> extends FormBinderBase<React.DOMAttributes<{}>,TDataPropValue,TComponentPropValue> {
+  handleValueChanged(props: React.DOMAttributes<any>, dataBinder:IDataBinder<any>, notifyChanged: () => void) {
     props.onChange = (e) => {
       this.onChanged(dataBinder, e.currentTarget[this.propertyGet], notifyChanged);
     };
@@ -105,7 +105,7 @@ export class InputFormBinder<TDataPropValue,TComponentPropValue> extends FormBin
 
 /** A radio input FormBinder */
 export class RadioFormBinder<TDataPropValue,TComponentPropValue> extends InputFormBinder<TDataPropValue,TComponentPropValue> {
-  setElementProperty(props: React.DOMAttributes, dataBinder:IDataBinder<any>) {
+  setElementProperty(props: React.DOMAttributes<any>, dataBinder:IDataBinder<any>) {
     props["name"] = this.dataName;
     props[this.propertySet] = this.convert(dataBinder.getValue(this.dataName)) === props[this.propertyGet];
   }
@@ -129,7 +129,7 @@ class KeyboardHelper{
     return /\d/;
   }
 
-  static numericKeyPress(e: React.KeyboardEvent, options?: INumericOptions){
+  static numericKeyPress(e: React.KeyboardEvent<{}>, options?: INumericOptions){
     const regEx = KeyboardHelper.getNumericRegEx(options)
     const m = e.key.match(regEx);
     if(!m){
@@ -232,7 +232,7 @@ export class FormBinder {
       adaptorInjector["max"] = options.max
     }
 
-    adaptorInjector[dataBinderAttribute].extender = (props: React.HTMLAttributes, ea, nc) => {
+    adaptorInjector[dataBinderAttribute].extender = (props: React.HTMLAttributes<any>, ea, nc) => {
       props.onKeyPress = e => KeyboardHelper.numericKeyPress(e, options);
       props.onBlur = e => {
         e.currentTarget["value"] = converter.convert(ea.getValue(dataName));

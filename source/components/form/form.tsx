@@ -83,7 +83,7 @@ export class Form extends React.Component<IFormProps,{}>{
         return element;
       }
 
-      let props: React.DOMAttributes = _.extend({}, element.props);
+      let props: React.DOMAttributes<{}> = _.extend({}, element.props);
       let children = element.props.children;
 
       const fbi = props as IFormBinderInjector<any>;
