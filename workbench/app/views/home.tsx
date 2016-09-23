@@ -37,7 +37,7 @@ export class Home extends React.Component<{}, { dialogOpen: boolean }> {
     return (
         <Grid debugMode={false} fillContainer={false}>
           <Row>
-            <Col><TextInput placeholder="rustle my jimmies"/></Col>
+            <Col><TextInput placeholder="rustle my jimmiez"/></Col>
             <Col><Button disabled={true} className="shadow bg-positive" onClick={() => this.setState({ dialogOpen: true }) } ref={b => this.button = b}>Hello world!</Button></Col>
           </Row>
           <Row>
