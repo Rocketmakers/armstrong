@@ -8,7 +8,9 @@ var CopyWebpackPlugin = require('copy-webpack-plugin');
 
 var APP_DIR = path.join(__dirname, '../app');
 var buildPath = path.join(__dirname, '../www');
-var tsConfigPath = path.join(__dirname, '../tsconfig.json');
+var tsConfigPath = path.resolve('./app/tsconfig.json');
+
+console.log(tsConfigPath);
 
 var scssLoaders = [
   "style-loader",

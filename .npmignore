@@ -1,6 +1,5 @@
 workbench/
-source/
-sass_concat.js
-typings/
+armstrong/source/
+armstrong/sass_concat.js
 .node-version
 IcoMoon-Ultimate.ttf

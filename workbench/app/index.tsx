@@ -2,15 +2,14 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { Router, Route, Link, hashHistory, IndexRoute } from 'react-router';
-import { Grid, Row, Col } from './../../source/components/layout/grid';
-import { BurgerMenu, BurgerMenuItem } from './../../source/components/navigation/burgerMenu';
-import { Image } from './../../source/components/display/image';
+import { Grid, Row, Col } from './../../armstrong/source/components/layout/grid';
+import { BurgerMenu, BurgerMenuItem } from './../../armstrong/source/components/navigation/burgerMenu';
+import { Image } from './../../armstrong/source/components/display/image';
 
 // VIEWS
 import { Home } from "./views/home";
-import { CalendarTest } from "./views/calendarTest";
 
-import { setLocale } from "../../source/config/config";
+import { setLocale } from "../../armstrong/source/config/config";
 
 // STYLES
 import "./theme/theme";
