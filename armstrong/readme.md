@@ -105,7 +105,7 @@ export class MyComponent extends React.Component<{}, {}> {
     return (
       <main>
         <h1>Below is a button!</h1>
-        <Button text="Armstrong lives!" condition="info" onClick={ this.buttonClicked } />
+        <Button condition="info" onClick={ this.buttonClicked }>Armstrong lives!</Button>
       </main>
     );
   }
