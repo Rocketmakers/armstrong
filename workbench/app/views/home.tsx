@@ -4,8 +4,8 @@ import * as ReactDOM from 'react-dom';
 import * as moment from 'moment';
 import * as _ from 'underscore';
 import { Link } from "react-router";
-import { Grid, Row, Col } from './../../../armstrong/source/components/layout/grid';
-import { Button } from './../../../armstrong/source/components/interaction/button';
+import { Grid, Row, Col } from './../../../source/components/layout/grid';
+import { Button } from './../../../source/components/interaction/button';
 
 export class Home extends React.Component<{}, { dialogOpen: boolean }> {
   /**
