@@ -8,6 +8,7 @@ export interface IBurgerMenuProps {
   bodyId?: string;
   closeOnNavigate?: boolean;
   burgerButtonHidden?: boolean;
+  onMenuToggle: (sender: BurgerMenu) => any;
 }
 
 export class BurgerMenu extends React.Component<IBurgerMenuProps, {}>{
@@ -32,12 +33,16 @@ export class BurgerMenu extends React.Component<IBurgerMenuProps, {}>{
   closeMenu() {
     this.appNode.classList.remove("menu-open");
     this.isOpen = false;
-
+    if(this.props.onMenuToggle) {
+      this.props.onMenuToggle(this);
+    }
   }
   openMenu() {
     this.appNode.classList.add("menu-open");
     this.isOpen = true;
-
+    if(this.props.onMenuToggle) {
+      this.props.onMenuToggle(this);
+    }
   }
   componentWillUnmount() {
     this.unmountPortalNode();
