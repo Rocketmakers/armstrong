@@ -8,7 +8,7 @@ export interface IBurgerMenuProps {
   bodyId?: string;
   closeOnNavigate?: boolean;
   burgerButtonHidden?: boolean;
-  onMenuToggle: (sender: BurgerMenu) => any;
+  onMenuToggle?: (sender: BurgerMenu) => any;
 }
 
 export class BurgerMenu extends React.Component<IBurgerMenuProps, {}>{

@@ -1,6 +1,6 @@
 {
   "name": "armstrong-react-types",
-  "version": "1.0.0-alpha.27",
+  "version": "1.0.0-alpha.28",
   "description": "Rocketmakers Armstrong library of React components (For projects using npm @types from Typescript 2.0)",
   "main": "./dist/index.js",
   "style": "./dist/style.scss",
