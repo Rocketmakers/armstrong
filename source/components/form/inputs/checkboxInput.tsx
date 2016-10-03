@@ -4,17 +4,17 @@ import {Form} from "../form";
 import { Grid, Row, Col } from './../../layout/grid';
 
 export interface ICheckboxInputProps extends React.HTMLProps<CheckboxInput> {
-    label: string;
+    labelContent: string | React.ReactElement<any>;
 }
 
 export class CheckboxInput extends React.Component<ICheckboxInputProps, {}> {
     render() {
-        var id = "radio_" + Math.random();
+        const id = "checkbox_" + Math.random();
         return (
             <div className="checkbox">
-            <input id={id} { ..._.omit(this.props, "label") } type="checkbox"/>
-            <label htmlFor={id}/>
-            <label className="checkbox-label" htmlFor={id}>{this.props.label}</label>
+              <input id={id} { ..._.omit(this.props, "labelContent") } type="checkbox"/>
+              <label htmlFor={id}/>
+              <label className="checkbox-label" htmlFor={id}>{this.props.labelContent}</label>
             </div>
         );
     }

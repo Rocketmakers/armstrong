@@ -50,6 +50,10 @@ The default bottom margin has been removed to make it more flexible. Just pad yo
 
 Dropdownselect has been renamed to AutoCompleteInput to better reflect what it actually does
 
+#### Form - Checkbox
+
+CheckboxInput now takes "labelContent" which can be a string or a component. Previously it only supported a "label" string
+
 ## Introduction
 
 A library of components for React/SCSS interface development.
