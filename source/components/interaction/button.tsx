@@ -33,7 +33,7 @@ export class Button extends React.Component<IButtonProps, {}>{
       }
     );
     return (
-      <button type={this.props.type || 'button'} onClick={e => this.props.onClick(e)} { ...attrs } className={classes}>
+      <button type={this.props.type || 'button'} onClick={e => this.props.onClick ? this.props.onClick(e) : null} { ...attrs } className={classes}>
       {this.props.leftIcon && <Icon className="left-icon" icon={this.props.leftIcon}/>}
       {this.props.children}
       {this.props.rightIcon && <Icon className="right-icon" icon={this.props.rightIcon}/>}

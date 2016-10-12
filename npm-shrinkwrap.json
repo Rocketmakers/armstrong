@@ -1,6 +1,6 @@
 {
   "name": "armstrong-react",
-  "version": "1.0.0-alpha.29",
+  "version": "1.0.0-alpha.31",
   "dependencies": {
     "classnames": {
       "version": "2.2.5",
