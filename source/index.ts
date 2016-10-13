@@ -7,30 +7,32 @@
 export { IIconProps, Icon } from "./components/display/icon";
 export { IImageProps, Image } from "./components/display/image";
 export { IDialogProps, Dialog } from "./components/display/dialog";
-//export { IVelocityDialogProps, VelocityDialog } from "./components/display/velocityDialog";
 
 // form
 export { ICheckboxInputProps, CheckboxInput } from "./components/form/inputs/checkboxInput";
 export { IRadioInputProps, RadioInput } from "./components/form/inputs/radioInput";
 export { ISelectInputProps, SelectInput } from "./components/form/inputs/selectInput";
 export { DateInput, IDateInputProps } from "./components/form/inputs/dateInput";
-export { IDatePickerInputProps, DatePickerInput } from "./components/form/inputs/datePickerInput";
+export { TimeInput, ITimeInputProps } from "./components/form/inputs/timeInput";
+export { CalendarInput, ICalendarInputProps } from "./components/form/inputs/calendarInput";
 export { ITextInputProps, TextInput } from "./components/form/inputs/textInput";
-export { ITimeSelectorProps, TimeSelector } from "./components/form/inputs/timeSelectorInput";
-export { IForm, Form } from "./components/form/form";
-export { IDropdownSelectProps, IDropdownOption, DropdownSelect } from "./components/form/dropdownSelect";
+export { IAutoCompleteInputProps, AutoCompleteInput, IAutoCompleteOption } from "./components/form/inputs/autoCompleteInput";
+export { IFormProps, Form } from "./components/form/form";
 
 // interaction
 export { IButtonProps, Button } from "./components/interaction/button";
 
 // layout
-export { IGrid, Grid, IRow, Row, ICol, Col, SingleColumnRow } from "./components/layout/grid";
+export { IGrid, Grid, IRow, Row, ICol, Col } from "./components/layout/grid";
 
 // ui helpers
-export { Responsiveness, Color, Size, Side, CenterContentVertical, CenterContentHorizontal, CenterBoth, CenterContent, LayoutHelpers } from "./utilities/uiHelpers";
+export { Color, Size, Side, HorizontalAlignment, VerticalAlignment, LayoutHelpers } from "./utilities/uiHelpers";
 
 // icons
 export { Icons } from "./utilities/icons";
 
 // navigation
 export { BurgerMenu, IBurgerMenuProps, BurgerMenuItem, IBurgerMenuItemProps } from "./components/navigation/burgerMenu";
+
+import * as ArmstrongConfig from "./config/config"
+export { ArmstrongConfig };

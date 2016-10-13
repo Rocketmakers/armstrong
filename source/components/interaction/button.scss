@@ -1,21 +1,13 @@
 .btn {
-    padding: $spacing-small $spacing-medium;
+    background-color: $gray-medium;
+    color: white;
+    padding: $field-padding-vertical $field-padding-horizontal;
     cursor: pointer;
-    &.icon-button-left{
-      padding-left: ($spacing-small * 2) * 0.75;
-    }
-    &.icon-button-right{
-      padding-right: ($spacing-small * 2) * 0.75;
-    }
     transition: all 0.1s;
     border: none;
-    border-radius: 4px;
+    border-radius: $corner-radius-small;
     outline: none;
-    background: $gray-light;
-    color: white;
-    @include button-shadow($gray-light);
-    margin-bottom: $spacing-small;
-    &:active {
+    &:active:not(:disabled) {
         transform: translateY(2px);
     }
     .left-icon{
@@ -30,5 +22,14 @@
     &:disabled{
       opacity: 0.4;
       cursor: default;
+    }
+    &.icon-button-left{
+      padding-left: $field-padding-horizontal;
+    }
+    &.icon-button-right{
+      padding-right: $field-padding-horizontal;
+    }
+    &.shadow{
+      @include button-shadow($gray-medium);
     }
 }

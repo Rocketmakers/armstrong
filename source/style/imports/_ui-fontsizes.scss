@@ -1,6 +1,0 @@
-@each $f-size in $font-sizes{
-  $size: nth($f-size, 2);
-  %f-size-#{nth($f-size, 1)}{
-    font-size: $size;
-  }
-}

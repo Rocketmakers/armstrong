@@ -8,8 +8,8 @@ import { Icons } from "./../../../utilities/icons";
 export interface ITextInputProps extends React.HTMLProps<TextInput> {
   multiLine?: boolean;
   readonly?: boolean;
-  rightOverlayText?: string;
-  leftOverlayText?: string;
+  rightOverlayText?: string | React.ReactElement<any>;
+  leftOverlayText?: string | React.ReactElement<any>;
   type?: string;
   leftIcon?: string;
   rightIcon?: string;

@@ -6,11 +6,15 @@ import { Icon } from "./../display/icon";
 import { Icons } from "./../../utilities/icons";
 
 export interface IButtonProps extends React.HTMLProps<Button> {
-  text: string | React.ReactElement<any>;
-  onClick?: (e?)=> void;
+  /** ((React.MouseEvent) => void) Event to fire when the button is clicked */
+  onClick?: (e?: React.MouseEvent<{}>)=> void;
+  /** (string) An icon to show on the left of the buttons content */
   leftIcon?: string;
+  /** (string) An icon to show on the right of the buttons content */
   rightIcon?: string;
+  /** (boolean) Wether or not the buttton should have rounded edges */
   rounded?: boolean;
+  /** (string) CSS classname property */
   className?: string | MarginClass | PaddingClass | BgColorClass | FgColorClass;
 }
 
@@ -18,7 +22,7 @@ export class Button extends React.Component<IButtonProps, {}>{
   static Icomoon = Icons.Icomoon;
 
   render() {
-    var attrs = _.omit(this.props, "text", "onClick", "leftIcon", "rightIcon", "className", "rounded");
+    var attrs = _.omit(this.props, "onClick", "leftIcon", "rightIcon", "className", "rounded");
     const classes = classNames(
       "btn",
       this.props.className,
@@ -29,10 +33,9 @@ export class Button extends React.Component<IButtonProps, {}>{
       }
     );
     return (
-      <button onClick={this.props.onClick} { ...attrs }
-      className={classes}>
+      <button type={this.props.type || 'button'} onClick={e => this.props.onClick ? this.props.onClick(e) : null} { ...attrs } className={classes}>
       {this.props.leftIcon && <Icon className="left-icon" icon={this.props.leftIcon}/>}
-      <span>{this.props.text}</span>
+      {this.props.children}
       {this.props.rightIcon && <Icon className="right-icon" icon={this.props.rightIcon}/>}
       </button>
     );

@@ -1,17 +1,22 @@
 import * as React from "react";
 
-export interface IFormBinder<P, D>{
-  setElementProperty(props: P, dataBinder:IDataBinder<D>): void;
-  handleValueChanged(props: P, dataBinder:IDataBinder<D>, notifyChanged: () => void): void;
-  extender?(props: P, dataBinder:IDataBinder<D>, notifyChanged: () => void): void;
+/** Form Binder Core interface */
+export interface IFormBinder<TComponentProps, TDataPropValue>{
+  setElementProperty(props: TComponentProps, dataBinder:IDataBinder<TDataPropValue>): void;
+  handleValueChanged(props: TComponentProps, dataBinder:IDataBinder<TDataPropValue>, notifyChanged: () => void): void;
+  extender?(props: TComponentProps, dataBinder:IDataBinder<TDataPropValue>, notifyChanged: () => void): void;
 }
 
+/** Form Data Binder Core interface */
 export interface IDataBinder<T>{
   getValue(dataName: string): any;
   setValue(dataName: string, value: any): void;
   toJson(): T;
 }
 
-export interface IFormBinderInjector<P>{
-  __formBinder: IFormBinder<P, any>
+export const dataBinderAttribute = "data-form-binder"
+
+/** Used to inject properties onto React components to permit change handling */
+export interface IFormBinderInjector<TComponentProps>{
+  "data-form-binder": IFormBinder<TComponentProps, any>
 }

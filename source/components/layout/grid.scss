@@ -1,3 +1,47 @@
+%align {
+    display: flex;
+    flex-direction: row;
+}
+
+%wrap-row{
+    flex-wrap: wrap;
+}
+
+%align-content-horizontal-center {
+    @extend %align;
+    justify-content: center;
+}
+
+%align-content-vertical-center {
+    @extend %align;
+    align-items: center;
+}
+
+%align-content-vertical-top {
+    @extend %align;
+    align-items: flex-start;
+}
+
+%align-content-vertical-bottom {
+    @extend %align;
+    align-items: flex-end;
+}
+
+%align-content-horizontal-left {
+    @extend %align;
+    justify-content: flex-start;
+}
+
+%align-content-horizontal-right {
+    @extend %align;
+    justify-content: flex-end;
+}
+
+%align-content-center-both {
+    @extend %align-content-horizontal-center;
+    @extend %align-content-vertical-center;
+}
+
 .grid {
   .row {
     display: flex;
@@ -21,79 +65,41 @@
   background-size: cover;
 }
 
-%align {
-  display: flex;
-  flex-direction: row;
-}
-
 .wrap-row {
   @extend %wrap-row;
 }
 
-.align-content-horizontal-center {
+.align-con-h-center {
   @extend %align-content-horizontal-center;
 }
 
-.align-content-vertical-center {
+.align-con-v-center {
   @extend %align-content-vertical-center;
 }
 
-.align-content-vertical-top {
+.align-con-v-top {
   @extend %align-content-vertical-top;
 }
 
-.align-content-vertical-bottom {
+.align-con-v-bottom {
   @extend %align-content-vertical-bottom;
 }
 
-.align-content-horizontal-left {
+.align-con-h-left {
   @extend %align-content-horizontal-left;
 }
 
-.align-content-horizontal-right {
+.align-con-h-right {
   @extend %align-content-horizontal-right;
 }
 
-.align-content-center-both {
-  @extend %align-content-center-both;
-}
-
 .fill-container {
-  @extend %fill-container;
-}
-$grid_column-count: 12;
-
-@for $i from 1 through $grid_column-count {
-  .grid > .row > .col#{$i} {
-    flex: $i;
-  }
-}
-
-.table-grid {
-  > .row {
-    padding-top: 20px;
-    padding-bottom: 20px;
-
-    .col:first-of-type {
-      padding-left: 20px;
-    }
-
-    .col:last-of-type {
-      padding-right: 20px;
-    }
-  }
-
-  > .row:first-of-type {
-    background-color: rgba(0, 0, 0, 0.8);
-
-    * {
-      color: white;
-    }
-  }
-
-  > .row:nth-of-type(2n+3) {
-    background: rgba(0, 0, 0, 0.1);
-  }
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    min-height: 100%;
+    flex: 1;
+    justify-content: center;
 }
 
 .grid-debug {
@@ -110,30 +116,5 @@ $grid_column-count: 12;
 }
 
 .no-flex {
-  @extend %no-flex;
-}
-
-@each $size in $spacing-sizes {
-  .grid-p-inner-#{nth($size, 1)} {
-    .row {
-      padding-bottom: nth($size, 2);
-
-      @include last(1){
-        padding-bottom: 0;
-      }
-
-      .col {
-        $new-size: nth($size, 2);
-        padding-left: $new-size / 2;
-        padding-right: $new-size / 2;
-
-        @include first(1) {
-          padding-left: 0;
-        }
-        @include last(1) {
-          padding-right: 0;
-        }
-      }
-    }
-  }
+    flex: none !important;
 }

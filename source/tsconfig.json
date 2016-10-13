@@ -9,11 +9,12 @@
         "jsx": "react",
         "declaration": false,
         "noImplicitAny": false,
-        "removeComments": true,
+        "removeComments": false,
         "sourceMap": false,
         "noLib": false,
         "preserveConstEnums": false,
         "suppressImplicitAnyIndexErrors": true,
-        "outDir": "../dist"
+        "outDir": "../dist",
+        "moduleResolution": "node"
     }
 }

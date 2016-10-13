@@ -2,20 +2,25 @@ import * as React from "react";
 import * as ReactDOM from "react-dom";
 import * as _ from "underscore";
 import * as classNames from "classnames";
-import { LayoutHelpers, CenterContent, CenterBoth, MarginClass, PaddingClass, BgColorClass, FgColorClass } from "./../../utilities/uiHelpers";
+import { LayoutHelpers, MarginClass, PaddingClass, BgColorClass, FgColorClass, VerticalAlignment, HorizontalAlignment } from "./../../utilities/uiHelpers";
 
-export interface IGrid extends React.Props<Grid>, React.HTMLProps<Grid> {
+export interface IGrid extends React.HTMLProps<Grid> {
+  /** (boolean) Wether to render borders around grid parts */
   debugMode?: boolean;
+  /** (boolean) ADVANCED: Turns of automatic fix of safari6 compat wrapper */
   disableFlexOverride?: boolean;
+  /** (string) CSS classname property */
   className?: string | MarginClass | PaddingClass | BgColorClass | FgColorClass;
+  /** (boolean) Render the first row to simulate a table header */
   table?: boolean;
+  /** (boolean) Wether the table should expand and divide to fill its container */
   fillContainer?: boolean;
 }
 
-export class Grid extends React.Component<IGrid, any> {
+export class Grid extends React.Component<IGrid, {}> {
   render() {
     const originalClassName = this.props.className;
-    const attrs = _.omit(this.props, "className", "debugMode", "table", "fillContainer");
+    const attrs = _.omit(this.props, "className", "debugMode", "disableFlexOverride", "fillContainer");
     const classes = classNames(
       originalClassName,
       "grid",
@@ -25,39 +30,64 @@ export class Grid extends React.Component<IGrid, any> {
         "table-grid": this.props.table
       }
     );
-    if (this.props.fillContainer && !this.props.disableFlexOverride){
+    if (this.props.fillContainer && !this.props.disableFlexOverride) {
       return (<div className="flex-override"><div {...attrs} className={classes} /></div>);
     }
-    else{
+    else {
       return (<div {...attrs} className={classes} />);
     }
   }
-  componentDidMount(){
-    if (this.props.fillContainer && !this.props.disableFlexOverride){
+  componentDidMount() {
+    if (this.props.fillContainer && !this.props.disableFlexOverride) {
       (ReactDOM.findDOMNode(this).parentElement as HTMLElement).style.position = "relative";
     }
   }
 }
 
-export interface IColRow extends IRow {
-  centerContent?: CenterContent | CenterBoth;
-  className?: string | MarginClass | PaddingClass | BgColorClass | FgColorClass;
-}
-
 export interface IRow extends React.HTMLProps<Row> {
-  fixed?: boolean | number;
+  /** (number | string) Sets a fixed height for the row, or 'auto' to grow to fit its content */
+  height?: number | string;
+  /** (string) CSS classname property */
   className?: string | MarginClass | PaddingClass | BgColorClass | FgColorClass;
 }
 
 export class Row extends React.Component<IRow, any> {
+  needsFixed(){
+    if (!this.props.height){
+      return false;
+    }
+    if (typeof this.props.height === "number") {
+      return true
+    }else{
+      if (this.props.height === "auto"){
+        return true;
+      }
+    }
+    return false;
+  }
   render() {
-    var attrs = _.omit(this.props, "className", "fixed", "maxCols", "centerContent");
-    var classes = classNames(this.props.className, "row", this.props.fixed ? "no-flex" : "");
+    var attrs = _.omit(this.props, "className", "height");
+    var classes = classNames(this.props.className, "row", this.needsFixed() ? "no-flex" : "");
     var styles = this.props.style;
     var colStyles;
+    if (this.props.height) {
+      if (typeof this.props.height === "number") {
+        styles = _.extend({ height: `${this.props.height}px` }, styles);
+      } else {
+        let hString = (this.props.height as string);
+        let starIndex = hString.indexOf('*');
+        if (this.props.height === "auto"){
 
-    if (typeof this.props.fixed === "number") {
-      styles = _.extend({ height: `${this.props.fixed}px` }, styles);
+        }
+        else if (starIndex !== -1 && parseFloat(hString)) {
+          let hString = (this.props.height as string);
+          var spans = hString.substr(0, starIndex);
+          styles = _.extend({ flex: `${spans}` }, styles);
+        }
+        else{
+          throw new Error(`Unsupported height property '${this.props.height}' on Grid Row. If you are using a string, make sure it is either 'auto' or follows the pattern '[number]*'`)
+        }
+      }
     }
 
     return <div {...attrs} className={classes} style={styles}>
@@ -71,46 +101,69 @@ export class Row extends React.Component<IRow, any> {
 }
 
 export interface ICol extends React.HTMLProps<Col> {
-  centerContent?: CenterContent | CenterBoth;
-  spans?: number;
-  fixed?: boolean | number;
+  /** (HorizontalAlignment(string)) How to align content horizontally in this column */
+  horizontalAlignment?: HorizontalAlignment;
+  /** (HorizontalAlignment(string)) How to align content vertically in this column */
+  verticalAlignment?: VerticalAlignment;
+  /** (number | string) Sets a fixed width for the column, or 'auto' to grow to fit its content */
+  width?: number | string;
+  /** (string) CSS classname property */
   className?: string | MarginClass | PaddingClass | BgColorClass | FgColorClass;
 }
 
 export class Col extends React.Component<ICol, {}> {
+  needsFixed(){
+    if (!this.props.width){
+      return false;
+    }
+    if (typeof this.props.width === "number") {
+      return true
+    }else{
+      if (this.props.width === "auto"){
+        return true;
+      }
+    }
+    return false;
+  }
   render() {
-    const centerClasses = LayoutHelpers.GetAlignment(this.props.centerContent);
+    const alignmentClasses = LayoutHelpers.GetAlignmentClasses(this.props.verticalAlignment, this.props.horizontalAlignment);
     const classes = classNames(
       "col",
       this.props.className,
-      centerClasses,
+      alignmentClasses,
       {
-        "no-flex": this.props.fixed !== undefined,
-        [`col${this.props.spans}`]: this.props.spans !== undefined
+        "no-flex": this.needsFixed(),
       }
     );
 
-    const attrs = _.omit(this.props, "className", "fixed", "spans", "centerContent");
+    const attrs = _.omit(this.props, "className", "width", "horizontalAlignment", "verticalAlignment");
     let styles = this.props.style;
 
-    if (typeof this.props.fixed === "number") {
-      styles = _.extend({ maxWidth: `${this.props.fixed}px`, width: "100%" }, styles);
+
+    if (this.props.width) {
+      if (typeof this.props.width === "number") {
+        styles = _.extend({ maxwidth: `${this.props.width}px`, width: "100%" }, styles);
+      } else {
+        let wString = (this.props.width as string);
+        let starIndex = wString.indexOf('*');
+        if (this.props.width === "auto"){
+
+        }
+        else if (starIndex !== -1 && parseFloat(wString)) {
+          var spans = wString.substr(0, starIndex);
+          styles = _.extend({ flex: `${spans}` }, styles);
+        }
+        else{
+          throw new Error(`Unsupported width property '${this.props.width}' on Grid > Row > Col. If you are using a string, make sure it is either 'auto' or follows the pattern '[number]*'`)
+        }
+      }
+    }
+
+
+    if (typeof this.props.width === "number") {
+      styles = _.extend({ maxWidth: `${this.props.width}px`, width: "100%" }, styles);
     }
 
     return <div {...attrs} className={classes} style={styles} />
-  }
-}
-
-export class SingleColumnRow extends React.Component<IColRow, any> {
-  render() {
-    const centerClasses = LayoutHelpers.GetAlignment(this.props.centerContent);
-    const classes = classNames("row", this.props.className, { "no-flex": this.props.fixed !== undefined });
-    const styles = this.props.style;
-    const attrs = _.omit(this.props, "className", "fixed", "spans", "centerContent");
-
-    return (
-      <div {...attrs} className={classes}>
-        <div className={classNames('col', centerClasses) }>{this.props.children}</div>
-      </div>)
   }
 }
