@@ -1,21 +1,31 @@
-//// SCREEN SIZES
-$screen-size-phone: 480px !default;
-$screen-size-tablet: 860px !default;
-$fixed-screen-size: 960px !default;
+//// FIXED WIDTH SITE WIDTH
+$fixed-site-width: 960px !default;
 
-//// FONT FAMILIIES
-$primary-font: "averta", sans-serif !default;
-$secondary-font: "Caveat", cursive !default;
+
+//// RESPONSIVE SIZES
+$responsive-large: 70rem !default;
+$responsive-medium: 55rem !default;
+$responsive-small: 45rem !default;
+$responsive-xsmall: 35rem !default;
 
 //// FONT SIZES
 $font-size-root: 16px !default;
 
-$font-size-xxsmall: 0.75rem !default;
-$font-size-xsmall: 0.85rem !default;
+$font-size-xxsmall: 0.6rem !default;
+$font-size-xsmall: 0.8rem !default;
 $font-size-small: 1rem !default;
 $font-size-medium: 1.2rem !default;
 $font-size-large: 1.5rem !default;
 $font-size-xlarge: 2rem !default;
+
+$font-sizes:(
+  xxsmall $font-size-xxsmall,
+  xsmall $font-size-xsmall,
+  small $font-size-small,
+  medium $font-size-medium,
+  large $font-size-large,
+  xlarge $font-size-xlarge,
+);
 
 //// SPACINGS
 // Note: If you're adding to this, make sure to update the value and the array
@@ -36,40 +46,42 @@ $spacing-sizes: (
   none 0
 );
 
+//// BUTTON & INPUT SPACINGS
+$field-padding-vertical: 0.75em !default;
+$field-padding-horizontal: 1em !default;
+
 //// COLORS
 $white: #ffffff !default;
 
-$site-background: $white !default;
-
-$brand-primary: #00a388 !default;
+$brand-primary: #cd3939 !default;
 $brand-secondary: #3d4144 !default;
 
 $gray-base: #4f5c69 !default;
 
-$gray-very-dark: darken($gray-base, 40%) !default;
-$gray-dark: darken($gray-base, 20%) !default;
+$gray-very-dark: darken($gray-base, 20%) !default;
+$gray-dark: darken($gray-base, 15%) !default;
 $gray-medium: $gray-base !default;
-$gray-light: lighten($gray-base, 10%) !default;
-$gray-very-light: lighten($gray-base, 15%) !default;
+$gray-light: lighten($gray-base, 50%) !default;
+$gray-very-light: lighten($gray-base, 60%) !default;
 
-$condition-color-positive: #00a388 !default;
-$condition-color-warning: #f78e52 !default;
-$condition-color-negative: #df5a49 !default;
-$condition-color-info: #3498d8 !default;
+$color-positive: #00a388 !default;
+$color-warning: #f78e52 !default;
+$color-negative: #df5a49 !default;
+$color-info: #3498d8 !default;
 
-$condition-colors: (
-  positive $condition-color-positive,
-  warning $condition-color-warning,
-  negative $condition-color-negative,
-  info $condition-color-info,
-  brand-primary $brand-primary,
-  brand-secondary $brand-secondary,
-  gray-very-dark $gray-very-dark,
-  gray-dark $gray-dark,
-  gray-medium $gray-medium,
-  gray-light $gray-light,
-  gray-very-light $gray-very-light,
-  white $white,
+$colors: (
+  'positive' $color-positive,
+  'warning' $color-warning,
+  'negative' $color-negative,
+  'info' $color-info,
+  'brand-primary' $brand-primary,
+  'brand-secondary' $brand-secondary,
+  'gray-very-dark' $gray-very-dark,
+  'gray-dark' $gray-dark,
+  'gray-medium' $gray-medium,
+  'gray-light' $gray-light,
+  'gray-very-light' $gray-very-light,
+  'white' $white
 );
 
 //// CORNERS

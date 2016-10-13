@@ -1,0 +1,181 @@
+/********************************************
+  RESPONSIVE MIXINS
+********************************************/
+
+//// RESPONSIVE SIZE DICTIONARY
+$responsive-sizes: (
+  large $responsive-large,
+  medium $responsive-medium,
+  small $responsive-small,
+  xsmall $responsive-xsmall,
+);
+
+//// BEST MIXIN IN THE WORLD
+@mixin row-setup($column-number, $gutter-width) {
+  flex-flow: row wrap;
+
+  > div,
+  > div.col {
+    flex: 0 0 (100% - ($gutter-width * ($column-number - 1))) / $column-number;
+
+    &:nth-of-type(1n) {
+      margin-right: $gutter-width;
+    }
+
+    &:nth-of-type(#{$column-number}n) {
+      margin-right: 0;
+      margin-left: 0;
+    }
+
+    &.span-cols {
+      margin-right: 0;
+      margin-left: 0;
+      flex: 0 0 100%;
+    }
+  }
+}
+
+//// REMOVE FIXED PROPERTY ON COLUMN
+@mixin unfix() {
+  width: 100%;
+  max-width: none !important;
+  flex: initial;
+  flex-grow: 1;
+  flex-shrink: 0;
+  flex-basis: auto;
+
+  .btn {
+    margin-right: 0;
+    margin-bottom: $spacing-small;
+    margin-left: 0;
+  }
+}
+
+//Remove margin bottom on last col when in 1 col layout mode
+@mixin margin-tidy() {
+  .col:last-of-type {
+    margin-bottom: 0;
+  }
+}
+
+//Center contents
+@mixin center-content() {
+  margin: auto !important;
+  text-align: center;
+}
+
+//Add a margin below the columns
+@mixin spaced() {
+    margin-bottom: $spacing-medium !important;
+}
+
+
+/********************************************
+  DEFAULT RESPONSIVE (NO MEDIA QUERY)
+********************************************/
+
+.grid.rs-xlarge-1col > .row,
+.row.rs-xlarge-1col {
+  @include row-setup(1, 3%);
+  @include margin-tidy();
+}
+
+.grid.rs-xlarge-2col > .row,
+.row.rs-xlarge-2col {
+  @include row-setup(2, 3%);
+}
+
+.grid.rs-xlarge-3col > .row,
+.row.rs-xlarge-3col {
+  @include row-setup(3, 3%);
+}
+
+.grid.rs-xlarge-4col > .row,
+.row.rs-xlarge-4col {
+  @include row-setup(4, 3%);
+}
+
+.col.rs-xlarge-unfix {
+  @include unfix();
+}
+
+.rs-xlarge-full-width {
+  width: 100%;
+}
+
+.rs-xlarge-center-content {
+  @include center-content();
+}
+
+.grid.rs-xlarge-spaced,
+.row.rs-xlarge-spaced {
+  padding-bottom: 0 !important;
+
+  & > .row > .col,
+  > .col {
+    @include spaced();
+  }
+}
+
+.rs-xlarge-hide {
+  display: none !important;
+}
+
+.rs-xlarge-show {
+  display: block !important;
+}
+
+
+/********************************************
+  RESPONSIVE MEDIA QUERY LOOP BEHAVIOURS
+********************************************/
+
+@each $size in $responsive-sizes {
+  @media (max-width: #{nth($size, 2)}) {
+    //Do this loop for each column limit, from 1col to 4col
+
+    @for $n from 1 through 4 {
+      .grid.rs-#{nth($size, 1)}-#{$n}col > .row,
+      .row.rs-#{nth($size, 1)}-#{$n}col {
+        @include row-setup($n, 3%);
+
+        @if $n = 1 {
+          /// REMOVE MARGIN BOTTOM ON LAST COL WHEN IN 1 COL LAYOUT MODE
+          .col:last-of-type {
+            @include margin-tidy;
+          }
+        }
+      }
+      //Unfix a column
+      .col.rs-#{nth($size, 1)}-unfix {
+        @include unfix();
+      }
+      //Center content in a column
+      .rs-#{nth($size, 1)}-center-content {
+        @include center-content();
+      }
+
+      .grid.rs-#{nth($size, 1)}-spaced,
+      .row.rs-#{nth($size, 1)}-spaced {
+        padding-bottom: 0 !important;
+
+        & > .row > .col,
+        > .col {
+          @include spaced();
+        }
+      }
+
+      .rs-#{nth($size, 1)}-hide {
+        display: none !important;
+      }
+
+      .rs-#{nth($size, 1)}-show {
+        display: block !important;
+      }
+
+      .rs-#{nth($size, 1)}-full-width {
+        width: 100%;
+      }
+    }
+  }
+}

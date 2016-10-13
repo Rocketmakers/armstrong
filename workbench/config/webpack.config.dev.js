@@ -8,12 +8,15 @@ var CopyWebpackPlugin = require('copy-webpack-plugin');
 
 var APP_DIR = path.join(__dirname, '../app');
 var buildPath = path.join(__dirname, '../www');
-var tsConfigPath = path.join(__dirname, '../tsconfig.json');
+var tsConfigPath = path.resolve('./app/tsconfig.json');
+
+console.log(tsConfigPath);
 
 var scssLoaders = [
   "style-loader",
   "css-loader?sourceMap",
-  "postcss-loader",
+  "autoprefixer-loader?browsers=last 4 version",
+  "resolve-url-loader",
   "sass-loader?sourceMap&indentedSyntax=false&includePaths[]=" + APP_DIR,
 ];
 
@@ -43,8 +46,5 @@ module.exports = {
     new CopyWebpackPlugin([
       { from: path.resolve('./dev.html'), to: 'index.html' }
     ])
-  ],
-  postcss: function () {
-      return [ require('autoprefixer') ];
-  }
+  ]
 };

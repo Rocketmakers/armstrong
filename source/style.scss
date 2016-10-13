@@ -6,10 +6,11 @@
 
 /*** HELPERS ***/
 @import "./style/helpers/_normalize";
+@import "./style/helpers/_defaults";
 @import "./style/helpers/_colors";
 @import "./style/helpers/_helpers";
 @import "./style/helpers/_spacing";
-@import "./style/helpers/_typography";
+@import "./style/helpers/_fontsizes";
 
 /*** COMPONENTS ***/
 
@@ -17,18 +18,8 @@
 @import "./components/display/image";
 @import "./components/display/dialog";
 
-// form
-@import "./components/form/inputs/checkboxInput";
-@import "./components/form/inputs/radioInput";
-@import "./components/form/inputs/selectInput";
-@import "./components/form/inputs/textInput";
-@import "./components/form/inputs/datePickerInput";
-
 // interaction
 @import "./components/interaction/button";
 
 // layout
 @import "./components/layout/grid";
-
-// navigation
-@import "./components/navigation/burgerMenu";

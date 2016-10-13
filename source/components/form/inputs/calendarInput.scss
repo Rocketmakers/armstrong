@@ -7,23 +7,26 @@ $header-height: 40px;
   display: inline-block;
   width: 100%;
 
-  &.disabled {
-    opacity: 0.5;
-    pointer-events: none;
-
-    input {
-      pointer-events: none;
-      background-color: rgba(255, 255, 255, 0.4);
-
-      &:focus {
-        border: 1px solid rgba(255, 255, 255, 0.3) !important;
-      }
-    }
+  .clear-date-button{
+    cursor: pointer;
+    top: calc(#{$field-padding-vertical} + 8px);
+    position: absolute;
+    right: calc(#{$field-padding-horizontal} + 1.6em);
   }
 
+  &.disabled {
+    i{
+      opacity: 0.3;
+    }
+  }
+  .cal-input{
+    color: transparent;
+    text-shadow: 0 0 0 $gray-dark;
+    cursor: pointer;
+  }
   &.has-icon {
     input {
-      padding-left: 33px;
+      padding-left: calc(#{$field-padding-horizontal} + 1.5em);
     }
 
     i {
@@ -31,7 +34,7 @@ $header-height: 40px;
       z-index: 2;
       transform: translateY(-50%);
       top: 50%;
-      left: 10px;
+      left: $field-padding-horizontal;
     }
   }
 
@@ -74,7 +77,7 @@ $header-height: 40px;
     &.always-show-calendar {
       display: block;
     }
-    position: absolute;
+    position: fixed;
     width: 100%;
     background-color: white;
     z-index: 10;
@@ -89,7 +92,7 @@ $header-height: 40px;
   }
 
   .date-picker-top {
-    transform: translateY(-100%);
+    transform: translateY(calc(-100% - 40px));
     top: -10px;
   }
 
@@ -129,34 +132,5 @@ $header-height: 40px;
 .date-picker {
   .date-picker-body.always-show-calendar {
     box-shadow: none;
-  }
-}
-
-@include responsive-behaviour-phone {
-  .date-picker-body.responsive {
-    background-color: rgba(0, 0, 0, 0.3);
-    height: 100vh;
-    width: 100vw;
-    position: fixed !important;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-
-    .date-picker-body-wrapper {
-      height: 350px;
-      width: calc(100% - 20px);
-      background-color: white;
-      position: absolute;
-      top: 50%;
-      left: 10px;
-      transform: translateY(-55%);
-
-      .date-picker-days {
-        > div {
-          line-height: 30px;
-        }
-      }
-    }
   }
 }

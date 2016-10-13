@@ -1,15 +1,3 @@
-@mixin responsive-behaviour-phone {
-    @media (max-width: $screen-size-phone) {
-        @content;
-    }
-}
-
-@mixin responsive-behaviour-tablet {
-    @media (max-width: $screen-size-tablet) and (min-width: $screen-size-phone) {
-        @content;
-    }
-}
-
 @mixin reset-appearance {
     resize: none;
     outline: none;
@@ -18,9 +6,8 @@
 }
 
 @mixin button-shadow($color) {
-    background-color: $color;
     box-shadow: 0 4px 0 $color / 1.2;
-    &:active{
+    &:active:not(:disabled){
       box-shadow: 0 2px 0 $color / 1.2;
     }
 }
@@ -31,4 +18,9 @@
        -moz-animation-timing-function: cubic-bezier($t1, $t2, $t3, $t4);
          -o-animation-timing-function: cubic-bezier($t1, $t2, $t3, $t4);
             animation-timing-function: cubic-bezier($t1, $t2, $t3, $t4);
+}
+
+%input-disabled{
+  color: rgba(0, 0, 0, 0.3);
+  background-color: $gray-very-light;
 }

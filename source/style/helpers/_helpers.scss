@@ -7,24 +7,26 @@
     left: 0;
     right: 0;
     bottom: 0;
+    padding-left: inherit;
+    padding-right: inherit;
+    padding-top: inherit;
+    padding-bottom: inherit;
+    box-sizing: border-box;
 }
 
-.float-left{
-    float: left;
-}
-
-.float-right{
-    float: right;
-}
-
-.text-align-center{
+.t-align-center{
     text-align: center;
 }
 
-.text-align-left{
+.t-align-left{
     text-align: left;
 }
 
-.text-align-right{
+.t-align-right{
     text-align: right;
+}
+
+.width-wrapper{
+    max-width: $fixed-site-width;
+    margin: 0 auto;
 }

@@ -1,12 +1,9 @@
 /*********************************************************************************************
   ARMSTRONG SCSS EXPORTS - IMPORTS
   all scss to be consumed must be exported here.
-  EVERYTHING IN HERE WILL BE IMPORTED MULTIPLE TIMES AND SHOULD BE EXPORTING "VIRTUAL" SCSS
+  EVERYTHING IN HERE WILL BE IMPORTED MULTIPLE TIMES AND SHOULD BE EXPORTING "VIRTUAL" SCSS OR MIXINS
 **********************************************************************************************/
 
 @import "./style/imports/_variables";
 @import "./style/imports/_mixins";
-@import './style/imports/_ui-spacing';
-@import './style/imports/_ui-colors';
-
-@import './components/layout/_gridImports';
+@import "./style/imports/_family";

@@ -1,0 +1,54 @@
+body{
+  font-family: -apple-system, BlinkMacSystemFont,
+    "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans",
+    "Droid Sans", "Helvetica Neue", sans-serif
+    }
+
+p{
+  margin: 0;
+  margin-bottom: $spacing-small;
+}
+
+pre{
+  -webkit-margin-before: 0;
+  -webkit-margin-after: 0;
+  margin: 0;
+}
+
+h1,h2,h3,h4,h5,h6{
+  -webkit-margin-before: 0;
+  -webkit-margin-after: 0;
+  margin: 0;
+  margin-bottom: $spacing-small;
+}
+
+h1{
+  font-size: $font-size-xlarge;
+  font-weight: bold;
+}
+
+h2{
+  font-size: $font-size-large;
+  font-weight: bold;
+}
+
+h3{
+  font-size: $font-size-medium;
+  font-weight: bold;
+}
+
+ul, li{
+  margin: 0;
+  padding: 0;
+  -webkit-padding-start: 0;
+}
+
+ul{
+  margin-top: $spacing-small;
+}
+
+li{
+  margin-left: $spacing-small*1.1;
+  margin-bottom: $spacing-xxsmall
+}

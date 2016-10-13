@@ -3,7 +3,7 @@ import * as React from "react";
 import {Form} from "../form";
 
 export interface IRadioInputProps extends React.HTMLProps<RadioInput> {
-    label: string;
+    labelContent: string | React.ReactElement<any>;
 }
 
 export class RadioInput extends React.Component<IRadioInputProps, {}> {
@@ -11,8 +11,9 @@ export class RadioInput extends React.Component<IRadioInputProps, {}> {
         var id = "radio_" + Math.random();
         return (
             <div className="radio">
-            <input id={id} {...this.props as any} type="radio"/>
-            <label htmlFor={id}>{this.props.label}</label>
+            <input id={id} { ..._.omit(this.props, "labelContent") } type="radio"/>
+            <label htmlFor={id}/>
+            <label className="radio-label" htmlFor={id}>{this.props.labelContent}</label>
             </div>
         );
     }

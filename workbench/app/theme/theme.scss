@@ -1,9 +1,26 @@
-@import "fonts";
 @import "icomoon";
 
 @import "./../../../source/imports";
 @import "./../../../source/style";
+@import "./../../../source/form";
+@import "./../../../source/responsive";
 
-body, main, html, #app-content {
+body, main, html, #host {
   height: 100%;
+  font-size: 16px;
+}
+
+.header{
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 2;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+  +div{
+    padding-top: 60px;
+  }
+}
+
+.bg-gray-semi{
+  background-color: transparentize($color: $gray-dark, $amount: 0.2)
 }

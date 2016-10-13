@@ -1,5 +1,4 @@
 %placeholder {
-  font-style: italic;
   color: rgba(0, 0, 0, 0.4);
 }
 
@@ -17,15 +16,17 @@ input[type='date'],
 select,
 textarea {
   @include reset-appearance;
+  background-color: $white;
   box-sizing: border-box;
   width: 100%;
-  height: $form-field-height;
-  padding: 10px;
+  // BUG : Chrome doesnt give many f's about borders and box sizing
+  padding: calc(#{$field-padding-vertical} - 1px) $field-padding-horizontal;
   border: 1px solid $gray-light;
   border-radius: $corner-radius-small;
+  text-align: left;
 
   &:focus {
-    border: 1px solid $condition-color-info;
+    border: 1px solid $color-info;
   }
 
   // BUG : If all browser pfs extend placeholder, chrome stops working :(
@@ -34,47 +35,55 @@ textarea {
   }
 
   &::-moz-placeholder {
-    font-style: italic;
-
     /* Firefox 19+ */
     color: rgba(0, 0, 0, 0.4);
   }
 
   &:-ms-input-placeholder {
-    font-style: italic;
     color: rgba(0, 0, 0, 0.4);
   }
 
   &:focus:required:invalid {
-    border-color: red;
+    border-color: $color-negative;
   }
 
   &[readonly] {
-    background-color: rgba(255, 255, 255, 0.4);
+    color: rgba(0, 0, 0, 0.3);
+    background-color: $gray-very-light;
 
-    &:focus {
-      border: 1px solid rgba(255, 255, 255, 0.3) !important;
+    i {
+      color: rgba(0, 0, 0, 0.3);
+    }
+    &:focus{
+      border: 1px solid $gray-light;
     }
   }
 }
 
 textarea:focus {
   // BUG : Text areas seem to need additional offset to stop pixel jumping
-  margin-bottom: 12px;
 }
 
-.text-input-disabled {
-  input[type='text'],
+
+
+select:disabled{
+    @extend %input-disabled;
+}
+
+input[type='text'],
   input[type='email'],
   input[type='number'],
   input[type='search'],
   input[type='password'],
   input[type='url'],
-  textarea {
-    color: rgba(0, 0, 0, 0.3);
-    background-color: rgba(0, 0, 0, 0.1);
+  textarea{
+    &:disabled{
+    @extend %input-disabled;
+    }
   }
 
+
+.text-input-disabled {
   i {
     color: rgba(0, 0, 0, 0.3);
   }
@@ -82,13 +91,12 @@ textarea:focus {
 
 .text-input {
   position: relative;
-  padding-right: 1px;
 
   &.text-input-icon-right,
   &.text-input-icon-left {
     i {
       position: absolute;
-      z-index: 5;
+      z-index: 2;
       top: 50%;
       transform: translateY(-50%);
     }
@@ -114,17 +122,31 @@ textarea:focus {
     }
   }
 
-  &.has-text-overlay {
+  &.has-text-overlay-right {
     input,
     textarea {
-      padding-right: 30px;
+      padding-right: $spacing-large * 0.9;
+    }
+  }
+
+  &.has-text-overlay-left {
+    input,
+    textarea {
+      padding-left: $spacing-large * 0.9;
     }
   }
 }
 
-.input-overlay-text {
+.input-overlay-text-right {
   position: absolute;
   top: 12px;
-  right: 10px;
+  right: 18px;
+  opacity: 0.4;
+}
+
+.input-overlay-text-left {
+  position: absolute;
+  top: 12px;
+  left: 18px;
   opacity: 0.4;
 }

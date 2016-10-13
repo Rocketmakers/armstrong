@@ -4,22 +4,26 @@ import * as _ from "underscore";
 export type IdEntity = {id: string};
 export type NumericIdEntity = {id: number};
 
-export interface IValueConverter<D, V>{
-  convert?: IItemValueConverter<D, V>;
-  convertBack?: IItemValueConverter<V, D>;
+/** The core value converter */
+export interface IValueConverter<TFrom, TTo>{
+  convert?: IOneWayValueConverter<TFrom, TTo>;
+  convertBack?: IOneWayValueConverter<TTo, TFrom>;
 }
 
-export interface IItemValueConverter<D, V>{
-  (from: D): V;
+/** The core one way value converter */
+export interface IOneWayValueConverter<TFrom, TTo>{
+  (from: TFrom): TTo;
 }
 
-export interface IInputValueConverter<D> extends IValueConverter<D, string>{
+/** The core 'text' input value converter (always requires a string ) */
+export interface IInputValueConverter<TDataPropValue> extends IValueConverter<TDataPropValue, string>{
 }
 
-export class CheckboxValueConverter<D> implements IValueConverter<D, boolean> {
-  constructor(private trueValue: D, private falseValue: D){
+/** The core 'checkbox' input value converter (always requires a boolean) */
+export class CheckboxValueConverter<TDataPropValue> implements IValueConverter<TDataPropValue, boolean> {
+  constructor(private trueValue: TDataPropValue, private falseValue: TDataPropValue){
   }
-  convert(data: D){
+  convert(data: TDataPropValue){
     return data === this.trueValue;
   }
 
@@ -32,38 +36,43 @@ export class CheckboxValueConverter<D> implements IValueConverter<D, boolean> {
   }
 }
 
+/** Converts numeric id of property item to string  */
 export class IdEntityValueConverter implements IInputValueConverter<IdEntity> {
-  constructor(public convertBack: IItemValueConverter<string, IdEntity>){
+  constructor(public convertBack: IOneWayValueConverter<string, IdEntity>){
   }
   convert(data: IdEntity){
     return !data ? "0" : data.id;
   }
 }
 
+/** Pass-through converter - used for setting string id value on bound property item */
 export class IdValueConverter implements IInputValueConverter<string> {
-  constructor(public convertBack: IItemValueConverter<string, string>){
+  constructor(public convertBack: IOneWayValueConverter<string, string>){
   }
   convert(data: string){
     return data;
   }
 }
 
+/** Converts numeric id of item to string  */
 export class NumericIdEntityValueConverter implements IInputValueConverter<NumericIdEntity> {
-  constructor(public convertBack: IItemValueConverter<string, NumericIdEntity>){
+  constructor(public convertBack: IOneWayValueConverter<string, NumericIdEntity>){
   }
   convert(data: NumericIdEntity){
-    return !data || _.isUndefined(data) || _.isNull(data) ? "0" : data.id.toString();
+    return !data || !_.isNumber(data.id) || isNaN(data.id)  ? "0" : data.id.toString();
   }
 }
 
+/** Converts string to number - used for setting numeric id value on bound element */
 export class NumericIdValueConverter implements IInputValueConverter<number> {
-  constructor(public convertBack: IItemValueConverter<string, number>){
+  constructor(public convertBack: IOneWayValueConverter<string, number>){
   }
   convert(data: number){
-    return _.isUndefined(data) || _.isNull(data) ? "0" : data.toString();
+    return !_.isNumber(data) || isNaN(data) ? "0" : data.toString();
   }
 }
 
+/** The Default pass-through Value converter */
 export class DefaultValueConverter implements IInputValueConverter<string> {
   convert(data: string){
     return data;
@@ -75,48 +84,53 @@ export class DefaultValueConverter implements IInputValueConverter<string> {
 }
 
 export interface INumericOptions{
+  /** allow negative values? */
   allowNegative?: boolean;
+  /** number of decimals */
   decimals?: number;
+  /** min value */
   min?: number;
+  /** max value */
   max?: number;
+  /** range step */
+  step?: number;
 }
 
+/** A Numeric Value converter written to handle Text Input */
 export class NumericValueConverter implements IInputValueConverter<number> {
   constructor(private options?: INumericOptions){
   }
 
   convert(data: number){
-    const decimals = this.options && this.options.decimals;
-    return _.isUndefined(data) || _.isNull(data) ? null : data.toFixed(decimals);
+    return _.isUndefined(data) || _.isNull(data) ? null : data.toFixed(this.options && this.options.decimals);
   }
 
   convertBack(value: string){
     try{
-      console.log("value", value)
       if (!value.length) {
         return null;
       }
+
       if (value.length === 1 && value === "-") {
         return 0;
       }
+
       if (value.length === 2 && value === "-.") {
         return 0;
       }
+
       const decimals = this.options && this.options.decimals;
       let v = decimals ? parseFloat(value) : parseInt(value);
       if (isNaN(v)) {
         return;
       }
+
       if (this.options){
         if (!_.isUndefined(this.options.max)){
-          if (v > this.options.max){
-            v = this.options.max;
-          }
+          v = Math.min(v, this.options.max)
         }
         if (!_.isUndefined(this.options.min)){
-          if (v < this.options.min){
-            v = this.options.min;
-          }
+          v = Math.max(v, this.options.min)
         }
       }
 
@@ -127,4 +141,6 @@ export class NumericValueConverter implements IInputValueConverter<number> {
     }catch(e){
     }
   }
+
+  static instance = new NumericValueConverter();
 }
