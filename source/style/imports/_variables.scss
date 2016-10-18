@@ -44,7 +44,7 @@ $spacing-sizes: (
   large $spacing-large,
   xlarge $spacing-xlarge,
   none 0
-);
+) !default;
 
 //// BUTTON & INPUT SPACINGS
 $field-padding-vertical: 0.75em !default;
@@ -82,7 +82,7 @@ $colors: (
   'gray-light' $gray-light,
   'gray-very-light' $gray-very-light,
   'white' $white
-);
+) !default;
 
 //// CORNERS
 $corner-radius-small: 5px !default;
