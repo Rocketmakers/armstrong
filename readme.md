@@ -17,7 +17,7 @@ There are also now more files to import to cut down on size. They are self expla
 @import "~armstrong-react/dist/style";
 @import "~armstrong-react/dist/form";
 @import "~armstrong-react/dist/responsive";
-@import "~armstrong-react/dist/nav";
+@import "~armstrong-react/dist/navigation";
 ```
 
 #### Grid - CenterContent
