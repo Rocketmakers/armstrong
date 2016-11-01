@@ -16,7 +16,7 @@ $responsive-sizes: (
 
   > div,
   > div.col {
-    flex: 0 0 (100% - ($gutter-width * ($column-number - 1))) / $column-number;
+    flex: 0 0 (100% - ($gutter-width * ($column-number - 1))) / $column-number !important;
 
     &:nth-of-type(1n) {
       margin-right: $gutter-width;

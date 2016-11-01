@@ -17,12 +17,13 @@ export class Home extends React.Component<{}, { dialogOpen: boolean }> {
   }
   public render() {
     return (
-        <Grid debugMode={false} fillContainer={false}>
-          <Row>
-          <Col><Button>I am button</Button></Col>
-          </Row>
-
-        </Grid>
+      <Grid debugMode={false} fillContainer={false}>
+        <Row className="rs-large-2col">
+          <Col width="1*"><Button>I am button</Button></Col>
+          <Col width="2*"><Button>I am button</Button></Col>
+          <Col width="1*"><Button>I am button</Button></Col>
+        </Row>
+      </Grid>
     );
   }
 }
