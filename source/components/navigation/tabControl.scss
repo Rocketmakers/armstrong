@@ -1,0 +1,32 @@
+.tab-control {
+  .tab-item-header {
+    transition: background-color 0.1s;
+    cursor: pointer;
+    display: inline-block;
+    padding: $field-padding-vertical $field-padding-horizontal;
+    background-color: $gray-light;
+
+    &.selected {
+      background-color: $gray-medium;
+      color: $white;
+    }
+  }
+
+  &.tabs-right {
+    .tab-control-header {
+      text-align: right;
+      .tab-item-header{
+        margin-left: $spacing-xsmall;
+      }
+    }
+  }
+
+  &.tabs-left {
+    .tab-control-header {
+      text-align: left;
+      .tab-item-header{
+        margin-right: $spacing-xsmall;
+      }
+    }
+  }
+}
