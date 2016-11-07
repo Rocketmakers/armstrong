@@ -33,7 +33,7 @@ export { Icons } from "./utilities/icons";
 
 // navigation
 export { BurgerMenu, IBurgerMenuProps, BurgerMenuItem, IBurgerMenuItemProps } from "./components/navigation/burgerMenu";
-export { TabControl, TabItem, ITabItemProps, ITabControlProps } from "./components/navigation/tabControl";
+export { TabControl, TabItem, ITabItemProps, ITabControlProps, ITabControlState } from "./components/navigation/tabControl";
 
 import * as ArmstrongConfig from "./config/config"
 export { ArmstrongConfig };

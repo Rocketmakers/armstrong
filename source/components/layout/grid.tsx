@@ -15,6 +15,8 @@ export interface IGrid extends React.HTMLProps<Grid> {
   table?: boolean;
   /** (boolean) Wether the table should expand and divide to fill its container */
   fillContainer?: boolean;
+  /** (Row[]) A grid must contain one or many <Row/> elements */
+  children?: Row[] | Row;
 }
 
 export class Grid extends React.Component<IGrid, {}> {
@@ -49,6 +51,8 @@ export interface IRow extends React.HTMLProps<Row> {
   height?: number | string;
   /** (string) CSS classname property */
   className?: string | MarginClass | PaddingClass | BgColorClass | FgColorClass;
+  /** (Col[]) A row must contain one or many <Col/> elements */
+  children?: Col[] | Col;
 }
 
 export class Row extends React.Component<IRow, any> {

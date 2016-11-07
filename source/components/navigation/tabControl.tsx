@@ -5,12 +5,17 @@ import { Icons } from "./../../utilities/icons";
 import { Icon } from "./../display/icon";
 
 export interface ITabControlProps extends React.HTMLProps<TabControl> {
+  /** (number) The index of the tab selected when the control renders. Defaults to 0 */
+  defaultSelectedIndex?: number;
+  /** (TabItem[]) The tab items. Controls the header and the content */
   children?: TabItem[];
+  /** ((index: number) => void) Fires when the tab is changed by the user */
   onTabChanged?: (index: number) => void;
+  /** ('left' | 'right') Wether to align the tabs to the right or left of the header. Defaults to left */
   tabAlignment?: "left" | "right";
 }
 
-interface ITabControlState {
+export interface ITabControlState {
   selectedTabIndex?: number;
 }
 
@@ -25,6 +30,11 @@ export class TabControl extends React.Component<ITabControlProps, ITabControlSta
         this.props.onTabChanged(newIndex);
       }
     })
+  }
+  componentWillMount(){
+    if (this.props.defaultSelectedIndex !== undefined){
+      this.setState({ selectedTabIndex: this.props.defaultSelectedIndex })
+    }
   }
   render() {
     const attrs = _.omit(this.props, "className");
@@ -57,7 +67,9 @@ export class TabControl extends React.Component<ITabControlProps, ITabControlSta
 
 
 export interface ITabItemProps extends React.HTMLProps<TabItem> {
+  /** (string | JSX.Element) The content to use in the tab items header */
   title: any;
+  /** (string (Icomoon)) An optional icon to show to the left of the title in the tab header */
   icon?: string;
 }
 

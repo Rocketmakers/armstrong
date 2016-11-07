@@ -15,18 +15,12 @@
   &.tabs-right {
     .tab-control-header {
       text-align: right;
-      .tab-item-header{
-        margin-left: $spacing-xsmall;
-      }
     }
   }
 
   &.tabs-left {
     .tab-control-header {
       text-align: left;
-      .tab-item-header{
-        margin-right: $spacing-xsmall;
-      }
     }
   }
 }
