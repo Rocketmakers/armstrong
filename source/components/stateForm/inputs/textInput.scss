@@ -1,0 +1,146 @@
+%placeholder {
+  color: rgba(0, 0, 0, 0.4);
+}
+
+textarea {
+  min-height: 120px;
+}
+
+input[type='text'],
+input[type='email'],
+input[type='number'],
+input[type='search'],
+input[type='password'],
+input[type='url'],
+input[type='date'],
+select,
+textarea {
+  @include reset-appearance;
+  background-color: $white;
+  box-sizing: border-box;
+  width: 100%;
+  // BUG : Chrome doesnt give many f's about borders and box sizing
+  padding: calc(#{$field-padding-vertical} - 1px) $field-padding-horizontal;
+  border: 1px solid $gray-light;
+  border-radius: $corner-radius-small;
+  text-align: left;
+
+  &:focus {
+    border: 1px solid $color-info;
+  }
+
+  // BUG : If all browser pfs extend placeholder, chrome stops working :(
+  &::-webkit-input-placeholder {
+    @extend %placeholder;
+  }
+
+  &::-moz-placeholder {
+    /* Firefox 19+ */
+    color: rgba(0, 0, 0, 0.4);
+  }
+
+  &:-ms-input-placeholder {
+    color: rgba(0, 0, 0, 0.4);
+  }
+
+  &:focus:required:invalid {
+    border-color: $color-negative;
+  }
+
+  &[readonly] {
+    color: rgba(0, 0, 0, 0.3);
+    background-color: $gray-very-light;
+
+    i {
+      color: rgba(0, 0, 0, 0.3);
+    }
+    &:focus{
+      border: 1px solid $gray-light;
+    }
+  }
+}
+
+select:disabled{
+    @extend %input-disabled;
+}
+
+input[type='text'],
+  input[type='email'],
+  input[type='number'],
+  input[type='search'],
+  input[type='password'],
+  input[type='url'],
+  textarea{
+    &:disabled{
+    @extend %input-disabled;
+    }
+  }
+
+
+.text-input-disabled {
+  i {
+    color: rgba(0, 0, 0, 0.3);
+  }
+}
+
+.text-input {
+  position: relative;
+
+  &.text-input-icon-right,
+  &.text-input-icon-left {
+    i {
+      position: absolute;
+      z-index: 2;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+  }
+
+  &.text-input-icon-left {
+    i {
+      left: $spacing-small;
+    }
+
+    input {
+      padding-left: $spacing-large * 0.9;
+    }
+  }
+
+  &.text-input-icon-right {
+    i {
+      right: $spacing-small;
+    }
+
+    input {
+      padding-right: $spacing-large * 0.9;
+    }
+  }
+
+  &.has-text-overlay-right {
+    input,
+    textarea {
+      padding-right: $spacing-large * 0.9;
+    }
+  }
+
+  &.has-text-overlay-left {
+    input,
+    textarea {
+      padding-left: $spacing-large * 0.9;
+    }
+  }
+}
+
+.input-overlay-text-right {
+  position: absolute;
+  top: 12px;
+  right: 18px;
+  opacity: 0.4;
+}
+
+.input-overlay-text-left {
+  position: absolute;
+  top: 12px;
+  left: 18px;
+  opacity: 0.4;
+}

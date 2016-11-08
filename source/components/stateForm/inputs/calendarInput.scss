@@ -1,0 +1,136 @@
+$header-height: 40px;
+
+.date-picker {
+  box-sizing: border-box;
+  overflow: visible;
+  position: relative;
+  display: inline-block;
+  width: 100%;
+
+  .clear-date-button{
+    cursor: pointer;
+    top: calc(#{$field-padding-vertical} + 8px);
+    position: absolute;
+    right: calc(#{$field-padding-horizontal} + 1.6em);
+  }
+
+  &.disabled {
+    i{
+      opacity: 0.3;
+    }
+  }
+  .cal-input{
+    color: transparent;
+    text-shadow: 0 0 0 $gray-dark;
+    cursor: pointer;
+  }
+  &.has-icon {
+    input {
+      padding-left: calc(#{$field-padding-horizontal} + 1.5em);
+    }
+
+    i {
+      position: absolute;
+      z-index: 2;
+      transform: translateY(-50%);
+      top: 50%;
+      left: $field-padding-horizontal;
+    }
+  }
+
+  input {
+    box-sizing: border-box;
+  }
+
+  .date-picker-header {
+    background-color: $gray-base;
+    height: $header-height;
+    line-height: $header-height;
+    color: white;
+
+    .row {
+      .col {
+        text-align: center;
+      }
+
+      .col:first-of-type,
+      .col:last-of-type {
+        padding: 0 15px;
+        cursor: pointer;
+        background-color: rgba(0, 0, 0, 0.1);
+      }
+    }
+  }
+
+  .date-picker-week-day {
+    background-color: white;
+    cursor: default;
+  }
+
+  .date-picker-body {
+    min-width: 300px;
+    max-width: 350px;
+    box-sizing: border-box;
+    display: none;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+
+    &.always-show-calendar {
+      display: block;
+    }
+    position: fixed;
+    width: 100%;
+    background-color: white;
+    z-index: 10;
+
+    &.date-picker-body-visible {
+      display: block;
+    }
+
+    > .grid .row .col {
+      text-align: center;
+    }
+  }
+
+  .date-picker-top {
+    transform: translateY(calc(-100% - 40px));
+    top: -10px;
+  }
+
+  .date-picker-days {
+    box-sizing: border-box;
+    padding: 20px;
+    display: flex;
+    flex-flow: row wrap;
+
+    > div {
+      box-sizing: border-box;
+      cursor: pointer;
+      text-align: center;
+      padding: 5px;
+      flex-basis: percentage(1 / 7);
+
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.1);
+      }
+
+      &.selected-day {
+        background-color: $brand-primary;
+        color: white;
+      }
+
+      &.not-in-month {
+        opacity: 0.5;
+      }
+
+      &.day-disabled {
+        opacity: 0.2;
+      }
+    }
+  }
+}
+
+.date-picker {
+  .date-picker-body.always-show-calendar {
+    box-shadow: none;
+  }
+}

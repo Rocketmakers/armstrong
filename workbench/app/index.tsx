@@ -32,9 +32,6 @@ class App extends React.Component<any, { nav: boolean }> {
       <main>
         <Grid debugMode={true} fillContainer={true}>
           <Row>
-          <Col horizontalAlignment="center" verticalAlignment="center">
-          <div>hello</div>
-          </Col>
             <Col className="bg-gray-dark"/>
             <Col width={1100} className="p-large">
               { this.props.children }

@@ -35,5 +35,10 @@ export { Icons } from "./utilities/icons";
 export { BurgerMenu, IBurgerMenuProps, BurgerMenuItem, IBurgerMenuItemProps } from "./components/navigation/burgerMenu";
 export { TabControl, TabItem, ITabItemProps, ITabControlProps, ITabControlState } from "./components/navigation/tabControl";
 
+// utility
+export { Sample, ISampleProps, IPropInfo } from "./components/utility/sample";
+
 import * as ArmstrongConfig from "./config/config"
 export { ArmstrongConfig };
+
+

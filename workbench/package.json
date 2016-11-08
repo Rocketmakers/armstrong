@@ -20,6 +20,7 @@
     "css-loader": "^0.23.0",
     "extract-text-webpack-plugin": "^1.0.1",
     "file-loader": "^0.8.5",
+    "jsx-to-string": "^0.2.16",
     "node-sass": "3.8.0",
     "parallelshell": "^2.0.0",
     "postcss-loader": "^0.8.2",
