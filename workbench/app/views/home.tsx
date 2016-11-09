@@ -7,6 +7,7 @@ import { Grid, Row, Col } from  './../../../source/components/layout/grid';
 import { SelectInput } from  './../../../source/components/form/inputs/selectInput';
 import { Sample } from './../../../source/components/utility/sample';
 import { StateForm } from './../components/stateForm';
+import { NameForm } from './../components/nameForm';
 
 export class Home extends React.Component<{}, {}> {
   private tabControl: TabControl;
@@ -14,9 +15,8 @@ export class Home extends React.Component<{}, {}> {
   public render() {
     return (
       <div>
+      <NameForm/>
       <StateForm onSave={(d)=> alert(JSON.stringify(d)) }/>
-
-
 
         <Sample title="Select Input"
         description="A select input with 4 options"

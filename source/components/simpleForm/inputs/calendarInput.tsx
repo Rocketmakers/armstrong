@@ -9,8 +9,7 @@ import { DateHelpers } from './../../../utilities/dateHelpers';
 import { Grid, Row, Col } from "./../../layout/grid";
 import { Icons } from './../../../utilities/icons';
 import { Icon } from './../../display/icon';
-import { Binder } from "./../binder"
-import { IFormInput } from "./../formInput"
+import { Binder, IFormBinding } from "./../binder"
 
 export interface ICalendarInputProps extends React.Props<CalendarInput> {
   className?: string;
@@ -34,7 +33,7 @@ export interface ICalendarInputState {
 
 const isoFormat = "YYYY-MM-DD";
 
-export class CalendarInput extends React.Component<ICalendarInputProps & IFormInput, ICalendarInputState> {
+export class CalendarInput extends React.Component<ICalendarInputProps & IFormBinding, ICalendarInputState> {
   static Icomoon = Icons.Icomoon;
 
   private format: string;
@@ -47,10 +46,10 @@ export class CalendarInput extends React.Component<ICalendarInputProps & IFormIn
     locale: 'en-gb'
   }
 
-  constructor(props: ICalendarInputProps & IFormInput) {
+  constructor(props: ICalendarInputProps & IFormBinding) {
     super(props);
     this.format = this.props.nativeInput ? isoFormat : props.format;
-    const initialDate = props.data[this.props.prop]  ? moment(props.data[this.props.prop], isoFormat, true) : null;
+    const initialDate = props.data[this.props.prop] ? moment(props.data[this.props.prop], isoFormat, true) : null;
     let inputValue = "";
     let selectedMonthStart = moment().startOf('month');
     if (initialDate) {
@@ -63,7 +62,7 @@ export class CalendarInput extends React.Component<ICalendarInputProps & IFormIn
   change(date: string) {
     Binder.handleChange(this.props.prop, date, "string", this.props.data);
     this.props.context.forceUpdate();
-    this.resetState(this.props);
+    this.resetState(this.props.data[this.props.prop]);
   }
 
   onDaySelected(date: moment.Moment) {
@@ -152,7 +151,7 @@ export class CalendarInput extends React.Component<ICalendarInputProps & IFormIn
       this.change(m.format(isoFormat));
     }
     else {
-      this.resetState(this.props);
+      this.resetState(this.props.data[this.props.prop]);
     }
   }
 
@@ -168,10 +167,9 @@ export class CalendarInput extends React.Component<ICalendarInputProps & IFormIn
     }
   }
 
-  componentWillReceiveProps(nextProps: ICalendarInputProps & IFormInput): void {
-    if (this.props.data[this.props.prop] !== nextProps.data[this.props.prop]) {
-      this.resetState(nextProps);
-    }
+  componentWillReceiveProps(nextProps: ICalendarInputProps & IFormBinding): void {
+    let d = this.props.data[this.props.prop];
+    this.resetState(d);
   }
 
   handleEvent(e) {
@@ -184,15 +182,15 @@ export class CalendarInput extends React.Component<ICalendarInputProps & IFormIn
     }
     document.removeEventListener("mousewheel", this, false);
     if (!this.state.inputValue) {
-      this.resetState(this.props);
+      this.resetState(this.props.data[this.props.prop]);
     }
     else {
       this.setState({ pickerBodyVisible: false });
     }
   }
 
-  resetState(props: ICalendarInputProps & IFormInput): void {
-    const selectedDate = props.data[this.props.prop] ? moment(props.data[this.props.prop], isoFormat, true) : null;
+  resetState(date: string): void {
+    const selectedDate = date ? moment(date, isoFormat, true) : null;
     if (selectedDate) {
       this.setState({
         pickerBodyVisible: false,
@@ -279,6 +277,7 @@ export class CalendarInput extends React.Component<ICalendarInputProps & IFormIn
           <input className="cal-input" ref={i => this.inputElement = i}
             disabled={this.props.disabled}
             type="text"
+            onChange={e => this.checkDate(e.target["value"])}
             value={this.state.inputValue}
             onKeyDown={e => this.handleEvent(e)}
             onFocus={e => this.onInputFocus()} />

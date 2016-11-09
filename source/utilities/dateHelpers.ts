@@ -57,13 +57,14 @@ export class DateHelpers {
 
   static toDateFormat(s: {day?: number, month?: number, year?: number}){
     if (s.day && s.month && s.year) {
-      return moment().set("day", s.day).set("month", s.month-1).set("year", s.year).format("YYYY-MM-DD")
+      let m = moment().set("date", s.day).set("month", s.month-1).set("year", s.year).format("YYYY-MM-DD");
+      return m;
     }
   }
 
   // Time helpers
   static getTimeParts(time: string){
-    let d = moment(time, "HH:mm", true);
+    let d = moment(time, "HH:mm", false);
     return { hours: d.hour(), minutes: d.minute() };
   }
 }

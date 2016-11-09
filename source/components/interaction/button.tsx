@@ -22,7 +22,7 @@ export class Button extends React.Component<IButtonProps, {}>{
   static Icomoon = Icons.Icomoon;
 
   render() {
-    var attrs = _.omit(this.props, "onClick", "leftIcon", "rightIcon", "className", "rounded");
+    var attrs = _.omit(this.props, "onClick", "leftIcon", "rightIcon", "className", "rounded", "context");
     const classes = classNames(
       "btn",
       this.props.className,

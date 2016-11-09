@@ -5,8 +5,7 @@ import * as classNames from "classnames";
 import { Icon } from './../../display/icon';
 import { Grid, Row, Col } from './../../layout/grid';
 import { Button } from './../../interaction/button';
-import { Binder } from "./../binder"
-import { IFormInput } from "./../formInput"
+import { Binder, IFormBinding } from "./../binder"
 
 export interface IAutoCompleteOption {
   id: number;
@@ -18,8 +17,6 @@ export interface IAutoCompleteOption {
 export interface IAutoCompleteInputProps extends React.Props<AutoCompleteInput> {
   /** (string) CSS classname property */
   className?: string;
-  /** (IAutoCompleteOption | IAutoCompleteOption[]) The current/returned value or values if multi select */
-  //value?: IAutoCompleteOption | IAutoCompleteOption[];
   /** (number) No query will get executed until this is met. Defaults to 1 */
   minimumLength?: number;
   /** (string) The text to use a placeholder when no value is present */
@@ -38,8 +35,6 @@ export interface IAutoCompleteInputProps extends React.Props<AutoCompleteInput> 
   hasGoButton?: boolean;
   /** (React.ReactElement<any> | string) The content of the go button. Can be text or any element */
   goButtonContent?: React.ReactElement<any> | string;
-  /** ((IAutoCompleteOption | IAutoCompleteOption[]) => void) Fires when the selection is changed. Returns a single value or an array dependent on multiselect */
-  //onSelected?: (selectedOption: IAutoCompleteOption | IAutoCompleteOption[]) => void;
   /** (number) How many items to show before scrolling. Defaults to 3 */
   visibleItems?: number;
   /** (boolean) If true, shows an X icon to clear selection */
@@ -62,7 +57,7 @@ export interface IAutoCompleteInputState {
   topOffset?: number;
 }
 
-export class AutoCompleteInput extends React.Component<IAutoCompleteInputProps & IFormInput, IAutoCompleteInputState> {
+export class AutoCompleteInput extends React.Component<IAutoCompleteInputProps & IFormBinding, IAutoCompleteInputState> {
   private timer: number;
   // drive this through css ideally. Currently fixed height plus border (50 + 2px)
   private itemHeight = 52;
@@ -144,7 +139,7 @@ export class AutoCompleteInput extends React.Component<IAutoCompleteInputProps &
     }
     this.setState({ filteredOptions: this.props.options || [], selectedValue })
   }
-  componentWillReceiveProps(newProps: IAutoCompleteInputProps & IFormInput) {
+  componentWillReceiveProps(newProps: IAutoCompleteInputProps & IFormBinding) {
     if (this.props.multiSelect) {
       var newMultiValue = newProps.data[newProps.prop] as IAutoCompleteOption[];
       var oldMultiValue = this.state.selectedValue as IAutoCompleteOption[];
@@ -263,10 +258,7 @@ export class AutoCompleteInput extends React.Component<IAutoCompleteInputProps &
       })
 
       this.setState({ selectedValue: ddOptions })
-      this.change(ddOptions)
-      // if (this.props.onSelected) {
-      //   this.props.onSelected(ddOptions);
-      // }
+      this.change(ddOptions);
       let input = ReactDOM.findDOMNode(this).querySelector("input") as HTMLInputElement;
       if (input){
         input.focus()
@@ -275,10 +267,7 @@ export class AutoCompleteInput extends React.Component<IAutoCompleteInputProps &
       let option = options as IAutoCompleteOption;
       // Handle single selection
       this.setState({ selectedValue: option, open: false, query: "", filteredOptions: this.props.options || [], offsetIndex: 0 });
-      this.change(option)
-      // if (this.props.onSelected) {
-      //   this.props.onSelected(option);
-      // }
+      this.change(option);
       document.removeEventListener("click", this, false);
     }
   }

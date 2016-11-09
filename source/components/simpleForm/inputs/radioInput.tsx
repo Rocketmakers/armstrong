@@ -1,15 +1,14 @@
 import * as React from "react";
 import * as _ from "underscore";
 import * as classNames from "classnames";
-import { Binder } from "./../binder";
-import { IFormInput } from "./../formInput";
+import { Binder, IFormBinding } from "./../binder";
 
 interface IRadioInputProps extends React.HTMLProps<RadioInput> {
   value: string | number;
   label: any;
 }
 
-export class RadioInput extends React.Component<IRadioInputProps & IFormInput, {}> {
+export class RadioInput extends React.Component<IRadioInputProps & IFormBinding, {}> {
   change(e) {
     Binder.handleChange(this.props.prop, e.target["value"], "number", this.props.data);
     this.props.context.forceUpdate();

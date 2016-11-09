@@ -1,8 +1,7 @@
 import * as React from "react";
 import * as _ from "underscore";
 import * as classNames from "classnames";
-import { Binder } from "./../binder"
-import { IFormInput } from "./../formInput";
+import { Binder, IFormBinding} from "./../binder"
 
 export interface ISelectInputOption {
   id: number | string;
@@ -13,14 +12,17 @@ export interface ISelectInputProps extends React.HTMLProps<SelectInput> {
   options: ISelectInputOption[];
 }
 
-export class SelectInput extends React.Component<ISelectInputProps & IFormInput, {}> {
+export class SelectInput extends React.Component<ISelectInputProps & IFormBinding, {}> {
   change(e) {
-    Binder.handleChange(this.props.prop, this.props.options[e.target["selectedIndex"]].id, typeof this.props.id, this.props.data);
+    let v = e.target.value;
+    Binder.handleChange(this.props.prop, v, typeof this.props.id, this.props.data);
     this.props.context.forceUpdate();
   }
   render() {
+    let v = this.props.data[this.props.prop];
     var attrs = _.omit(this.props, "prop", "options", "context", "data");
-    return <select {...attrs} onChange={(e) => this.change(e)} defaultValue={this.props.data[this.props.prop]}>
+    return <select {...attrs} onChange={(e) => this.change(e)} value={v || ""}>
+      {this.props.placeholder && <option value="" disabled={true}>{this.props.placeholder}</option>}
       {this.props.options.map(o => <option key={`${this.props.prop}_option_${o.id}`} value={o.id}>{o.name}</option>)}
     </select>
   }

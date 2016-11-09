@@ -1,3 +1,9 @@
+export interface IFormBinding{
+  prop: string;
+  data?: any;
+  context?: any;
+}
+
 export class Binder {
    /** Loop through the property path and update the relevant field on the entity */
    public static handleChange(propName: string, value: any, type: string, entity: any) {

@@ -63,8 +63,9 @@ $header-height: 40px;
   }
 
   .date-picker-week-day {
-    background-color: white;
-    cursor: default;
+    background-color: white !important;
+    cursor: default !important;
+    font-weight: bold;
   }
 
   .date-picker-body {
