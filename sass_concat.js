@@ -25,13 +25,6 @@ importResolve({
     "output": "./dist/form.scss"
 });
 
-// SIMPLE FORM
-importResolve({
-    "ext": "scss",
-    "pathToMain": "./source/simpleForm.scss",
-    "output": "./dist/simpleForm.scss"
-});
-
 // RESPONSIVE
 importResolve({
     "ext": "scss",
