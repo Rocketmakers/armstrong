@@ -3,7 +3,7 @@ import * as _ from "underscore";
 import * as classNames from "classnames";
 import { Binder, IFormBinding } from "./../binder";
 
-interface IRadioInputProps extends React.HTMLProps<RadioInput> {
+export interface IRadioInputProps extends React.HTMLProps<RadioInput> {
   value: string | number;
   label: any;
 }

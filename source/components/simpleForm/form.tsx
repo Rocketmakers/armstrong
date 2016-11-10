@@ -2,7 +2,7 @@ import * as React from "react";
 import * as ReactDOM from "react-dom";
 import * as _ from "underscore";
 
-interface IFormProps extends React.HTMLProps<Form> {
+export interface IFormProps extends React.HTMLProps<Form> {
   /** The object your form is updating */
   entity: any;
 }

@@ -3,7 +3,7 @@ import * as _ from "underscore";
 import * as classNames from "classnames";
 import { Binder, IFormBinding } from "./../binder"
 
-interface ITextInputProps extends React.HTMLProps<TextInput>  {
+export interface ITextInputProps extends React.HTMLProps<TextInput>  {
   multiLine?: boolean;
 }
 

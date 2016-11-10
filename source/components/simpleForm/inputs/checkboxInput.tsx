@@ -3,7 +3,7 @@ import * as _ from "underscore";
 import * as classNames from "classnames";
 import { Binder, IFormBinding } from "./../binder";
 
-interface ICheckboxInputProps extends React.HTMLProps<CheckboxInput> {
+export interface ICheckboxInputProps extends React.HTMLProps<CheckboxInput> {
   label: any;
 }
 
