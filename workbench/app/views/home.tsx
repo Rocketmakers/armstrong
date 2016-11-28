@@ -5,6 +5,8 @@ import { Button } from './../../../source/components/interaction/button';
 import { TabControl, TabItem } from './../../../source/components/navigation/tabControl';
 import { Grid, Row, Col } from  './../../../source/components/layout/grid';
 import { SelectInput } from  './../../../source/components/form/inputs/selectInput';
+import { Form } from  './../../../source/components/form/form';
+import { DateInput, DateInputFormBinder } from  './../../../source/components/form/inputs/dateInput';
 import { Sample } from './../../../source/components/utility/sample';
 import { StateForm } from './../components/stateForm';
 import { NameForm } from './../components/nameForm';
@@ -17,7 +19,6 @@ export class Home extends React.Component<{}, {}> {
       <div>
       <NameForm/>
       <StateForm onSave={(d)=> alert(JSON.stringify(d)) }/>
-
         <Sample title="Select Input"
         description="A select input with 4 options"
         component={
@@ -35,7 +36,7 @@ export class Home extends React.Component<{}, {}> {
             </Row>
           </Grid>
         }/>
-
+        <DateInput futureDates={true} {...Form.Bind.custom(DateInputFormBinder.customValue("date"))} />
         <Sample title="Button"
         description="A green button"
         component={

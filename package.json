@@ -1,6 +1,6 @@
 {
   "name": "armstrong-react",
-  "version": "1.0.15",
+  "version": "1.0.17",
   "description": "Rocketmakers Armstrong library of React components (For projects using npm @types from Typescript 2.0)",
   "main": "./dist/index.js",
   "style": "./dist/style.scss",
@@ -28,7 +28,7 @@
     "@types/classnames": "*",
     "@types/underscore": "*",
     "classnames": "^2.2.5",
-    "moment": "^2.15.1",
+    "moment": "~2.15.1",
     "underscore": "^1.8.3",
     "jsx-to-string": "^0.2.16"
   },
