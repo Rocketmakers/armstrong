@@ -285,7 +285,7 @@ mkdirp@^0.5.0:
   dependencies:
     minimist "0.0.8"
 
-moment@^2.15.1:
+moment@~2.15.1:
   version "2.15.2"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.15.2.tgz#1bfdedf6a6e345f322fe956d5df5bd08a8ce84dc"
 
