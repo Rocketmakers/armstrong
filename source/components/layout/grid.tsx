@@ -22,7 +22,7 @@ export interface IGrid extends React.HTMLProps<Grid> {
 export class Grid extends React.Component<IGrid, {}> {
   render() {
     const originalClassName = this.props.className;
-    const attrs = _.omit(this.props, "className", "debugMode", "disableFlexOverride", "fillContainer");
+    const attrs = _.omit(this.props, "className", "debugMode", "disableFlexOverride", "table", "fillContainer");
     const classes = classNames(
       originalClassName,
       "grid",
