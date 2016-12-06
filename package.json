@@ -7,11 +7,10 @@
   "typings": "./dist/index.d.ts",
   "scripts": {
     "build": "tsc -p source -d && node sass_concat.js",
-    "prepublish": "npm run build",
     "patch": "npm --no-git-tag-version version patch -m \"Upgrade to %s\"",
     "prerelease": "npm --no-git-tag-version version prerelease -m \"Upgrade to %s\"",
-    "patch-publish": "npm run patch && npm publish",
-    "prerelease-publish": "npm run prerelease && npm publish"
+    "patch-publish": "npm run build && npm run patch && npm publish",
+    "prerelease-publish": "npm run build && npm run prerelease && npm publish"
   },
   "repository": {
     "type": "git",
