@@ -8,6 +8,7 @@ import { Image } from './../../source/components/display/image';
 
 // VIEWS
 import { Home } from "./views/home";
+import { Test } from "./views/test";
 
 import { setLocale } from "../../source/config/config";
 
@@ -46,4 +47,4 @@ class App extends React.Component<any, { nav: boolean }> {
 
 setLocale("en-GB");
 
-ReactDOM.render(<App><Home /></App>, document.getElementById('host'));
+ReactDOM.render(<App><Test /></App>, document.getElementById('host'));

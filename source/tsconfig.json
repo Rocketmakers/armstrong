@@ -15,6 +15,9 @@
         "preserveConstEnums": false,
         "suppressImplicitAnyIndexErrors": true,
         "outDir": "../dist",
-        "moduleResolution": "node"
+        "moduleResolution": "node",
+        "types": [
+            "es6-promise"
+        ]
     }
 }

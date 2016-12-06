@@ -15,7 +15,7 @@ export interface IDialogProps extends React.HTMLProps<Dialog> {
   /** (boolean) Setting this to true or false will open or close the dialog */
   isOpen: boolean;
   /** (()=> void) Event to fire when the dialog is closed */
-  onClose?: () => void;
+  onClose: () => void;
   /** (()=> void) Event to fire when the dialog is opened */
   onOpen?: () => void;
   /** (()=> void) Event to fire when the x button is clicked. Use this to confirm (double dialogs) */
@@ -31,14 +31,24 @@ export class Dialog extends React.Component<IDialogProps, {}>{
   private portalNode: HTMLElement;
   private dialogId: string;
 
-  public closeClicked() {
-    if (this.props.onClose) {
-      this.props.onClose();
+  private closeClicked() {
+    this.close();
+  }
+
+  private xClicked() {
+    if (this.props.onXClicked) {
+      this.props.onXClicked();
+    } else {
+      this.close();
     }
+  }
+
+  private close() {
+    this.props.onClose();
     this.unmountPortalNode();
   }
 
-  public scrollToTop() {
+  private scrollToTop() {
     this.dialogContentElement.scrollTop = 0;
   }
 
@@ -111,29 +121,28 @@ export class Dialog extends React.Component<IDialogProps, {}>{
     return (
       <div className={`dialog${this.props.className ? ` ${this.props.className}` : ''}`} style={style} id={this.dialogId}>
         {!this.props.title &&
-          <div className="dialog-close-button" onClick={() => this.props.onXClicked ? this.props.onXClicked() : this.closeClicked() }>
-            <Icon icon={Icon.Icomoon.cross}/>
+          <div className="dialog-close-button" onClick={() => this.xClicked()}>
+            <Icon icon={Icon.Icomoon.cross} />
           </div>
         }
         {this.props.title &&
           <div className="dialog-header">
             {this.props.title}
-            <div className="dialog-close-button" onClick={() => this.props.onXClicked ? this.props.onXClicked() : this.closeClicked() }>
-              <Icon icon={Icon.Icomoon.cross}/>
+            <div className="dialog-close-button" onClick={() => this.xClicked()}>
+              <Icon icon={Icon.Icomoon.cross} />
             </div>
           </div>
         }
         <div className="dialog-content" id="dialog-content">
           {children}
         </div>
-        {this.props.footerContent && <div className="dialog-footer">{this.props.footerContent}</div> }
+        {this.props.footerContent && <div className="dialog-footer">{this.props.footerContent}</div>}
       </div>
     )
   }
-
   render() {
     return (
-      <noscript/>
+      <noscript />
     );
   }
 }
