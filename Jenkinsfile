@@ -8,7 +8,7 @@ node('macosx') {
         sh 'yarn'
         sh 'npm run build'
         if (env.BRANCH_NAME == "master"){
-          sh 'npm run publish'
+          sh 'npm publish'
         }
     }
 }
