@@ -9,6 +9,7 @@ import { DateHelpers } from './../../../utilities/dateHelpers';
 import { Grid, Row, Col } from "./../../layout/grid";
 import { Icons } from './../../../utilities/icons';
 import { Icon } from './../../display/icon';
+import { isLocaleSet } from "../../../config/config"
 
 export interface ICalendarInputProps extends React.Props<CalendarInput> {
   className?: string;
@@ -43,12 +44,15 @@ export class CalendarInput extends React.Component<ICalendarInputProps, ICalenda
   private bodyElement: HTMLDivElement;
 
   static defaultProps = {
-    format: 'L',
-    locale: 'en-gb'
+    format: 'L'
   }
 
   constructor(props: ICalendarInputProps) {
     super(props);
+    if (!isLocaleSet()) {
+      console.warn("Using CalendarInput without setting the global Armstrong locale is not recommended. See https://github.com/Rocketmakers/armstrong-react#form---calendar--datepickers")
+    }
+
     this.format = this.props.nativeInput ? isoFormat : props.format;
     const initialDate = props.date ? moment(props.date, isoFormat, true) : null;
     let inputValue = "";

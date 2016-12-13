@@ -11,3 +11,5 @@ export const setLocale = (locale: string) => {
   moment.locale(locale);
   localeSet = true;
 }
+
+export const isLocaleSet = () => localeSet;
