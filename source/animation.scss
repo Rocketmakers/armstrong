@@ -73,21 +73,17 @@
   }
 }
 
-%animation-base{
-  animation-fill-mode: forwards;
-}
-
-.slide-in-up{ @extend %animation-base; opacity: 0; animation: slide-in-up $animation-duration; }
-.slide-in-down{ @extend %animation-base; opacity: 0; animation: slide-in-down $animation-duration; }
-.slide-in-left{ @extend %animation-base; opacity: 0; animation: slide-in-left $animation-duration; }
-.slide-in-right{ @extend %animation-base; opacity: 0; animation: slide-in-right $animation-duration; }
-.slide-out-up{ @extend %animation-base; @extend .slide-in-up; animation-direction: reverse; }
-.slide-out-down{ @extend %animation-base; @extend .slide-in-down; animation-direction: reverse; }
-.slide-out-left{ @extend %animation-base; @extend .slide-in-left;  animation-direction: reverse; }
-.slide-out-right{ @extend %animation-base; @extend .slide-in-right;  animation-direction: reverse; }
-.fade-in{ @extend %animation-base; opacity: 0; animation: fade-in $animation-duration; }
-.fade-out{ @extend %animation-base; @extend .fade-in; animation-direction: reverse; }
-.scale-down-in{ @extend %animation-base; opacity: 0; animation: scale-down-in $animation-duration; }
-.scale-up-in{ @extend %animation-base; opacity: 0; animation: scale-up-in $animation-duration; }
+.slide-in-up{ opacity: 0; animation: slide-in-up $animation-duration forwards; }
+.slide-in-down{ opacity: 0; animation: slide-in-down $animation-duration forwards; }
+.slide-in-left{ opacity: 0; animation: slide-in-left $animation-duration forwards; }
+.slide-in-right{ opacity: 0; animation: slide-in-right $animation-duration forwards; }
+.slide-out-up{ @extend .slide-in-up; animation-direction: reverse; }
+.slide-out-down{ @extend .slide-in-down; animation-direction: reverse; }
+.slide-out-left{ @extend .slide-in-left;  animation-direction: reverse; }
+.slide-out-right{ @extend .slide-in-right;  animation-direction: reverse; }
+.fade-in{ opacity: 0; animation: fade-in $animation-duration forwards; }
+.fade-out{ @extend .fade-in; animation-direction: reverse; }
+.scale-down-in{ opacity: 0; animation: scale-down-in $animation-duration forwards; }
+.scale-up-in{ opacity: 0; animation: scale-up-in $animation-duration forwards; }
 
 .loop{ animation-iteration-count: infinite; }
