@@ -1,5 +1,5 @@
 node('macosx') {
-    ws("/Users/jenkins/build/hanzi.hero/${env.BRANCH_NAME.replace('/', '-')}") {
+    ws("/Users/jenkins/build/armstrong.react/${env.BRANCH_NAME.replace('/', '-')}") {
         checkout scm
         echo "Running on a Mac OSX Node"
         echo "Branch is: ${env.BRANCH_NAME}"

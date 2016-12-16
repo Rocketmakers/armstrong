@@ -3,6 +3,7 @@
 @import "./../../../source/style";
 @import "./../../../source/responsive";
 @import "./../../../source/navigation";
+@import "./../../../source/animations";
 
 body,
 main,
@@ -37,3 +38,6 @@ html,
     }
   }
 }
+
+
+.animatable{ display: inline-block; background: $brand-primary; padding: 20px; color: white }

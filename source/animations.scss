@@ -1,0 +1,92 @@
+$duration: 450ms;
+$offset: 50px;
+
+@keyframes slide-in-up {
+  0% {
+    opacity: 0;
+    transform: translateY($offset);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slide-in-down {
+  0% {
+    opacity: 0;
+    transform: translateY(-$offset);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slide-in-right {
+  0% {
+    opacity: 0;
+    transform: translateX($offset);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slide-in-left {
+  0% {
+    opacity: 0;
+    transform: translateX(-$offset);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes scale-down-in {
+  0% {
+    opacity: 0;
+    transform: scale(1.5,1.5);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1,1);
+  }
+}
+
+@keyframes scale-up-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.5,0.5);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1,1);
+  }
+}
+
+.slide-in-up{ animation: slide-in-up $duration; }
+.slide-in-down{ animation: slide-in-down $duration; }
+.slide-in-left{ animation: slide-in-left $duration; }
+.slide-in-right{ animation: slide-in-right $duration; }
+.slide-out-up{ @extend .slide-in-up; animation-direction: reverse; }
+.slide-out-down{ @extend .slide-in-down; animation-direction: reverse; }
+.slide-out-left{ @extend .slide-in-left;  animation-direction: reverse; }
+.slide-out-right{ @extend .slide-in-right;  animation-direction: reverse; }
+.fade-in{ animation: fade-in $duration; }
+.fade-out{ @extend .fade-in; animation-direction: reverse; }
+.scale-down-in{ animation: scale-down-in $duration; }
+.scale-up-in{ animation: scale-up-in $duration; }
+
+.loop{ animation-iteration-count: infinite; }

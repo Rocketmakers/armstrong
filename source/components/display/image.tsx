@@ -29,14 +29,13 @@ export class Image extends React.Component<IImageProps, { source?: string }>{
     this.state = { source: "" };
   }
   getRandomUser() {
-    var _this = this;
     var url = `http://api.randomuser.me/?exc=login,name,location,email,registered,dob,phone,cell,id,nat${this.props.sampleUserSeed ? `&seed=${this.props.sampleUserSeed}` : ''}`;
     var xmlHttp = new XMLHttpRequest();
-    xmlHttp.onreadystatechange = function () {
+    xmlHttp.onreadystatechange = () => {
       if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
         var response = JSON.parse(xmlHttp.responseText);
         var pictureUrl = response.results[0].picture.large;
-        _this.setState({ source: pictureUrl });
+        this.setState({ source: pictureUrl });
       }
     }
     xmlHttp.open("GET", url, true);
