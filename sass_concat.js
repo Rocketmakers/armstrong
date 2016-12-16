@@ -38,3 +38,10 @@ importResolve({
     "pathToMain": "./source/navigation.scss",
     "output": "./dist/navigation.scss"
 });
+
+// ANIMATION LIBRARY
+importResolve({
+    "ext": "scss",
+    "pathToMain": "./source/animation.scss",
+    "output": "./dist/animation.scss"
+});
