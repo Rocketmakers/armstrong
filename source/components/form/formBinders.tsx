@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as _ from "underscore";
-import {IFormBinder,IDataBinder,IFormBinderInjector,dataBinderAttribute} from "./formCore";
+import {IFormBinder,IDataBinder,IFormBinderInjector} from "./formCore";
 import {
   IdEntity,
   NumericIdEntity,
@@ -232,7 +232,7 @@ export class FormBinder {
       adaptorInjector["max"] = options.max
     }
 
-    adaptorInjector[dataBinderAttribute].extender = (props: React.HTMLAttributes<any>, ea, nc) => {
+    adaptorInjector["data-form-binder"].extender = (props: React.HTMLAttributes<any>, ea, nc) => {
       props.onKeyPress = e => KeyboardHelper.numericKeyPress(e, options);
       props.onBlur = e => {
         e.currentTarget["value"] = converter.convert(ea.getValue(dataName));

@@ -14,8 +14,6 @@ export interface IDataBinder<T>{
   toJson(): T;
 }
 
-export const dataBinderAttribute = "data-form-binder"
-
 /** Used to inject properties onto React components to permit change handling */
 export interface IFormBinderInjector<TComponentProps>{
   "data-form-binder": IFormBinder<TComponentProps, any>

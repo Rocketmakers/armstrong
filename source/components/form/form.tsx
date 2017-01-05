@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as _ from "underscore";
-import {IFormBinder,IDataBinder,IFormBinderInjector,dataBinderAttribute} from "./formCore";
+import {IFormBinder,IDataBinder,IFormBinderInjector} from "./formCore";
 import {FormBinder} from "./formBinders";
 import {PropertyPathResolver} from "./properyPathResolver";
 import * as classnames from "classnames";
@@ -87,9 +87,9 @@ export class Form extends React.Component<IFormProps,{}>{
       let children = element.props.children;
 
       const fbi = props as IFormBinderInjector<any>;
-      const formBinder = fbi[dataBinderAttribute];
+      const formBinder = fbi["data-form-binder"];
       if (formBinder) {
-        fbi[dataBinderAttribute] = undefined
+        fbi["data-form-binder"] = undefined
         formBinder.setElementProperty(props, this.props.dataBinder);
         formBinder.handleValueChanged(props, this.props.dataBinder, this.notifyChange);
         if (formBinder.extender) {
