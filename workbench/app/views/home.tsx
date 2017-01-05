@@ -9,6 +9,7 @@ import { Form } from  './../../../source/components/form/form';
 import { DateInput, DateInputFormBinder } from  './../../../source/components/form/inputs/dateInput';
 import { Sample } from './../../../source/components/utility/sample';
 import { Dialog } from '../../../source/components/display/dialog';
+import { AutoCompleteInput } from '../../../source/components/form/inputs/autoCompleteInput';
 
 export class Home extends React.Component<{}, { dialogOpen: boolean }> {
   /**
@@ -21,8 +22,15 @@ export class Home extends React.Component<{}, { dialogOpen: boolean }> {
   private tabControl: TabControl;
 
   public render() {
+    let options = [];
+    options.push({ id: 1, name: 'test 1' });
+    options.push({ id: 2, name: 'test 2' });
+    options.push({ id: 3, name: 'test 3' });
     return (
       <div>
+
+      <AutoCompleteInput options={options}/>
+
       <Dialog title="waddup" isOpen={this.state.dialogOpen} onClose={()=> this.setState({ dialogOpen: false })}>
       oh shit, waddup?
       </Dialog>
