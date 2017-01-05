@@ -23,13 +23,13 @@ export class Home extends React.Component<{}, { dialogOpen: boolean }> {
 
   public render() {
     let options = [];
-    options.push({ id: 1, name: 'test 1' });
-    options.push({ id: 2, name: 'test 2' });
-    options.push({ id: 3, name: 'test 3' });
+    options.push({ id: 3, name: 'é' });
+    options.push({ id: 4, name: 'e' });
+    options.push({ id: 4, name: 'ę' });
     return (
       <div>
 
-      <AutoCompleteInput options={options}/>
+      <AutoCompleteInput ignoreDiacritics={true} options={options}/>
 
       <Dialog title="waddup" isOpen={this.state.dialogOpen} onClose={()=> this.setState({ dialogOpen: false })}>
       oh shit, waddup?

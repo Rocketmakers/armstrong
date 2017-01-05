@@ -5,6 +5,7 @@ import * as classNames from "classnames";
 import { Icon } from './../../display/icon';
 import { Grid, Row, Col } from './../../layout/grid';
 import { Button } from './../../interaction/button';
+import { DiacriticsStripper } from '../../../utilities/diacriticsStripper';
 
 export interface IAutoCompleteOption {
   id: number;
@@ -46,6 +47,8 @@ export interface IAutoCompleteInputProps extends React.Props<AutoCompleteInput> 
   disabled?: boolean;
   /** (boolean) Wether the control should function like a tagging control, returning an array of options or a single select, returning one option */
   multiSelect?: boolean;
+  /** (boolean) wether or not to strip diacritical marks */
+  ignoreDiacritics?: boolean;
 }
 
 export interface IAutoCompleteInputState {
@@ -62,6 +65,7 @@ export interface IAutoCompleteInputState {
 
 export class AutoCompleteInput extends React.Component<IAutoCompleteInputProps, IAutoCompleteInputState> {
   private timer: number;
+  private diacriticsStripper: DiacriticsStripper;
   // drive this through css ideally. Currently fixed height plus border (50 + 2px)
   private itemHeight = 52;
   static defaultProps = {
@@ -81,6 +85,7 @@ export class AutoCompleteInput extends React.Component<IAutoCompleteInputProps, 
       showOnTop: false,
       topOffset: -35
     };
+    this.diacriticsStripper = new DiacriticsStripper();
   }
   filterRemote(query: string, immediate?: boolean) {
     if (this.timer) {
@@ -103,9 +108,21 @@ export class AutoCompleteInput extends React.Component<IAutoCompleteInputProps, 
       if (query.length < this.props.minimumLength) {
         this.setState({ filteredOptions: this.props.options, query }, () => this.constrainIndex());
       } else {
-        this.setState({ filteredOptions: _.reject(this.props.options, o => o.name.toLowerCase().indexOf(q) === -1), query }, () => this.constrainIndex());;
+        this.setState({ filteredOptions: _.reject(this.props.options, o => this.match(o.name, q)), query }, () => this.constrainIndex());;
       }
     }
+  }
+  match(value1: string, value2: string) : boolean{
+    value1 = value1.toLowerCase();
+    value2 = value2.toLowerCase();
+
+    if (this.props.ignoreDiacritics){
+      value1 = this.diacriticsStripper.removeDiacritics(value1);
+    }
+
+    return value1.toLowerCase().indexOf(value2) === -1;
+    // if (this.props.stripDiacritics){
+    // }
 
   }
   focusInput(e) {
