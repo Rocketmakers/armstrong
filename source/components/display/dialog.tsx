@@ -61,7 +61,6 @@ export class Dialog extends React.Component<IDialogProps, {}>{
   }
 
   componentWillReceiveProps(newProps: IDialogProps) {
-    debugger;
     var open = newProps.isOpen;
     if (open && open != this.props.isOpen && this.props.onOpen) {
       this.props.onOpen();
