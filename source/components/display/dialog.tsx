@@ -61,12 +61,13 @@ export class Dialog extends React.Component<IDialogProps, {}>{
   }
 
   componentWillReceiveProps(newProps: IDialogProps) {
+    debugger;
     var open = newProps.isOpen;
     if (open && open != this.props.isOpen && this.props.onOpen) {
       this.props.onOpen();
     }
     if (open) {
-      this.renderToPortal(this.renderDialog(newProps.children as any[]))
+      this.renderToPortal(this.renderDialog(newProps))
     }
     if (!open && this.props.isOpen) {
       if (this.props.onClose) {
@@ -116,7 +117,7 @@ export class Dialog extends React.Component<IDialogProps, {}>{
     delete this.portalNode;
     return unmounted;
   }
-  renderDialog(children) {
+  renderDialog(newProps) {
     var style = { width: this.props.width || "500px", height: this.props.height || "auto" }
     return (
       <div className={`dialog${this.props.className ? ` ${this.props.className}` : ''}`} style={style} id={this.dialogId}>
@@ -134,9 +135,9 @@ export class Dialog extends React.Component<IDialogProps, {}>{
           </div>
         }
         <div className="dialog-content" id="dialog-content">
-          {children}
+          {newProps.children}
         </div>
-        {this.props.footerContent && <div className="dialog-footer">{this.props.footerContent}</div>}
+        {newProps.footerContent && <div className="dialog-footer">{newProps.footerContent}</div>}
       </div>
     )
   }
