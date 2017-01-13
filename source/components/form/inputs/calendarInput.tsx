@@ -3,12 +3,11 @@ import * as ReactDOM from "react-dom";
 import * as _ from "underscore";
 import * as moment from "moment";
 import * as classNames from "classnames";
-import { IDataBinder } from "../../form/formCore";
-import { FormBinderBase } from "../../form/formBinders";
-import { DateHelpers } from './../../../utilities/dateHelpers';
-import { Grid, Row, Col } from "./../../layout/grid";
-import { Icons } from './../../../utilities/icons';
-import { Icon } from './../../display/icon';
+import {IValueConverter} from "../formValueConverters";
+import { DateHelpers } from '../../../utilities/dateHelpers';
+import { Grid, Row, Col } from "../../layout/grid";
+import { Icons } from '../../../utilities/icons';
+import { Icon } from '../../display/icon';
 import { isLocaleSet } from "../../../config/config"
 
 export interface ICalendarInputProps extends React.Props<CalendarInput> {
@@ -159,6 +158,7 @@ export class CalendarInput extends React.Component<ICalendarInputProps, ICalenda
   }
 
   componentWillUnmount() {
+    var f: EventListenerOrEventListenerObject;
     if (!this.props.nativeInput) {
       window.removeEventListener('mousedown', this);
     }
@@ -176,12 +176,12 @@ export class CalendarInput extends React.Component<ICalendarInputProps, ICalenda
     }
   }
 
-  handleEvent(e) {
+  handleEvent(e: Event) {
     const domNode = ReactDOM.findDOMNode(this);
-    if (domNode.contains(e.target) && e.type !== "mousewheel" && e.type !== "keydown") {
+    if (domNode.contains(e.target as Node) && e.type !== "mousewheel" && e.type !== "keydown") {
       return;
     }
-    if (e.type === "keydown" && e.keyCode !== 9){
+    if (e.type === "keydown" && e["keyCode"] !== 9){
       return;
     }
     document.removeEventListener("mousewheel", this, false);
@@ -282,7 +282,7 @@ export class CalendarInput extends React.Component<ICalendarInputProps, ICalenda
             disabled={this.props.disabled}
             type="text"
             value={this.state.inputValue}
-            onKeyDown={e => this.handleEvent(e)}
+            onKeyDown={e => this.handleEvent(e.nativeEvent)}
             onFocus={e => this.onInputFocus() }/>
         }
         {!this.props.alwaysShowCalendar && this.props.date && !this.props.disableClear &&
@@ -328,15 +328,5 @@ class CalendarDay extends React.Component<ICalendarDayProps, {}> {
       }
     );
     return <div className={classes} onClick={() => this.props.dayClicked(this.props.date) }>{this.props.date.format('DD') }</div>
-  }
-}
-
-export class CalendarInputFormBinder extends FormBinderBase<ICalendarInputProps, string, string>{
-  static customValue(dataName: string) {
-    return new CalendarInputFormBinder(dataName, "date");
-  }
-
-  handleValueChanged(props: ICalendarInputProps, dataBinder: IDataBinder<any>, notifyChanged: () => void) {
-    props.onDateChanged = (e) => this.onChanged(dataBinder, e, notifyChanged);
   }
 }

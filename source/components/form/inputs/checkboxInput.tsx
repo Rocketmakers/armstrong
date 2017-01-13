@@ -1,7 +1,5 @@
 import * as _ from "underscore";
 import * as React from "react";
-import {Form} from "../form";
-import { Grid, Row, Col } from './../../layout/grid';
 
 export interface ICheckboxInputProps extends React.HTMLProps<CheckboxInput> {
     labelContent: string | React.ReactElement<any>;

@@ -6,10 +6,11 @@ import { TabControl, TabItem } from './../../../source/components/navigation/tab
 import { Grid, Row, Col } from  './../../../source/components/layout/grid';
 import { SelectInput } from  './../../../source/components/form/inputs/selectInput';
 import { Form } from  './../../../source/components/form/form';
-import { DateInput, DateInputFormBinder } from  './../../../source/components/form/inputs/dateInput';
+import { DateInput } from  './../../../source/components/form/inputs/dateInput';
 import { Sample } from './../../../source/components/utility/sample';
 import { Dialog } from '../../../source/components/display/dialog';
 import { AutoCompleteInput } from '../../../source/components/form/inputs/autoCompleteInput';
+import {SampleForm} from "./sampleForm";
 
 export class Home extends React.Component<{}, { dialogOpen?: boolean, canClick?: boolean }> {
   /**
@@ -22,13 +23,10 @@ export class Home extends React.Component<{}, { dialogOpen?: boolean, canClick?:
   private tabControl: TabControl;
 
   public render() {
-    let options = [];
-    options.push({ id: 3, name: 'é' });
-    options.push({ id: 4, name: 'e' });
-    options.push({ id: 4, name: 'ę' });
+    let options = [{ id: 3, name: 'é' }, { id: 4, name: 'e' }, { id: 4, name: 'ę' }];
     return (
       <div>
-
+      <SampleForm sample={{id:"s101", name: "Keith", tags:[]}}/>
       <AutoCompleteInput ignoreDiacritics={true} options={options}/>
 
       <Dialog title="waddup" isOpen={this.state.dialogOpen} onClose={()=> this.setState({ dialogOpen: false })} footerContent={
@@ -59,7 +57,6 @@ export class Home extends React.Component<{}, { dialogOpen?: boolean, canClick?:
             </Row>
           </Grid>
         }/>
-        <DateInput futureDates={true} {...Form.Bind.custom(DateInputFormBinder.customValue("date"))} />
         <Sample title="Button"
         description="A green button"
         component={

@@ -1,9 +1,12 @@
 import * as React from "react";
 import * as _ from "underscore";
-import { IDataBinder } from "../../form/formCore";
-import { FormBinderBase } from "../../form/formBinders";
-import { DateHelpers } from './../../../utilities/dateHelpers';
-import { Grid, Row, Col } from "./../../layout/grid";
+import { IDataBinder, getEventTargetAs } from "../formCore";
+import { FormBinderBase } from "../formBinderBase";
+import { DateHelpers } from '../../../utilities/dateHelpers';
+import {Form} from "../form";
+import { Grid, Row, Col } from "../../layout/grid";
+import {buildOptions} from "./options";
+import {Formatting} from "../../../utilities/formatting";
 
 export interface ITimeInputProps extends React.Props<TimeInput> {
   /** ((string) => void) Returns the time value when changed */
@@ -12,6 +15,14 @@ export interface ITimeInputProps extends React.Props<TimeInput> {
   time?: string;
   /** (boolean) Should the picker disallow user interaction */
   disabled?: boolean;
+  /** (number) Indicates the minute intervals to display */
+  minuteStep?:number;
+
+  /** (string) The hour label - default to `HH` */
+  hourLabel?: string;
+
+  /** (string) The minute label - default to `MM` */
+  minuteLabel?: string;
 }
 
 export interface ITimerInputState {
@@ -20,33 +31,26 @@ export interface ITimerInputState {
 }
 
 export class TimeInput extends React.Component<ITimeInputProps, ITimerInputState> {
+  private static hours = _.range(0, 24);
+
+  static defaultProps = {
+    time:"",
+    hourLabel:"HH",
+    minuteLabel:"MM"
+  }
+
   constructor() {
     super();
     this.state = { hours: null, minutes: null };
   }
+
   componentWillMount() {
     if (this.props.time){
       var time = DateHelpers.getTimeParts(this.props.time)
       this.setState({ hours: time.hours, minutes: time.minutes });
     }
   }
-  hourChanged(hour: string) {
-    let hours = parseInt(hour);
-    this.setState({ hours }, ()=>{
-      this.updateTime();
-    });
-  }
-  minuteChanged(minute: string) {
-    let minutes = parseInt(minute);
-    this.setState({ minutes }, ()=>{
-      this.updateTime();
-    });
-  }
-  updateTime(){
-    if (this.props.onChange){
-      this.props.onChange(`${this.state.hours}:${this.state.minutes}`);
-    }
-  }
+
   componentWillReceiveProps(newProps: ITimeInputProps){
     if(newProps.time){
       let newTime = DateHelpers.getTimeParts(newProps.time);
@@ -68,36 +72,38 @@ export class TimeInput extends React.Component<ITimeInputProps, ITimerInputState
       this.setState({ hours: null, minutes: null })
     }
   }
+
+  private handleDataChanged = (d: ITimerInputState) => {
+    this.setState(d, () => {
+      if (!this.props.onChange || Formatting.isNullOrUndefined(d.hours) || Formatting.isNullOrUndefined(d.minutes)){
+        return
+      }
+
+      this.props.onChange(`${d.hours}:${d.minutes}`);
+    })
+  }
+
   render() {
-    var hours = _.range(0, 24, 1);
-    var minutes = _.range(0, 60, 1);
-    return <Grid>
-      <Row>
-        <Col>
-          <select disabled={this.props.disabled} onChange={(e) => this.hourChanged((e.target as HTMLOptionElement).value) } value={this.state.hours ? this.state.hours.toString() : ""}>
-            <option disabled={true} value="">HH</option>
-            {hours.map(d => <option key={d.toString()} value={d.toString()}>{d < 10 ? `0${d}` : d}</option>) }
-          </select>
-        </Col>
-        <Col>
-          <select disabled={this.props.disabled} onChange={(e) => this.minuteChanged((e.target as HTMLOptionElement).value) } value={this.state.minutes ? this.state.minutes.toString() : ""}>
-            <option disabled={true} value="">MM</option>
-            {minutes.map(d => <option key={d.toString()} value={d.toString()}>{d < 10 ? `0${d}` : d}</option>) }
-          </select>
-        </Col>
-      </Row>
-    </Grid>
-  }
-}
-
-export class TimeInputFormBinder extends FormBinderBase<ITimeInputProps, string, string>{
-  static customValue(dataName: string){
-    return new TimeInputFormBinder(dataName, "time");
-  }
-
-  handleValueChanged(props: ITimeInputProps, dataBinder:IDataBinder<any>, notifyChanged: () => void) {
-    props.onChange = (e) => {
-      this.onChanged(dataBinder, e, notifyChanged);
-    };
+    var minutes = _.range(0, 60, this.props.minuteStep || 1);
+    const hourOptions = buildOptions(this.props.hourLabel, TimeInput.hours, v => v, v => Formatting.twoDigitNumber(v));
+    const minuteOptions = buildOptions(this.props.minuteLabel, minutes, v => v, v => Formatting.twoDigitNumber(v));
+    return (
+      <Form dataBinder={Form.jsonDataBinder(this.state)} onDataChanged={this.handleDataChanged}>
+      <Grid>
+        <Row>
+          <Col>
+            <select {...Form.Bind.selectNumeric("hours")} disabled={this.props.disabled}>
+              {hourOptions}
+            </select>
+          </Col>
+          <Col>
+            <select {...Form.Bind.selectNumeric("minutes")} disabled={this.props.disabled}>
+              {minuteOptions}
+            </select>
+          </Col>
+        </Row>
+      </Grid>
+      </Form>
+    )
   }
 }

@@ -1,28 +1,31 @@
 import * as _ from "underscore";
 import * as React from "react";
-import { Form } from "../form";
-
+import {buildOptions} from "./options";
 export interface ISelectInputOption {
-    id: number;
+    id: number | string;
     name: string;
 }
 
 export interface ISelectInputProps extends React.HTMLProps<SelectInput> {
     options: ISelectInputOption[];
     change?: (selected: ISelectInputOption) => void;
+    optionLabel?: string
 }
 
 export class SelectInput extends React.Component<ISelectInputProps, {}> {
-    change(e) {
-        if (this.props.change) {
-            this.props.change(this.props.options[e.target["selectedIndex"]]);
-        }
+  static defaultProps = {
+    optionLabel:"[Select]"
+  }
+    private change = (e) => {
+      this.props.change && this.props.change(this.props.options[e.target["selectedIndex"]]);
+      this.props.onChange && this.props.onChange(e);
     }
+
     render() {
         return (
             <div className="select-input">
-                <select {..._.omit(this.props, "options", "change") } onChange={e => this.change(e)}>
-                    {this.props.options.map((op, i) => <option key={i} value={op.id.toString()}>{op.name}</option>)}
+                <select {..._.omit(this.props, "options", "change", "onChange", "optionLabel") } onChange={this.change}>
+                {buildOptions(this.props.optionLabel, this.props.options, o => o.id, o => o.name)}
                 </select>
             </div>
         );

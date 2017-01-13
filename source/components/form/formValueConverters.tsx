@@ -1,17 +1,18 @@
 import * as React from "react";
 import * as _ from "underscore";
-
-export type IdEntity = {id: string};
-export type NumericIdEntity = {id: number};
+import {Formatting} from "../../utilities/formatting";
 
 /** The core value converter */
 export interface IValueConverter<TFrom, TTo>{
+  /** convert TFrom to TTo */
   convert?: IOneWayValueConverter<TFrom, TTo>;
+  /** convert TTo to TFrom */
   convertBack?: IOneWayValueConverter<TTo, TFrom>;
 }
 
 /** The core one way value converter */
 export interface IOneWayValueConverter<TFrom, TTo>{
+  /** convert TFrom to TTo */
   (from: TFrom): TTo;
 }
 
@@ -33,42 +34,6 @@ export class CheckboxValueConverter<TDataPropValue> implements IValueConverter<T
     }
 
     return this.falseValue;
-  }
-}
-
-/** Converts numeric id of property item to string  */
-export class IdEntityValueConverter implements IInputValueConverter<IdEntity> {
-  constructor(public convertBack: IOneWayValueConverter<string, IdEntity>){
-  }
-  convert(data: IdEntity){
-    return !data ? "0" : data.id;
-  }
-}
-
-/** Pass-through converter - used for setting string id value on bound property item */
-export class IdValueConverter implements IInputValueConverter<string> {
-  constructor(public convertBack: IOneWayValueConverter<string, string>){
-  }
-  convert(data: string){
-    return data;
-  }
-}
-
-/** Converts numeric id of item to string  */
-export class NumericIdEntityValueConverter implements IInputValueConverter<NumericIdEntity> {
-  constructor(public convertBack: IOneWayValueConverter<string, NumericIdEntity>){
-  }
-  convert(data: NumericIdEntity){
-    return !data || !_.isNumber(data.id) || isNaN(data.id)  ? "0" : data.id.toString();
-  }
-}
-
-/** Converts string to number - used for setting numeric id value on bound element */
-export class NumericIdValueConverter implements IInputValueConverter<number> {
-  constructor(public convertBack: IOneWayValueConverter<string, number>){
-  }
-  convert(data: number){
-    return !_.isNumber(data) || isNaN(data) ? "0" : data.toString();
   }
 }
 
@@ -96,13 +61,13 @@ export interface INumericOptions{
   step?: number;
 }
 
-/** A Numeric Value converter written to handle Text Input */
+/** A Numeric Value converter to handle converting typed text to a number */
 export class NumericValueConverter implements IInputValueConverter<number> {
   constructor(private options?: INumericOptions){
   }
 
   convert(data: number){
-    return _.isUndefined(data) || _.isNull(data) ? null : data.toFixed(this.options && this.options.decimals);
+    return Formatting.isNullOrUndefined(data) || data === "" as any ? null : data.toFixed(this.options && this.options.decimals);
   }
 
   convertBack(value: string){
@@ -126,10 +91,10 @@ export class NumericValueConverter implements IInputValueConverter<number> {
       }
 
       if (this.options){
-        if (!_.isUndefined(this.options.max)){
+        if (!Formatting.isNullOrUndefined(this.options.max)){
           v = Math.min(v, this.options.max)
         }
-        if (!_.isUndefined(this.options.min)){
+        if (!Formatting.isNullOrUndefined(this.options.min)){
           v = Math.max(v, this.options.min)
         }
       }

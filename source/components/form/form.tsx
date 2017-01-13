@@ -1,12 +1,12 @@
 import * as React from "react";
 import * as _ from "underscore";
-import {IFormBinder,IDataBinder,IFormBinderInjector} from "./formCore";
+import {IFormBinder,IDataBinder,IFormBinderInjector,getFormBinderFromInjector,updateFormBinderInjector} from "./formCore";
 import {FormBinder} from "./formBinders";
 import {PropertyPathResolver} from "./properyPathResolver";
 import * as classnames from "classnames";
 
 /** The default Json Entity binder - NOTE, the original instance provided is MUTABLE */
-export class JsonEntityBinder<T> implements IDataBinder<T>{
+class JsonEntityBinder<T> implements IDataBinder<T>{
   constructor(private data: T){}
   getValue(dataName: string): any{
     return PropertyPathResolver.getValue(this.data, dataName)
@@ -21,12 +21,29 @@ export class JsonEntityBinder<T> implements IDataBinder<T>{
   }
 }
 
+function deepObjectExtend (target, source) {
+    for (var prop in source) {
+        if (source.hasOwnProperty(prop)) {
+            if (target[prop] && typeof source[prop] === 'object') {
+                deepObjectExtend(target[prop], source[prop]);
+            }
+            else {
+                target[prop] = source[prop];
+            }
+        }
+    }
+    return target;
+}
+
 export interface IFormProps extends React.HTMLProps<Form>{
   /** The forms data binder instance, this contains the data that is used by bound form elements*/
   dataBinder: IDataBinder<any>;
 
   /** Called when bound form data changes: NOTE, this is called on every key stroke/interaction on any of the bound fields */
   onDataChanged?: (data?: any) => void;
+
+  /** Called when bound form data changes: NOTE, this is called on every key stroke/interaction on any of the bound fields */
+  onDataBinderChange?: (dataBinder: IDataBinder<any>) => void;
 }
 
 export interface IFormContext{
@@ -62,7 +79,7 @@ export class Form extends React.Component<IFormProps,{}>{
 
   static Bind = FormBinder;
   static jsonDataBinder<T>(data: T): IDataBinder<T>{
-    return new JsonEntityBinder(data);
+    return new JsonEntityBinder(deepObjectExtend({}, data));
   }
 
   private preventDefault = (e) => { e.preventDefault(); return false }
@@ -87,9 +104,9 @@ export class Form extends React.Component<IFormProps,{}>{
       let children = element.props.children;
 
       const fbi = props as IFormBinderInjector<any>;
-      const formBinder = fbi["data-form-binder"];
+      const formBinder = getFormBinderFromInjector(fbi);
       if (formBinder) {
-        fbi["data-form-binder"] = undefined
+        updateFormBinderInjector(fbi, null)
         formBinder.setElementProperty(props, this.props.dataBinder);
         formBinder.handleValueChanged(props, this.props.dataBinder, this.notifyChange);
         if (formBinder.extender) {
@@ -103,5 +120,8 @@ export class Form extends React.Component<IFormProps,{}>{
     })
   }
 
-  private notifyChange = () => this.props.onDataChanged && this.props.onDataChanged(this.props.dataBinder.toJson())
+  private notifyChange = () => {
+    this.props.onDataBinderChange && this.props.onDataBinderChange(this.props.dataBinder)
+    this.props.onDataChanged && this.props.onDataChanged(this.props.dataBinder.toJson())
+  }
 }

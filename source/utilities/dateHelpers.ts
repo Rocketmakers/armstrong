@@ -1,15 +1,24 @@
 import * as moment from "moment";
 import * as _ from "underscore";
+import {Formatting} from "./formatting";
 
+function range1to(to: number){
+  return _.range(1,to + 1).map(d => d.toString())
+}
 export class DateHelpers {
   // Date helpers
-  static getDaysArrayByMonth(date: string, month: number): string[] {
-    let activeMoment = date ? moment(date, "YYYY-MM-DD", true) : moment();
-    if (month) {
-      activeMoment.set("month", month - 1)
+  static getDaysArrayByMonth(month: number, year: number): string[] {
+    if (Formatting.isNullOrUndefined(month)) {
+      return range1to(31)
     }
-    let daysInMonth = activeMoment.daysInMonth();
-    return _.range(1,daysInMonth + 1).map(d => d.toString())
+    if (Formatting.isNullOrUndefined(year)) {
+      year = 2000
+    }
+    let activeMoment = moment([year, month - 1, 1])
+    if (!activeMoment.isValid()) {
+      return range1to(31)
+    }
+    return range1to(activeMoment.daysInMonth())
   }
 
   static getDateParts(date: string, includeDate = false){
@@ -57,8 +66,10 @@ export class DateHelpers {
 
   static toDateFormat(s: {day?: number, month?: number, year?: number}){
     if (s.day && s.month && s.year) {
-      let m = moment().set("date", s.day).set("month", s.month-1).set("year", s.year).format("YYYY-MM-DD");
-      return m;
+      const mom = moment([s.year, s.month - 1, s.day]);
+      if (mom.isValid()) {
+        return mom.format("YYYY-MM-DD")
+      }
     }
   }
 

@@ -6,11 +6,13 @@ import { Icon } from './../../display/icon';
 import { Grid, Row, Col } from './../../layout/grid';
 import { Button } from './../../interaction/button';
 import { DiacriticsStripper } from '../../../utilities/diacriticsStripper';
+import {IDataBinder,getEventTargetAs} from "../formCore";
+//import {Promise} from "es6-promise";
 
 export interface IAutoCompleteOption {
-  id: number;
+  id: number | string;
   name: string;
-  data?: any;
+  //data?: any;
   className?: string;
 }
 
@@ -125,8 +127,8 @@ export class AutoCompleteInput extends React.Component<IAutoCompleteInputProps, 
     // }
 
   }
-  focusInput(e) {
-    if (!this.state.open && !e.target.classList.contains("clear-selected")) {
+  focusInput(e: React.MouseEvent<any>) {
+    if (!this.state.open && !getEventTargetAs(e).classList.contains("clear-selected")) {
       this.setState({ open: true, showOnTop: this.shouldShowOnTop() }, () => {
         (ReactDOM.findDOMNode(this).querySelector("input") as any).focus()
         document.addEventListener("click", this, false);
@@ -136,14 +138,16 @@ export class AutoCompleteInput extends React.Component<IAutoCompleteInputProps, 
       })
     }
   }
-  handleEvent(e) {
+
+  handleEvent(e: Event) {
     // The second or check here is to allow for handling of deletion clicks on multi-select items after they have been removed from the dom
-    if (ReactDOM.findDOMNode(this).contains(e.target) || (e.target as HTMLDivElement).classList.contains("multi-select-item-part")) {
+    if (ReactDOM.findDOMNode(this).contains(e.target as Node) || (e.target as HTMLDivElement).classList.contains("multi-select-item-part")) {
       return;
     }
     this.setState({ open: false, query: "", filteredOptions: this.props.options || [] })
     document.removeEventListener("click", this, false);
   }
+
   componentWillMount() {
     let selectedValue: any = this.props.multiSelect ? [] : null;
     if (this.props.value) {
@@ -165,7 +169,7 @@ export class AutoCompleteInput extends React.Component<IAutoCompleteInputProps, 
       var oldMultiValue = this.state.selectedValue as IAutoCompleteOption[];
 
       if (oldMultiValue.length === 0 || !_.isEqual(newMultiValue.map(v => v.id), oldMultiValue.map(v => v.id))) {
-        this.setState({ selectedValue: newMultiValue })
+        this.setState({ selectedValue: newMultiValue || [] })
       }
     } else {
       var newSingleValue = newProps.value as IAutoCompleteOption;
@@ -298,6 +302,7 @@ export class AutoCompleteInput extends React.Component<IAutoCompleteInputProps, 
       }
     }
   }
+
   private prevFilter: string;
   checkToFilter(query: string) {
     this.setState({ query }, () => {
@@ -355,7 +360,7 @@ export class AutoCompleteInput extends React.Component<IAutoCompleteInputProps, 
                   style={{ marginTop: `${this.props.multiSelect && this.state.showOnTop && `${this.state.topOffset}px`}` }}
                   value={this.state.query}
                   onKeyUp={(e) => this.checkKey(e)}
-                  onChange={(e) => this.checkToFilter(e.target["value"])}
+                  onChange={(e) => this.checkToFilter(getEventTargetAs<HTMLInputElement>(e).value)}
                   placeholder={this.props.placeholder || "start typing to filter results..."} />
                 {this.state.remoteSearching && <Icon className="spinner fg-info" icon={Icon.Icomoon.spinner2} />}
                 <div data-id="autocomplete-select-list"

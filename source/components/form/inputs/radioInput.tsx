@@ -1,6 +1,5 @@
 import * as _ from "underscore";
 import * as React from "react";
-import {Form} from "../form";
 
 export interface IRadioInputProps extends React.HTMLProps<RadioInput> {
     labelContent: string | React.ReactElement<any>;
