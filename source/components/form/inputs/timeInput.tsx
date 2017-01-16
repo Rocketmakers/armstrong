@@ -100,7 +100,7 @@ export class TimeInput extends React.Component<ITimeInputProps, ITimerInputState
             </select>
           </Col>
           <Col>
-            <select tabIndex={this.props.tabIndex ? this.props.tabIndex +1 : null} {...Form.Bind.selectNumeric("minutes")} disabled={this.props.disabled}>
+            <select tabIndex={this.props.tabIndex} {...Form.Bind.selectNumeric("minutes")} disabled={this.props.disabled}>
               {minuteOptions}
             </select>
           </Col>

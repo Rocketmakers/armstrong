@@ -65,7 +65,7 @@ export class SampleForm extends React.Component<ISampleForm,{binder: IDataBinder
         </div>
         <div>
           <CalendarInput {...Form.Bind.calendarInput("date")}/>
-          <DateInput futureDates={true} {...Form.Bind.dateInput("date")} />
+          <DateInput className="test" futureDates={true} {...Form.Bind.dateInput("date")} />
           <DateInput futureDates={true} {...Form.Bind.dateInput("date")} datePartOrder={["year", "month", "day"]} monthLabel="M" dayLabel="D" yearLabel="Y" />
           <DateInput futureDates={true} {...Form.Bind.dateInput("expiry")} datePartOrder={["month", "year"]} monthLabel="Expiry Month" yearLabel="Expiry Year" />
           <TextInput {...Form.Bind.text("expiry")} disabled={true} />

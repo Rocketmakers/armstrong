@@ -110,7 +110,7 @@ export class DateInput extends React.Component<IDateInputProps, IDateInputState>
             {this.props.datePartOrder.map((key, idx) => {
               return (
                 <Col key={idx}>
-                  <select tabIndex={this.props.tabIndex ? this.props.tabIndex + idx : null} {...Form.Bind.selectNumeric(key)} disabled={this.props.disabled}>
+                  <select tabIndex={this.props.tabIndex} {...Form.Bind.selectNumeric(key)} disabled={this.props.disabled}>
                     {options[key]}
                   </select>
                 </Col>

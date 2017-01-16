@@ -13,7 +13,8 @@
   }
 
     input[type='radio'] {
-        display: none;
+        position: absolute;
+        opacity: 0;
         & + label {
           position: absolute;
           display: inline-block;
@@ -51,7 +52,7 @@
 
         &:focus {
             & + label:before {
-              border-color: $color-info;
+              border-color: $color-info !important;
             }
         }
     }
