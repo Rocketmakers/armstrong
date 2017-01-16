@@ -11,39 +11,34 @@ import {Formatting} from "../../../utilities/formatting";
 export type DateParts = "day" | "month" | "year"
 
 export interface IDateInputProps extends React.Props<DateInput> {
+  /** (string) CSS classname property */
+  className?: string;
+  /** (number) The tab index of the first select */
+  tabIndex?: number;
   /** (string) Date string in YYYY-MM-DD format */
   date?: string;
-
   /** ((string) => void) Event which returns the date when it changes and is valid */
   onChange?: (date: string) => void;
-
   /** (number) How many years from the current year to display in the year dropdown */
   yearsFromNow?: number;
-
   /** (boolean) Should the picker let you choose years from the future rather than the past */
   futureDates?: boolean;
-
   /** (boolean) Should the picker disallow user interaction */
   disabled?: boolean;
-
   /** (string) The year label - default to `Year` */
   yearLabel?: string;
-
   /** (string) The month label - default to `Month` */
   monthLabel?: string;
-
   /** (string) The day label - default to `Day` */
   dayLabel?: string;
-
   /** Control date part order (`day`, `month`, `year`)*/
-  datePartOrder?: DateParts[]
+  datePartOrder?: DateParts[];
 }
 
 export interface IDateInputState {
   day?: number;
   month?: number;
   year?: number;
-
   date?: string;
 }
 
@@ -107,7 +102,7 @@ export class DateInput extends React.Component<IDateInputProps, IDateInputState>
     }
     return (
       <Form
-        className={classNames("date-input", this.props.disabled? "input-disabled" : null)}
+        className={classNames("date-input", this.props.className, this.props.disabled? "input-disabled" : null)}
         onDataChanged={this.handleDataChanged}
         dataBinder={Form.jsonDataBinder(this.state)}>
        <Grid>
@@ -115,7 +110,7 @@ export class DateInput extends React.Component<IDateInputProps, IDateInputState>
             {this.props.datePartOrder.map((key, idx) => {
               return (
                 <Col key={idx}>
-                  <select {...Form.Bind.selectNumeric(key)} disabled={this.props.disabled}>
+                  <select tabIndex={this.props.tabIndex ? this.props.tabIndex + idx : null} {...Form.Bind.selectNumeric(key)} disabled={this.props.disabled}>
                     {options[key]}
                   </select>
                 </Col>

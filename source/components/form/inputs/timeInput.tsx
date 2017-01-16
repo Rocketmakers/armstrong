@@ -1,5 +1,6 @@
 import * as React from "react";
 import * as _ from "underscore";
+import * as classNames from "classnames";
 import { IDataBinder, getEventTargetAs } from "../formCore";
 import { FormBinderBase } from "../formBinderBase";
 import { DateHelpers } from '../../../utilities/dateHelpers';
@@ -9,6 +10,10 @@ import {buildOptions} from "./options";
 import {Formatting} from "../../../utilities/formatting";
 
 export interface ITimeInputProps extends React.Props<TimeInput> {
+  /** (string) CSS classname property */
+  className?: string;
+  /** (number) The tab index of the first select */
+  tabIndex?: number;
   /** ((string) => void) Returns the time value when changed */
   onChange?: (time: string) => void;
   /** (string) The time value in HH:mm format */
@@ -17,10 +22,8 @@ export interface ITimeInputProps extends React.Props<TimeInput> {
   disabled?: boolean;
   /** (number) Indicates the minute intervals to display */
   minuteStep?:number;
-
   /** (string) The hour label - default to `HH` */
   hourLabel?: string;
-
   /** (string) The minute label - default to `MM` */
   minuteLabel?: string;
 }
@@ -88,16 +91,16 @@ export class TimeInput extends React.Component<ITimeInputProps, ITimerInputState
     const hourOptions = buildOptions(this.props.hourLabel, TimeInput.hours, v => v, v => Formatting.twoDigitNumber(v));
     const minuteOptions = buildOptions(this.props.minuteLabel, minutes, v => v, v => Formatting.twoDigitNumber(v));
     return (
-      <Form dataBinder={Form.jsonDataBinder(this.state)} onDataChanged={this.handleDataChanged}>
+      <Form className={classNames("time-input", this.props.className, this.props.disabled? "input-disabled" : null)} dataBinder={Form.jsonDataBinder(this.state)} onDataChanged={this.handleDataChanged}>
       <Grid>
         <Row>
           <Col>
-            <select {...Form.Bind.selectNumeric("hours")} disabled={this.props.disabled}>
+            <select tabIndex={this.props.tabIndex} {...Form.Bind.selectNumeric("hours")} disabled={this.props.disabled}>
               {hourOptions}
             </select>
           </Col>
           <Col>
-            <select {...Form.Bind.selectNumeric("minutes")} disabled={this.props.disabled}>
+            <select tabIndex={this.props.tabIndex ? this.props.tabIndex +1 : null} {...Form.Bind.selectNumeric("minutes")} disabled={this.props.disabled}>
               {minuteOptions}
             </select>
           </Col>
