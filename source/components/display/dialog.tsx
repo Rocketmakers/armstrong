@@ -111,9 +111,14 @@ export class Dialog extends React.Component<IDialogProps, {}>{
     }
     const unmounted = ReactDOM.unmountComponentAtNode(this.portalNode);
     if (unmounted) {
-      document.getElementById(this.props.bodyId || "host").removeChild(this.portalNode);
+      let body =  document.getElementById(this.props.bodyId || "host");
+      if (body && this.portalNode){
+        body.removeChild(this.portalNode);
+      }
     }
-    delete this.portalNode;
+    if (this.portalNode){
+      delete this.portalNode;
+    }
     return unmounted;
   }
   renderDialog(newProps) {
