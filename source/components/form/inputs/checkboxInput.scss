@@ -54,7 +54,7 @@
     }
   }
 
-  input[type='checkbox'][disabled] {
+  input[type='checkbox'][disabled], input[type='checkbox'][disabled] {
     & + label {
       opacity: 0.6;
 

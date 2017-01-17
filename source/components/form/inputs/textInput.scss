@@ -47,7 +47,7 @@ textarea {
     border-color: $color-negative;
   }
 
-  &[readonly] {
+  &[readonly], &[disabled] {
     color: rgba(0, 0, 0, 0.3);
     background-color: $gray-very-light;
 
