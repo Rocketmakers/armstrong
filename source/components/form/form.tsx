@@ -79,6 +79,9 @@ export class Form extends React.Component<IFormProps,{}>{
 
   static Bind = FormBinder;
   static jsonDataBinder<T>(data: T): IDataBinder<T>{
+    return new JsonEntityBinder(data);
+  }
+  static jsonDataBinderWithClone<T>(data: T): IDataBinder<T>{
     return new JsonEntityBinder(deepObjectExtend({}, data));
   }
 

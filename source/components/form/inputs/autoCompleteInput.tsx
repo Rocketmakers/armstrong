@@ -12,7 +12,7 @@ import {IDataBinder,getEventTargetAs} from "../formCore";
 export interface IAutoCompleteOption {
   id: number | string;
   name: string;
-  //data?: any;
+  data?: any;
   className?: string;
 }
 
@@ -99,7 +99,6 @@ export class AutoCompleteInput extends React.Component<IAutoCompleteInputProps, 
         this.setState({ filteredOptions, remoteSearching: false })
       })
     }, immediate ? 0 : this.props.remoteThrottle)
-
   }
   filter(query: string) {
     var q = query.toLowerCase();
