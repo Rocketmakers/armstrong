@@ -56,7 +56,7 @@ export class Dialog extends React.Component<IDialogProps, {}>{
     this.dialogContentElement = document.getElementById("dialog-content");
     this.appNode = document.getElementById(this.props.bodyId || "host");
     if (this.props.isOpen) {
-      this.renderToPortal(this.renderDialog(this.props.children as any[]))
+      this.renderToPortal(this.renderDialog(this.props))
     }
   }
 
