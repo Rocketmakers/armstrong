@@ -21,7 +21,8 @@ export interface ISample{
   divisionId?: number
   userType?: string
   userTypeNumeric?: number
-  tags:string[]
+  tags: string[]
+  accepts: boolean
 }
 
 export interface ISampleForm{

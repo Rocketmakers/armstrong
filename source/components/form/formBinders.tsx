@@ -39,8 +39,15 @@ export class InputFormBinder<TDataPropValue,TComponentPropValue> extends FormBin
 }
 
 export class CheckboxFormBinder<TDataPropValue,TComponentPropValue> extends InputFormBinder<TDataPropValue,TComponentPropValue>{
+  constructor(dataName: string, valueConverter?: IValueConverter<TDataPropValue, TComponentPropValue>){
+    super(dataName, "checked", valueConverter)
+  }
   protected getDefaultInputValue(){
     return false
+  }
+
+  setElementProperty(props: React.DOMAttributes<any>, dataBinder:IDataBinder<any>) {
+    super.setElementProperty(props, dataBinder)
   }
 }
 
@@ -217,7 +224,7 @@ export class FormBinder {
 
   /** generic checkbox */
   static checkboxCustom<TDataPropValue>(/** helooo */dataName: string, valueConverter?: IValueConverter<TDataPropValue, boolean>){
-    let adaptorInjector = FormBinder.custom(new CheckboxFormBinder(dataName, "value", valueConverter, "checked"));
+    let adaptorInjector = FormBinder.custom(new CheckboxFormBinder(dataName, valueConverter));
     adaptorInjector["type"] = "checkbox";
     return adaptorInjector;
     //return this.defaultInputFormBinder(dataName, "checkbox", valueConverter, "checked")

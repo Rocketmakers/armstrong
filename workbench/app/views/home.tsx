@@ -26,7 +26,7 @@ export class Home extends React.Component<{}, { dialogOpen?: boolean, canClick?:
     let options = [{ id: 3, name: 'é' }, { id: 4, name: 'e' }, { id: 4, name: 'ę' }];
     return (
       <div>
-      <SampleForm sample={{id:"s101", name: "Keith", tags:[]}}/>
+      <SampleForm sample={{id:"s101", name: "Keith2", tags:[], accepts: true}}/>
       <AutoCompleteInput ignoreDiacritics={true} options={options}/>
 
       <Dialog title="waddup" isOpen={this.state.dialogOpen} onClose={()=> this.setState({ dialogOpen: false })} footerContent={
