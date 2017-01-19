@@ -146,6 +146,9 @@ export class AutoCompleteInput extends React.Component<IAutoCompleteInputProps, 
     this.setState({ open: false, query: "", filteredOptions: this.props.options || [] })
     document.removeEventListener("click", this, false);
   }
+  componentWillUnmount(){
+     document.removeEventListener("click", this, false);
+  }
 
   componentWillMount() {
     let selectedValue: any = this.props.multiSelect ? [] : null;

@@ -79,6 +79,7 @@ export class SampleForm extends React.Component<ISampleForm,{binder: IDataBinder
           <TextInput {...Form.Bind.textNumeric("reputation")} />
           <TextInput {...Form.Bind.password("password")} />
           <TextInput {...Form.Bind.text("name")} />
+          <TextInput defaultValue={this.state.binder.toJson().name} />
         </div>
         <div>
           <CheckboxInput labelContent="accepts" {...Form.Bind.checkbox("accepts")} />
