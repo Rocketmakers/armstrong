@@ -18,6 +18,8 @@ export { CalendarInput, ICalendarInputProps } from "./components/form/inputs/cal
 export { ITextInputProps, TextInput } from "./components/form/inputs/textInput";
 export { IAutoCompleteInputProps, AutoCompleteInput, IAutoCompleteOption } from "./components/form/inputs/autoCompleteInput";
 export { IDataBinder, IFormBinder } from "./components/form/formCore";
+export { FormBinderBase } from "./components/form/formBinderBase";
+export { FormBinder, InputFormBinder } from "./components/form/formBinders";
 export { IFormProps, Form } from "./components/form/form";
 
 // Interaction

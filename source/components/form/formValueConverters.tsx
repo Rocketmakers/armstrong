@@ -61,6 +61,18 @@ export interface INumericOptions{
   step?: number;
 }
 
+export class MultipleNumericValueConverter implements IValueConverter<number[], string[]> {
+  private static converter = NumericValueConverter.instance
+  convert(data: number[]){
+    return data.map(d => MultipleNumericValueConverter.converter.convert(d));
+  }
+  convertBack(value: string[]){
+    return value.map(d => MultipleNumericValueConverter.converter.convertBack(d));
+  }
+
+  static instance = new MultipleNumericValueConverter();
+}
+
 /** A Numeric Value converter to handle converting typed text to a number */
 export class NumericValueConverter implements IInputValueConverter<number> {
   constructor(private options?: INumericOptions){
