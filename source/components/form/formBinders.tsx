@@ -51,8 +51,23 @@ export class SelectMultipleFormBinder<TDataProp> extends InputFormBinder<TDataPr
 
   handleValueChanged(props: React.DOMAttributes<any>, dataBinder:IDataBinder<any>, notifyChanged: () => void) {
     props.onChange = (e) => {
-      this.onChanged(dataBinder, _.map(e.currentTarget.selectedOptions as any[], s => s.value), notifyChanged);
+      this.onChanged(dataBinder, this.getSelectValues(e.currentTarget), notifyChanged);
     };
+  }
+
+  private getSelectValues(select) {
+    const result: string[] = [];
+    const options = select && select.options;
+    if (!options) {
+      return result
+    }
+    for (let i = 0; i < options.length; i++) {
+      let opt = options[i];
+      if (opt.selected) {
+        result.push(opt.value);
+      }
+    }
+    return result;
   }
 }
 
