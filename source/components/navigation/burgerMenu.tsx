@@ -121,7 +121,7 @@ export class BurgerMenu extends React.Component<IBurgerMenuProps, {}>{
       }
       <ul className="burger-menu-list" role="menu" aria-activedescendant aria-expanded={ this.isOpen } aria-hidden={ !this.isOpen }>{React.Children.map(children, (c, index) => {
         return <li onClick={(e) => this.closeNav(e, () => this.closeMenu()) } key={`nav_item_${index}`}>{c}</li>
-      }) }
+      })}
       </ul>
       </div>);
   }

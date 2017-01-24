@@ -12,13 +12,13 @@ import { Dialog } from '../../../source/components/display/dialog';
 import { AutoCompleteInput } from '../../../source/components/form/inputs/autoCompleteInput';
 import {SampleForm} from "./sampleForm";
 
-export class Home extends React.Component<{}, { dialogOpen?: boolean, canClick?: boolean }> {
+export class Home extends React.Component<{}, { dialogOpen?: boolean, canClick?: boolean, pending?: boolean }> {
   /**
    *
    */
   constructor() {
     super();
-    this.state = { dialogOpen: false, canClick: true }
+    this.state = { dialogOpen: false, canClick: true, pending: false }
   }
   private tabControl: TabControl;
 
@@ -26,6 +26,8 @@ export class Home extends React.Component<{}, { dialogOpen?: boolean, canClick?:
     let options = [{ id: 3, name: 'é' }, { id: 4, name: 'e' }, { id: 4, name: 'ę' }];
     return (
       <div>
+      <Button onClick={()=> this.setState({ pending: !this.state.pending })}>waddup?</Button>
+      <Button rounded={true} pending={this.state.pending} >waddup!</Button>
       <SampleForm sample={{id:"s101", name: "Keith2", tags:[], accepts: true}}/>
       <AutoCompleteInput ignoreDiacritics={true} options={options}/>
 

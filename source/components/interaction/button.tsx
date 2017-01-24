@@ -16,24 +16,33 @@ export interface IButtonProps extends React.HTMLProps<Button> {
   rounded?: boolean;
   /** (string) CSS classname property */
   className?: string | MarginClass | PaddingClass | BgColorClass | FgColorClass;
+  /** (boolean) If true, disables actions and puts button into a 'pending' state */
+  pending?: boolean;
 }
 
 export class Button extends React.Component<IButtonProps, {}>{
   static Icomoon = Icons.Icomoon;
 
+  handleClick(){
+    if (this.props.onClick && !this.props.pending){
+      this.props.onClick();
+    }
+  }
+
   render() {
-    var attrs = _.omit(this.props, "onClick", "leftIcon", "rightIcon", "className", "rounded", "context");
+    var attrs = _.omit(this.props, "onClick", "leftIcon", "rightIcon", "className", "rounded", "context", "pending", "disabled");
     const classes = classNames(
       "btn",
       this.props.className,
       {
         "rounded": this.props.rounded,
         "icon-button-left": this.props.leftIcon !== undefined,
-        "icon-button-right": this.props.rightIcon !== undefined
+        "icon-button-right": this.props.rightIcon !== undefined,
+        "pending": this.props.pending
       }
     );
     return (
-      <button type={this.props.type || 'button'} onClick={e => this.props.onClick ? this.props.onClick(e) : null} { ...attrs } className={classes}>
+      <button disabled={this.props.pending || this.props.disabled} type={this.props.type || 'button'} onClick={e => this.handleClick()} { ...attrs } className={classes}>
       {this.props.leftIcon && <Icon className="left-icon" icon={this.props.leftIcon}/>}
       {this.props.children}
       {this.props.rightIcon && <Icon className="right-icon" icon={this.props.rightIcon}/>}
