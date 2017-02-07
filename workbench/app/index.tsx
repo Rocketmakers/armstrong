@@ -9,6 +9,7 @@ import { Image } from './../../source/components/display/image';
 // VIEWS
 import { Home } from "./views/home";
 import { Test } from "./views/test";
+import { List } from "./views/list";
 
 import { setLocale } from "../../source/config/config";
 
@@ -34,7 +35,7 @@ class App extends React.Component<any, { nav: boolean }> {
         <Grid debugMode={true} fillContainer={true}>
           <Row>
             <Col className="bg-gray-dark"/>
-            <Col width={1100} className="p-large">
+            <Col width={1100}>
               { this.props.children }
             </Col>
             <Col className="bg-gray-dark"/>
