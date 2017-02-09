@@ -5,6 +5,9 @@ Form Binder Core interface
 The defintion of a form binder
 */
 export interface IFormBinder<TComponentProps, TData>{
+  /** The path used to bind to the data object */
+  dataPath: string
+
   /**
   Augment the component props that will be applied to the forms child element being bound
   */

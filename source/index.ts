@@ -11,7 +11,7 @@ export { IDialogProps, Dialog } from "./components/display/dialog";
 // Form
 export { ICheckboxInputProps, CheckboxInput } from "./components/form/inputs/checkboxInput";
 export { IRadioInputProps, RadioInput } from "./components/form/inputs/radioInput";
-export { ISelectInputProps, SelectInput } from "./components/form/inputs/selectInput";
+export { ISelectInputProps, SelectInput, ISelectInputOption } from "./components/form/inputs/selectInput";
 export { DateInput, IDateInputProps } from "./components/form/inputs/dateInput";
 export { TimeInput, ITimeInputProps } from "./components/form/inputs/timeInput";
 export { CalendarInput, ICalendarInputProps } from "./components/form/inputs/calendarInput";

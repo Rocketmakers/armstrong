@@ -13,7 +13,7 @@ TComponentPropValue: The type of the target property being bound on the componen
 export abstract class FormBinderBase<TComponentProps,TDataPropValue,TComponentPropValue> implements IFormBinder<TComponentProps, any> {
   constructor(
     /** The name of the data property being bound  */
-    protected dataName: string,
+    public dataPath: string,
     /** The name of the component property being bound  */
     protected propertySet: string,
     /** The converter required to convert 'dataName' to 'propertySet' (TDataPropValue to TComponentPropValue) */
@@ -24,8 +24,8 @@ export abstract class FormBinderBase<TComponentProps,TDataPropValue,TComponentPr
 
   /** Sets the React elements properties required in binding */
   setElementProperty(props: TComponentProps, dataBinder:IDataBinder<any>) {
-    props["name"] = this.dataName;
-    props[this.propertySet] = this.convert(dataBinder.getValue(this.dataName));
+    props["name"] = this.dataPath;
+    props[this.propertySet] = this.convert(dataBinder.getValue(this.dataPath));
   }
 
   /** handle the change event, to modify the dataBinder (safely via this.onChanged(...)), then notifyChanged */
@@ -38,7 +38,7 @@ export abstract class FormBinderBase<TComponentProps,TDataPropValue,TComponentPr
       return;
     }
 
-    dataBinder.setValue(this.dataName, value);
+    dataBinder.setValue(this.dataPath, value);
     notifyChanged();
   };
 

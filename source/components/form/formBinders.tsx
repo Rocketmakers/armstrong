@@ -40,8 +40,8 @@ export class InputFormBinder<TDataPropValue,TComponentPropValue> extends FormBin
 }
 
 export class SelectMultipleFormBinder<TDataProp> extends InputFormBinder<TDataProp,string[]>{
-  constructor(dataName: string, valueConverter?: IValueConverter<TDataProp, string[]>){
-    super(dataName, "value", valueConverter)
+  constructor(dataPath: string, valueConverter?: IValueConverter<TDataProp, string[]>){
+    super(dataPath, "value", valueConverter)
   }
 
   setElementProperty(props: React.DOMAttributes<any>, dataBinder:IDataBinder<any>) {
@@ -72,8 +72,8 @@ export class SelectMultipleFormBinder<TDataProp> extends InputFormBinder<TDataPr
 }
 
 export class CheckboxFormBinder<TDataPropValue,TComponentPropValue> extends InputFormBinder<TDataPropValue,TComponentPropValue>{
-  constructor(dataName: string, valueConverter?: IValueConverter<TDataPropValue, TComponentPropValue>){
-    super(dataName, "checked", valueConverter)
+  constructor(dataPath: string, valueConverter?: IValueConverter<TDataPropValue, TComponentPropValue>){
+    super(dataPath, "checked", valueConverter)
   }
   protected getDefaultInputValue(){
     return false
@@ -83,14 +83,14 @@ export class CheckboxFormBinder<TDataPropValue,TComponentPropValue> extends Inpu
 /** A radio input FormBinder */
 export class RadioFormBinder<TDataPropValue,TComponentPropValue> extends InputFormBinder<TDataPropValue,TComponentPropValue> {
   setElementProperty(props: React.DOMAttributes<any>, dataBinder:IDataBinder<any>) {
-    props["name"] = this.dataName;
-    props[this.propertySet] = this.convert(dataBinder.getValue(this.dataName)) === props[this.propertyGet];
+    props["name"] = this.dataPath;
+    props[this.propertySet] = this.convert(dataBinder.getValue(this.dataPath)) === props[this.propertyGet];
   }
 }
 
 export class DateInputFormBinder extends FormBinderBase<IDateInputProps, string, string>{
-  constructor(dataName: string){
-    super(dataName, "date")
+  constructor(dataPath: string){
+    super(dataPath, "date")
   }
 
   handleValueChanged(props: IDateInputProps, dataBinder:IDataBinder<any>, notifyChanged: () => void) {
@@ -101,8 +101,8 @@ export class DateInputFormBinder extends FormBinderBase<IDateInputProps, string,
 }
 
 export class TimeInputFormBinder extends FormBinderBase<ITimeInputProps, string, string>{
-  constructor(dataName: string){
-    super(dataName, "time")
+  constructor(dataPath: string){
+    super(dataPath, "time")
   }
   static customValue(dataName: string){
     return new TimeInputFormBinder(dataName);
@@ -116,8 +116,8 @@ export class TimeInputFormBinder extends FormBinderBase<ITimeInputProps, string,
 }
 
 export class CalendarInputFormBinder extends FormBinderBase<ICalendarInputProps, string, string>{
-  constructor(dataName: string){
-    super(dataName, "date")
+  constructor(dataPath: string){
+    super(dataPath, "date")
   }
 
   static customValue(dataName: string) {
@@ -130,7 +130,7 @@ export class CalendarInputFormBinder extends FormBinderBase<ICalendarInputProps,
 }
 
 export class AutoCompleteFormBinder implements IFormBinder<IAutoCompleteInputProps, any> {
-  constructor(private dataPath: string){}
+  constructor(public dataPath: string){}
   setElementProperty(props: IAutoCompleteInputProps, dataBinder: IDataBinder<any>): void{
     const value = dataBinder.getValue(this.dataPath);
     if (_.isArray(value)) {
