@@ -23,9 +23,9 @@ export interface IButtonProps extends React.HTMLProps<Button> {
 export class Button extends React.Component<IButtonProps, {}>{
   static Icomoon = Icons.Icomoon;
 
-  handleClick(){
+  handleClick(e){
     if (this.props.onClick && !this.props.pending){
-      this.props.onClick();
+      this.props.onClick(e);
     }
   }
 
@@ -42,7 +42,7 @@ export class Button extends React.Component<IButtonProps, {}>{
       }
     );
     return (
-      <button disabled={this.props.pending || this.props.disabled} type={this.props.type || 'button'} onClick={e => this.handleClick()} { ...attrs } className={classes}>
+      <button disabled={this.props.pending || this.props.disabled} type={this.props.type || 'button'} onClick={e => this.handleClick(e)} { ...attrs } className={classes}>
       {this.props.leftIcon && <Icon className="left-icon" icon={this.props.leftIcon}/>}
       {this.props.children}
       {this.props.rightIcon && <Icon className="right-icon" icon={this.props.rightIcon}/>}
