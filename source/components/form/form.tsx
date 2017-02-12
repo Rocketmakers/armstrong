@@ -21,31 +21,39 @@ class JsonEntityBinder<T> implements IDataBinder<T>{
   }
 }
 
-function deepObjectClone<T>(source: T) {
-  const target: T = {} as any
-  for (var prop in source) {
-    if (source.hasOwnProperty(prop)) {
-      const value = source[prop]
-      if (typeof value === 'object') {
-        if (_.isArray(value)) {
-          target[prop] = value.map(v => {
-            if (typeof v === 'object') {
-              return deepObjectClone(v)
-            }
+export class FormDataClone{
+  static json<T>(source: T) {
+    return JSON.parse(JSON.stringify(source)) as T
+  }
 
-            return v;
-          }) as any
-        } else {
-          target[prop] = deepObjectClone(value);
+  static custom<T>(source: T) {
+    const target: T = {} as any
+    for (var prop in source) {
+      if (source.hasOwnProperty(prop)) {
+        const value = source[prop]
+        if (typeof value === 'object') {
+          if (_.isArray(value)) {
+            target[prop] = value.map(v => {
+              if (typeof v === 'object') {
+                return FormDataClone.custom(v)
+              }
+
+              return v;
+            }) as any
+          } else {
+            target[prop] = FormDataClone.custom(value);
+          }
+        }
+        else {
+          target[prop] = source[prop];
         }
       }
-      else {
-        target[prop] = source[prop];
-      }
     }
+    return target;
   }
-  return target;
+
 }
+
 
 export interface IFormValidationResult{
   /** The attribute (dataPath) of the invalid entry */
@@ -110,7 +118,7 @@ export class Form extends React.Component<IFormProps,{}>{
   }
 
   static jsonDataBinderWithClone<T>(data: T): IDataBinder<T>{
-    return new JsonEntityBinder(deepObjectClone(data));
+    return new JsonEntityBinder(FormDataClone.custom(data));
   }
 
   private preventDefault = (e) => { e.preventDefault(); return false }
