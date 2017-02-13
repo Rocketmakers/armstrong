@@ -10,6 +10,7 @@ import { Image } from './../../source/components/display/image';
 import { Home } from "./views/home";
 import { Test } from "./views/test";
 import { List } from "./views/list";
+import { Form } from "./views/form";
 
 import { setLocale } from "../../source/config/config";
 
@@ -48,4 +49,4 @@ class App extends React.Component<any, { nav: boolean }> {
 
 setLocale("en-GB");
 
-ReactDOM.render(<App><Home /></App>, document.getElementById('host'));
+ReactDOM.render(<App><Form /></App>, document.getElementById('host'));
