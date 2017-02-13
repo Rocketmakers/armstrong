@@ -42,7 +42,7 @@ export class TextInput extends React.Component<ITextInputProps, {}> {
     );
     var ps = _.omit(this.props, "className", "readonly", "rightOverlayText", "leftOverlayText", "type", "leftIcon", "rightIcon", "multiLine")
     return (
-        <div className={classes}>
+        <div className={classes} data-validation-message={this.props["data-validation-message"]}>
             { this.props.leftIcon && <Icon className="left-icon" icon={this.props.leftIcon}/>}
             { this.props.leftOverlayText && <div className="input-overlay-text-left">{this.props.leftOverlayText}</div> }
             { !this.props.multiLine && <input ref={r => this.input = r} type={this.props.type || "text"} readOnly={this.props.readonly} {...ps} placeholder={this.props.placeholder} required={this.props.required} />}

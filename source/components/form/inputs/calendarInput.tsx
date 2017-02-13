@@ -262,7 +262,7 @@ export class CalendarInput extends React.Component<ICalendarInputProps, ICalenda
     );
     if (this.props.nativeInput) {
       return (
-        <div className={rootClasses}>
+        <div className={rootClasses} data-validation-message={this.props["data-validation-message"]}>
           {this.props.icon && <Icon icon={this.props.icon}/>}
           <input ref={i => this.inputElement = i}
             type="date"
@@ -275,7 +275,7 @@ export class CalendarInput extends React.Component<ICalendarInputProps, ICalenda
       )
     }
     return (
-      <div className={rootClasses}>
+      <div className={rootClasses} data-validation-message={this.props["data-validation-message"]}>
         <Icon icon={this.props.icon || Icons.Icomoon.calendar2}/>
         {!this.props.alwaysShowCalendar &&
           <input className="cal-input" ref={i => this.inputElement = i}

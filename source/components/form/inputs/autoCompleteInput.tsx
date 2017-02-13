@@ -317,6 +317,7 @@ export class AutoCompleteInput extends React.Component<IAutoCompleteInputProps, 
   render() {
     return (
       <Grid
+        data-validation-message={this.props["data-validation-message"]}
         onClick={(e) => this.focusInput(e)}
         className={`autocomplete-select${this.props.className ? ` ${this.props.className}` : ''}${this.props.disabled ? ' disabled' : ''}${this.props.hasGoButton && !this.props.multiSelect ? ' has-go-button' : ''}${this.props.multiSelect && (this.state.selectedValue as IAutoCompleteOption[]).length !== 0 ? ' has-multiple-options' : ''}`}>
         <Row>

@@ -33,7 +33,7 @@ export class SelectInput extends React.Component<ISelectInputProps, {}> {
   }
   render() {
     return (
-      <div className="select-input">
+      <div className="select-input" data-validation-message={this.props["data-validation-message"]}>
         <select ref={r => this.select = r} {..._.omit(this.props, "options", "change", "onChange", "optionLabel") } onChange={this.change}>
           {buildOptions(this.props.optionLabel, this.props.options, o => o.id, o => o.name)}
         </select>

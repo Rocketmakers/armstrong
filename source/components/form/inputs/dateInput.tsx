@@ -103,6 +103,7 @@ export class DateInput extends React.Component<IDateInputProps, IDateInputState>
     return (
       <Form
         className={classNames("date-input", this.props.className, this.props.disabled? "input-disabled" : null)}
+        data-validation-message={this.props["data-validation-message"]}
         onDataChanged={this.handleDataChanged}
         dataBinder={Form.jsonDataBinder(this.state)}>
        <Grid>
