@@ -16,8 +16,7 @@ export interface ITextInputProps extends React.HTMLProps<TextInput> {
 
 export class TextInput extends React.Component<ITextInputProps, {}> {
   static Icomoon = Icons.Icomoon;
-
-  private input: HTMLElement;
+  public input: HTMLElement;
   public focus() {
     if (this.input) {
       this.input.focus()
