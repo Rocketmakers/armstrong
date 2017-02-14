@@ -64,7 +64,7 @@
     display: inline-block;
     background-color: $gray-medium;
     color: $white;
-    border-radius: 4px;
+    border-radius: 0;
     padding: $spacing-xsmall / 2 $spacing-xsmall;
     line-height: normal;
     margin-right: $field-padding-horizontal/5;
@@ -139,7 +139,7 @@
     box-sizing: border-box;
     width: 100%;
     border: 1px solid $gray-light;
-    border-radius: $corner-radius-small;
+    border-radius: 0;
     text-align: left;
     position: relative;
     cursor: text;
@@ -159,7 +159,7 @@
 
   input {
     position: relative;
-    z-index: 1;
+    z-index: 3;
   }
 
   .clear-selected {

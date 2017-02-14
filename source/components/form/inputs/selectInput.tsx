@@ -1,12 +1,14 @@
 import * as _ from "underscore";
 import * as React from "react";
+import * as classNames from "classnames";
+import { IFormInputHTMLProps } from "../form";
 import { buildOptions } from "./options";
 export interface ISelectInputOption {
   id: number | string;
   name: string;
 }
 
-export interface ISelectInputProps extends React.HTMLProps<SelectInput> {
+export interface ISelectInputProps extends IFormInputHTMLProps<SelectInput> {
   options: ISelectInputOption[];
   change?: (selected: ISelectInputOption) => void;
   optionLabel?: string
@@ -15,7 +17,8 @@ export interface ISelectInputProps extends React.HTMLProps<SelectInput> {
 export class SelectInput extends React.Component<ISelectInputProps, {}> {
   private select: HTMLSelectElement;
   static defaultProps = {
-    optionLabel: "[Select]"
+    optionLabel: "[Select]",
+    validationMode: "none"
   }
   private change = (e) => {
     this.props.change && this.props.change(this.props.options[e.target["selectedIndex"]]);
@@ -32,9 +35,16 @@ export class SelectInput extends React.Component<ISelectInputProps, {}> {
     }
   }
   render() {
+    var classes = classNames(
+      "select-input",
+      this.props.className,
+      {
+        "show-validation": (this.props.validationMode !== "none" && this.props["data-validation-message"])
+      }
+    );
     return (
-      <div className="select-input" data-validation-message={this.props["data-validation-message"]}>
-        <select ref={r => this.select = r} {..._.omit(this.props, "options", "change", "onChange", "optionLabel") } onChange={this.change}>
+      <div className={classes} title={this.props["data-validation-message"]}>
+        <select ref={r => this.select = r} {..._.omit(this.props, "options", "change", "onChange", "optionLabel", "validationMode") } onChange={this.change}>
           {buildOptions(this.props.optionLabel, this.props.options, o => o.id, o => o.name)}
         </select>
       </div>

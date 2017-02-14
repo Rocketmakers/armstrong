@@ -54,6 +54,16 @@ export class FormDataClone{
 
 }
 
+export interface IFormInputProps<T> extends React.Props<T>{
+  /** (string) How to display validation messages */
+  validationMode?: "none" | "icon" | "below" | "both";
+}
+
+export interface IFormInputHTMLProps<T> extends React.HTMLProps<T>{
+  /** (string) How to display validation messages */
+  validationMode?: "none" | "icon" | "below" | "both";
+}
+
 
 export interface IFormValidationResult{
   /** The attribute (dataPath) of the invalid entry */
@@ -74,7 +84,10 @@ export interface IFormProps extends React.HTMLProps<Form>{
   onDataBinderChange?: (dataBinder: IDataBinder<any>) => void;
 
   /** An optional array of validation results - bound controls whose dataBinder dataPath matches an attribute will be annotated with a 'data-validation-message' property */
-  validationResults?: IFormValidationResult[]
+  validationResults?: IFormValidationResult[];
+
+  /** (string) How to display validation messages. 'icon' (default) shows a small exclamation symbol in the right of the field, 'below' shows the message below the field, while 'both' is a combination, and none hides all validation UI */
+  validationMode?: "none" | "icon" | "below" | "both";
 }
 
 export interface IFormContext{
@@ -91,6 +104,9 @@ NOTE: This is designed to render all elements in the form on every change. This 
 NOTE: This element provides a react context, this can be used to get access to the Forms dataBinder (or any parent Form dataBinder when nested)
 */
 export class Form extends React.Component<IFormProps,{}>{
+  static defaultProps = {
+    validationMode: "icon"
+  }
 
   static contextTypes = {"form": React.PropTypes.object}
 
@@ -124,13 +140,13 @@ export class Form extends React.Component<IFormProps,{}>{
   private preventDefault = (e) => { e.preventDefault(); return false }
 
   render() {
-    const ch = this.processChildren(this.props.children);
+    const ch = this.processChildren(this.props.children, this.props.validationMode);
     const hasParentForm = !!Form.getFormContext(this.context)
     const className = classnames("form", hasParentForm && "form-nested", this.props.className)
     return hasParentForm ? React.DOM.div({ className: className}, ch) : React.DOM.form({className: className, onSubmit: this.preventDefault}, ch)
   }
 
-  private processChildren(node: React.ReactNode){
+  private processChildren(node: React.ReactNode, validationMode: "none" | "icon" | "below" | "both"){
     const validationResults = this.props.validationResults
     return React.Children.map(node, (element: React.ReactElement<React.HTMLProps<HTMLElement>>) => {
       if (!element){
@@ -141,6 +157,12 @@ export class Form extends React.Component<IFormProps,{}>{
       }
 
       let props: React.DOMAttributes<HTMLElement> = _.extend({}, element.props);
+
+      if (validationMode && props["validationMode"]){
+        props["validationMode"] = validationMode;
+      }
+
+
       let children = element.props.children;
 
       const fbi = props as IFormBinderInjector<any>;
@@ -159,7 +181,7 @@ export class Form extends React.Component<IFormProps,{}>{
           formBinder.extender(props, this.props.dataBinder, this.notifyChange);
         }
       } else if (children) {
-        children = this.processChildren(children);
+        children = this.processChildren(children, validationMode);
       }
 
       return React.cloneElement<any, any>(element, props, children);

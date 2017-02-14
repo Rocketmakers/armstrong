@@ -2,6 +2,7 @@ import * as React from "react";
 import * as moment from "moment";
 import * as classNames from "classnames";
 import * as _ from "underscore";
+import { IFormInputProps } from "../form";
 import {Form} from "../form";
 import { Grid, Row, Col } from "../../layout/grid";
 import { DateHelpers } from '../../../utilities/dateHelpers';
@@ -10,7 +11,7 @@ import {Formatting} from "../../../utilities/formatting";
 
 export type DateParts = "day" | "month" | "year"
 
-export interface IDateInputProps extends React.Props<DateInput> {
+export interface IDateInputProps extends IFormInputProps<DateInput> {
   /** (string) CSS classname property */
   className?: string;
   /** (number) The tab index of the first select */
@@ -47,7 +48,8 @@ export class DateInput extends React.Component<IDateInputProps, IDateInputState>
     yearLabel:"Year",
     monthLabel:"Month",
     dayLabel:"Day",
-    datePartOrder:["day", "month", "year"]
+    datePartOrder:["day", "month", "year"],
+    validationMode: "none"
   }
 
   private cId = `di_${Math.random()}`;
@@ -100,10 +102,17 @@ export class DateInput extends React.Component<IDateInputProps, IDateInputState>
       "month": buildOptions(this.props.monthLabel, DateHelpers.getMonthValues(), v => v.value, v => v.label),
       "year": buildOptions(this.props.yearLabel, DateHelpers.getYearValues(this.props.futureDates, this.props.yearsFromNow), v => v, v => v.toString())
     }
+    var classes = classNames(
+      "date-input",
+      this.props.className,
+      {
+        "show-validation": (this.props.validationMode !== "none" && this.props["data-validation-message"]),
+        "input-disabled" : this.props.disabled
+      }
+    );
     return (
       <Form
-        className={classNames("date-input", this.props.className, this.props.disabled? "input-disabled" : null)}
-        data-validation-message={this.props["data-validation-message"]}
+        className={classes} title={this.props["data-validation-message"]}
         onDataChanged={this.handleDataChanged}
         dataBinder={Form.jsonDataBinder(this.state)}>
        <Grid>
@@ -118,6 +127,15 @@ export class DateInput extends React.Component<IDateInputProps, IDateInputState>
               )
             })}
           </Row>
+           {this.props["data-validation-message"] && this.props.validationMode !== "none" &&
+            <Row height="auto">
+              <Col>
+                <label className={classNames("validation-message", `validation-message-${this.props.validationMode}`)} title={this.props["data-validation-message"]}>
+                  {(this.props.validationMode === "both" || this.props.validationMode === "below") && this.props["data-validation-message"]}
+                </label>
+              </Col>
+            </Row>
+          }
         </Grid>
       </Form>
     )

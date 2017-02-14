@@ -47,8 +47,8 @@ $spacing-sizes: (
 ) !default;
 
 //// BUTTON & INPUT SPACINGS
-$field-padding-vertical: 0.75em !default;
-$field-padding-horizontal: 1em !default;
+$field-padding-vertical: 15px !default;
+$field-padding-horizontal: 17px !default;
 
 //// COLORS
 $white: #ffffff !default;
@@ -90,6 +90,7 @@ $corner-radius-large: 15px !default;
 
 //// FORMS
 $form-field-height: 40px !default;
+$form-field-bottom-spacing: 10px !default;
 
 
 //// ANIMATION RELATED

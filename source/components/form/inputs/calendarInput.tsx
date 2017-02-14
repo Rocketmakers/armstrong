@@ -3,15 +3,15 @@ import * as ReactDOM from "react-dom";
 import * as _ from "underscore";
 import * as moment from "moment";
 import * as classNames from "classnames";
-import {IValueConverter} from "../formValueConverters";
+import { IFormInputHTMLProps } from "../form";
+import { IValueConverter } from "../formValueConverters";
 import { DateHelpers } from '../../../utilities/dateHelpers';
 import { Grid, Row, Col } from "../../layout/grid";
 import { Icons } from '../../../utilities/icons';
 import { Icon } from '../../display/icon';
 import { isLocaleSet } from "../../../config/config"
 
-export interface ICalendarInputProps extends React.Props<CalendarInput> {
-  className?: string;
+export interface ICalendarInputProps extends IFormInputHTMLProps<CalendarInput> {
   date?: string;
   format?: string;
   min?: string;
@@ -43,7 +43,8 @@ export class CalendarInput extends React.Component<ICalendarInputProps, ICalenda
   private bodyElement: HTMLDivElement;
 
   static defaultProps = {
-    format: 'L'
+    format: 'L',
+    validationMode: "none"
   }
 
   constructor(props: ICalendarInputProps) {
@@ -257,14 +258,16 @@ export class CalendarInput extends React.Component<ICalendarInputProps, ICalenda
       this.props.className,
       {
         "has-icon": this.props.icon !== null,
-        "disabled": this.props.disabled
+        "disabled": this.props.disabled,
+        "show-validation": (this.props.validationMode !== "none" && this.props["data-validation-message"])
       }
     );
     if (this.props.nativeInput) {
       return (
-        <div className={rootClasses} data-validation-message={this.props["data-validation-message"]}>
+        <div className={rootClasses}>
           {this.props.icon && <Icon icon={this.props.icon}/>}
           <input ref={i => this.inputElement = i}
+            data-validation-message={this.props["data-validation-message"]}
             type="date"
             min={this.props.min || ''}
             max={this.props.max || ''}
@@ -275,10 +278,11 @@ export class CalendarInput extends React.Component<ICalendarInputProps, ICalenda
       )
     }
     return (
-      <div className={rootClasses} data-validation-message={this.props["data-validation-message"]}>
+      <div className={rootClasses}>
         <Icon icon={this.props.icon || Icons.Icomoon.calendar2}/>
         {!this.props.alwaysShowCalendar &&
           <input className="cal-input" ref={i => this.inputElement = i}
+            data-validation-message={this.props["data-validation-message"]}
             disabled={this.props.disabled}
             type="text"
             value={this.state.inputValue}
@@ -303,6 +307,11 @@ export class CalendarInput extends React.Component<ICalendarInputProps, ICalenda
             </div>
           </div>
         </div>
+        {this.props["data-validation-message"] && this.props.validationMode !== "none" &&
+          <label className={classNames("validation-message", `validation-message-${this.props.validationMode}`)} title={this.props["data-validation-message"]}>
+            {(this.props.validationMode === "both" || this.props.validationMode === "below") && this.props["data-validation-message"]}
+          </label>
+        }
       </div>
     )
   }

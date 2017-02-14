@@ -1,6 +1,7 @@
 import * as React from "react";
 import * as _ from "underscore";
 import * as classNames from "classnames";
+import { IFormInputProps } from "../form";
 import { IDataBinder, getEventTargetAs } from "../formCore";
 import { FormBinderBase } from "../formBinderBase";
 import { DateHelpers } from '../../../utilities/dateHelpers';
@@ -9,7 +10,7 @@ import { Grid, Row, Col } from "../../layout/grid";
 import { buildOptions } from "./options";
 import { Formatting } from "../../../utilities/formatting";
 
-export interface ITimeInputProps extends React.Props<TimeInput> {
+export interface ITimeInputProps extends IFormInputProps<TimeInput> {
   /** (string) CSS classname property */
   className?: string;
   /** (number) The tab index of the first select */
@@ -39,7 +40,8 @@ export class TimeInput extends React.Component<ITimeInputProps, ITimerInputState
   static defaultProps = {
     time: "",
     hourLabel: "HH",
-    minuteLabel: "MM"
+    minuteLabel: "MM",
+    validationMode: "none"
   }
 
   constructor() {
@@ -91,21 +93,34 @@ export class TimeInput extends React.Component<ITimeInputProps, ITimerInputState
     const hourOptions = buildOptions(this.props.hourLabel, TimeInput.hours, v => v, v => Formatting.twoDigitNumber(v));
     const minuteOptions = buildOptions(this.props.minuteLabel, minutes, v => v, v => Formatting.twoDigitNumber(v));
     return (
-      <Form className={classNames("time-input", this.props.className, this.props.disabled ? "input-disabled" : null)} dataBinder={Form.jsonDataBinder(this.state)} onDataChanged={this.handleDataChanged} data-validation-message={this.props["data-validation-message"]}>
+      <Form className={classNames("time-input", this.props.className, this.props.disabled ? "input-disabled" : null, { "show-validation": (this.props.validationMode !== "none" && this.props["data-validation-message"]) })}
+        dataBinder={Form.jsonDataBinder(this.state)}
+        onDataChanged={this.handleDataChanged}
+        title={this.props["data-validation-message"]}>
         <Grid>
           <Row>
             <Col>
-              <select tabIndex={this.props.tabIndex} {...Form.Bind.selectNumeric("hours") } disabled={this.props.disabled}>
+              <select tabIndex={this.props.tabIndex} {...Form.Bind.selectNumeric("hours") } disabled={this.props.disabled} data-validation-message={this.props["data-validation-message"]}>
                 {hourOptions}
               </select>
             </Col>
             <Col>
-              <select tabIndex={this.props.tabIndex} {...Form.Bind.selectNumeric("minutes") } disabled={this.props.disabled}>
+              <select tabIndex={this.props.tabIndex} {...Form.Bind.selectNumeric("minutes") } disabled={this.props.disabled} data-validation-message={this.props["data-validation-message"]}>
                 {minuteOptions}
               </select>
             </Col>
           </Row>
+          {this.props["data-validation-message"] && this.props.validationMode !== "none" &&
+            <Row height="auto">
+              <Col>
+                <label className={classNames("validation-message", `validation-message-${this.props.validationMode}`)} title={this.props["data-validation-message"]}>
+                  {(this.props.validationMode === "both" || this.props.validationMode === "below") && this.props["data-validation-message"]}
+                </label>
+              </Col>
+            </Row>
+          }
         </Grid>
+
       </Form>
     )
   }

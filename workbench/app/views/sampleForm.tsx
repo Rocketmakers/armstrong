@@ -55,8 +55,23 @@ export class SampleForm extends React.Component<ISampleForm, { binder: IDataBind
         }
     }
     render() {
+        let validations = [
+            {attribute:"name", message:"arghhh"},
+            {attribute:"date", message:"arghhh"},
+            {attribute:"time", message:"arghhh"},
+            {attribute:"auto", message:"arghhh"},
+            {attribute:"autoMulti", message:"arghhh"},
+            {attribute:"expiry", message:"arghhh"},
+            {attribute:"accepts", message:"arghhh"},
+            {attribute:"divisionId", message:"arghhh"},
+            {attribute:"division2Id", message:"arghhh"},
+            {attribute:"userType", message:"arghhh"},
+            {attribute:"userTypeNumeric", message:"arghhh"},
+            {attribute:"reputation", message:"arghhh"},
+            {attribute:"password", message:"arghhh"},
+        ];
         return (
-            <Form dataBinder={this.state.binder} validationResults={[{attribute:"name", message:"arghhh"}]} onDataBinderChange={d => this.setState({ binder: d })}>
+            <Form dataBinder={this.state.binder} validationResults={validations} onDataBinderChange={d => this.setState({ binder: d })}>
                 <div>
                     <TextInput {...Form.Bind.hidden("id") } />
                 </div>
