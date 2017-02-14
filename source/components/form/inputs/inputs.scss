@@ -1,10 +1,4 @@
-input[type='text'],
-input[type='email'],
-input[type='number'],
-input[type='search'],
-input[type='password'],
-input[type='url'],
-input[type='date'],
+input,
 select,
 textarea {
   @include reset-appearance;
