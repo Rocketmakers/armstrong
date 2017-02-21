@@ -22,6 +22,8 @@ export interface IDateInputProps extends IFormInputProps<DateInput> {
   onChange?: (date: string) => void;
   /** (number) How many years from the current year to display in the year dropdown */
   yearsFromNow?: number;
+  /** (number) How many years to skip in the dropdown (useful for age and date limiting) */
+  startYearCap?: number;
   /** (boolean) Should the picker let you choose years from the future rather than the past */
   futureDates?: boolean;
   /** (boolean) Should the picker disallow user interaction */
@@ -100,7 +102,7 @@ export class DateInput extends React.Component<IDateInputProps, IDateInputState>
     const options = {
       "day": buildOptions(this.props.dayLabel, this.getDaysArrayByMonth(), v => v, v => Formatting.twoDigitNumber(parseInt(v))),
       "month": buildOptions(this.props.monthLabel, DateHelpers.getMonthValues(), v => v.value, v => v.label),
-      "year": buildOptions(this.props.yearLabel, DateHelpers.getYearValues(this.props.futureDates, this.props.yearsFromNow), v => v, v => v.toString())
+      "year": buildOptions(this.props.yearLabel, DateHelpers.getYearValues(this.props.futureDates, this.props.yearsFromNow, this.props.startYearCap), v => v, v => v.toString())
     }
     var classes = classNames(
       "date-input",
