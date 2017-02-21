@@ -23,6 +23,7 @@ export interface ISample {
     userTypeNumeric?: number
     tags: string[]
     accepts: boolean
+    birthMonthDay: string
 }
 
 export interface ISampleForm {

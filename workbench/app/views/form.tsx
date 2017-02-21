@@ -8,7 +8,7 @@ interface IFormComponentProps extends React.Props<FormComponent> {
 
 export class FormComponent extends React.Component<IFormComponentProps, {}> {
   render(){
-    return <SampleForm sample={{ id: "s101", name: "Keith2", tags: [], accepts: true }} />
+    return <SampleForm sample={{ id: "s101", name: "Keith2", birthMonthDay: "", tags: [], accepts: true }} />
   }
 }
 
