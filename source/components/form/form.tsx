@@ -27,29 +27,15 @@ export class FormDataClone {
   }
 
   static custom<T>(source: T) {
-    const target: T = {} as any
-    for (var prop in source) {
-      if (source.hasOwnProperty(prop)) {
-        const value = source[prop]
-        if (typeof value === 'object') {
-          if (_.isArray(value)) {
-            target[prop] = value.map(v => {
-              if (typeof v === 'object') {
-                return FormDataClone.custom(v)
-              }
-
-              return v;
-            }) as any
-          } else {
-            target[prop] = FormDataClone.custom(value);
-          }
-        }
-        else {
-          target[prop] = source[prop];
-        }
+    const clone = _.clone(source);
+    _.keys(clone).map(key => {
+      const value = clone[key]
+      if (_.isObject(value)) {
+        clone[key] = FormDataClone.custom(value);
       }
-    }
-    return target;
+    });
+
+    return clone;
   }
 
 }
