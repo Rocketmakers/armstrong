@@ -20,7 +20,7 @@ export class TextInput extends React.Component<ITextInputProps, {}> {
     validationMode: "none"
   }
   static Icomoon = Icons.Icomoon;
-  public input: HTMLElement;
+  public input: HTMLInputElement | HTMLTextAreaElement;
   public focus() {
     if (this.input) {
       this.input.focus()

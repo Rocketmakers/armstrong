@@ -1,7 +1,7 @@
 import * as _ from "underscore";
 import * as React from "react";
 import * as classNames from "classnames";
-import { IFormInputHTMLProps } from "../form";
+import { IFormInputHTMLProps, generateUniqueId } from "../form";
 
 export interface IRadioInputProps extends IFormInputHTMLProps<RadioInput> {
   labelContent: string | React.ReactElement<any>;
@@ -12,7 +12,7 @@ export class RadioInput extends React.Component<IRadioInputProps, {}> {
     validationMode: "none"
   }
   render() {
-    var id = "radio_" + Math.random();
+    var id = generateUniqueId(u => "radio_" + u);
     var classes = classNames(
       "radio",
       this.props.className,

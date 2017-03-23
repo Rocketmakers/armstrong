@@ -1,7 +1,7 @@
 import * as _ from "underscore";
 import * as React from "react";
 import * as classNames from "classnames";
-import { IFormInputHTMLProps } from "../form";
+import { IFormInputHTMLProps, generateUniqueId } from "../form";
 
 export interface ICheckboxInputProps extends IFormInputHTMLProps<CheckboxInput> {
   labelContent: string | React.ReactElement<any>;
@@ -12,7 +12,7 @@ export class CheckboxInput extends React.Component<ICheckboxInputProps, {}> {
     validationMode: "none"
   }
   render() {
-    const id = "checkbox_" + Math.random();
+    const id = generateUniqueId( u => "checkbox_" + u);
     var classes = classNames(
       "checkbox",
       this.props.className,

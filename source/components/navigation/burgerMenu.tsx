@@ -2,7 +2,7 @@ import * as React from "react";
 import * as ReactDOM from "react-dom";
 import { Icon } from "./../display/icon";
 import { Icons } from "./../../utilities/icons";
-
+import { generateUniqueId } from "../form/form";
 export interface IBurgerMenuProps {
   buttonIcon?: string;
   bodyId?: string;
@@ -21,7 +21,7 @@ export class BurgerMenu extends React.Component<IBurgerMenuProps, {}>{
 
   constructor() {
     super();
-    this.menuId = `burger-menu${Math.random()}`;
+    this.menuId = generateUniqueId(u => `burger-menu-${u}`);
   }
   toggleMenu() {
     if (!this.isOpen) {

@@ -40,6 +40,11 @@ export class FormDataClone {
 
 }
 
+export function generateUniqueId(formatter?: (unique: string) => string) {
+  const u = `${Math.random()}`
+  return formatter ? formatter(u) : u
+}
+
 export interface IFormInputProps<T> extends React.Props<T> {
   /** (string) How to display validation messages */
   validationMode?: "none" | "icon" | "below" | "both";

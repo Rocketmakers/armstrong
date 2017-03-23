@@ -27,7 +27,7 @@ export interface IAutoCompleteInputProps extends IFormInputProps<AutoCompleteInp
   /** (string) The text to use a placeholder when no value is present */
   placeholder?: string;
   /** (string) The text show when no results were found */
-  noResultsMessage?: string;
+  noResultsMessage?: string | JSX.Element | {(value: string): string | JSX.Element};
   /** (IAutoCompleteOption[]) If you are using local rather than remote options, specify them here */
   options?: IAutoCompleteOption[];
   /** (number) How long to wait after every key press before executing a remote query */
@@ -386,7 +386,7 @@ export class AutoCompleteInput extends React.Component<IAutoCompleteInputProps, 
                   {this.state.filteredOptions && this.state.filteredOptions.map((o, i) =>
                     <div data-index={i} key={`dd-item-${i}`} className={`dd-list-item${i === this.state.selectedIndex ? ' selected' : ''}${(this.props.multiSelect && _.some((this.state.selectedValue as IAutoCompleteOption[]), ddo => ddo.id === o.id)) ? ' in-selected-list' : ''}`}
                       onClick={() => this.handleSelection(o)}>{o.name}</div>)}
-                  {this.state.filteredOptions.length === 0 && this.state.query && <div className="dd-list-item-no-select">{this.props.noResultsMessage || "No results..."}</div>}
+                  {this.state.filteredOptions.length === 0 && this.state.query && <div className="dd-list-item-no-select">{getNoResults(this.state.query, this.props.noResultsMessage)}</div>}
                 </div>
               </div>
             }
@@ -404,4 +404,14 @@ export class AutoCompleteInput extends React.Component<IAutoCompleteInputProps, 
         }
       </Grid>)
   }
+}
+
+function getNoResults(search: string, message: string | JSX.Element | {(value: string): string | JSX.Element}): string | JSX.Element{
+  if (!message) {
+    return "No results..."
+  }
+  if (_.isFunction(message)){
+    return message(search)
+  }
+  return message;
 }

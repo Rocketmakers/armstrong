@@ -2,7 +2,7 @@ import * as React from "react";
 import * as moment from "moment";
 import * as classNames from "classnames";
 import * as _ from "underscore";
-import { IFormInputProps } from "../form";
+import { IFormInputProps, generateUniqueId } from "../form";
 import {Form} from "../form";
 import { Grid, Row, Col } from "../../layout/grid";
 import { DateHelpers } from '../../../utilities/dateHelpers';
@@ -54,7 +54,7 @@ export class DateInput extends React.Component<IDateInputProps, IDateInputState>
     validationMode: "none"
   }
 
-  private cId = `di_${Math.random()}`;
+  private cId = generateUniqueId(u => `di_${u}`);
   constructor(props: IDateInputProps) {
     super(props);
     this.validateProps(props)

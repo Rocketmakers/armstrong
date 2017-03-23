@@ -2,7 +2,7 @@ import * as React from "react";
 import * as ReactDOM from "react-dom";
 import { Icon } from "./icon";
 import { Grid, Row, Col } from './../layout/grid';
-
+import { generateUniqueId } from "../form/form";
 export interface IDialogProps extends React.HTMLProps<Dialog> {
   /** (string) default: 'host' - The ID of your sites body element  */
   bodyId?: string;
@@ -20,7 +20,7 @@ export interface IDialogProps extends React.HTMLProps<Dialog> {
   onOpen?: () => void;
   /** (()=> void) Event to fire when the x button is clicked. Use this to confirm (double dialogs) */
   onXClicked?: () => void;
-  /** (React.ReactElement<any>) A collection of elements, normally buttons, to put in the footer */
+  /** (React.ReactElement<any>) An element, normally containing buttons, to put in the footer */
   footerContent?: React.ReactElement<any>;
 }
 
@@ -56,7 +56,7 @@ export class Dialog extends React.Component<IDialogProps, {}>{
     this.dialogContentElement = document.getElementById("dialog-content");
     this.appNode = document.getElementById(this.props.bodyId || "host");
     if (this.props.isOpen) {
-      this.renderToPortal(this.renderDialog(this.props))
+      this.renderToPortal(this.props)
     }
   }
 
@@ -66,7 +66,7 @@ export class Dialog extends React.Component<IDialogProps, {}>{
       this.props.onOpen();
     }
     if (open) {
-      this.renderToPortal(this.renderDialog(newProps))
+      this.renderToPortal(newProps)
     }
     if (!open && this.props.isOpen) {
       if (this.props.onClose) {
@@ -76,7 +76,8 @@ export class Dialog extends React.Component<IDialogProps, {}>{
     }
   }
 
-  renderToPortal(element) {
+  private renderToPortal(props: IDialogProps) {
+    let element = this.renderDialog(props)
     let node = this.portalNode;
 
     if (node == null) {
@@ -85,7 +86,7 @@ export class Dialog extends React.Component<IDialogProps, {}>{
       if (this.props.layerClass) {
         this.portalNode.classList.add(this.props.layerClass);
       }
-      node.id = this.dialogId || `dialog-layer-${Math.random()}`;
+      node.id = this.dialogId || generateUniqueId(u => `dialog-layer-${u}`);
       this.appNode.appendChild(node);
     }
 
@@ -105,7 +106,7 @@ export class Dialog extends React.Component<IDialogProps, {}>{
     this.unmountPortalNode();
   }
 
-  unmountPortalNode() {
+  private unmountPortalNode() {
     if (!this.portalNode) {
       return;
     }
@@ -121,7 +122,8 @@ export class Dialog extends React.Component<IDialogProps, {}>{
     }
     return unmounted;
   }
-  renderDialog(newProps) {
+
+  private renderDialog(newProps) {
     var style = { width: this.props.width || "500px", height: this.props.height || "auto" }
     return (
       <div className={`dialog${this.props.className ? ` ${this.props.className}` : ''}`} style={style} id={this.dialogId}>
@@ -145,6 +147,7 @@ export class Dialog extends React.Component<IDialogProps, {}>{
       </div>
     )
   }
+
   render() {
     return (
       <noscript />

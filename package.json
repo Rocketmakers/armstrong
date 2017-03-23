@@ -1,12 +1,13 @@
 {
   "name": "armstrong-react",
-  "version": "1.0.55",
+  "version": "1.0.56",
   "description": "Rocketmakers Armstrong library of React components (For projects using npm @types from Typescript 2.0)",
   "main": "./dist/index.js",
   "style": "./dist/style.scss",
   "typings": "./dist/index.d.ts",
   "scripts": {
-    "build": "tsc -p source -d && node sass_concat.js"
+    "build": "tsc -p source -d && node sass_concat.js",
+    "workbench": "(cd workbench && yarn start)"
   },
   "repository": {
     "type": "git",
