@@ -89,6 +89,15 @@ export interface IFormContext {
   parent: IFormContext
 }
 
+export function extractChildValidationResults(validationResults: IFormValidationResult[], dataPath: string) {
+  const vr = validationResults && _.filter(validationResults, vr => vr.attribute.indexOf(dataPath + ".") === 0)
+  if (!vr) {
+    return
+  }
+
+  return vr.map(a => ({ ...a, attribute: a.attribute.substring(dataPath.length + 1) }))
+}
+
 /**
 A stateless data bindable form - state is held within the 'dataBinder' property
 NOTE: This is designed to render all elements in the form on every change. This allows other participating elements to react to these changes
@@ -161,14 +170,19 @@ export class Form extends React.Component<IFormProps, {}>{
       if (formBinder) {
         updateFormBinderInjector(fbi, null)
         if (validationResults && validationResults.length) {
-          const vr = _.find(validationResults, vr => vr.attribute === formBinder.dataPath)
+          let vr: IFormValidationResult = _.find(validationResults, vr => vr.attribute === formBinder.dataPath);
           if (vr) {
-            props["data-validation-message"] = vr.message
-            if (validationMode && props["validationMode"]) {
-              props["validationMode"] = validationMode;
-            }
+            props["data-validation-message"] = vr.message;
+          } else {
+            // use for child form
+            props["validationResults"] = extractChildValidationResults(validationResults, formBinder.dataPath)
+          }
+
+          if (validationMode && props["validationMode"]) {
+            props["validationMode"] = validationMode;
           }
         }
+
         formBinder.setElementProperty(props, this.props.dataBinder);
         formBinder.handleValueChanged(props, this.props.dataBinder, this.notifyChange);
         if (formBinder.extender) {
