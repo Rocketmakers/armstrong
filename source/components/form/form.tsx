@@ -8,12 +8,14 @@ import * as classnames from "classnames";
 /** The default Json Entity binder - NOTE, the original instance provided is MUTABLE */
 class JsonEntityBinder<T> implements IDataBinder<T>{
   constructor(private data: T) { }
-  getValue(dataName: string): any {
-    return PropertyPathResolver.getValue(this.data, dataName)
+  lastDataPathSet?: string
+  getValue(dataPath: string): any {
+    return PropertyPathResolver.getValue(this.data, dataPath)
   }
 
-  setValue(dataName: string, value: any): void {
-    PropertyPathResolver.setValue(this.data, dataName, value)
+  setValue(dataPath: string, value: any): void {
+    PropertyPathResolver.setValue(this.data, dataPath, value)
+    this.lastDataPathSet = dataPath
   }
 
   toJson(): T {

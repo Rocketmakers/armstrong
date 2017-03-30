@@ -242,6 +242,7 @@ export class CalendarInput extends React.Component<ICalendarInputProps, ICalenda
   }
 
   render() {
+    const dvm = this.props["data-validation-message"]
     const weekdays = _.range(0, 7).map(n => <div className="date-picker-week-day" key={`day_name_${n}`}>{moment().startOf('week').add(n, 'days').format('dd') }</div>)
     const days = this.getDaysInMonth();
     const currentDisplayDate = this.state.selectedMonthStart.format("MMMM - YYYY");
@@ -259,7 +260,7 @@ export class CalendarInput extends React.Component<ICalendarInputProps, ICalenda
       {
         "has-icon": this.props.icon !== null,
         "disabled": this.props.disabled,
-        "show-validation": (this.props.validationMode !== "none" && this.props["data-validation-message"])
+        "show-validation": (this.props.validationMode !== "none" && dvm)
       }
     );
     if (this.props.nativeInput) {
@@ -267,7 +268,7 @@ export class CalendarInput extends React.Component<ICalendarInputProps, ICalenda
         <div className={rootClasses}>
           {this.props.icon && <Icon icon={this.props.icon}/>}
           <input ref={i => this.inputElement = i}
-            data-validation-message={this.props["data-validation-message"]}
+            data-validation-message={dvm}
             type="date"
             min={this.props.min || ''}
             max={this.props.max || ''}
@@ -282,7 +283,7 @@ export class CalendarInput extends React.Component<ICalendarInputProps, ICalenda
         <Icon icon={this.props.icon || Icons.Icomoon.calendar2}/>
         {!this.props.alwaysShowCalendar &&
           <input className="cal-input" ref={i => this.inputElement = i}
-            data-validation-message={this.props["data-validation-message"]}
+            data-validation-message={dvm}
             disabled={this.props.disabled}
             type="text"
             value={this.state.inputValue}
@@ -307,9 +308,9 @@ export class CalendarInput extends React.Component<ICalendarInputProps, ICalenda
             </div>
           </div>
         </div>
-        {this.props["data-validation-message"] && this.props.validationMode !== "none" &&
-          <label className={classNames("validation-message", `validation-message-${this.props.validationMode}`)} title={this.props["data-validation-message"]}>
-            {(this.props.validationMode === "both" || this.props.validationMode === "below") && this.props["data-validation-message"]}
+        {dvm && this.props.validationMode !== "none" &&
+          <label className={classNames("validation-message", `validation-message-${this.props.validationMode}`)} title={dvm}>
+            {(this.props.validationMode === "both" || this.props.validationMode === "below") && dvm}
           </label>
         }
       </div>

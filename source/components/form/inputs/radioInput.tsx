@@ -12,17 +12,19 @@ export class RadioInput extends React.Component<IRadioInputProps, {}> {
     validationMode: "none"
   }
   render() {
-    var id = generateUniqueId(u => "radio_" + u);
-    var classes = classNames(
+    const dvm = this.props["data-validation-message"]
+
+    const id = generateUniqueId(u => "radio_" + u);
+    const classes = classNames(
       "radio",
       this.props.className,
       {
-        "show-validation": (this.props.validationMode !== "none" && this.props["data-validation-message"])
+        "show-validation": (this.props.validationMode !== "none" && dvm)
       }
     );
     return (
-      <div className={classes} title={this.props["data-validation-message"]}>
-        <input id={id} { ..._.omit(this.props, "labelContent", "validationMode") } type="radio" data-validation-message={this.props["data-validation-message"]}/>
+      <div className={classes} title={dvm}>
+        <input id={id} { ..._.omit(this.props, "labelContent", "validationMode") } type="radio" data-validation-message={dvm}/>
         <label htmlFor={id} />
         <label className="radio-label" htmlFor={id}>{this.props.labelContent}</label>
       </div>

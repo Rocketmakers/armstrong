@@ -35,15 +35,16 @@ export class SelectInput extends React.Component<ISelectInputProps, {}> {
     }
   }
   render() {
-    var classes = classNames(
+    const dvm = this.props["data-validation-message"]
+    const classes = classNames(
       "select-input",
       this.props.className,
       {
-        "show-validation": (this.props.validationMode !== "none" && this.props["data-validation-message"])
+        "show-validation": (this.props.validationMode !== "none" && dvm)
       }
     );
     return (
-      <div className={classes} title={this.props["data-validation-message"]}>
+      <div className={classes} title={dvm}>
         <select ref={r => this.select = r} {..._.omit(this.props, "options", "change", "onChange", "optionLabel", "validationMode") } onChange={this.change}>
           {buildOptions(this.props.optionLabel, this.props.options, o => o.id, o => o.name)}
         </select>

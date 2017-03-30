@@ -84,13 +84,15 @@ export class Home extends React.Component<{}, { dialogOpen?: boolean, canClick?:
         <Button disabled={true} onClick={() => alert('testing 123')}>test disabled</Button>
         <Button onClick={() => this.setState({ pending: !this.state.pending })}>waddup?</Button>
         <Button rounded={true} pending={this.state.pending} >waddup!</Button>
-        <SampleForm sample={{ id: "s101", name: "Keith2", tags: [], accepts: true }} />
+        <SampleForm sample={{ id: "s101", name: "Keith2", tags: [], accepts: true, birthMonthDay:"12-14" }} />
         <AutoCompleteInput ignoreDiacritics={true} options={options} />
+
+        <Button onClick={() => this.setState({ dialogOpen: true })}>open dialog plz</Button>
 
         <Dialog title="waddup" isOpen={this.state.dialogOpen} onClose={() => this.setState({ dialogOpen: false })} footerContent={
           <Button disabled={!this.state.canClick}>OH NO</Button>
         }>
-          oh shit, waddup?<Button onClick={() => this.setState({ canClick: false })}>disable BUTT</Button>
+          oh sheee, waddup?<Button onClick={() => this.setState({ canClick: false })}>disable BUTT</Button>
         </Dialog>
 
         <Sample title="Select Input"
@@ -102,7 +104,6 @@ export class Home extends React.Component<{}, { dialogOpen?: boolean, canClick?:
                 { id: 2, name: "P3 Hub" },
                 { id: 3, name: "Pathway toolkit" }]} />
           } />
-        <Button onClick={() => this.setState({ dialogOpen: true })}>open dialog plz</Button>
 
         <Sample title="Grid"
           description="A grid with 3 columns"

@@ -30,6 +30,7 @@ Wraps access to the data being bound to the form.
 This provides the bridge between the data source and the form elements
 */
 export interface IDataBinder<T>{
+  lastDataPathSet?: string
   /** Gets a value for the data path (uses dot notation)*/
   getValue(dataPath: string): any;
   /** Sets a value for the data path (uses dot notation)*/

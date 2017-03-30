@@ -15,11 +15,11 @@ export class PropertyPathResolver {
   const name = PropertyPathResolver.getValue(person, "name")
   const firstAddressTitle = PropertyPathResolver.getValue(person, "addresses.0.title")
   */
-  static getValue(data: any, dataName: string): any{
-    const parts = dataName.split(".");
+  static getValue(data: any, dataPath: string): any{
+    const parts = dataPath.split(".");
     return _.reduce(parts, (result,p: string, index: number)=>{
       if (!result || !p){
-        throw new Error(`${dataName} not found in data - failed on '${p}' (part: ${index})`);
+        throw new Error(`${dataPath} not found in data - failed on '${p}' (part: ${index})`);
       }
       return result[p]
     }, data);
@@ -31,12 +31,12 @@ export class PropertyPathResolver {
   PropertyPathResolver.setValue(person, "name", "Dave")
   PropertyPathResolver.setValue(person, "addresses.0.title", "home")
   */
-  static setValue(data: any, dataName: string, value: any): void{
-    const parts = dataName.split(".");
+  static setValue(data: any, dataPath: string, value: any): void{
+    const parts = dataPath.split(".");
     const lastIndex = parts.length - 1;
     _.each(parts, (p,index) => {
       if (!data || !p){
-        throw new Error(`${dataName} not found in data - failed on '${p}' (part: ${index})`);
+        throw new Error(`${dataPath} not found in data - failed on '${p}' (part: ${index})`);
       }
       if (index === lastIndex) {
         data[p] = value;

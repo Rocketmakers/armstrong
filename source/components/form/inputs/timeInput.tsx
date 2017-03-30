@@ -89,32 +89,33 @@ export class TimeInput extends React.Component<ITimeInputProps, ITimerInputState
   }
 
   render() {
-    var minutes = _.range(0, 60, this.props.minuteStep || 1);
+    const dvm = this.props["data-validation-message"]
+    const minutes = _.range(0, 60, this.props.minuteStep || 1);
     const hourOptions = buildOptions(this.props.hourLabel, TimeInput.hours, v => v, v => Formatting.twoDigitNumber(v));
     const minuteOptions = buildOptions(this.props.minuteLabel, minutes, v => v, v => Formatting.twoDigitNumber(v));
     return (
-      <Form className={classNames("time-input", this.props.className, this.props.disabled ? "input-disabled" : null, { "show-validation": (this.props.validationMode !== "none" && this.props["data-validation-message"]) })}
+      <Form className={classNames("time-input", this.props.className, this.props.disabled ? "input-disabled" : null, { "show-validation": (this.props.validationMode !== "none" && dvm) })}
         dataBinder={Form.jsonDataBinder(this.state)}
         onDataChanged={this.handleDataChanged}
-        title={this.props["data-validation-message"]}>
+        title={dvm}>
         <Grid>
           <Row>
             <Col>
-              <select tabIndex={this.props.tabIndex} {...Form.Bind.selectNumeric("hours") } disabled={this.props.disabled} data-validation-message={this.props["data-validation-message"]}>
+              <select tabIndex={this.props.tabIndex} {...Form.Bind.selectNumeric("hours") } disabled={this.props.disabled} data-validation-message={dvm}>
                 {hourOptions}
               </select>
             </Col>
             <Col>
-              <select tabIndex={this.props.tabIndex} {...Form.Bind.selectNumeric("minutes") } disabled={this.props.disabled} data-validation-message={this.props["data-validation-message"]}>
+              <select tabIndex={this.props.tabIndex} {...Form.Bind.selectNumeric("minutes") } disabled={this.props.disabled} data-validation-message={dvm}>
                 {minuteOptions}
               </select>
             </Col>
           </Row>
-          {this.props["data-validation-message"] && this.props.validationMode !== "none" &&
+          {dvm && this.props.validationMode !== "none" &&
             <Row height="auto">
               <Col>
-                <label className={classNames("validation-message", `validation-message-${this.props.validationMode}`)} title={this.props["data-validation-message"]}>
-                  {(this.props.validationMode === "both" || this.props.validationMode === "below") && this.props["data-validation-message"]}
+                <label className={classNames("validation-message", `validation-message-${this.props.validationMode}`)} title={dvm}>
+                  {(this.props.validationMode === "both" || this.props.validationMode === "below") && dvm}
                 </label>
               </Col>
             </Row>

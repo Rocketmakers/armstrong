@@ -8,7 +8,6 @@ import { Grid, Row, Col } from './../../layout/grid';
 import { Button } from './../../interaction/button';
 import { DiacriticsStripper } from '../../../utilities/diacriticsStripper';
 import { IDataBinder, getEventTargetAs } from "../formCore";
-//import {Promise} from "es6-promise";
 
 export interface IAutoCompleteOption {
   id: number | string;
@@ -317,19 +316,21 @@ export class AutoCompleteInput extends React.Component<IAutoCompleteInputProps, 
     })
   }
   render() {
-    var classes = classNames(
+    const dvm = this.props["data-validation-message"]
+
+    const classes = classNames(
       "autocomplete-select",
       `${this.props.multiSelect && (this.state.selectedValue as IAutoCompleteOption[]).length !== 0 ? ' has-multiple-options' : ''}`,
       this.props.className,
       {
         "has-go-button": this.props.hasGoButton,
         "disabled": this.props.disabled,
-        "show-validation": (this.props.validationMode !== "none" && this.props["data-validation-message"])
+        "show-validation": (this.props.validationMode !== "none" && dvm)
       }
     );
     return (
       <Grid
-        title={this.props["data-validation-message"]}
+        title={dvm}
         onClick={(e) => this.focusInput(e)}
         className={classes}>
         <Row>
@@ -373,7 +374,7 @@ export class AutoCompleteInput extends React.Component<IAutoCompleteInputProps, 
             {this.state.open &&
               <div className={classNames("autocomplete-select-list-wrapper", this.props.multiSelect ? 'multi-select' : '')}>
                 <input type="text"
-                  data-validation-message={this.props["data-validation-message"]}
+                  data-validation-message={dvm}
                   style={{ marginTop: `${this.props.multiSelect && this.state.showOnTop && `${this.state.topOffset}px`}` }}
                   value={this.state.query}
                   onKeyUp={(e) => this.checkKey(e)}
@@ -393,11 +394,11 @@ export class AutoCompleteInput extends React.Component<IAutoCompleteInputProps, 
           </Col>
           {this.props.hasGoButton && !this.props.multiSelect && <Col width="auto"><Button className="bg-positive" onClick={() => this.buttonClick()}>{this.props.goButtonContent || "Go"}</Button></Col>}
         </Row>
-        {this.props["data-validation-message"] && this.props.validationMode !== "none" &&
+        {dvm && this.props.validationMode !== "none" &&
           <Row height="auto">
             <Col>
-              <label className={classNames("validation-message", `validation-message-${this.props.validationMode}`)} title={this.props["data-validation-message"]}>
-                {(this.props.validationMode === "both" || this.props.validationMode === "below") && this.props["data-validation-message"]}
+              <label className={classNames("validation-message", `validation-message-${this.props.validationMode}`)} title={dvm}>
+                {(this.props.validationMode === "both" || this.props.validationMode === "below") && dvm}
               </label>
             </Col>
           </Row>

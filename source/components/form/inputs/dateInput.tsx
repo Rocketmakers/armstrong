@@ -99,22 +99,24 @@ export class DateInput extends React.Component<IDateInputProps, IDateInputState>
   }
 
   render() {
+    const dvm = this.props["data-validation-message"]
+
     const options = {
       "day": buildOptions(this.props.dayLabel, this.getDaysArrayByMonth(), v => v, v => Formatting.twoDigitNumber(parseInt(v))),
       "month": buildOptions(this.props.monthLabel, DateHelpers.getMonthValues(), v => v.value, v => v.label),
       "year": buildOptions(this.props.yearLabel, DateHelpers.getYearValues(this.props.futureDates, this.props.yearsFromNow, this.props.startYearCap), v => v, v => v.toString())
     }
-    var classes = classNames(
+    const classes = classNames(
       "date-input",
       this.props.className,
       {
-        "show-validation": (this.props.validationMode !== "none" && this.props["data-validation-message"]),
+        "show-validation": (this.props.validationMode !== "none" && dvm),
         "input-disabled" : this.props.disabled
       }
     );
     return (
       <Form
-        className={classes} title={this.props["data-validation-message"]}
+        className={classes} title={dvm}
         onDataChanged={this.handleDataChanged}
         dataBinder={Form.jsonDataBinder(this.state)}>
        <Grid>
@@ -129,11 +131,11 @@ export class DateInput extends React.Component<IDateInputProps, IDateInputState>
               )
             })}
           </Row>
-           {this.props["data-validation-message"] && this.props.validationMode !== "none" &&
+           {dvm && this.props.validationMode !== "none" &&
             <Row height="auto">
               <Col>
-                <label className={classNames("validation-message", `validation-message-${this.props.validationMode}`)} title={this.props["data-validation-message"]}>
-                  {(this.props.validationMode === "both" || this.props.validationMode === "below") && this.props["data-validation-message"]}
+                <label className={classNames("validation-message", `validation-message-${this.props.validationMode}`)} title={dvm}>
+                  {(this.props.validationMode === "both" || this.props.validationMode === "below") && dvm}
                 </label>
               </Col>
             </Row>
