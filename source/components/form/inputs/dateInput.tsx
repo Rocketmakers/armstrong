@@ -7,7 +7,8 @@ import {Form} from "../form";
 import { Grid, Row, Col } from "../../layout/grid";
 import { DateHelpers } from '../../../utilities/dateHelpers';
 import {buildOptions} from "./options";
-import {Formatting} from "../../../utilities/formatting";
+import { Formatting } from "../../../utilities/formatting";
+import { ValidationLabel } from "../validationWrapper";
 
 export type DateParts = "day" | "month" | "year"
 
@@ -99,7 +100,7 @@ export class DateInput extends React.Component<IDateInputProps, IDateInputState>
   }
 
   render() {
-    const dvm = this.props["data-validation-message"]
+    const validationMessage = this.props["data-validation-message"]
 
     const options = {
       "day": buildOptions(this.props.dayLabel, this.getDaysArrayByMonth(), v => v, v => Formatting.twoDigitNumber(parseInt(v))),
@@ -110,13 +111,13 @@ export class DateInput extends React.Component<IDateInputProps, IDateInputState>
       "date-input",
       this.props.className,
       {
-        "show-validation": (this.props.validationMode !== "none" && dvm),
+        "show-validation": (this.props.validationMode !== "none" && validationMessage),
         "input-disabled" : this.props.disabled
       }
     );
     return (
       <Form
-        className={classes} title={dvm}
+        className={classes} title={validationMessage}
         onDataChanged={this.handleDataChanged}
         dataBinder={Form.jsonDataBinder(this.state)}>
        <Grid>
@@ -131,15 +132,7 @@ export class DateInput extends React.Component<IDateInputProps, IDateInputState>
               )
             })}
           </Row>
-           {dvm && this.props.validationMode !== "none" &&
-            <Row height="auto">
-              <Col>
-                <label className={classNames("validation-message", `validation-message-${this.props.validationMode}`)} title={dvm}>
-                  {(this.props.validationMode === "both" || this.props.validationMode === "below") && dvm}
-                </label>
-              </Col>
-            </Row>
-          }
+          <ValidationLabel message={validationMessage} mode={this.props.validationMode} wrapper={p => <Row height="auto"><Col {...p} /></Row>} />
         </Grid>
       </Form>
     )

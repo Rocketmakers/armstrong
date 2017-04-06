@@ -4,6 +4,7 @@ import * as classNames from "classnames";
 import { IFormInputHTMLProps } from "../form";
 import { Icon } from "./../../display/icon";
 import { Icons } from "./../../../utilities/icons";
+import { ValidationLabel } from "../validationWrapper";
 
 export interface ITextInputProps extends IFormInputHTMLProps<TextInput> {
   multiLine?: boolean;
@@ -32,7 +33,7 @@ export class TextInput extends React.Component<ITextInputProps, {}> {
     }
   }
   render() {
-    const dvm = this.props["data-validation-message"]
+    const validationMessage = this.props["data-validation-message"]
     var classes = classNames(
       "text-input",
       this.props.className,
@@ -42,23 +43,20 @@ export class TextInput extends React.Component<ITextInputProps, {}> {
         "has-text-overlay-left": this.props.leftOverlayText !== undefined,
         "text-input-icon-left": this.props.leftIcon !== undefined,
         "text-input-icon-right": this.props.rightIcon !== undefined,
-        "show-validation": (this.props.validationMode !== "none" && dvm)
+        "show-validation": (this.props.validationMode !== "none" && validationMessage)
       }
     );
     var ps = _.omit(this.props, "className", "readonly", "rightOverlayText", "leftOverlayText", "type", "leftIcon", "rightIcon", "multiLine", "validationMode")
     return (
-      <div className={classes} title={dvm}>
+      <div className={classes} title={validationMessage}>
         {this.props.leftIcon && <Icon className="left-icon" icon={this.props.leftIcon} />}
         {this.props.leftOverlayText && <div className="input-overlay-text-left">{this.props.leftOverlayText}</div>}
         {!this.props.multiLine && <input ref={r => this.input = r} type={this.props.type || "text"} readOnly={this.props.readonly} {...ps} placeholder={this.props.placeholder} required={this.props.required} />}
         {this.props.multiLine && <textarea ref={r => this.input = r} readOnly={this.props.readonly} {...ps} placeholder={this.props.placeholder} />}
         {this.props.rightOverlayText && <div className="input-overlay-text-right">{this.props.rightOverlayText}</div>}
         {this.props.rightIcon && <Icon className="right-icon" icon={this.props.rightIcon} />}
-        {dvm && this.props.validationMode !== "none" &&
-          <label className={classNames("validation-message", `validation-message-${this.props.validationMode}`)} title={dvm}>
-            {(this.props.validationMode === "both" || this.props.validationMode === "below") && dvm}
-          </label>
-        }
+        {this.props.children}
+        <ValidationLabel message={validationMessage} mode={this.props.validationMode} />
       </div>
     );
   }

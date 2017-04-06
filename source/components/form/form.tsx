@@ -47,14 +47,16 @@ export function generateUniqueId(formatter?: (unique: string) => string) {
   return formatter ? formatter(u) : u
 }
 
+export type ValidationModes = "none" | "icon" | "below" | "both";
+
 export interface IFormInputProps<T> extends React.Props<T> {
   /** (string) How to display validation messages */
-  validationMode?: "none" | "icon" | "below" | "both";
+  validationMode?: ValidationModes;
 }
 
 export interface IFormInputHTMLProps<T> extends React.HTMLProps<T> {
   /** (string) How to display validation messages */
-  validationMode?: "none" | "icon" | "below" | "both";
+  validationMode?: ValidationModes;
 }
 
 

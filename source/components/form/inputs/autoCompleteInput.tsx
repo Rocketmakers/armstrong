@@ -8,6 +8,7 @@ import { Grid, Row, Col } from './../../layout/grid';
 import { Button } from './../../interaction/button';
 import { DiacriticsStripper } from '../../../utilities/diacriticsStripper';
 import { IDataBinder, getEventTargetAs } from "../formCore";
+import { ValidationLabel } from "../validationWrapper";
 
 export interface IAutoCompleteOption {
   id: number | string;
@@ -316,7 +317,7 @@ export class AutoCompleteInput extends React.Component<IAutoCompleteInputProps, 
     })
   }
   render() {
-    const dvm = this.props["data-validation-message"]
+    const validationMessage = this.props["data-validation-message"]
 
     const classes = classNames(
       "autocomplete-select",
@@ -325,12 +326,12 @@ export class AutoCompleteInput extends React.Component<IAutoCompleteInputProps, 
       {
         "has-go-button": this.props.hasGoButton,
         "disabled": this.props.disabled,
-        "show-validation": (this.props.validationMode !== "none" && dvm)
+        "show-validation": (this.props.validationMode !== "none" && validationMessage)
       }
     );
     return (
       <Grid
-        title={dvm}
+        title={validationMessage}
         onClick={(e) => this.focusInput(e)}
         className={classes}>
         <Row>
@@ -374,7 +375,7 @@ export class AutoCompleteInput extends React.Component<IAutoCompleteInputProps, 
             {this.state.open &&
               <div className={classNames("autocomplete-select-list-wrapper", this.props.multiSelect ? 'multi-select' : '')}>
                 <input type="text"
-                  data-validation-message={dvm}
+                  data-validation-message={validationMessage}
                   style={{ marginTop: `${this.props.multiSelect && this.state.showOnTop && `${this.state.topOffset}px`}` }}
                   value={this.state.query}
                   onKeyUp={(e) => this.checkKey(e)}
@@ -394,15 +395,7 @@ export class AutoCompleteInput extends React.Component<IAutoCompleteInputProps, 
           </Col>
           {this.props.hasGoButton && !this.props.multiSelect && <Col width="auto"><Button className="bg-positive" onClick={() => this.buttonClick()}>{this.props.goButtonContent || "Go"}</Button></Col>}
         </Row>
-        {dvm && this.props.validationMode !== "none" &&
-          <Row height="auto">
-            <Col>
-              <label className={classNames("validation-message", `validation-message-${this.props.validationMode}`)} title={dvm}>
-                {(this.props.validationMode === "both" || this.props.validationMode === "below") && dvm}
-              </label>
-            </Col>
-          </Row>
-        }
+        <ValidationLabel message={validationMessage} mode={this.props.validationMode} wrapper={p => <Row height="auto"><Col {...p} /></Row>} />
       </Grid>)
   }
 }

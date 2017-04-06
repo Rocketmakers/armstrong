@@ -42,4 +42,5 @@ export { TabControl, TabItem, ITabItemProps, ITabControlProps, ITabControlState 
 export { Sample, ISampleProps, IPropInfo } from "./components/utility/sample";
 
 import * as ArmstrongConfig from "./config/config"
+export { ValidationLabel, ValidationWrapper } from "./components/form/validationWrapper";
 export { ArmstrongConfig };

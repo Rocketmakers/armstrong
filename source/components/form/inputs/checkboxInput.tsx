@@ -13,13 +13,13 @@ export class CheckboxInput extends React.Component<ICheckboxInputProps, {}> {
   }
   render() {
     const id = generateUniqueId( u => "checkbox_" + u);
-    const dvm = this.props["data-validation-message"]
+    const validationMessage = this.props["data-validation-message"]
 
     var classes = classNames(
       "checkbox",
       this.props.className,
       {
-        "show-validation": (this.props.validationMode !== "none" && dvm)
+        "show-validation": (this.props.validationMode !== "none" && validationMessage)
       }
     );
     return (

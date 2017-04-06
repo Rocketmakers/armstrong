@@ -10,6 +10,7 @@ import { Grid, Row, Col } from "../../layout/grid";
 import { Icons } from '../../../utilities/icons';
 import { Icon } from '../../display/icon';
 import { isLocaleSet } from "../../../config/config"
+import { ValidationLabel } from "../validationWrapper";
 
 export interface ICalendarInputProps extends IFormInputHTMLProps<CalendarInput> {
   date?: string;
@@ -242,7 +243,7 @@ export class CalendarInput extends React.Component<ICalendarInputProps, ICalenda
   }
 
   render() {
-    const dvm = this.props["data-validation-message"]
+    const validationMessage = this.props["data-validation-message"]
     const weekdays = _.range(0, 7).map(n => <div className="date-picker-week-day" key={`day_name_${n}`}>{moment().startOf('week').add(n, 'days').format('dd') }</div>)
     const days = this.getDaysInMonth();
     const currentDisplayDate = this.state.selectedMonthStart.format("MMMM - YYYY");
@@ -260,7 +261,7 @@ export class CalendarInput extends React.Component<ICalendarInputProps, ICalenda
       {
         "has-icon": this.props.icon !== null,
         "disabled": this.props.disabled,
-        "show-validation": (this.props.validationMode !== "none" && dvm)
+        "show-validation": (this.props.validationMode !== "none" && validationMessage)
       }
     );
     if (this.props.nativeInput) {
@@ -268,7 +269,7 @@ export class CalendarInput extends React.Component<ICalendarInputProps, ICalenda
         <div className={rootClasses}>
           {this.props.icon && <Icon icon={this.props.icon}/>}
           <input ref={i => this.inputElement = i}
-            data-validation-message={dvm}
+            data-validation-message={validationMessage}
             type="date"
             min={this.props.min || ''}
             max={this.props.max || ''}
@@ -283,7 +284,7 @@ export class CalendarInput extends React.Component<ICalendarInputProps, ICalenda
         <Icon icon={this.props.icon || Icons.Icomoon.calendar2}/>
         {!this.props.alwaysShowCalendar &&
           <input className="cal-input" ref={i => this.inputElement = i}
-            data-validation-message={dvm}
+            data-validation-message={validationMessage}
             disabled={this.props.disabled}
             type="text"
             value={this.state.inputValue}
@@ -308,11 +309,7 @@ export class CalendarInput extends React.Component<ICalendarInputProps, ICalenda
             </div>
           </div>
         </div>
-        {dvm && this.props.validationMode !== "none" &&
-          <label className={classNames("validation-message", `validation-message-${this.props.validationMode}`)} title={dvm}>
-            {(this.props.validationMode === "both" || this.props.validationMode === "below") && dvm}
-          </label>
-        }
+        <ValidationLabel message={validationMessage} mode={this.props.validationMode}/>
       </div>
     )
   }
