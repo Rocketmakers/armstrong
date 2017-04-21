@@ -9,9 +9,7 @@
     "build": "tsc -p source -d && node sass_concat.js",
     "watch-scss" : "node sass_copy.js",
     "watch-ts" : "tsc -p source -d -w",
-    "watch-workbench": "cd ../workbench && yarn start",
-    "watch": "parallelshell -v \"yarn run watch-ts\" \"yarn run watch-scss\"",
-    "workbench": "parallelshell -v \"yarn run watch-ts\" \"yarn run watch-scss\" \"yarn run watch-workbench\""
+    "watch": "parallelshell -v \"yarn run watch-ts\" \"yarn run watch-scss\""
   },
   "repository": {
     "type": "git",

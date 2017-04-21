@@ -5,11 +5,10 @@ node('macosx') {
         echo "Branch is: ${env.BRANCH_NAME}"
         sh 'nodenv update-version-defs'
         sh 'nodenv install || :'
-        sh 'cd armstrong-react'
-        sh 'yarn'
-        sh 'npm run build'
+        sh 'cd armstrong-react && yarn'
+        sh 'cd armstrong-react && yarn run build'
         if (env.BRANCH_NAME == "master"){
-          sh 'npm publish'
+          sh 'cd armstrong-react && npm publish'
         }
     }
 }
