@@ -1,6 +1,4 @@
 import * as React from "react";
-import { Dialog } from '../../../source/components/display/dialog';
-import { Button } from './../../../source/components/interaction/button';
 
 export class Test extends React.Component<{}, { dialogOpen: boolean }> {
   constructor() {

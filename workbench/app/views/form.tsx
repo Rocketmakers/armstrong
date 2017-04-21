@@ -1,5 +1,5 @@
 import * as React from "react";
-import { withRouter, InjectedRouter } from 'react-router';
+import { withRouter } from 'react-router';
 import { SampleForm } from './sampleForm';
 
 interface IFormComponentProps extends React.Props<FormComponent> {
@@ -12,4 +12,4 @@ export class FormComponent extends React.Component<IFormComponentProps, {}> {
   }
 }
 
-export const Form = withRouter(FormComponent)
+export const Form = FormComponent;

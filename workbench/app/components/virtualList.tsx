@@ -1,10 +1,10 @@
 import * as React from "react";
 
 import "./virtualList.scss"
-import { Grid, Row, Col } from './../../../source/components/layout/grid';
+import { Grid, Row, Col } from 'armstrong-react';
 
 interface IVirtualListProps extends React.Props<VirtualList> {
-  
+
 }
 
 export class VirtualList extends React.Component<IVirtualListProps, { items?: Array<any>, currentIndex?: number }> {

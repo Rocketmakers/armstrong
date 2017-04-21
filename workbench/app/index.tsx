@@ -1,10 +1,8 @@
 // LIBS
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { Router, Route, Link, hashHistory, IndexRoute } from 'react-router';
-import { Grid, Row, Col } from './../../source/components/layout/grid';
-import { BurgerMenu, BurgerMenuItem } from './../../source/components/navigation/burgerMenu';
-import { Image } from './../../source/components/display/image';
+import { Router, Route } from 'react-router';
+import { Grid, Row, Col, ArmstrongConfig } from 'armstrong-react';
 
 // VIEWS
 import { Home } from "./views/home";
@@ -12,7 +10,6 @@ import { Test } from "./views/test";
 import { List } from "./views/list";
 import { Form } from "./views/form";
 
-import { setLocale } from "../../source/config/config";
 
 // STYLES
 import "./theme/theme";
@@ -47,6 +44,6 @@ class App extends React.Component<any, { nav: boolean }> {
   }
 }
 
-setLocale("en-GB");
+ArmstrongConfig.setLocale("en-GB");
 
 ReactDOM.render(<App><Home /></App>, document.getElementById('host'));

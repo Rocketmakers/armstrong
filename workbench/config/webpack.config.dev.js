@@ -5,12 +5,11 @@
 var webpack = require('webpack');
 var path = require('path');
 var CopyWebpackPlugin = require('copy-webpack-plugin');
+var ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 var APP_DIR = path.join(__dirname, '../app');
 var buildPath = path.join(__dirname, '../www');
 var tsConfigPath = path.resolve('./app/tsconfig.json');
-
-console.log(tsConfigPath);
 
 var scssLoaders = [
   "style-loader",
@@ -21,30 +20,37 @@ var scssLoaders = [
 ];
 
 module.exports = {
-  debug: true,
   devtool: 'eval',
   resolve: {
-    extensions: ["", ".ts", ".tsx", ".webpack.js", ".web.js", ".js", ".sass", ".scss"],
+    extensions: [".ts", ".tsx", ".js", ".scss"]
   },
-  entry: [
-    './app/index.tsx'
-  ],
+  entry: {
+    app: "./app/index.tsx",
+    vendor: ["react", "underscore", "moment", "armstrong-react", "react-dom", "react-router", "classnames"]
+  },
   module: {
-    loaders: [
-      { test: /\.ts(x)?$/, loaders: ["ts-loader?tsconfig=" + tsConfigPath] },
-      { test: /\.scss$/, loaders: scssLoaders },
+    rules: [
+      { test: /\.ts(x)?$/, loader: "ts-loader", options: { tsconfig: tsConfigPath, transpileOnly: true } },
+      { test: /\.scss$/, loader: ExtractTextPlugin.extract({ fallback: "style-loader", use: "css-loader!sass-loader" }) },
       { test: /\.(ttf|eot|svg|woff2?)(\?[a-z0-9]+)?$/, loader: 'url-loader' },
       { test: /\.(png|jpeg|jpg|gif)$/, loader: 'url-loader?limit=1000' }
     ]
   },
   output: {
-    filename: 'app.js',
+    filename: 'bundle.js',
     path: buildPath,
     publicPath: 'http://localhost:3010/'
   },
   plugins: [
     new CopyWebpackPlugin([
       { from: path.resolve('./dev.html'), to: 'index.html' }
-    ])
-  ]
+    ]),
+    new webpack.optimize.CommonsChunkPlugin({
+      name: "vendor",
+      filename: "vendor.bundle.js",
+      minChunks: Infinity
+    }),
+
+    new ExtractTextPlugin("styles.css")
+  ],
 };

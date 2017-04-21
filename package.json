@@ -1,47 +1,22 @@
 {
-  "name": "armstrong-react",
-  "version": "1.0.58",
-  "description": "Rocketmakers Armstrong library of React components (For projects using npm @types from Typescript 2.0)",
-  "main": "./dist/index.js",
-  "style": "./dist/style.scss",
-  "typings": "./dist/index.d.ts",
+  "name": "armstrong-react-build",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
   "scripts": {
-    "build": "tsc -p source -d && node sass_concat.js",
-    "workbench": "(cd workbench && yarn start)"
+    "postinstall": "(cd armstrong-react && yarn) && (cd workbench && yarn)",
+    "start-workbench" : "cd workbench && yarn start",
+    "start-armstrong" : "cd armstrong-react && yarn run watch",
+    "start": "parallelshell -v \"yarn run start-workbench\" \"yarn run start-armstrong\""
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Rocketmakers/armstrong-react.git"
+    "url": "git+https://github.com/Rocketmakers/armstrong-react.git"
   },
-  "keywords": [
-    "typescript",
-    "React",
-    "sass"
-  ],
-  "author": "developers@rocketmakers.com",
-  "license": "MIT",
-  "dependencies": {
-    "@types/classnames": "*",
-    "@types/underscore": "*",
-    "classnames": "^2.2.5",
-    "jsx-to-string": "^1.1.0",
-    "moment": "^2.18.1",
-    "tslib": "^1.6.0",
-    "underscore": "^1.8.3"
-  },
-  "peerDependencies": {
-    "@types/react": "*",
-    "@types/react-dom": "*",
-    "react": "15.x",
-    "react-dom": "15.x"
-  },
+  "private": true,
+  "author": "",
+  "license": "ISC",
   "devDependencies": {
-    "@types/react": "*",
-    "@types/react-dom": "*",
-    "import-resolve": "^0.4.0",
-    "react": "^15.4.2",
-    "react-dom": "^15.4.2",
-    "ts-loader": "^2.0.3",
-    "typescript": "^2.2.2"
+    "parallelshell": "^2.0.0"
   }
 }

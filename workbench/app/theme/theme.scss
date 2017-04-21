@@ -1,10 +1,9 @@
 @import "icomoon";
-@import "./../../../source/imports";
-@import "./../../../source/style";
-@import "./../../../source/responsive";
-@import "./../../../source/navigation";
-@import "./../../../source/animation";
-@import "./../../../source/form";
+@import "~armstrong-react/dist/imports";
+@import "~armstrong-react/dist/core";
+@import "~armstrong-react/dist/form";
+@import "~armstrong-react/dist/navigation";
+@import "~armstrong-react/dist/animation";
 
 body,
 main,

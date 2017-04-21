@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Form, TextInput, DateInput, AutoCompleteInput, TimeInput, CalendarInput, SelectInput, ISelectInputProps, Button, CheckboxInput, RadioInput, IDataBinder, IFormBinder } from "../../../source/index";
+import { Form, TextInput, DateInput, AutoCompleteInput, TimeInput, CalendarInput, SelectInput, ISelectInputProps, Button, CheckboxInput, RadioInput, IDataBinder, IFormBinder } from "armstrong-react";
 
 class CustomFormBinder implements IFormBinder<ISelectInputProps, any> {
     constructor(public dataPath: string) { }

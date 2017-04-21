@@ -1,0 +1,51 @@
+{
+  "name": "armstrong-react",
+  "version": "2.0.0",
+  "description": "Rocketmakers Armstrong library of React components",
+  "main": "./dist/index.js",
+  "style": "./dist/style.scss",
+  "typings": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -p source -d && node sass_concat.js",
+    "watch-scss" : "node sass_copy.js",
+    "watch-ts" : "tsc -p source -d -w",
+    "watch-workbench": "cd ../workbench && yarn start",
+    "watch": "parallelshell -v \"yarn run watch-ts\" \"yarn run watch-scss\"",
+    "workbench": "parallelshell -v \"yarn run watch-ts\" \"yarn run watch-scss\" \"yarn run watch-workbench\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Rocketmakers/armstrong-react.git"
+  },
+  "keywords": [
+    "typescript",
+    "React",
+    "sass"
+  ],
+  "author": "developers@rocketmakers.com",
+  "license": "MIT",
+  "dependencies": {
+    "classnames": "^2.2.5",
+    "jsx-to-string": "^1.1.0",
+    "moment": "^2.18.1",
+    "tslib": "^1.6.1",
+    "underscore": "^1.8.3"
+  },
+  "peerDependencies": {
+    "@types/react": "^15.0.22",
+    "react": "15.x",
+    "react-dom": "15.x"
+  },
+  "devDependencies": {
+    "@types/react": "^15.0.22",
+    "@types/react-dom": "^15.5.0",
+    "@types/underscore": "^1.8.0",
+    "chokidar": "^1.6.1",
+    "parallelshell": "^2.0.0",
+    "import-resolve": "^0.4.0",
+    "react": "^15.5.4",
+    "react-dom": "^15.5.4",
+    "ts-loader": "^2.0.3",
+    "typescript": "~2.2.2"
+  }
+}
