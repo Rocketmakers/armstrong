@@ -32,7 +32,7 @@ module.exports = {
     rules: [
       { test: /\.ts(x)?$/, loader: "ts-loader", options: { tsconfig: tsConfigPath, transpileOnly: true } },
       { test: /\.scss$/, loader: ExtractTextPlugin.extract({ fallback: "style-loader", use: "css-loader!sass-loader" }) },
-      { test: /\.(ttf|eot|svg|woff2?)(\?[a-z0-9]+)?$/, loader: 'url-loader' },
+      { test: /\.(ttf|eot|svg|woff2?)(\?[a-z0-9]+)?$/, loader: 'url-loader?limit=1000' },
       { test: /\.(png|jpeg|jpg|gif)$/, loader: 'url-loader?limit=1000' }
     ]
   },
