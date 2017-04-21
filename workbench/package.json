@@ -1,5 +1,5 @@
 {
-  "name": "ProjectSkeleton",
+  "name": "armstrong-workbench",
   "version": "1.5.0",
   "description": "Just a quick react / typescript ready dev server for front-end dev.",
   "main": "server.js",
