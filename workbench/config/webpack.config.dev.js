@@ -50,7 +50,6 @@ module.exports = {
       filename: "vendor.bundle.js",
       minChunks: Infinity
     }),
-
     new ExtractTextPlugin("styles.css")
   ],
 };
