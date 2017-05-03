@@ -9,3 +9,9 @@
         background-color: $gray-very-light;
     }
 }
+
+.armstrong-input select{
+    -moz-appearance: none;
+    text-indent: 0.01px;
+    text-overflow: '';
+}
