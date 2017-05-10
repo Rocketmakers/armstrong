@@ -15,3 +15,8 @@
     text-indent: 0.01px;
     text-overflow: '';
 }
+
+.armstrong-input select::-ms-expand {
+    display: none;
+}
+
