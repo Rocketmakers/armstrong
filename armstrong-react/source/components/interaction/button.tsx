@@ -1,8 +1,8 @@
 import * as React from "react";
 import * as _ from "underscore";
+import * as classNames from "classnames";
 import { Size, LayoutHelpers, Color, FgColorClass, BgColorClass, MarginClass, PaddingClass } from "./../../utilities/uiHelpers";
 import { Icon } from "./../display/icon";
-import { ClassHelpers } from "../../utilities/classNames";
 
 export interface IButtonProps extends React.HTMLProps<Button> {
   /** ((React.MouseEvent) => void) Event to fire when the button is clicked */
@@ -29,7 +29,7 @@ export class Button extends React.Component<IButtonProps, {}>{
 
   render() {
     var attrs = _.omit(this.props, "onClick", "leftIcon", "rightIcon", "className", "rounded", "context", "pending", "disabled");
-    const classes = ClassHelpers.classNames(
+    const classes = classNames(
       "btn",
       this.props.className,
       {
@@ -39,11 +39,13 @@ export class Button extends React.Component<IButtonProps, {}>{
         "pending": this.props.pending
       }
     );
+    let leftIcon = this.props.leftIcon && <Icon className="left-icon" icon={this.props.leftIcon}/>
+    let rightIcon = this.props.rightIcon && <Icon className="right-icon" icon={this.props.rightIcon}/>
     return (
       <button disabled={this.props.pending || this.props.disabled} type={this.props.type || 'button'} onClick={e => this.handleClick(e)} { ...attrs } className={classes}>
-      {this.props.leftIcon && <Icon className="left-icon" icon={this.props.leftIcon}/>}
+      {leftIcon}
       {this.props.children}
-      {this.props.rightIcon && <Icon className="right-icon" icon={this.props.rightIcon}/>}
+      {rightIcon}
       </button>
     );
   }
