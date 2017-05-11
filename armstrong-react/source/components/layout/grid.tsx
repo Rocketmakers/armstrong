@@ -15,6 +15,8 @@ export interface IGrid extends React.HTMLProps<Grid> {
   table?: boolean;
   /** (boolean) Wether the table should expand and divide to fill its container */
   fillContainer?: boolean;
+  /** (string) An HTML tag to use for the root element instead of <div> */
+  tagName?: string;
   /** (Row[]) A grid must contain one or many <Row/> elements */
   children?: any[] | any;
 }
@@ -33,10 +35,10 @@ export class Grid extends React.Component<IGrid, {}> {
       }
     );
     if (this.props.fillContainer && !this.props.disableFlexOverride) {
-      return (<div className="flex-override"><div {...attrs} className={classes} /></div>);
+      return React.createElement(this.props.tagName || "div", { className: "flex-override" }, <div {...attrs} className={classes} />)
     }
     else {
-      return (<div {...attrs} className={classes} />);
+      return React.createElement(this.props.tagName || "div", { ...attrs, className: classes });
     }
   }
   componentDidMount() {
@@ -51,19 +53,21 @@ export interface IRow extends React.HTMLProps<Row> {
   height?: number | string;
   /** (string) CSS classname property */
   className?: string | MarginClass | PaddingClass | BgColorClass | FgColorClass;
+  /** (string) An HTML tag to use for the root element instead of <div> */
+  tagName?: string;
   /** (Col[]) A row must contain one or many <Col/> elements */
   children?: any[] | any;
 }
 
 export class Row extends React.Component<IRow, any> {
-  private needsFixed(){
-    if (!this.props.height){
+  private needsFixed() {
+    if (!this.props.height) {
       return false;
     }
     if (typeof this.props.height === "number") {
       return true
-    }else{
-      if (this.props.height === "auto"){
+    } else {
+      if (this.props.height === "auto") {
         return true;
       }
     }
@@ -80,7 +84,7 @@ export class Row extends React.Component<IRow, any> {
       } else {
         let hString = (this.props.height as string);
         let starIndex = hString.indexOf('*');
-        if (this.props.height === "auto"){
+        if (this.props.height === "auto") {
 
         }
         else if (starIndex !== -1 && parseFloat(hString)) {
@@ -88,19 +92,17 @@ export class Row extends React.Component<IRow, any> {
           var spans = hString.substr(0, starIndex);
           styles = _.extend({ flex: `${spans}` }, styles);
         }
-        else{
+        else {
           throw new Error(`Unsupported height property '${this.props.height}' on Grid Row. If you are using a string, make sure it is either 'auto' or follows the pattern '[number]*'`)
         }
       }
     }
 
-    return <div {...attrs} className={classes} style={styles}>
-      {
-        React.Children.map(this.props.children, (c: any) => {
-          return c ? React.cloneElement((c as React.ReactElement<any>), { style: colStyles ? _.extend(colStyles, c.props.style) : c.props.style }) : null
-        })
-      }
-    </div>
+    return React.createElement(this.props.tagName || "div", { ...attrs, className: classes, style: styles },
+      React.Children.map(this.props.children, (c: any) => {
+        return c ? React.cloneElement((c as React.ReactElement<any>), { style: colStyles ? _.extend(colStyles, c.props.style) : c.props.style }) : null
+      })
+    )
   }
 }
 
@@ -111,19 +113,21 @@ export interface ICol extends React.HTMLProps<Col> {
   verticalAlignment?: VerticalAlignment;
   /** (number | string) Sets a fixed width for the column, or 'auto' to grow to fit its content */
   width?: number | string;
+  /** (string) An HTML tag to use for the root element instead of <div> */
+  tagName?: string;
   /** (string) CSS classname property */
   className?: string | MarginClass | PaddingClass | BgColorClass | FgColorClass;
 }
 
 export class Col extends React.Component<ICol, {}> {
-  needsFixed(){
-    if (!this.props.width){
+  needsFixed() {
+    if (!this.props.width) {
       return false;
     }
     if (typeof this.props.width === "number") {
       return true
-    }else{
-      if (this.props.width === "auto"){
+    } else {
+      if (this.props.width === "auto") {
         return true;
       }
     }
@@ -150,14 +154,14 @@ export class Col extends React.Component<ICol, {}> {
       } else {
         let wString = (this.props.width as string);
         let starIndex = wString.indexOf('*');
-        if (this.props.width === "auto"){
+        if (this.props.width === "auto") {
 
         }
         else if (starIndex !== -1 && parseFloat(wString)) {
           var spans = wString.substr(0, starIndex);
           styles = _.extend({ flex: `${spans}` }, styles);
         }
-        else{
+        else {
           throw new Error(`Unsupported width property '${this.props.width}' on Grid > Row > Col. If you are using a string, make sure it is either 'auto' or follows the pattern '[number]*'`)
         }
       }
@@ -168,6 +172,6 @@ export class Col extends React.Component<ICol, {}> {
       styles = _.extend({ maxWidth: `${this.props.width}px`, width: "100%" }, styles);
     }
 
-    return <div {...attrs} className={classes} style={styles} />
+    return React.createElement(this.props.tagName || "div", {...attrs, className: classes, style: styles})
   }
 }
