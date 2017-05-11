@@ -1,6 +1,5 @@
 import * as React from "react";
 import * as moment from "moment";
-import * as classNames from "classnames";
 import * as _ from "underscore";
 import { IFormInputProps, generateUniqueId } from "../form";
 import {Form} from "../form";
@@ -9,6 +8,7 @@ import { DateHelpers } from '../../../utilities/dateHelpers';
 import {buildOptions} from "./options";
 import { Formatting } from "../../../utilities/formatting";
 import { ValidationLabel } from "../validationWrapper";
+import { ClassHelpers } from "../../../utilities/classNames";
 
 export type DateParts = "day" | "month" | "year"
 
@@ -107,7 +107,7 @@ export class DateInput extends React.Component<IDateInputProps, IDateInputState>
       "month": buildOptions(this.props.monthLabel, DateHelpers.getMonthValues(), v => v.value, v => v.label),
       "year": buildOptions(this.props.yearLabel, DateHelpers.getYearValues(this.props.futureDates, this.props.yearsFromNow, this.props.startYearCap), v => v, v => v.toString())
     }
-    const classes = classNames(
+    const classes = ClassHelpers.classNames(
       "armstrong-input",
       "date-input",
       this.props.className,

@@ -1,6 +1,5 @@
 import * as React from "react";
 import * as _ from "underscore";
-import * as classNames from "classnames";
 import { IFormInputProps } from "../form";
 import { IDataBinder, getEventTargetAs } from "../formCore";
 import { FormBinderBase } from "../formBinderBase";
@@ -10,6 +9,7 @@ import { Grid, Row, Col } from "../../layout/grid";
 import { buildOptions } from "./options";
 import { Formatting } from "../../../utilities/formatting";
 import { ValidationLabel } from "../validationWrapper";
+import { ClassHelpers } from "../../../utilities/classNames";
 
 export interface ITimeInputProps extends IFormInputProps<TimeInput> {
   /** (string) CSS classname property */
@@ -95,7 +95,7 @@ export class TimeInput extends React.Component<ITimeInputProps, ITimerInputState
     const hourOptions = buildOptions(this.props.hourLabel, TimeInput.hours, v => v, v => Formatting.twoDigitNumber(v));
     const minuteOptions = buildOptions(this.props.minuteLabel, minutes, v => v, v => Formatting.twoDigitNumber(v));
     return (
-      <Form className={classNames("time-input", "armstrong-input", this.props.className, this.props.disabled ? "input-disabled" : null, { "show-validation": (this.props.validationMode !== "none" && validationMessage) })}
+      <Form className={ClassHelpers.classNames("time-input", "armstrong-input", this.props.className, this.props.disabled ? "input-disabled" : null, { "show-validation": (this.props.validationMode !== "none" && validationMessage) })}
         dataBinder={Form.jsonDataBinder(this.state)}
         onDataChanged={this.handleDataChanged}
         title={validationMessage}>

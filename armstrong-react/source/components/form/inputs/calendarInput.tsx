@@ -2,7 +2,6 @@ import * as React from "react";
 import * as ReactDOM from "react-dom";
 import * as _ from "underscore";
 import * as moment from "moment";
-import * as classNames from "classnames";
 import { IFormInputHTMLProps } from "../form";
 import { IValueConverter } from "../formValueConverters";
 import { DateHelpers } from '../../../utilities/dateHelpers';
@@ -10,6 +9,7 @@ import { Grid, Row, Col } from "../../layout/grid";
 import { Icon } from '../../display/icon';
 import { isLocaleSet } from "../../../config/config"
 import { ValidationLabel } from "../validationWrapper";
+import { ClassHelpers } from "../../../utilities/classNames";
 
 export interface ICalendarInputProps extends IFormInputHTMLProps<CalendarInput> {
   date?: string;
@@ -245,7 +245,7 @@ export class CalendarInput extends React.Component<ICalendarInputProps, ICalenda
     const weekdays = _.range(0, 7).map(n => <div className="date-picker-week-day" key={`day_name_${n}`}>{moment().startOf('week').add(n, 'days').format('dd') }</div>)
     const days = this.getDaysInMonth();
     const currentDisplayDate = this.state.selectedMonthStart.format("MMMM - YYYY");
-    const classes = classNames(
+    const classes = ClassHelpers.classNames(
       "date-picker-body",
       {
         "date-picker-body-visible": this.state.pickerBodyVisible && !this.props.alwaysShowCalendar,
@@ -253,7 +253,7 @@ export class CalendarInput extends React.Component<ICalendarInputProps, ICalenda
         "always-show-calendar": this.props.alwaysShowCalendar
       }
     );
-    const rootClasses = classNames(
+    const rootClasses = ClassHelpers.classNames(
       "date-picker",
       "armstrong-input",
       this.props.className,
@@ -325,7 +325,7 @@ interface ICalendarDayProps extends React.Props<CalendarDay> {
 
 class CalendarDay extends React.Component<ICalendarDayProps, {}> {
   render() {
-    const classes = classNames(
+    const classes = ClassHelpers.classNames(
       {
         "not-in-month": this.props.notInCurrentMonth,
         "selected-day": this.props.selected,

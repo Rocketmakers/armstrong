@@ -1,5 +1,5 @@
 import * as React from "react";
-import * as classNames from "classnames";
+import { ClassHelpers } from "./classNames";
 
 export type Size = "none" | "xxsmall" | "xsmall" | "small" | "medium" | "large" | "xlarge";
 export type Side = "top" | "left" | "right" | "bottom" | "all";
@@ -23,6 +23,6 @@ export class LayoutHelpers {
     if (horizontal){
       classes.push(`align-con-h-${horizontal}`)
     }
-    return classNames(classes);
+    return ClassHelpers.classNames(classes);
   }
 }

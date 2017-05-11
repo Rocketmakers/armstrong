@@ -1,7 +1,6 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 import * as _ from "underscore";
-import * as classNames from "classnames";
 import { IFormInputProps } from "../form";
 import { Icon } from './../../display/icon';
 import { Grid, Row, Col } from './../../layout/grid';
@@ -9,6 +8,7 @@ import { Button } from './../../interaction/button';
 import { DiacriticsStripper } from '../../../utilities/diacriticsStripper';
 import { IDataBinder, getEventTargetAs } from "../formCore";
 import { ValidationLabel } from "../validationWrapper";
+import { ClassHelpers } from "../../../utilities/classNames";
 
 export interface IAutoCompleteOption {
   id: number | string;
@@ -319,7 +319,7 @@ export class AutoCompleteInput extends React.Component<IAutoCompleteInputProps, 
   render() {
     const validationMessage = this.props["data-validation-message"]
 
-    const classes = classNames(
+    const classes = ClassHelpers.classNames(
       "armstrong-input",
       "autocomplete-select",
       `${this.props.multiSelect && (this.state.selectedValue as IAutoCompleteOption[]).length !== 0 ? ' has-multiple-options' : ''}`,
@@ -374,7 +374,7 @@ export class AutoCompleteInput extends React.Component<IAutoCompleteInputProps, 
               </Grid>
             }
             {this.state.open &&
-              <div className={classNames("autocomplete-select-list-wrapper", this.props.multiSelect ? 'multi-select' : '')}>
+              <div className={ClassHelpers.classNames("autocomplete-select-list-wrapper", this.props.multiSelect ? 'multi-select' : '')}>
                 <input type="text"
                   data-validation-message={validationMessage}
                   style={{ marginTop: `${this.props.multiSelect && this.state.showOnTop && `${this.state.topOffset}px`}` }}

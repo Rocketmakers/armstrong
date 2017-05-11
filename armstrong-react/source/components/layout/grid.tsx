@@ -1,8 +1,8 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 import * as _ from "underscore";
-import * as classNames from "classnames";
 import { LayoutHelpers, MarginClass, PaddingClass, BgColorClass, FgColorClass, VerticalAlignment, HorizontalAlignment } from "./../../utilities/uiHelpers";
+import { ClassHelpers } from "../../utilities/classNames";
 
 export interface IGrid extends React.HTMLProps<Grid> {
   /** (boolean) Wether to render borders around grid parts */
@@ -23,7 +23,7 @@ export class Grid extends React.Component<IGrid, {}> {
   render() {
     const originalClassName = this.props.className;
     const attrs = _.omit(this.props, "className", "debugMode", "disableFlexOverride", "table", "fillContainer");
-    const classes = classNames(
+    const classes = ClassHelpers.classNames(
       originalClassName,
       "grid",
       {
@@ -71,7 +71,7 @@ export class Row extends React.Component<IRow, any> {
   }
   render() {
     var attrs = _.omit(this.props, "className", "height");
-    var classes = classNames(this.props.className, "row", this.needsFixed() ? "no-flex" : "");
+    var classes = ClassHelpers.classNames(this.props.className, "row", this.needsFixed() ? "no-flex" : "");
     var styles = this.props.style;
     var colStyles;
     if (this.props.height) {
@@ -131,7 +131,7 @@ export class Col extends React.Component<ICol, {}> {
   }
   render() {
     const alignmentClasses = LayoutHelpers.GetAlignmentClasses(this.props.verticalAlignment, this.props.horizontalAlignment);
-    const classes = classNames(
+    const classes = ClassHelpers.classNames(
       "col",
       this.props.className,
       alignmentClasses,

@@ -1,8 +1,8 @@
 import * as _ from "underscore";
 import * as React from "react";
-import * as classNames from "classnames";
 import { IFormInputHTMLProps } from "../form";
 import { buildOptions } from "./options";
+import { ClassHelpers } from "../../../utilities/classNames";
 export interface ISelectInputOption {
   id: number | string;
   name: string;
@@ -36,7 +36,7 @@ export class SelectInput extends React.Component<ISelectInputProps, {}> {
   }
   render() {
     const validationMessage = this.props["data-validation-message"]
-    const classes = classNames(
+    const classes = ClassHelpers.classNames(
       "armstrong-input",
       "select-input",
       this.props.className,
@@ -44,10 +44,11 @@ export class SelectInput extends React.Component<ISelectInputProps, {}> {
         "show-validation": (this.props.validationMode !== "none" && validationMessage)
       }
     );
+    let options = buildOptions(this.props.optionLabel, this.props.options, o => o.id, o => o.name);
     return (
       <div className={classes} title={validationMessage}>
         <select ref={r => this.select = r} {..._.omit(this.props, "options", "change", "onChange", "optionLabel", "validationMode") } onChange={this.change}>
-          {buildOptions(this.props.optionLabel, this.props.options, o => o.id, o => o.name)}
+          {options}
         </select>
       </div>
     );

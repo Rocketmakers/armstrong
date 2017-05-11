@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as _ from "underscore";
-import * as classNames from "classnames";
 import { Icon } from "./../display/icon";
+import { ClassHelpers } from "../../utilities/classNames";
 
 export interface ITabControlProps extends React.HTMLProps<TabControl> {
   /** (number) The index of the tab selected when the control renders. Defaults to 0 */
@@ -41,7 +41,7 @@ export class TabControl extends React.Component<ITabControlProps, ITabControlSta
     if (!tabAlignment) {
       tabAlignment = "left"
     }
-    const classes = classNames(
+    const classes = ClassHelpers.classNames(
       this.props.className,
       "tab-control",
       {

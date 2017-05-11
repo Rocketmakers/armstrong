@@ -1,8 +1,8 @@
 import * as React from "react";
 import * as _ from "underscore";
-import * as classNames from "classnames";
 import { Size, LayoutHelpers, Color, FgColorClass, BgColorClass, MarginClass, PaddingClass } from "./../../utilities/uiHelpers";
 import { Icon } from "./../display/icon";
+import { ClassHelpers } from "../../utilities/classNames";
 
 export interface IButtonProps extends React.HTMLProps<Button> {
   /** ((React.MouseEvent) => void) Event to fire when the button is clicked */
@@ -29,7 +29,7 @@ export class Button extends React.Component<IButtonProps, {}>{
 
   render() {
     var attrs = _.omit(this.props, "onClick", "leftIcon", "rightIcon", "className", "rounded", "context", "pending", "disabled");
-    const classes = classNames(
+    const classes = ClassHelpers.classNames(
       "btn",
       this.props.className,
       {

@@ -1,9 +1,9 @@
 import * as _ from "underscore";
 import * as React from "react";
-import * as classNames from "classnames";
 import { IFormInputHTMLProps } from "../form";
 import { Icon } from "./../../display/icon";
 import { ValidationLabel } from "../validationWrapper";
+import { ClassHelpers } from "../../../utilities/classNames";
 
 export interface ITextInputProps extends IFormInputHTMLProps<TextInput> {
   multiLine?: boolean;
@@ -32,7 +32,7 @@ export class TextInput extends React.Component<ITextInputProps, {}> {
   }
   render() {
     const validationMessage = this.props["data-validation-message"]
-    var classes = classNames(
+    var classes = ClassHelpers.classNames(
       "armstrong-input",
       "text-input",
       this.props.className,

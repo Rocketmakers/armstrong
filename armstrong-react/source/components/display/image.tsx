@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as _ from "underscore";
-import * as classNames from "classnames";
 import { Color, LayoutHelpers } from "./../../utilities/uiHelpers";
+import { ClassHelpers } from "../../utilities/classNames";
 
 export interface IImageProps extends React.HTMLProps<Image> {
   /** (boolean) Should the image be circular? */
@@ -64,7 +64,7 @@ export class Image extends React.Component<IImageProps, { source?: string }>{
   render() {
     var attrs = _.omit(this.props, "height", "width", "noPlaceholder", "sampleUserSeed", "sampleUser", "source", "className", "rounded");
     return (
-      <img src={this.state.source} { ...attrs } height={this.props.height} width={this.props.width} className={classNames(this.props.className, { "rounded": this.props.rounded }) }/>
+      <img src={this.state.source} { ...attrs } height={this.props.height} width={this.props.width} className={ClassHelpers.classNames(this.props.className, { "rounded": this.props.rounded }) }/>
     );
   }
 }

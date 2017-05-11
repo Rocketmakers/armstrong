@@ -3,7 +3,7 @@ import * as _ from "underscore";
 import { IFormBinder, IDataBinder, IFormBinderInjector, getFormBinderFromInjector, updateFormBinderInjector } from "./formCore";
 import { FormBinder } from "./formBinders";
 import { PropertyPathResolver } from "./properyPathResolver";
-import * as classnames from "classnames";
+import { ClassHelpers } from "../../utilities/classNames";
 
 /** The default Json Entity binder - NOTE, the original instance provided is MUTABLE */
 class JsonEntityBinder<T> implements IDataBinder<T>{
@@ -146,7 +146,7 @@ export class Form extends React.Component<IFormProps, {}>{
   render() {
     const ch = this.processChildren(this.props.children, this.props.validationMode);
     const hasParentForm = !!Form.getFormContext(this.context)
-    const className = classnames("form", hasParentForm && "form-nested", this.props.className)
+    const className = ClassHelpers.classNames("form", hasParentForm && "form-nested", this.props.className)
     return hasParentForm ? React.DOM.div({ className: className }, ch) : React.DOM.form({ className: className, onSubmit: this.preventDefault }, ch)
   }
 
