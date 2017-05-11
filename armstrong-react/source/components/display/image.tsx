@@ -62,9 +62,10 @@ export class Image extends React.Component<IImageProps, { source?: string }>{
     }
   }
   render() {
-    var attrs = _.omit(this.props, "height", "width", "noPlaceholder", "sampleUserSeed", "sampleUser", "source", "className", "rounded");
+    let attrs = _.omit(this.props, "height", "width", "noPlaceholder", "sampleUserSeed", "sampleUser", "source", "className", "rounded");
+    let classes = ClassHelpers.classNames(this.props.className, { "rounded": this.props.rounded });
     return (
-      <img src={this.state.source} { ...attrs } height={this.props.height} width={this.props.width} className={ClassHelpers.classNames(this.props.className, { "rounded": this.props.rounded }) }/>
+      <img src={this.state.source} { ...attrs } height={this.props.height} width={this.props.width} className={classes}/>
     );
   }
 }
