@@ -1,6 +1,6 @@
 declare module "jsx-to-string" {
   namespace JSXToString { }
 
-  function JSXToString(element: any): void;
+  function JSXToString(element: any): string;
   export = JSXToString;
 }

@@ -6,7 +6,9 @@
   "style": "./dist/style.scss",
   "typings": "./dist/index.d.ts",
   "scripts": {
-    "build": "tsc -p source -d && node sass_concat.js",
+    "build-ts": "tsc -p source -d",
+    "build-scss": "node sass_concat.js",
+    "build": "yarn run build-ts && yarn run build-scss",
     "watch-scss" : "node sass_copy.js",
     "watch-ts" : "tsc -p source -d -w",
     "watch": "parallelshell -v \"yarn run watch-ts\" \"yarn run watch-scss\""
@@ -44,6 +46,6 @@
     "react": "^15.5.4",
     "react-dom": "^15.5.4",
     "ts-loader": "^2.0.3",
-    "typescript": "~2.2.2"
+    "typescript": "~2.3.2"
   }
 }
