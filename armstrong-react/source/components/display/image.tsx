@@ -28,7 +28,7 @@ export class Image extends React.Component<IImageProps, { source?: string }>{
     this.state = { source: "" };
   }
   getRandomUser() {
-    var url = `http://api.randomuser.me/?exc=login,name,location,email,registered,dob,phone,cell,id,nat${this.props.sampleUserSeed ? `&seed=${this.props.sampleUserSeed}` : ''}`;
+    var url = `https://randomuser.me/api?exc=login,name,location,email,registered,dob,phone,cell,id,nat${this.props.sampleUserSeed ? `&seed=${this.props.sampleUserSeed}` : ''}`;
     var xmlHttp = new XMLHttpRequest();
     xmlHttp.onreadystatechange = () => {
       if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
