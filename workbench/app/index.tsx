@@ -46,4 +46,4 @@ class App extends React.Component<any, { nav: boolean }> {
 
 ArmstrongConfig.setLocale("en-GB");
 
-ReactDOM.render(<App><Home /></App>, document.getElementById('host'));
+ReactDOM.render(<App><Form /></App>, document.getElementById('host'));

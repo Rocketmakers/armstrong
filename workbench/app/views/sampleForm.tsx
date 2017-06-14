@@ -92,7 +92,7 @@ export class SampleForm extends React.Component<ISampleForm, { binder: IDataBind
                     <TimeInput {...Form.Bind.timeInput("time") } minuteStep={5} hourLabel="Hour" minuteLabel="Minute" />
                 </div>
                 <div>
-                    <TextInput {...Form.Bind.textNumeric("reputation") } />
+                    <TextInput placeholder="numbers plz" {...Form.Bind.textNumeric("reputation") } />
                     <TextInput {...Form.Bind.password("password") } />
                     <TextInput {...Form.Bind.text("name") } />
                     <TextInput defaultValue={this.state.binder.toJson().name} />

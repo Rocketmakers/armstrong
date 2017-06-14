@@ -34,9 +34,9 @@ export abstract class FormBinderBase<TComponentProps,TDataPropValue,TComponentPr
   /** convert the value from element to data, set the dataBinder, and notify if changed */
   protected onChanged(dataBinder:IDataBinder<any>, newValue: TComponentPropValue, notifyChanged: () => void) {
     const value = this.convertBack(newValue);
-    if (Formatting.isNullOrUndefined(value)) {
-      return;
-    }
+    // if (Formatting.isNullOrUndefined(value)) {
+    //   return value;
+    // }
 
     dataBinder.setValue(this.dataPath, value);
     notifyChanged();

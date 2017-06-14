@@ -67,7 +67,8 @@ export class NumericValueConverter implements IInputValueConverter<number> {
   }
 
   convert(data: number){
-    return Formatting.isNullOrUndefined(data) || data === "" as any ? null : data.toFixed(this.options && this.options.decimals);
+    let v = Formatting.isNullOrUndefined(data) || data === "" as any ? null : data.toFixed(this.options && this.options.decimals);
+    return v;
   }
 
   convertBack(value: string){
@@ -84,10 +85,9 @@ export class NumericValueConverter implements IInputValueConverter<number> {
         return 0;
       }
 
-      const decimals = this.options && this.options.decimals;
-      let v = decimals ? parseFloat(value) : parseInt(value);
+      let v = parseFloat(value);
       if (isNaN(v)) {
-        return;
+        return null;
       }
 
       if (this.options){
@@ -98,12 +98,9 @@ export class NumericValueConverter implements IInputValueConverter<number> {
           v = Math.max(v, this.options.min)
         }
       }
-
-      if (decimals) {
-        return parseFloat(v.toFixed(decimals));
-      }
       return v;
     }catch(e){
+      return null;
     }
   }
 
