@@ -44,6 +44,10 @@ export class Dialog extends React.Component<IDialogProps, {}>{
   }
 
   private close() {
+    let main = document.querySelector("main");
+    if (main && main.classList.contains("dialog-open")){
+      main.classList.remove("dialog-open");
+    }
     this.props.onClose();
     this.unmountPortalNode();
   }
@@ -77,6 +81,10 @@ export class Dialog extends React.Component<IDialogProps, {}>{
   }
 
   private renderToPortal(props: IDialogProps) {
+    let main = document.querySelector("main");
+    if (main && !main.classList.contains("dialog-open")){
+      main.classList.add("dialog-open");
+    }
     let element = this.renderDialog(props)
     let node = this.portalNode;
 
