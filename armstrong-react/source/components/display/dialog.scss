@@ -84,6 +84,13 @@ $dialog-header-height: 50px;
         color: white;
       }
 
+    .dialog-close-button-no-title{
+      @extend .dialog-close-button;
+      height: 50px;
+      background: none;
+      color: rgba(0,0,0,0.7);
+    }
+
     .dialog-header {
       flex: 0 0 auto;
       background-color: $gray-base;

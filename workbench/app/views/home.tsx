@@ -80,7 +80,7 @@ export class Home extends React.Component<{}, { dialogOpen?: boolean, canClick?:
 
         <Button onClick={() => this.setState({ dialogOpen: true })}>open dialog plz</Button>
 
-        <Dialog title="waddup" isOpen={this.state.dialogOpen} onClose={() => this.setState({ dialogOpen: false })} footerContent={
+        <Dialog closeOnBackgroundClick={true} isOpen={this.state.dialogOpen} onClose={() => this.setState({ dialogOpen: false })} footerContent={
           <Button disabled={!this.state.canClick}>OH NO</Button>
         }>
           oh sheee, waddup?<Button onClick={() => this.setState({ canClick: false })}>disable BUTT</Button>

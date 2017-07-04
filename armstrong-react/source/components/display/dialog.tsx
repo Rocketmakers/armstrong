@@ -14,6 +14,8 @@ export interface IDialogProps extends React.HTMLProps<Dialog> {
   title?: string;
   /** (boolean) Setting this to true or false will open or close the dialog */
   isOpen: boolean;
+  /** (boolean) Controls wether the dialog closes when the background overlay is clicked */
+  closeOnBackgroundClick?: boolean;
   /** (()=> void) Event to fire when the dialog is closed */
   onClose: () => void;
   /** (()=> void) Event to fire when the dialog is opened */
@@ -45,7 +47,7 @@ export class Dialog extends React.Component<IDialogProps, {}>{
 
   private close() {
     let main = document.querySelector("main");
-    if (main && main.classList.contains("dialog-open")){
+    if (main && main.classList.contains("dialog-open")) {
       main.classList.remove("dialog-open");
     }
     this.props.onClose();
@@ -82,7 +84,7 @@ export class Dialog extends React.Component<IDialogProps, {}>{
 
   private renderToPortal(props: IDialogProps) {
     let main = document.querySelector("main");
-    if (main && !main.classList.contains("dialog-open")){
+    if (main && !main.classList.contains("dialog-open")) {
       main.classList.add("dialog-open");
     }
     let element = this.renderDialog(props)
@@ -91,6 +93,11 @@ export class Dialog extends React.Component<IDialogProps, {}>{
     if (node == null) {
       this.portalNode = node = document.createElement('div');
       this.portalNode.classList.add('dialog-layer');
+      if (this.props.closeOnBackgroundClick) {
+        this.portalNode.onclick = () => {
+          this.close();
+        }
+      }
       if (this.props.layerClass) {
         this.portalNode.classList.add(this.props.layerClass);
       }
@@ -118,14 +125,15 @@ export class Dialog extends React.Component<IDialogProps, {}>{
     if (!this.portalNode) {
       return;
     }
+    this.portalNode.onclick = null;
     const unmounted = ReactDOM.unmountComponentAtNode(this.portalNode);
     if (unmounted) {
-      let body =  document.getElementById(this.props.bodyId || "host");
-      if (body && this.portalNode){
+      let body = document.getElementById(this.props.bodyId || "host");
+      if (body && this.portalNode) {
         body.removeChild(this.portalNode);
       }
     }
-    if (this.portalNode){
+    if (this.portalNode) {
       delete this.portalNode;
     }
     return unmounted;
@@ -136,7 +144,7 @@ export class Dialog extends React.Component<IDialogProps, {}>{
     return (
       <div className={`dialog${this.props.className ? ` ${this.props.className}` : ''}`} style={style} id={this.dialogId}>
         {!this.props.title &&
-          <div className="dialog-close-button" onClick={() => this.xClicked()}>
+          <div className="dialog-close-button-no-title" onClick={() => this.xClicked()}>
             <Icon icon={Icon.Icomoon.cross} />
           </div>
         }
