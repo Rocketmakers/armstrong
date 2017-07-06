@@ -12,6 +12,7 @@ export interface ISelectInputProps extends IFormInputHTMLProps<SelectInput> {
   options: ISelectInputOption[];
   change?: (selected: ISelectInputOption) => void;
   optionLabel?: string
+  enableOptionLabel?: boolean
 }
 
 export class SelectInput extends React.Component<ISelectInputProps, {}> {
@@ -44,7 +45,7 @@ export class SelectInput extends React.Component<ISelectInputProps, {}> {
         "show-validation": (this.props.validationMode !== "none" && validationMessage)
       }
     );
-    let options = buildOptions(this.props.optionLabel, this.props.options, o => o.id, o => o.name);
+    let options = buildOptions(this.props.optionLabel, this.props.options, o => o.id, o => o.name, !!this.props.enableOptionLabel);
     return (
       <div className={classes} title={validationMessage}>
         <select ref={r => this.select = r} {..._.omit(this.props, "options", "change", "onChange", "optionLabel", "validationMode") } onChange={this.change}>
