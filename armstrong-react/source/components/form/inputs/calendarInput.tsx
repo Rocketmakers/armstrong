@@ -274,6 +274,7 @@ export class CalendarInput extends React.Component<ICalendarInputProps, ICalenda
             max={this.props.max || ''}
             onChange={e => this.checkDate(e.target["value"]) }
             value={this.propsDateAsMoment().format(this.format) }
+            placeholder={this.props.placeholder}
             />
         </div>
       )
@@ -288,7 +289,9 @@ export class CalendarInput extends React.Component<ICalendarInputProps, ICalenda
             type="text"
             value={this.state.inputValue}
             onKeyDown={e => this.handleEvent(e.nativeEvent)}
-            onFocus={e => this.onInputFocus() }/>
+            onFocus={e => this.onInputFocus() }
+            placeholder={this.props.placeholder}
+            />
         }
         {!this.props.alwaysShowCalendar && this.props.date && !this.props.disableClear &&
           <div className="clear-date-button" onClick={()=> this.props.onDateChanged(null)}><Icon icon={Icon.Icomoon.cross}/></div>
