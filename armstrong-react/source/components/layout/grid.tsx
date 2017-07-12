@@ -16,9 +16,9 @@ export interface IGrid extends React.HTMLProps<Grid> {
   /** (boolean) Wether the table should expand and divide to fill its container */
   fillContainer?: boolean;
   /** (string) An HTML tag to use for the root element instead of <div> */
-  tagName?: string;
+  tagName?: keyof React.ReactHTML;
   /** (Row[]) A grid must contain one or many <Row/> elements */
-  children?: any[] | any;
+  children?: React.ReactNode | Row | Row[];
 }
 
 export class Grid extends React.Component<IGrid, {}> {
@@ -56,7 +56,7 @@ export interface IRow extends React.HTMLProps<Row> {
   /** (string) An HTML tag to use for the root element instead of <div> */
   tagName?: string;
   /** (Col[]) A row must contain one or many <Col/> elements */
-  children?: any[] | any;
+  children?: React.ReactNode | Col | Col[];
 }
 
 export class Row extends React.Component<IRow, any> {
@@ -99,8 +99,8 @@ export class Row extends React.Component<IRow, any> {
     }
 
     return React.createElement(this.props.tagName || "div", { ...attrs, className: classes, style: styles },
-      React.Children.map(this.props.children, (c: any) => {
-        return c ? React.cloneElement((c as React.ReactElement<any>), { style: colStyles ? _.extend(colStyles, c.props.style) : c.props.style }) : null
+      React.Children.map(this.props.children, (c: React.ReactElement<any>) => {
+        return c ? React.cloneElement(c, { style: colStyles ? _.extend(colStyles, c.props.style) : c.props.style }) : null
       })
     )
   }

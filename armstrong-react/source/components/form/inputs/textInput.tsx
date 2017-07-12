@@ -45,7 +45,7 @@ export class TextInput extends React.Component<ITextInputProps, {}> {
         "show-validation": (this.props.validationMode !== "none" && validationMessage)
       }
     );
-    var ps = _.omit(this.props, "className", "readonly", "rightOverlayText", "leftOverlayText", "type", "leftIcon", "rightIcon", "multiLine", "validationMode")
+    var ps = _.omit(this.props, "className", "readonly", "rightOverlayText", "leftOverlayText", "type", "leftIcon", "rightIcon", "multiLine", "validationMode", "validationResults")
     return (
       <div className={classes} title={validationMessage}>
         {this.props.leftIcon && <Icon className="left-icon" icon={this.props.leftIcon} />}

@@ -7,7 +7,7 @@ export interface ITabControlProps extends React.HTMLProps<TabControl> {
   /** (number) The index of the tab selected when the control renders. Defaults to 0 */
   defaultSelectedIndex?: number;
   /** (TabItem[]) The tab items. Controls the header and the content */
-  children?: any[] | any;
+  children?: React.ReactNode | TabItem | TabItem[];
   /** ((index: number) => void) Fires when the tab is changed by the user */
   onTabChanged?: (index: number) => void;
   /** ('left' | 'right') Wether to align the tabs to the right or left of the header. Defaults to left */

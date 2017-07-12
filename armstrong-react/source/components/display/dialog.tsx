@@ -109,7 +109,7 @@ export class Dialog extends React.Component<IDialogProps, {}>{
     // to render null. If "element" is `null`, just render a noscript element,
     // like React does when an element's render returns null.
     if (element === null) {
-      element = React.DOM.noscript();
+      element = React.createFactory("noscript")();
     }
 
     // use ReactDOM.unstable_renderSubtreeIntoContainer function instead of
@@ -139,7 +139,7 @@ export class Dialog extends React.Component<IDialogProps, {}>{
     return unmounted;
   }
 
-  private renderDialog(newProps) {
+  private renderDialog(newProps: IDialogProps) {
     var style = { width: this.props.width || "500px", height: this.props.height || "auto" }
     return (
       <div className={`dialog${this.props.className ? ` ${this.props.className}` : ''}`} style={style} id={this.dialogId}>

@@ -9,6 +9,7 @@ export interface IBurgerMenuProps {
   burgerButtonHidden?: boolean;
   onMenuToggle?: (sender: BurgerMenu) => any;
   mode?: "push" | "slide";
+  children?: React.ReactNode
 }
 
 export class BurgerMenu extends React.Component<IBurgerMenuProps, {}>{
@@ -31,29 +32,29 @@ export class BurgerMenu extends React.Component<IBurgerMenuProps, {}>{
   }
   public closeMenu() {
     let mode = this.props.mode || "push";
-    if (mode === "push"){
+    if (mode === "push") {
       this.appNode.classList.remove("menu-open");
       this.appNode.classList.remove("menu-push");
-    }else{
+    } else {
       this.appNode.classList.remove("menu-open");
       this.appNode.classList.remove("menu-slide");
     }
     this.isOpen = false;
-    if(this.props.onMenuToggle) {
+    if (this.props.onMenuToggle) {
       this.props.onMenuToggle(this);
     }
   }
   public openMenu() {
     let mode = this.props.mode || "push";
-    if (mode === "push"){
+    if (mode === "push") {
       this.appNode.classList.add("menu-open");
       this.appNode.classList.add("menu-push");
-    }else{
+    } else {
       this.appNode.classList.add("menu-open");
       this.appNode.classList.add("menu-slide");
     }
     this.isOpen = true;
-    if(this.props.onMenuToggle) {
+    if (this.props.onMenuToggle) {
       this.props.onMenuToggle(this);
     }
   }
@@ -61,20 +62,20 @@ export class BurgerMenu extends React.Component<IBurgerMenuProps, {}>{
     this.unmountPortalNode();
   }
 
-  componentWillReceiveProps(newProps) {
-    this.renderToPortal(this.renderNav(newProps.children as any[]))
+  componentWillReceiveProps(newProps: IBurgerMenuProps) {
+    this.renderToPortal(this.renderNav(newProps.children))
   }
 
   componentDidMount() {
     let appNode = document.getElementById(this.props.bodyId || "host");
-    if(!appNode){
+    if (!appNode) {
       throw new Error(`Cannot find document node of ${this.props.bodyId || "host"}`)
     }
     this.appNode = appNode;
-    this.renderToPortal(this.renderNav(this.props.children as any[]))
+    this.renderToPortal(this.renderNav(this.props.children))
   }
 
-  renderToPortal(element) {
+  renderToPortal(element: JSX.Element) {
     let node = this.portalNode;
 
     if (node == null) {
@@ -88,7 +89,7 @@ export class BurgerMenu extends React.Component<IBurgerMenuProps, {}>{
     // to render null. If "element" is `null`, just render a noscript element,
     // like React does when an element's render returns null.
     if (element === null) {
-      element = React.DOM.noscript();
+      element = React.createFactory("noscript")();
     }
 
     // use ReactDOM.unstable_renderSubtreeIntoContainer function instead of
@@ -104,6 +105,7 @@ export class BurgerMenu extends React.Component<IBurgerMenuProps, {}>{
     delete this.portalNode;
     return unmounted;
   }
+
   private closeNav(e, handler) {
     // There is a probably a nicer way to do this, but CBA right now
     if (this.props.closeOnNavigate) {
@@ -111,23 +113,23 @@ export class BurgerMenu extends React.Component<IBurgerMenuProps, {}>{
     }
   }
 
-  renderNav(children: any[]) {
+  renderNav(children: React.ReactNode) {
     return (
       <div>
-      {this.props.mode === "slide" &&
-      <div className="burger-blocker" onClick={()=> this.closeMenu()}/>
-      }
-      <ul className="burger-menu-list" role="menu" aria-activedescendant aria-expanded={ this.isOpen } aria-hidden={ !this.isOpen }>{React.Children.map(children, (c, index) => {
-        return <li onClick={(e) => this.closeNav(e, () => this.closeMenu()) } key={`nav_item_${index}`}>{c}</li>
-      })}
-      </ul>
+        {this.props.mode === "slide" &&
+          <div className="burger-blocker" onClick={() => this.closeMenu()} />
+        }
+        <ul className="burger-menu-list" role="menu" aria-activedescendant aria-expanded={this.isOpen} aria-hidden={!this.isOpen}>{React.Children.map(children, (c, index) => {
+          return <li onClick={(e) => this.closeNav(e, () => this.closeMenu())} key={`nav_item_${index}`}>{c}</li>
+        })}
+        </ul>
       </div>);
   }
 
   render() {
     return (
-      <button className={`burger-menu-button${this.props.burgerButtonHidden ? " hidden" : ""}`} onClick={() => this.toggleMenu() }>
-        { this.props.buttonIcon && <Icon icon={this.props.buttonIcon}/> }
+      <button className={`burger-menu-button${this.props.burgerButtonHidden ? " hidden" : ""}`} onClick={() => this.toggleMenu()}>
+        {this.props.buttonIcon && <Icon icon={this.props.buttonIcon} />}
       </button>
     )
   }
@@ -154,8 +156,8 @@ export class BurgerMenuItem extends React.Component<IBurgerMenuItemProps, {}> {
     }
   }
   render() {
-    return <div role="menuitem" className={`burger-menu-item${this.props.active ? ' active' : ''}`} style={this.props.style} aria-selected={ this.props.active || false } onClick={() => this.props.onClick ? this.handleClick(this.props.onClick) : null }>
-      {this.props.icon && <Icon icon={this.props.icon}/>}{this.props.title}
+    return <div role="menuitem" className={`burger-menu-item${this.props.active ? ' active' : ''}`} style={this.props.style} aria-selected={this.props.active || false} onClick={() => this.props.onClick ? this.handleClick(this.props.onClick) : null}>
+      {this.props.icon && <Icon icon={this.props.icon} />}{this.props.title}
     </div>
   }
 }
