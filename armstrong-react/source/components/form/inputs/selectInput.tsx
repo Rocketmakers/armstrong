@@ -48,7 +48,7 @@ export class SelectInput extends React.Component<ISelectInputProps, {}> {
     let options = buildOptions(this.props.optionLabel, this.props.options, o => o.id, o => o.name, !!this.props.enableOptionLabel);
     return (
       <div className={classes} title={validationMessage}>
-        <select ref={r => this.select = r} {..._.omit(this.props, "options", "change", "onChange", "optionLabel", "validationMode") } onChange={this.change}>
+        <select ref={r => this.select = r} {..._.omit(this.props, "options", "change", "onChange", "optionLabel", "validationMode", "enableOptionLabel") } onChange={this.change}>
           {options}
         </select>
       </div>
