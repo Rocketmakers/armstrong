@@ -1,5 +1,7 @@
 #!/usr/bin/env ruby
 
+require "English"
+
 def system_req(*args)
   system(*args)
   if $CHILD_STATUS.exitstatus != 0
