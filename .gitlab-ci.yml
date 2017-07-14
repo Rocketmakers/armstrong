@@ -9,7 +9,7 @@ build:
     - linux
   artifacts:
     paths:
-      - 'dist'
+      - 'armstrong-react/dist'
 
 deploy:
   stage: deploy
