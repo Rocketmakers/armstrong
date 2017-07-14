@@ -1,0 +1,24 @@
+stages:
+  - build
+  - deploy
+
+build:
+  stage: build
+  script: "./build.sh"
+  tags:
+    - linux
+  artifacts:
+    paths:
+      - 'dist'
+
+deploy:
+  stage: deploy
+  script: "./deploy.sh"
+  tags:
+    - linux
+  environment:
+    name: npm
+    url: https://www.npmjs.com/package/armstrong-react
+  only:
+    - master
+  when: manual
