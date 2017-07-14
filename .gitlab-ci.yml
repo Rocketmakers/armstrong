@@ -16,9 +16,6 @@ deploy:
   script: "./deploy.sh"
   tags:
     - linux
-  environment:
-    name: npm
-    url: https://www.npmjs.com/package/armstrong-react
   only:
     - master
   when: manual
