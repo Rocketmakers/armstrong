@@ -22,3 +22,5 @@ deploy:
   only:
     - master
   when: manual
+  dependencies:
+    - build
