@@ -4,10 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "postinstall": "(cd armstrong-react && yarn) && (cd workbench && yarn)",
-    "start-workbench" : "cd workbench && yarn start",
-    "start-armstrong" : "cd armstrong-react && yarn run watch",
-    "start": "parallelshell -v \"yarn run start-workbench\" \"yarn run start-armstrong\""
+    "postinstall": "(cd armstrong-react && yarn) && (cd workbench && yarn) && (cd docs && yarn)",
+    "start-workbench": "cd workbench && yarn start",
+    "start-docs": "cd docs && yarn start",
+    "start-armstrong": "cd armstrong-react && yarn run watch",
+    "start": "parallelshell -v \"yarn run start-workbench\" \"yarn run start-armstrong\" \"yarn run start-docs\""
   },
   "repository": {
     "type": "git",

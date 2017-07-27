@@ -1,0 +1,30 @@
+/********************************************
+  STANDARD IMPORTS
+********************************************/
+
+@import "~armstrong-react/dist/imports";
+@import "./shared/_as-variables";
+@import "./shared/variables";
+
+/********************************************
+  FORM VALIDATION
+********************************************/
+
+.invalid {
+    
+    label {
+        color: $color-negative;
+    }
+    input,select {
+        border: 1px solid $color-negative;
+    }
+    .icon {
+        color: $color-negative;
+    }
+}
+
+.validation {
+    font-size: $font-size-xsmall;
+    margin-top: $spacing-xsmall;
+    margin-bottom: $spacing-xsmall;
+}

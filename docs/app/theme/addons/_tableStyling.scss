@@ -1,0 +1,80 @@
+// STANDARD IMPORTS
+@import "~armstrong-react/dist/imports";
+@import "./shared/_as-variables.scss";
+@import "./shared/_variables.scss";
+
+/********************************************
+  TABLE STYLING
+********************************************/
+
+table {
+    font-size: $font-size-xsmall;
+    width: 100%;
+
+    th, td {
+        padding: $spacing-xsmall;
+    }
+
+    thead {
+        th {
+            font-weight: 300;
+            text-align: left;
+            color: white;
+            background: $gray-dark;
+        }
+    }
+
+    tbody {
+        tr {
+            &:nth-of-type(odd) {
+                background: darken( $gray-very-light, 6);
+            }
+            &:nth-of-type(even) {
+                background: darken( $gray-very-light, 1);
+            }
+            &.positive td {
+                color: white;
+                background: $color-positive;
+            }
+            &.negative td {
+                color: white;
+                background: $color-negative;
+            }
+        }
+    }
+
+    tfoot {
+        td {
+            font-weight: bold;
+            color: $gray-dark;
+            border-top: 1px solid $gray-dark;
+        }
+    }
+
+    &.hoverable {
+        tbody {
+            tr:hover {
+                td {
+                    cursor: pointer;
+                    background: $color-info;
+                    color: white;
+                    i {
+                        color: white;
+                    }
+                }
+
+                &.positive:hover td {
+                    background: darken($color-positive, 10.0);
+                }
+
+                &.negative:hover td {
+                    background: darken($color-negative, 15.0);
+                }
+            }
+        }
+    }
+
+    .btn {
+        padding: $spacing-xsmall;
+    }
+}

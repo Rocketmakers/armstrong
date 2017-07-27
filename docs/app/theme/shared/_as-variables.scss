@@ -1,0 +1,89 @@
+/*********************************************************************************************
+  ARMSTRONG SCSS EXPORTS - IMPORTS
+  all scss to be consumed must be exported here.
+  EVERYTHING IN HERE WILL BE IMPORTED MULTIPLE TIMES AND SHOULD BE EXPORTING "VIRTUAL" SCSS
+**********************************************************************************************/
+
+//// SCREEN SIZES
+// $screen-size-phone: 480px !default;
+// $screen-size-tablet: 860px !default;
+// $screen-size-computer: 960px !default;
+
+//// FONT SIZES
+// $font-size-root: 16px !default;
+
+// $font-size-xxsmall: 0.6rem !default;
+$font-size-xsmall: 0.9rem;
+// $font-size-small: 1rem !default;
+// $font-size-medium: 1.2rem !default;
+$font-size-large: 1.3rem;
+$font-size-xlarge: 2.25rem;
+
+// $font-sizes:(
+//   xxsmall $font-size-xxsmall,
+//   xsmall $font-size-xsmall,
+//   small $font-size-small,
+//   medium $font-size-medium,
+//   large $font-size-large,
+//   xlarge $font-size-xlarge,
+// );
+
+//// SPACINGS
+// Note: If you're adding to this, make sure to update the value and the array
+// $spacing-xxsmall: 0.25rem !default;
+// $spacing-xsmall: 0.5rem !default;
+// $spacing-small: 1rem !default;
+// $spacing-medium: 2rem !default;
+// $spacing-large: 3rem !default;
+// $spacing-xlarge: 4rem !default;
+
+// $spacing-sizes: (
+//   xxsmall $spacing-xxsmall,
+//   xsmall $spacing-xsmall,
+//   small $spacing-small,
+//   medium $spacing-medium,
+//   large $spacing-large,
+//   xlarge $spacing-xlarge,
+//   none 0
+// );
+
+//// COLORS
+// $white: #ffffff !default;
+
+// $brand-primary: #cd3939 !default;
+// $brand-secondary: #3d4144 !default;
+
+$gray-base: #7592a6;
+
+$gray-very-dark: #48535c;
+$gray-dark: #4f5c69;
+$gray-medium: $gray-base;
+$gray-light: #d5dfe5;
+$gray-very-light: #f0f3f5;
+
+// $color-positive: #00a388 !default;
+// $color-warning: #f78e52 !default;
+// $color-negative: #df5a49 !default;
+// $color-info: #3498d8 !default;
+
+// $colors: (
+//   'positive' $color-positive,
+//   'warning' $color-warning,
+//   'negative' $color-negative,
+//   'info' $color-info,
+//   'brand-primary' $brand-primary,
+//   'brand-secondary' $brand-secondary,
+//   'gray-very-dark' $gray-very-dark,
+//   'gray-dark' $gray-dark,
+//   'gray-medium' $gray-medium,
+//   'gray-light' $gray-light,
+//   'gray-very-light' $gray-very-light,
+//   'white' $white
+// );
+
+//// CORNERS
+// $corner-radius-small: 5px !default;
+// $corner-radius-large: 15px !default;
+
+//// FORMS
+// $form-field-height: 40px !default;

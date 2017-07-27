@@ -17,7 +17,5 @@
     "outDir": "../www",
     "moduleResolution": "node"
   },
-  "exclude": [
-    "../armstrong/node_modules/**"
-  ]
+  "exclude": ["../armstrong-react/node_modules/**"]
 }

@@ -21,3 +21,11 @@ deploy:
   when: manual
   dependencies:
     - build
+
+pages:
+  script:
+  - "./build-docs.sh"
+  - "cp -r docs/www public"
+  artifacts:
+    paths:
+    - public

@@ -1,0 +1,48 @@
+/********************************************
+  STANDARD IMPORTS
+********************************************/
+
+@import "~armstrong-react/dist/imports";
+@import "./shared/_as-variables";
+@import "./shared/variables";
+
+/********************************************
+  FORM-GRID
+********************************************/
+
+.form-grid {
+    & > .row {
+        &:last-of-type {
+            > .col:last-of-type {
+                margin-bottom: inherit;
+            }
+        }
+        > .col {
+            margin-right: $spacing-xsmall;
+            margin-bottom: $spacing-small;
+            &:last-of-type {
+                margin-right: 0;
+            }
+            label {
+                display: block;
+                margin-bottom: $spacing-xsmall;
+            }
+            .full-width-form-element {
+                width: 100%;
+                min-width: 100px;
+                input {
+                    min-width: 100px;
+                }
+            }
+        }
+         //Fix for nested form-grids
+            .form-grid .row:last-of-type .col {
+                margin-bottom:0;
+            }
+    }
+
+    .btn, button, input, select {
+        margin: 0;
+    }
+
+}

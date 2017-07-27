@@ -1,0 +1,398 @@
+// 1. OVERRIDES TO ARMSTRONG VARIABLES MUST BE LOADED FIRST
+@import "./shared/variables";
+
+// 2. THEN ANY NEW VARIABLES YOU CREATE
+@import "./shared/as-variables";
+
+// 3. FONTS SHOULD BE LOADED SECOND
+@import "fonts";
+@import "addons/icomoon";
+
+// 4. ARMSTRONG LIBRARY IMPORTS
+@import "~armstrong-react/dist/imports";
+@import "~armstrong-react/dist/core";
+@import "~armstrong-react/dist/responsive";
+@import "~armstrong-react/dist/navigation";
+
+// 5. ANY CUSTOM STYLING LAST
+@import "addons/tableStyling";
+@import "addons/typography";
+@import "addons/tooltip";
+@import "addons/formGrid";
+@import "addons/formValidation";
+
+// @import "fonts";
+// @import "addons/icomoon";
+
+// @import "~armstrong-react/dist/imports";
+// @import "~armstrong-react/dist/style";
+
+// @import "addons/responsive";
+// @import "addons/tableStyling";
+// @import "addons/typography";
+// @import "addons/tooltip";
+// @import "addons/formGrid";
+// @import "addons/formValidation";
+
+// @import "./shared/_as-variables";
+// @import "./shared/_variables";
+
+/************************************************************************************************
+  GLOBAL THEME STYLES
+  In an ideal world, this file will only be the above imports. All SCSS should really
+  exist next to each component and consume variables where it needs to.
+
+  If you're about to add global styles to this file, make sure it's really what you want to do!
+************************************************************************************************/
+
+html,
+body,
+main,
+#host {
+  height: 100%;
+}
+
+hr {
+  border: 0;
+  border-top: 1px solid $gray-light;
+  margin-top: $spacing-large;
+  margin-bottom: $spacing-large;
+}
+
+/************************************************************************************************
+  DEMO LAYOUT CLASSES
+************************************************************************************************/
+
+.main-content {
+  max-width: 1200px;
+  padding: $spacing-medium $spacing-large;
+  position: relative;
+}
+
+.typography-examples {
+  & > .row {
+    padding: $spacing-small 0;
+    margin: $spacing-small 0;
+    border-bottom: 1px solid $gray-very-light;
+    & > .col {
+      &:first-of-type {
+        padding-right: $spacing-medium;
+        code {
+          margin-bottom: 5px;
+        }
+      }
+      &:nth-of-type(2) {
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6,
+        p,
+        pre,
+        ul,
+        ol,
+        blockquote {
+          margin-top: 0 !important;
+          margin-bottom: 0 !important;
+        }
+        code {
+          margin-bottom: 5px;
+        }
+      }
+    }
+  }
+}
+
+footer {
+  padding-top: $spacing-medium;
+  font-size: $font-size-xsmall;
+}
+
+nav.burger-menu {
+  background-color: $gray-very-light;
+  font-size: $font-size-small;
+
+  h3 {
+    margin: $spacing-medium 0 $spacing-small 0;
+    font-size: $font-size-xsmall;
+    cursor: initial;
+  }
+
+  ul.burger-menu-list {
+    margin: 0;
+    padding: $spacing-medium;
+    li {
+      margin: 0;
+      margin-left: 0;
+      padding: 0;
+      cursor: pointer;
+      div.burger-menu-item {
+        color: $gray-dark;
+        border-bottom: 0 solid rgba(white, 0);
+        padding: 0 !important;
+        margin-bottom: $spacing-small;
+        &:hover {
+          font-weight: bold;
+          color: $gray-very-dark !important;
+        }
+      }
+    }
+  }
+}
+
+ul.components {
+  font-size: $font-size-xsmall;
+  margin: 0;
+  padding: 0;
+  margin-bottom: $spacing-medium;
+  li {
+    padding: $spacing-small;
+    display: inline-block;
+    border-radius: 5px;
+    transition: background-color 500ms;
+    transition: color 500ms;
+    background-color: $gray-very-light;
+    color: $gray-very-dark;
+    cursor: pointer;
+    margin-left: $spacing-xsmall;
+    margin-right: $spacing-xsmall;
+    &:hover {
+      background-color: $gray-very-dark;
+      color: white;
+    }
+    &:first-of-type {
+      margin-left: 0;
+    }
+    &:last-of-type {
+      margin-right: 0;
+    }
+  }
+}
+
+.helper-grid {
+  word-break: break-all !important;
+  background-color: rgba($gray-medium, 0.5);
+  padding: $spacing-small;
+  font-size: $font-size-xsmall;
+  margin-bottom: $spacing-medium;
+
+  > .row {
+    background-color: rgba(white, 0.5);
+    padding-top: $spacing-small;
+    padding-left: $spacing-small;
+    padding-right: $spacing-small;
+
+    &:last-of-type {
+      padding-bottom: $spacing-small;
+    }
+
+    & > .col {
+      background-color: rgba(white, 0.5);
+      padding: $spacing-xsmall;
+      margin-right: $spacing-xsmall;
+
+      &:last-of-type {
+        margin-right: 0;
+      }
+    }
+  }
+}
+
+.sidebar {
+  background-color: $gray-very-light;
+  padding: $spacing-medium;
+  nav {
+    font-size: $font-size-xsmall;
+    a {
+      text-decoration: none;
+      color: $gray-medium;
+      display: block;
+      margin-bottom: $spacing-small;
+      &:hover {
+        color: $gray-dark;
+      }
+      &.active {
+        font-weight: 500;
+        color: $gray-dark;
+      }
+    }
+    h3 {
+      margin-top: 2em;
+      font-weight: 300;
+      font-size: $font-size-xsmall;
+    }
+  }
+}
+
+.secondary-nav {
+  padding-left: $spacing-small;
+  font-size: $font-size-xsmall;
+  margin-top: $spacing-small;
+  ul {
+    margin: 0;
+    padding: 0;
+    li {
+      list-style-type: none;
+      padding-left: 0;
+      a {
+        text-decoration: none;
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+}
+
+/************************************************************************************************
+  DEMO TYPOGRAPHY CLASSES
+************************************************************************************************/
+
+h1 {
+  font-family: "Averta";
+
+  &.header-title {
+    font-size: $font-size-medium;
+    margin-bottom: 0;
+    margin-top: 0;
+    display: inline;
+    margin-right: $spacing-small;
+  }
+  &.headline {
+    font-size: 2.25em;
+  }
+}
+
+h2 {
+  &.header-description {
+    font-size: $font-size-small;
+    margin-top: 0;
+    margin-bottom: 0;
+    display: inline;
+    font-weight: 300;
+  }
+  &.subheading {
+    font-weight: 300;
+    font-size: 1.3em;
+  }
+}
+
+a {
+  transition: color 400ms;
+  &:hover {
+    color: $gray-medium;
+  }
+  i {
+    color: initial;
+    border-bottom: 0;
+    &:hover {
+      color: initial;
+    }
+  }
+}
+
+/************************************************************************************************
+  DEMO MISC/HELPER CLASSES
+************************************************************************************************/
+
+article h1:first-of-type {
+  margin-top: 0;
+}
+
+.swatch {
+  height: 25px;
+  width: 25px;
+  border: 1px solid $gray-medium;
+}
+
+.alert {
+  padding: $spacing-small;
+  font-size: $font-size-xsmall;
+  color: white;
+  margin-top: $spacing-medium;
+  margin-bottom: $spacing-medium;
+}
+
+.burger-menu-button {
+  line-height: initial;
+  background: transparent;
+  color: $gray-very-dark;
+  margin: 0;
+  padding: 0;
+  margin-right: $spacing-medium;
+  width: initial;
+  margin-top: $spacing-small;
+  i {
+    font-size: $font-size-xlarge;
+  }
+}
+
+.callout {
+  &.major {
+    color: white;
+    background-color: $gray-very-dark;
+    margin-bottom: $spacing-medium;
+  }
+  &.minor {
+    background-color: $gray-very-light;
+    margin-bottom: $spacing-small;
+  }
+}
+
+/************************************************************************************************
+  ARMSTRONG OVERRIDES
+************************************************************************************************/
+
+.btn {
+  margin-bottom: 2px;
+}
+
+/********************************************
+  BUTTON SPACING HELPER
+********************************************/
+
+.btn {
+  margin-left: $spacing-xxsmall;
+  margin-right: $spacing-xxsmall;
+  transition: background-color 250ms ease-in;
+  &:first-of-type {
+    margin-left: 0;
+  }
+  &:last-of-type {
+    margin-right: 0;
+  }
+}
+
+.name-form {
+  width: 300px;
+  button {
+    width: 100%;
+  }
+}
+
+.state-form {
+  width: 800px;
+  button {
+    width: 100%;
+  }
+}
+
+/************************************************************************************************
+  RESPONSIVE
+************************************************************************************************/
+
+@media (max-width: $responsive-medium) {
+  .main-content {
+    max-width: 100%;
+  }
+  .sidebar {
+    display: none;
+  }
+}
+
+@media (max-width: $responsive-small) {
+  .secondary-nav {
+    display: none;
+  }
+}
