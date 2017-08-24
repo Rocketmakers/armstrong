@@ -1,6 +1,6 @@
 {
   "name": "armstrong-react",
-  "version": "2.2.1",
+  "version": "2.3.0",
   "description": "Rocketmakers Armstrong library of React components",
   "main": "./dist/index.js",
   "style": "./dist/style.scss",
@@ -17,11 +17,7 @@
     "type": "git",
     "url": "https://github.com/Rocketmakers/armstrong-react.git"
   },
-  "keywords": [
-    "typescript",
-    "React",
-    "sass"
-  ],
+  "keywords": ["typescript", "React", "sass"],
   "author": "developers@rocketmakers.com",
   "license": "MIT",
   "dependencies": {
