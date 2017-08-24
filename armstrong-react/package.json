@@ -17,7 +17,11 @@
     "type": "git",
     "url": "https://github.com/Rocketmakers/armstrong-react.git"
   },
-  "keywords": ["typescript", "React", "sass"],
+  "keywords": [
+    "typescript",
+    "React",
+    "sass"
+  ],
   "author": "developers@rocketmakers.com",
   "license": "MIT",
   "dependencies": {
@@ -33,14 +37,14 @@
     "react-dom": "15.x"
   },
   "devDependencies": {
-    "@types/react": "^15.0.37",
+    "@types/react": "16.0.5",
     "@types/react-dom": "^15.5.1",
     "@types/underscore": "^1.8.1",
     "chokidar": "^1.7.0",
     "import-resolve": "^0.4.0",
     "parallelshell": "^3.0.1",
-    "react": "^15.6.1",
-    "react-dom": "^15.6.1",
+    "react": "next",
+    "react-dom": "next",
     "ts-loader": "^2.2.2",
     "typescript": "~2.4.1"
   }
