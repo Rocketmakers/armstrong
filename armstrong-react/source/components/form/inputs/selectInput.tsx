@@ -22,7 +22,7 @@ export class SelectInput extends React.Component<ISelectInputProps, {}> {
     validationMode: "none"
   }
   private change = (e) => {
-    this.props.change && this.props.change(this.props.options[e.target["selectedIndex"]]);
+    this.props.change && this.props.change(this.props.options[e.target["selectedIndex"] - 1]);
     this.props.onChange && this.props.onChange(e);
   }
   public focus() {
