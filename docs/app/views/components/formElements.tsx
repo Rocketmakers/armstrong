@@ -213,7 +213,7 @@ export class FormElements extends React.Component<{}, {}> {
               <p><b>Note: </b> CalendarInput no longer takes a locale prop. Instead import ArmstrongConfig and call setLocale once, probably on app startup.</p>
 
               <pre className="callout minor">
-                {`<CalendarInput icon={CalendarInput.Icomoon.calendar2} />`}
+                {`<CalendarInput icon={Icon.Icomoon.calendar2} />`}
               </pre>
 
               <table>

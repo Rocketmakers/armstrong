@@ -86,7 +86,7 @@ export class FormGrid extends React.Component<{}, {}> {
     </Col>
     <Col>
       <label>Date of birth</label>
-      <CalendarInput icon={CalendarInput.Icomoon.calendar2} />
+      <CalendarInput icon={Icon.Icomoon.calendar2} />
     </Col>
   </Row>
 </Grid>`}
