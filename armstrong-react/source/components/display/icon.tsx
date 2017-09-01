@@ -13,13 +13,11 @@ export interface IIconProps extends React.HTMLProps<Icon> {
 export class Icon extends React.Component<IIconProps, {}>{
   static Icomoon = Icons.Icomoon;
 
-
-
-  render(){
+  render() {
     var attrs = _.omit(this.props, "icon", "className", "test");
     var classes = ClassHelpers.classNames(this.props.className, "icon", this.props.icon);
     return (
-      <i { ...attrs } className={classes}/>
+      <i { ...attrs } className={classes} />
     );
   }
 }

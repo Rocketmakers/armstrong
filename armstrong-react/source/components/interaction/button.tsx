@@ -4,9 +4,9 @@ import { Size, LayoutHelpers, Color, FgColorClass, BgColorClass, MarginClass, Pa
 import { Icon } from "./../display/icon";
 import { ClassHelpers } from "../../utilities/classNames";
 
-export interface IButtonProps extends React.HTMLProps<Button> {
+export interface IButtonProps extends React.HTMLProps<HTMLButtonElement> {
   /** ((React.MouseEvent) => void) Event to fire when the button is clicked */
-  onClick?: (e?: React.MouseEvent<{}>)=> void;
+  onClick?: (e?: React.MouseEvent<{}>) => void;
   /** (string) An icon to show on the left of the buttons content */
   leftIcon?: string;
   /** (string) An icon to show on the right of the buttons content */
@@ -19,34 +19,31 @@ export interface IButtonProps extends React.HTMLProps<Button> {
   pending?: boolean;
 }
 
-export class Button extends React.Component<IButtonProps, {}>{
-
-  handleClick(e){
-    if (this.props.onClick && !this.props.pending){
-      this.props.onClick(e);
+export function Button(props: IButtonProps) {
+  function handleClick(e) {
+    if (props.onClick && !props.pending) {
+      props.onClick(e);
     }
   }
-
-  render() {
-    var attrs = _.omit(this.props, "onClick", "leftIcon", "rightIcon", "className", "rounded", "context", "pending", "disabled");
-    const classes = ClassHelpers.classNames(
-      "btn",
-      this.props.className,
-      {
-        "rounded": this.props.rounded,
-        "icon-button-left": this.props.leftIcon !== undefined,
-        "icon-button-right": this.props.rightIcon !== undefined,
-        "pending": this.props.pending
-      }
-    );
-    let leftIcon = this.props.leftIcon && <Icon className="left-icon" icon={this.props.leftIcon}/>
-    let rightIcon = this.props.rightIcon && <Icon className="right-icon" icon={this.props.rightIcon}/>
-    return (
-      <button disabled={this.props.pending || this.props.disabled} type={this.props.type || 'button'} onClick={e => this.handleClick(e)} { ...attrs } className={classes}>
+  var attrs = _.omit(props, "onClick", "leftIcon", "rightIcon", "className", "rounded", "context", "pending", "disabled");
+  const classes = ClassHelpers.classNames(
+    "btn",
+    props.className,
+    {
+      "rounded": props.rounded,
+      "icon-button-left": props.leftIcon !== undefined,
+      "icon-button-right": props.rightIcon !== undefined,
+      "pending": props.pending
+    }
+  );
+  let leftIcon = props.leftIcon && <Icon className="left-icon" icon={props.leftIcon} />
+  let rightIcon = props.rightIcon && <Icon className="right-icon" icon={props.rightIcon} />
+  return (
+    <button disabled={props.pending || props.disabled} type={props.type || 'button'} onClick={e => handleClick(e)} { ...attrs } className={classes}>
       {leftIcon}
-      {this.props.children}
+      {props.children}
       {rightIcon}
-      </button>
-    );
-  }
+    </button>
+  );
+
 }
