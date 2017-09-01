@@ -28,6 +28,8 @@ pages:
   script:
   - "./build-docs.sh"
   - "cp -r docs/www public"
+  tags:
+    - linux
   artifacts:
     paths:
     - public
