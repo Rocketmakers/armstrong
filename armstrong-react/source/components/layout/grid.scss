@@ -45,15 +45,15 @@
 .grid {
   .row {
     display: flex;
-    flex: 1 1 0;
+    flex: 1 1 0%;
 
     .col {
-      flex: 1 1 0;
+      flex: 1 1 0%;
     }
   }
 
   &.fixed {
-    flex: 0 1 0;
+    flex: 0 1 0%;
   }
 }
 
