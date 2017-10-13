@@ -94,8 +94,11 @@ export class Dialog extends React.Component<IDialogProps, {}>{
       this.portalNode = node = document.createElement('div');
       this.portalNode.classList.add('dialog-layer');
       if (this.props.closeOnBackgroundClick) {
-        this.portalNode.onclick = () => {
-          this.close();
+        this.portalNode.onclick = (e) => {
+          let clickedElement = e.target as HTMLElement;
+          if (clickedElement && clickedElement.classList.contains("dialog-layer")) {
+            this.close();
+          }
         }
       }
       if (this.props.layerClass) {
