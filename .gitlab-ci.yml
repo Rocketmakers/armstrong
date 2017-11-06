@@ -30,6 +30,7 @@ pages:
   - "cp -r docs/www public"
   tags:
     - linux
+  when: manual
   artifacts:
     paths:
     - public
