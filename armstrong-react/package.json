@@ -1,6 +1,6 @@
 {
   "name": "armstrong-react",
-  "version": "2.3.3",
+  "version": "2.3.4",
   "description": "Rocketmakers Armstrong library of React components",
   "main": "./dist/index.js",
   "style": "./dist/style.scss",
@@ -28,9 +28,9 @@
     "underscore": "^1.8.3"
   },
   "peerDependencies": {
-    "@types/react": "^15.0.37",
-    "react": "15.x",
-    "react-dom": "15.x"
+    "@types/react": "16.x",
+    "react": "16.x",
+    "react-dom": "16.x"
   },
   "devDependencies": {
     "@types/react": "16.0.5",
