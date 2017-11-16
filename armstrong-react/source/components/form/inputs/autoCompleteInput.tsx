@@ -105,7 +105,9 @@ export class AutoCompleteInput extends React.Component<IAutoCompleteInputProps, 
   filter(query: string) {
     var q = query.toLowerCase();
     if (this.props.remoteQuery) {
-      this.filterRemote(query);
+      if (query.length < this.props.minimumLength) {
+        this.filterRemote(query);
+      }
     }
     else {
       if (query.length < this.props.minimumLength) {
