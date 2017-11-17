@@ -19,7 +19,6 @@ deploy:
     - linux
   only:
     - master
-  when: manual
   dependencies:
     - build
 

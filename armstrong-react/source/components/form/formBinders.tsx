@@ -135,14 +135,14 @@ export class AutoCompleteFormBinder implements IFormBinder<IAutoCompleteInputPro
     const value = dataBinder.getValue(this.dataPath);
     if (_.isArray(value)) {
       if (this.getItemFromId) {
-        props.value = value.map(v => this.getItemFromId(v.id))
+        props.value = value.map(v => this.getItemFromId(v))
         return
       }
       props.value = props.options ? props.options.filter(o => value.indexOf(o.id) > -1) : []
       return
     }
     if (this.getItemFromId) {
-      props.value = this.getItemFromId(value.id)
+      props.value = this.getItemFromId(value)
       return
     }
 
