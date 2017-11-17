@@ -15,7 +15,7 @@ import { FormBinderBase } from "./formBinderBase";
 import { ICalendarInputProps } from "./inputs/calendarInput";
 import { IDateInputProps } from "./inputs/dateInput";
 import { ITimeInputProps } from "./inputs/timeInput";
-import { IAutoCompleteInputProps } from "./inputs/autoCompleteInput";
+import { IAutoCompleteInputProps, IAutoCompleteOption } from "./inputs/autoCompleteInput";
 import { Formatting } from "../../utilities/formatting";
 
 /** An input FormBinder that sets native 'value' and 'onChange: (e) => void' properties */
@@ -130,11 +130,19 @@ export class CalendarInputFormBinder extends FormBinderBase<ICalendarInputProps,
 }
 
 export class AutoCompleteFormBinder implements IFormBinder<IAutoCompleteInputProps, any> {
-  constructor(public dataPath: string) { }
+  constructor(public dataPath: string, private getItemFromId?: (id: string) => IAutoCompleteOption) { }
   setElementProperty(props: IAutoCompleteInputProps, dataBinder: IDataBinder<any>): void {
     const value = dataBinder.getValue(this.dataPath);
     if (_.isArray(value)) {
+      if (this.getItemFromId) {
+        props.value = value.map(v => this.getItemFromId(v.id))
+        return
+      }
       props.value = props.options ? props.options.filter(o => value.indexOf(o.id) > -1) : []
+      return
+    }
+    if (this.getItemFromId) {
+      props.value = this.getItemFromId(value.id)
       return
     }
 
@@ -181,8 +189,8 @@ export class FormBinder {
     return this.defaultInputFormBinder(dataName, "email", valueConverter)
   }
 
-  static autoCompleteInput(dataName: string) {
-    return FormBinder.custom(new AutoCompleteFormBinder(dataName));
+  static autoCompleteInput(dataName: string, getItemFromId?: (id: string) => IAutoCompleteOption) {
+    return FormBinder.custom(new AutoCompleteFormBinder(dataName, getItemFromId));
   }
 
   /** bind a 'date' string property to a CalendarInput (e.g. YYYY-MM-DD) */
