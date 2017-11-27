@@ -27,7 +27,14 @@ export class Button extends React.Component<IButtonProps> {
       onClick(e);
     }
   }
-  
+
+  public input: HTMLButtonElement;
+  public focus() {
+    this.input && this.input.focus()
+  }
+  public blur() {
+    this.input && this.input.blur()
+  }
   render() {
     const { onClick, leftIcon, rightIcon, className, rounded, pending, disabled, type, children, ...attrs } = this.props
     //var attrs = _.omit(props, );
@@ -42,7 +49,7 @@ export class Button extends React.Component<IButtonProps> {
       }
     );
     return (
-      <button disabled={pending || disabled} type={type || 'button'} onClick={this.handleClick} { ...attrs } className={classes}>
+      <button disabled={pending || disabled} type={type || 'button'} onClick={this.handleClick} { ...attrs } ref={r => this.input = r} className={classes}>
         {leftIcon && <Icon className="left-icon" icon={leftIcon} />}
         {children}
         {rightIcon && <Icon className="right-icon" icon={rightIcon} />}
