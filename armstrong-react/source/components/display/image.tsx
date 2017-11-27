@@ -23,8 +23,8 @@ export interface IImageProps extends React.HTMLProps<Image> {
 }
 
 export class Image extends React.Component<IImageProps, { source?: string }>{
-  constructor() {
-    super();
+  constructor(props: IImageProps) {
+    super(props);
     this.state = { source: "" };
   }
   getRandomUser() {

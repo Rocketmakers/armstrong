@@ -67,7 +67,7 @@ export class NumericValueConverter implements IInputValueConverter<number> {
   }
 
   convert(data: number){
-    let v = Formatting.isNullOrUndefined(data) || data === "" as any ? null : data.toFixed(this.options && this.options.decimals);
+    let v = (Formatting.isNullOrUndefined(data) || data === "" as any) ? null : data.toFixed(this.options && this.options.decimals);
     return v;
   }
 

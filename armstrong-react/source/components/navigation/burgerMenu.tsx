@@ -18,8 +18,8 @@ export class BurgerMenu extends React.Component<IBurgerMenuProps, {}>{
   private menuId: string;
   public isOpen: boolean;
 
-  constructor() {
-    super();
+  constructor(props: IBurgerMenuProps) {
+    super(props);
     this.menuId = generateUniqueId(u => `burger-menu-${u}`);
   }
   toggleMenu() {

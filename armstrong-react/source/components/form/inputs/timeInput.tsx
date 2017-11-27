@@ -45,8 +45,8 @@ export class TimeInput extends React.Component<ITimeInputProps, ITimerInputState
     validationMode: "none"
   }
 
-  constructor() {
-    super();
+  constructor(props: ITimeInputProps) {
+    super(props);
     this.state = { hours: null, minutes: null };
   }
 

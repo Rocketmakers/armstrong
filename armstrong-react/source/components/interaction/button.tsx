@@ -11,7 +11,7 @@ export interface IButtonProps extends React.HTMLProps<HTMLButtonElement> {
   leftIcon?: string;
   /** (string) An icon to show on the right of the buttons content */
   rightIcon?: string;
-  /** (boolean) Wether or not the buttton should have rounded edges */
+  /** (boolean) Wether or not the button should have rounded edges */
   rounded?: boolean;
   /** (string) CSS classname property */
   className?: string | MarginClass | PaddingClass | BgColorClass | FgColorClass;
@@ -19,31 +19,34 @@ export interface IButtonProps extends React.HTMLProps<HTMLButtonElement> {
   pending?: boolean;
 }
 
-export function Button(props: IButtonProps) {
-  function handleClick(e) {
-    if (props.onClick && !props.pending) {
-      props.onClick(e);
+export class Button extends React.Component<IButtonProps> {
+
+  private handleClick = (e) => {
+    const { onClick, pending } = this.props
+    if (onClick && !pending) {
+      onClick(e);
     }
   }
-  var attrs = _.omit(props, "onClick", "leftIcon", "rightIcon", "className", "rounded", "context", "pending", "disabled");
-  const classes = ClassHelpers.classNames(
-    "btn",
-    props.className,
-    {
-      "rounded": props.rounded,
-      "icon-button-left": props.leftIcon !== undefined,
-      "icon-button-right": props.rightIcon !== undefined,
-      "pending": props.pending
-    }
-  );
-  let leftIcon = props.leftIcon && <Icon className="left-icon" icon={props.leftIcon} />
-  let rightIcon = props.rightIcon && <Icon className="right-icon" icon={props.rightIcon} />
-  return (
-    <button disabled={props.pending || props.disabled} type={props.type || 'button'} onClick={e => handleClick(e)} { ...attrs } className={classes}>
-      {leftIcon}
-      {props.children}
-      {rightIcon}
-    </button>
-  );
-
+  
+  render() {
+    const { onClick, leftIcon, rightIcon, className, rounded, pending, disabled, type, children, ...attrs } = this.props
+    //var attrs = _.omit(props, );
+    const classes = ClassHelpers.classNames(
+      "btn",
+      className,
+      {
+        "rounded": rounded,
+        "icon-button-left": leftIcon !== undefined,
+        "icon-button-right": rightIcon !== undefined,
+        "pending": pending
+      }
+    );
+    return (
+      <button disabled={pending || disabled} type={type || 'button'} onClick={this.handleClick} { ...attrs } className={classes}>
+        {leftIcon && <Icon className="left-icon" icon={leftIcon} />}
+        {children}
+        {rightIcon && <Icon className="right-icon" icon={rightIcon} />}
+      </button>
+    );
+  }
 }

@@ -19,8 +19,8 @@ export interface ITabControlState {
 }
 
 export class TabControl extends React.Component<ITabControlProps, ITabControlState> {
-  constructor() {
-    super();
+  constructor(props: ITabControlProps) {
+    super(props);
     this.state = { selectedTabIndex: 0 }
   }
   changeTab(newIndex: number) {
