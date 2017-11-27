@@ -290,6 +290,7 @@ export class CalendarInput extends React.Component<ICalendarInputProps, ICalenda
             value={this.state.inputValue}
             onKeyDown={e => this.handleEvent(e.nativeEvent)}
             onFocus={e => this.onInputFocus() }
+            onChange={e => { /* This noop handler is here to stop react complaining! */}}
             placeholder={this.props.placeholder}
             />
         }
