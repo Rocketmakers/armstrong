@@ -60,8 +60,7 @@ export class TimeInput extends React.Component<ITimeInputProps, ITimerInputState
   componentWillReceiveProps(newProps: ITimeInputProps) {
     if (newProps.time) {
       let newTime = DateHelpers.getTimeParts(newProps.time);
-      let hours = this.state.hours;
-      let minutes = this.state.minutes;
+      let { hours, minutes } = this.state
       let needsUpdate;
       if (newTime.hours !== hours) {
         hours = newTime.hours;

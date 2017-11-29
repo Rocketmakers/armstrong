@@ -132,7 +132,7 @@ export class CalendarInput extends React.Component<ICalendarInputProps, ICalenda
       withinRange={dateWithinRange}
       notInCurrentMonth={notInCurrentMonth}
       dayClicked={dayClicked}
-      date={d}/>;
+      date={d} />;
   }
 
   changeMonth(increment: number) {
@@ -142,7 +142,7 @@ export class CalendarInput extends React.Component<ICalendarInputProps, ICalenda
   }
 
   checkDate(dateString: string) {
-    if (dateString === this.state.inputValue){
+    if (dateString === this.state.inputValue) {
       return;
     }
     const m = moment(dateString, this.format, false);
@@ -181,14 +181,14 @@ export class CalendarInput extends React.Component<ICalendarInputProps, ICalenda
     if (domNode.contains(e.target as Node) && e.type !== "mousewheel" && e.type !== "keydown") {
       return;
     }
-    if (e.type === "keydown" && e["keyCode"] !== 9){
+    if (e.type === "keydown" && e["keyCode"] !== 9) {
       return;
     }
     document.removeEventListener("mousewheel", this, false);
-    if (!this.state.inputValue){
+    if (!this.state.inputValue) {
       this.resetState(this.props);
     }
-    else{
+    else {
       this.setState({ pickerBodyVisible: false });
     }
   }
@@ -242,68 +242,70 @@ export class CalendarInput extends React.Component<ICalendarInputProps, ICalenda
 
   render() {
     const validationMessage = this.props["data-validation-message"]
-    const weekdays = _.range(0, 7).map(n => <div className="date-picker-week-day" key={`day_name_${n}`}>{moment().startOf('week').add(n, 'days').format('dd') }</div>)
+    const { icon, placeholder, alwaysShowCalendar, disableClear, onDateChanged, className, disabled, validationMode, nativeInput, min, max, date } = this.props
+    const { selectedMonthStart, pickerBodyVisible, showOnTop, inputValue, calendarOffset } = this.state
+    const weekdays = _.range(0, 7).map(n => <div className="date-picker-week-day" key={`day_name_${n}`}>{moment().startOf('week').add(n, 'days').format('dd')}</div>)
     const days = this.getDaysInMonth();
-    const currentDisplayDate = this.state.selectedMonthStart.format("MMMM - YYYY");
+    const currentDisplayDate = selectedMonthStart.format("MMMM - YYYY");
     const classes = ClassHelpers.classNames(
       "date-picker-body",
       {
-        "date-picker-body-visible": this.state.pickerBodyVisible && !this.props.alwaysShowCalendar,
-        "date-picker-top": this.state.showOnTop,
-        "always-show-calendar": this.props.alwaysShowCalendar
+        "date-picker-body-visible": pickerBodyVisible && !alwaysShowCalendar,
+        "date-picker-top": showOnTop,
+        "always-show-calendar": alwaysShowCalendar
       }
     );
     const rootClasses = ClassHelpers.classNames(
       "date-picker",
       "armstrong-input",
-      this.props.className,
+      className,
       {
-        "has-icon": this.props.icon !== null,
-        "disabled": this.props.disabled,
-        "show-validation": (this.props.validationMode !== "none" && validationMessage)
+        "has-icon": icon !== null,
+        "disabled": disabled,
+        "show-validation": (validationMode !== "none" && validationMessage)
       }
     );
-    if (this.props.nativeInput) {
+    if (nativeInput) {
       return (
         <div className={rootClasses}>
-          {this.props.icon && <Icon icon={this.props.icon}/>}
+          {icon && <Icon icon={icon} />}
           <input ref={i => this.inputElement = i}
             data-validation-message={validationMessage}
             type="date"
-            min={this.props.min || ''}
-            max={this.props.max || ''}
-            onChange={e => this.checkDate(e.target["value"]) }
-            value={this.propsDateAsMoment().format(this.format) }
-            placeholder={this.props.placeholder}
-            />
+            min={min || ''}
+            max={max || ''}
+            onChange={e => this.checkDate(e.target["value"])}
+            value={this.propsDateAsMoment().format(this.format)}
+            placeholder={placeholder}
+          />
         </div>
       )
     }
     return (
       <div className={rootClasses}>
-        <Icon icon={this.props.icon || Icon.Icomoon.calendar2}/>
-        {!this.props.alwaysShowCalendar &&
+        <Icon icon={icon || Icon.Icomoon.calendar2} />
+        {!alwaysShowCalendar &&
           <input className="cal-input" ref={i => this.inputElement = i}
             data-validation-message={validationMessage}
-            disabled={this.props.disabled}
+            disabled={disabled}
             type="text"
-            value={this.state.inputValue}
+            value={inputValue}
             onKeyDown={e => this.handleEvent(e.nativeEvent)}
-            onFocus={e => this.onInputFocus() }
-            onChange={e => { /* This noop handler is here to stop react complaining! */}}
-            placeholder={this.props.placeholder}
-            />
+            onFocus={e => this.onInputFocus()}
+            onChange={e => { /* This noop handler is here to stop react complaining! */ }}
+            placeholder={placeholder}
+          />
         }
-        {!this.props.alwaysShowCalendar && this.props.date && !this.props.disableClear &&
-          <div className="clear-date-button" onClick={()=> this.props.onDateChanged(null)}><Icon icon={Icon.Icomoon.cross}/></div>
+        {!alwaysShowCalendar && date && !disableClear &&
+          <div className="clear-date-button" onClick={() => onDateChanged(null)}><Icon icon={Icon.Icomoon.cross} /></div>
         }
-        <div ref={b => this.bodyElement = b} className={classes} style={{ top: `${this.state.calendarOffset}px` }}>
+        <div ref={b => this.bodyElement = b} className={classes} style={{ top: `${calendarOffset}px` }}>
           <div className="date-picker-body-wrapper">
             <Grid className="date-picker-header">
               <Row>
-                <Col onClick={() => this.changeMonth(-1) } width="auto">{`<`}</Col>
+                <Col onClick={() => this.changeMonth(-1)} width="auto">{`<`}</Col>
                 <Col>{currentDisplayDate}</Col>
-                <Col onClick={() => this.changeMonth(1) } width="auto">{`>`}</Col>
+                <Col onClick={() => this.changeMonth(1)} width="auto">{`>`}</Col>
               </Row>
             </Grid>
             <div className="date-picker-days">
@@ -312,7 +314,7 @@ export class CalendarInput extends React.Component<ICalendarInputProps, ICalenda
             </div>
           </div>
         </div>
-        <ValidationLabel message={validationMessage} mode={this.props.validationMode}/>
+        <ValidationLabel message={validationMessage} mode={validationMode} />
       </div>
     )
   }
@@ -329,14 +331,15 @@ interface ICalendarDayProps extends React.Props<CalendarDay> {
 
 class CalendarDay extends React.Component<ICalendarDayProps, {}> {
   render() {
+    const { notInCurrentMonth, selected, isToday, withinRange, date, dayClicked } = this.props
     const classes = ClassHelpers.classNames(
       {
-        "not-in-month": this.props.notInCurrentMonth,
-        "selected-day": this.props.selected,
-        "is-today": this.props.isToday,
-        "day-disabled": !this.props.withinRange
+        "not-in-month": notInCurrentMonth,
+        "selected-day": selected,
+        "is-today": isToday,
+        "day-disabled": !withinRange
       }
     );
-    return <div className={classes} onClick={() => this.props.dayClicked(this.props.date) }>{this.props.date.format('DD') }</div>
+    return <div className={classes} onClick={() => dayClicked(date)}>{date.format('DD')}</div>
   }
 }

@@ -1,9 +1,8 @@
-import * as _ from "underscore";
 import * as React from "react";
 import { IFormInputHTMLProps, generateUniqueId } from "../form";
 import { ClassHelpers } from "../../../utilities/classNames";
 
-export interface IRadioInputProps extends IFormInputHTMLProps<RadioInput> {
+export interface IRadioInputProps extends IFormInputHTMLProps<HTMLInputElement> {
   labelContent: string | React.ReactElement<any>;
 }
 
@@ -13,21 +12,21 @@ export class RadioInput extends React.Component<IRadioInputProps, {}> {
   }
   render() {
     const validationMessage = this.props["data-validation-message"]
-
+    const { labelContent, validationMode, ...attrs } = this.props
     const id = generateUniqueId(u => "radio_" + u);
     const classes = ClassHelpers.classNames(
       "armstrong-input",
       "radio",
       this.props.className,
       {
-        "show-validation": (this.props.validationMode !== "none" && validationMessage)
+        "show-validation": (validationMode !== "none" && validationMessage)
       }
     );
     return (
       <div className={classes} title={validationMessage}>
-        <input id={id} { ..._.omit(this.props, "labelContent", "validationMode") } type="radio" data-validation-message={validationMessage}/>
+        <input id={id} { ...attrs } type="radio" data-validation-message={validationMessage} />
         <label htmlFor={id} />
-        <label className="radio-label" htmlFor={id}>{this.props.labelContent}</label>
+        <label className="radio-label" htmlFor={id}>{labelContent}</label>
       </div>
     );
   }

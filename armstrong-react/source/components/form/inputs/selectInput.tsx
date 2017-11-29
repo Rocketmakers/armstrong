@@ -1,14 +1,14 @@
-import * as _ from "underscore";
 import * as React from "react";
 import { IFormInputHTMLProps } from "../form";
 import { buildOptions } from "./options";
 import { ClassHelpers } from "../../../utilities/classNames";
+
 export interface ISelectInputOption {
   id: number | string;
   name: string;
 }
 
-export interface ISelectInputProps extends IFormInputHTMLProps<SelectInput> {
+export interface ISelectInputProps extends IFormInputHTMLProps<HTMLSelectElement> {
   options: ISelectInputOption[];
   change?: (selected: ISelectInputOption) => void;
   optionLabel?: string
@@ -22,8 +22,9 @@ export class SelectInput extends React.Component<ISelectInputProps, {}> {
     validationMode: "none"
   }
   private change = (e) => {
-    this.props.change && this.props.change(this.props.options[e.target["selectedIndex"] - 1]);
-    this.props.onChange && this.props.onChange(e);
+    const { change, onChange, options } = this.props
+    change && change(options[e.target["selectedIndex"] - 1]);
+    onChange && onChange(e);
   }
   public focus() {
     if (this.select) {
@@ -37,19 +38,20 @@ export class SelectInput extends React.Component<ISelectInputProps, {}> {
   }
   render() {
     const validationMessage = this.props["data-validation-message"]
+    const { options, change, onChange, optionLabel, validationMode, enableOptionLabel, ...attrs } = this.props
     const classes = ClassHelpers.classNames(
       "armstrong-input",
       "select-input",
       this.props.className,
       {
-        "show-validation": (this.props.validationMode !== "none" && validationMessage)
+        "show-validation": (validationMode !== "none" && validationMessage)
       }
     );
-    let options = buildOptions(this.props.optionLabel, this.props.options, o => o.id, o => o.name, !!this.props.enableOptionLabel);
+
     return (
       <div className={classes} title={validationMessage}>
-        <select ref={r => this.select = r} {..._.omit(this.props, "options", "change", "onChange", "optionLabel", "validationMode", "enableOptionLabel") } onChange={this.change}>
-          {options}
+        <select ref={r => this.select = r} {...attrs } onChange={this.change}>
+          {buildOptions(optionLabel, options, o => o.id, o => o.name, !!enableOptionLabel)}
         </select>
       </div>
     );

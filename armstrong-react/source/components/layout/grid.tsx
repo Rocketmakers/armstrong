@@ -4,7 +4,7 @@ import * as _ from "underscore";
 import { LayoutHelpers, MarginClass, PaddingClass, BgColorClass, FgColorClass, VerticalAlignment, HorizontalAlignment } from "./../../utilities/uiHelpers";
 import { ClassHelpers } from "../../utilities/classNames";
 
-export interface IGrid extends React.HTMLProps<Grid> {
+export interface IGrid extends React.HTMLProps<HTMLDivElement> {
   /** (boolean) Wether to render borders around grid parts */
   debugMode?: boolean;
   /** (boolean) ADVANCED: Turns of automatic fix of safari6 compat wrapper */
@@ -17,32 +17,31 @@ export interface IGrid extends React.HTMLProps<Grid> {
   fillContainer?: boolean;
   /** (string) An HTML tag to use for the root element instead of <div> */
   tagName?: keyof React.ReactHTML;
-  /** (Row[]) A grid must contain one or many <Row/> elements */
-  children?: React.ReactNode;
 }
 
 export class Grid extends React.Component<IGrid, {}> {
   render() {
     const originalClassName = this.props.className;
-    const attrs = _.omit(this.props, "className", "debugMode", "disableFlexOverride", "table", "fillContainer", "tagName");
+    const { className, debugMode, disableFlexOverride, table, fillContainer, tagName, ...attrs } = this.props
     const classes = ClassHelpers.classNames(
       originalClassName,
       "grid",
       {
-        "fill-container": this.props.fillContainer,
-        "grid-debug": this.props.debugMode,
-        "table-grid": this.props.table
+        "fill-container": fillContainer,
+        "grid-debug": debugMode,
+        "table-grid": table
       }
     );
-    if (this.props.fillContainer && !this.props.disableFlexOverride) {
-      return React.createElement(this.props.tagName || "div", { className: "flex-override" }, <div {...attrs} className={classes} />)
+    if (fillContainer && !disableFlexOverride) {
+      return React.createElement(tagName || "div", { className: "flex-override" }, <div {...attrs} className={classes} />)
     }
     else {
-      return React.createElement(this.props.tagName || "div", { ...attrs, className: classes });
+      return React.createElement(tagName || "div", { ...attrs, className: classes });
     }
   }
   componentDidMount() {
-    if (this.props.fillContainer && !this.props.disableFlexOverride) {
+    const { fillContainer, disableFlexOverride } = this.props
+    if (fillContainer && !disableFlexOverride) {
       (ReactDOM.findDOMNode(this).parentElement as HTMLElement).style.position = "relative";
     }
   }
@@ -60,45 +59,46 @@ export interface IRow extends React.HTMLProps<HTMLDivElement> {
 }
 
 export function Row(props: IRow) {
+  const { className, height, tagName, style, ...attrs } = props
+
   function needsFixed() {
-    if (!props.height) {
+    if (!height) {
       return false;
     }
-    if (typeof props.height === "number") {
+    if (typeof height === "number") {
       return true
     } else {
-      if (props.height === "auto") {
+      if (height === "auto") {
         return true;
       }
     }
     return false;
   }
 
-  var attrs = _.omit(props, "className", "height", "tagName");
-  var classes = ClassHelpers.classNames(props.className, "row", needsFixed() ? "no-flex" : "");
-  var styles = props.style;
-  var colStyles;
-  if (props.height) {
-    if (typeof props.height === "number") {
-      styles = _.extend({ height: `${props.height}px` }, styles);
+  const classes = ClassHelpers.classNames(className, "row", needsFixed() ? "no-flex" : "");
+  let styles = style;
+  let colStyles;
+  if (height) {
+    if (typeof height === "number") {
+      styles = _.extend({ height: `${height}px` }, styles);
     } else {
-      let hString = (props.height as string);
+      let hString = (height as string);
       let starIndex = hString.indexOf('*');
-      if (props.height === "auto") {
+      if (height === "auto") {
 
       }
       else if (starIndex !== -1 && parseFloat(hString)) {
-        let hString = (props.height as string);
+        let hString = (height as string);
         var spans = hString.substr(0, starIndex);
         styles = _.extend({ flex: `${spans}` }, styles);
       }
       else {
-        throw new Error(`Unsupported height property '${props.height}' on Grid Row. If you are using a string, make sure it is either 'auto' or follows the pattern '[number]*'`)
+        throw new Error(`Unsupported height property '${height}' on Grid Row. If you are using a string, make sure it is either 'auto' or follows the pattern '[number]*'`)
       }
     }
   }
 
-  return React.createElement(props.tagName || "div", { ...attrs, className: classes, style: styles },
+  return React.createElement(tagName || "div", { ...attrs, className: classes, style: styles },
     React.Children.map(props.children, (c: React.ReactElement<any>) => {
       return c ? React.cloneElement(c, { style: colStyles ? _.extend(colStyles, c.props.style) : c.props.style }) : null
     })
@@ -120,40 +120,40 @@ export interface ICol extends React.HTMLProps<HTMLDivElement> {
 }
 
 export function Col(props: ICol) {
+  const { className, width, horizontalAlignment, verticalAlignment, tagName, style, ...attrs } = props
   function needsFixed() {
-    if (!props.width) {
+    if (!width) {
       return false;
     }
-    if (typeof props.width === "number") {
+    if (typeof width === "number") {
       return true
     } else {
-      if (props.width === "auto") {
+      if (width === "auto") {
         return true;
       }
     }
     return false;
   }
-  const alignmentClasses = LayoutHelpers.GetAlignmentClasses(props.verticalAlignment, props.horizontalAlignment);
+  const alignmentClasses = LayoutHelpers.GetAlignmentClasses(verticalAlignment, horizontalAlignment);
   const classes = ClassHelpers.classNames(
     "col",
-    props.className,
+    className,
     alignmentClasses,
     {
       "no-flex": needsFixed(),
     }
   );
 
-  const attrs = _.omit(props, "className", "width", "horizontalAlignment", "verticalAlignment", "tagName");
-  let styles = props.style;
+  let styles = style;
 
 
-  if (props.width) {
-    if (typeof props.width === "number") {
-      styles = _.extend({ maxwidth: `${props.width}px`, width: "100%" }, styles);
+  if (width) {
+    if (typeof width === "number") {
+      styles = _.extend({ maxwidth: `${width}px`, width: "100%" }, styles);
     } else {
-      let wString = (props.width as string);
+      let wString = (width as string);
       let starIndex = wString.indexOf('*');
-      if (props.width === "auto") {
+      if (width === "auto") {
 
       }
       else if (starIndex !== -1 && parseFloat(wString)) {
@@ -161,15 +161,15 @@ export function Col(props: ICol) {
         styles = _.extend({ flex: `${spans}` }, styles);
       }
       else {
-        throw new Error(`Unsupported width property '${props.width}' on Grid > Row > Col. If you are using a string, make sure it is either 'auto' or follows the pattern '[number]*'`)
+        throw new Error(`Unsupported width property '${width}' on Grid > Row > Col. If you are using a string, make sure it is either 'auto' or follows the pattern '[number]*'`)
       }
     }
   }
 
 
-  if (typeof props.width === "number") {
-    styles = _.extend({ maxWidth: `${props.width}px`, width: "100%" }, styles);
+  if (typeof width === "number") {
+    styles = _.extend({ maxWidth: `${width}px`, width: "100%" }, styles);
   }
 
-  return React.createElement(props.tagName || "div", { ...attrs, className: classes, style: styles })
+  return React.createElement(tagName || "div", { ...attrs, className: classes, style: styles })
 }

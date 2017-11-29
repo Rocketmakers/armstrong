@@ -1,9 +1,8 @@
 import * as React from "react";
-import * as _ from "underscore";
 import { Color, LayoutHelpers } from "./../../utilities/uiHelpers";
 import { ClassHelpers } from "../../utilities/classNames";
 
-export interface IImageProps extends React.HTMLProps<Image> {
+export interface IImageProps extends React.HTMLProps<HTMLImageElement> {
   /** (boolean) Should the image be circular? */
   rounded?: boolean;
   /** (string) CSS classname property */
@@ -28,7 +27,8 @@ export class Image extends React.Component<IImageProps, { source?: string }>{
     this.state = { source: "" };
   }
   getRandomUser() {
-    var url = `https://randomuser.me/api?exc=login,name,location,email,registered,dob,phone,cell,id,nat${this.props.sampleUserSeed ? `&seed=${this.props.sampleUserSeed}` : ''}`;
+    const { sampleUser, sampleUserSeed } = this.props
+    var url = `https://randomuser.me/api?exc=login,name,location,email,registered,dob,phone,cell,id,nat${sampleUserSeed ? `&seed=${sampleUserSeed}` : ''}`;
     var xmlHttp = new XMLHttpRequest();
     xmlHttp.onreadystatechange = () => {
       if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
@@ -41,31 +41,29 @@ export class Image extends React.Component<IImageProps, { source?: string }>{
     xmlHttp.send(null);
   }
   componentDidMount() {
-    var height = this.props.height;
-    var width = this.props.width;
-    if (!this.props.height && this.props.width){
-      height = this.props.width;
+    let { height, width, sampleUser, source, noPlaceholder } = this.props
+    if (!height && width) {
+      height = width;
     }
-    if (!this.props.width && this.props.height){
-      width = this.props.height;
+    if (!width && height) {
+      width = height;
     }
 
-    var source;
-    if (this.props.source){
-      this.setState({ source: this.props.source});
+    if (source) {
+      this.setState({ source: source });
     }
-    else if (this.props.sampleUser) {
+    else if (sampleUser) {
       this.getRandomUser();
     }
-    else if (!this.props.noPlaceholder && !this.props.sampleUser) {
-      this.setState({ source: `http://dummyimage.com/${height}x${width}/4f5c69/ffffff.png`});
+    else if (!noPlaceholder && !sampleUser) {
+      this.setState({ source: `http://dummyimage.com/${height}x${width}/4f5c69/ffffff.png` });
     }
   }
   render() {
-    let attrs = _.omit(this.props, "height", "width", "noPlaceholder", "sampleUserSeed", "sampleUser", "source", "className", "rounded");
-    let classes = ClassHelpers.classNames(this.props.className, { "rounded": this.props.rounded });
+    const { height, width, noPlaceholder, sampleUserSeed, sampleUser, source, className, rounded, ...attrs } = this.props
+    let classes = ClassHelpers.classNames(className, { "rounded": rounded });
     return (
-      <img src={this.state.source} { ...attrs } height={this.props.height} width={this.props.width} className={classes}/>
+      <img src={this.state.source} { ...attrs } height={height} width={width} className={classes} />
     );
   }
 }

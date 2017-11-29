@@ -175,12 +175,15 @@ export class Form extends React.Component<IFormProps, {}>{
       if (formBinder) {
         updateFormBinderInjector(fbi, null)
         if (validationResults && validationResults.length) {
-          let vr: IFormValidationResult = _.find(validationResults, vr => vr.attribute === formBinder.dataPath);
+          const vr: IFormValidationResult = _.find(validationResults, vr => vr.attribute === formBinder.dataPath);
           if (vr) {
             props["data-validation-message"] = vr.message;
           } else {
             // use for child form
-            props["validationResults"] = extractChildValidationResults(validationResults, formBinder.dataPath)
+            const childValidators = extractChildValidationResults(validationResults, formBinder.dataPath)
+            if (childValidators && childValidators.length) {
+              props["validationResults"] = childValidators
+            }
           }
 
           if (validationMode && props["validationMode"]) {

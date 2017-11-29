@@ -37,7 +37,6 @@ export class Button extends React.Component<IButtonProps> {
   }
   render() {
     const { onClick, leftIcon, rightIcon, className, rounded, pending, disabled, type, children, ...attrs } = this.props
-    //var attrs = _.omit(props, );
     const classes = ClassHelpers.classNames(
       "btn",
       className,

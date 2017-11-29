@@ -212,53 +212,55 @@ export class AutoCompleteInput extends React.Component<IAutoCompleteInputProps, 
   }
 
   checkKey(e) {
-    var currentIndex = this.state.selectedIndex;
+    let { filteredOptions, offsetIndex, selectedIndex } = this.state
     if (e.keyCode === 27) {
       this.setState({ open: false, query: "", filteredOptions: this.props.options || [] });
     }
-    if (e.keyCode === 40 && this.state.filteredOptions.length !== 0) {
+    if (e.keyCode === 40 && filteredOptions.length !== 0) {
       // DOWN ARROW
-      var offsetIndex = Math.min((this.props.visibleItems || 3) - 1, this.state.offsetIndex + 1);
-      var selectedIndex = Math.min(this.state.selectedIndex + 1, this.state.filteredOptions.length - 1);
-      var listElement = ReactDOM.findDOMNode(this).querySelector(".autocomplete-select-list");
+      offsetIndex = Math.min((this.props.visibleItems || 3) - 1, offsetIndex + 1);
+      selectedIndex = Math.min(selectedIndex + 1, filteredOptions.length - 1);
+      const listElement = ReactDOM.findDOMNode(this).querySelector(".autocomplete-select-list");
       this.setState({ offsetIndex });
 
       if (offsetIndex >= 2) {
         listElement.scrollTop = (selectedIndex - 2) * this.itemHeight;
       }
 
-      var selectedItem = this.state.filteredOptions[selectedIndex]
+      var selectedItem = filteredOptions[selectedIndex]
       this.setState({ selectedIndex, query: selectedItem.name })
       e.preventDefault();
       return false;
     }
-    if (e.keyCode === 38 && this.state.filteredOptions.length !== 0) {
+    if (e.keyCode === 38 && filteredOptions.length !== 0) {
       // UP ARROW
-      var offsetIndex = Math.max(this.state.offsetIndex - 1, 0);
-      var selectedIndex = Math.max(this.state.selectedIndex - 1, 0);
-      var listElement = ReactDOM.findDOMNode(this).querySelector(".autocomplete-select-list");
+      offsetIndex = Math.max(offsetIndex - 1, 0);
+      selectedIndex = Math.max(selectedIndex - 1, 0);
+      const listElement = ReactDOM.findDOMNode(this).querySelector(".autocomplete-select-list");
       this.setState({ offsetIndex });
 
       if (offsetIndex === 0) {
         listElement.scrollTop = (selectedIndex) * this.itemHeight;
       }
 
-      var selectedItem = this.state.filteredOptions[selectedIndex]
+      const selectedItem = filteredOptions[selectedIndex]
       this.setState({ selectedIndex, query: selectedItem.name })
       e.preventDefault();
       return false;
     }
-    if (e.keyCode === 13 && this.state.filteredOptions.length !== 0) {
+    if (e.keyCode === 13 && filteredOptions.length !== 0) {
       // ENTER
-      var selectedValue = this.state.filteredOptions[this.state.selectedIndex];
+      const selectedValue = filteredOptions[selectedIndex];
       this.handleSelection(selectedValue);
       e.preventDefault();
       return false;
     }
   }
   constrainIndex() {
-    if (this.state.selectedIndex > this.state.filteredOptions.length - 1) {
-      this.setState({ selectedIndex: Math.max(this.state.filteredOptions.length - 1, 0) })
+    const { filteredOptions, selectedIndex } = this.state
+
+    if (selectedIndex > filteredOptions.length - 1) {
+      this.setState({ selectedIndex: Math.max(filteredOptions.length - 1, 0) })
     }
   }
 
@@ -269,7 +271,7 @@ export class AutoCompleteInput extends React.Component<IAutoCompleteInputProps, 
     if (this.props.multiSelect) {
       // Handle multiple selection
       const items: IAutoCompleteOption[] = this.isArray(options) ? options : [options]
-      var ddOptions = (this.state.selectedValue as IAutoCompleteOption[]);
+      let ddOptions = (this.state.selectedValue as IAutoCompleteOption[]);
       items.forEach(option => {
         if (ddOptions.length !== 0 && _.some(ddOptions, ddo => ddo.id === option.id)) {
           // Remove
@@ -301,8 +303,9 @@ export class AutoCompleteInput extends React.Component<IAutoCompleteInputProps, 
   }
 
   buttonClick() {
-    if (this.state.filteredOptions.length !== 0) {
-      var selectedValue = this.state.filteredOptions[this.state.selectedIndex];
+    const { filteredOptions, selectedIndex } = this.state
+    if (filteredOptions.length !== 0) {
+      var selectedValue = filteredOptions[selectedIndex];
       if (selectedValue) {
         this.handleSelection(selectedValue);
       }
@@ -310,26 +313,30 @@ export class AutoCompleteInput extends React.Component<IAutoCompleteInputProps, 
   }
 
   private prevFilter: string;
-  checkToFilter(query: string) {
-    this.setState({ query }, () => {
-      if (this.state.query !== this.prevFilter) {
-        this.prevFilter = this.state.query;
-        this.filter(this.state.query);
+  checkToFilter(q: string) {
+    const { query } = this.state
+
+    this.setState({ query: q }, () => {
+      if (query !== this.prevFilter) {
+        this.prevFilter = query;
+        this.filter(query);
       }
     })
   }
+
   render() {
     const validationMessage = this.props["data-validation-message"]
-
+    const { selectedValue, showOnTop, topOffset, query, remoteSearching, filteredOptions, selectedIndex } = this.state
+    const { multiSelect, className, hasGoButton, disabled, validationMode, placeholder, canClear, options, visibleItems, noResultsMessage, goButtonContent } = this.props
     const classes = ClassHelpers.classNames(
       "armstrong-input",
       "autocomplete-select",
-      `${this.props.multiSelect && (this.state.selectedValue as IAutoCompleteOption[]).length !== 0 ? ' has-multiple-options' : ''}`,
-      this.props.className,
+      `${multiSelect && (selectedValue as IAutoCompleteOption[]).length !== 0 ? ' has-multiple-options' : ''}`,
+      className,
       {
-        "has-go-button": this.props.hasGoButton,
-        "disabled": this.props.disabled,
-        "show-validation": (this.props.validationMode !== "none" && validationMessage)
+        "has-go-button": hasGoButton,
+        "disabled": disabled,
+        "show-validation": (validationMode !== "none" && validationMessage)
       }
     );
     return (
@@ -339,66 +346,66 @@ export class AutoCompleteInput extends React.Component<IAutoCompleteInputProps, 
         className={classes}>
         <Row>
           <Col className="drop-down-controls">
-            {(!this.state.open || this.props.multiSelect) &&
+            {(!open || multiSelect) &&
               <Grid className="autocomplete-value-display">
                 <Row>
                   <Col>
-                    {this.state.selectedValue &&
+                    {selectedValue &&
                       <div className="selected-value-wrapper">
-                        {this.state.selectedValue && this.props.multiSelect ? (this.state.selectedValue as IAutoCompleteOption[]).map(ddo =>
-                          <div key={`multi-select-item-${ddo.id}`} className={`multi-select-item multi-select-item-part${ddo.className ? ` ${ddo.className}` : ''}`} onClick={() => this.handleSelection(ddo)} >{ddo.name}<Icon className="multi-select-item-part" icon={Icon.Icomoon.cross} /></div>) : (this.state.selectedValue as IAutoCompleteOption).name}
+                        {selectedValue && multiSelect ? (selectedValue as IAutoCompleteOption[]).map(ddo =>
+                          <div key={`multi-select-item-${ddo.id}`} className={`multi-select-item multi-select-item-part${ddo.className ? ` ${ddo.className}` : ''}`} onClick={() => this.handleSelection(ddo)} >{ddo.name}<Icon className="multi-select-item-part" icon={Icon.Icomoon.cross} /></div>) : (selectedValue as IAutoCompleteOption).name}
                       </div>
                     }
-                    {(this.props.multiSelect && (this.state.selectedValue as IAutoCompleteOption[]).length === 0) &&
+                    {(multiSelect && (selectedValue as IAutoCompleteOption[]).length === 0) &&
                       <div className="placeholder">
                         &nbsp;
-                      <div className="placeholder-value">{!this.state.open && (this.props.placeholder || "start typing to filter results...")}</div>
+                      <div className="placeholder-value">{!open && (placeholder || "start typing to filter results...")}</div>
                       </div>
                     }
-                    {!this.props.multiSelect && this.state.selectedValue === null &&
+                    {!multiSelect && selectedValue === null &&
                       <div className="placeholder">
                         &nbsp;
-                      <div className="placeholder-value">{this.props.placeholder || "start typing to filter results..."}</div>
+                      <div className="placeholder-value">{placeholder || "start typing to filter results..."}</div>
                       </div>
                     }
                   </Col>
-                  {!this.props.multiSelect && this.state.selectedValue && this.props.canClear &&
-                    <Col width="auto" className="clear-selected p-right-xsmall" onClick={() => this.setState({ selectedValue: this.props.multiSelect ? [] : null, open: false, query: "", filteredOptions: this.props.options || [] })}>
+                  {!multiSelect && selectedValue && canClear &&
+                    <Col width="auto" className="clear-selected p-right-xsmall" onClick={() => this.setState({ selectedValue: multiSelect ? [] : null, open: false, query: "", filteredOptions: options || [] })}>
                       <Icon icon={Icon.Icomoon.cross} />
                     </Col>
                   }
-                  {this.props.multiSelect && (this.state.selectedValue as IAutoCompleteOption[]).length !== 0 && this.props.canClear &&
-                    <Col width="auto" className="clear-selected p-right-xsmall" onClick={() => this.setState({ selectedValue: this.props.multiSelect ? [] : null, open: false, query: "", filteredOptions: this.props.options || [] })}>
+                  {multiSelect && (selectedValue as IAutoCompleteOption[]).length !== 0 && canClear &&
+                    <Col width="auto" className="clear-selected p-right-xsmall" onClick={() => this.setState({ selectedValue: multiSelect ? [] : null, open: false, query: "", filteredOptions: options || [] })}>
                       <Icon icon={Icon.Icomoon.cross} />
                     </Col>
                   }
                 </Row>
               </Grid>
             }
-            {this.state.open &&
-              <div className={ClassHelpers.classNames("autocomplete-select-list-wrapper", this.props.multiSelect ? 'multi-select' : '')}>
+            {open &&
+              <div className={ClassHelpers.classNames("autocomplete-select-list-wrapper", multiSelect ? 'multi-select' : '')}>
                 <input type="text"
                   data-validation-message={validationMessage}
-                  style={{ marginTop: `${this.props.multiSelect && this.state.showOnTop && `${this.state.topOffset}px`}` }}
-                  value={this.state.query}
+                  style={{ marginTop: `${multiSelect && showOnTop && `${topOffset}px`}` }}
+                  value={query}
                   onKeyUp={(e) => this.checkKey(e)}
                   onChange={(e) => this.checkToFilter(getEventTargetAs<HTMLInputElement>(e).value)}
-                  placeholder={this.props.placeholder || "start typing to filter results..."} />
-                {this.state.remoteSearching && <Icon className="spinner fg-info" icon={Icon.Icomoon.spinner2} />}
+                  placeholder={placeholder || "start typing to filter results..."} />
+                {remoteSearching && <Icon className="spinner fg-info" icon={Icon.Icomoon.spinner2} />}
                 <div data-id="autocomplete-select-list"
-                  className={`autocomplete-select-list${this.state.showOnTop ? ' on-top' : ''}`}
-                  style={{ maxHeight: `${(this.props.visibleItems || 3) * this.itemHeight}px`, marginTop: `${this.state.topOffset}px` }}>
-                  {this.state.filteredOptions && this.state.filteredOptions.map((o, i) =>
-                    <div data-index={i} key={`dd-item-${i}`} className={`dd-list-item${o.className ? ` ${o.className}` : ''}${i === this.state.selectedIndex ? ' selected' : ''}${(this.props.multiSelect && _.some((this.state.selectedValue as IAutoCompleteOption[]), ddo => ddo.id === o.id)) ? ' in-selected-list' : ''}`}
+                  className={`autocomplete-select-list${showOnTop ? ' on-top' : ''}`}
+                  style={{ maxHeight: `${(visibleItems || 3) * this.itemHeight}px`, marginTop: `${topOffset}px` }}>
+                  {filteredOptions && filteredOptions.map((o, i) =>
+                    <div data-index={i} key={`dd-item-${i}`} className={`dd-list-item${o.className ? ` ${o.className}` : ''}${i === selectedIndex ? ' selected' : ''}${(multiSelect && _.some((selectedValue as IAutoCompleteOption[]), ddo => ddo.id === o.id)) ? ' in-selected-list' : ''}`}
                       onClick={() => this.handleSelection(o)}>{o.name}</div>)}
-                  {this.state.filteredOptions.length === 0 && this.state.query && <div className="dd-list-item-no-select">{getNoResults(this.state.query, this.props.noResultsMessage)}</div>}
+                  {filteredOptions.length === 0 && query && <div className="dd-list-item-no-select">{getNoResults(query, noResultsMessage)}</div>}
                 </div>
               </div>
             }
           </Col>
-          {this.props.hasGoButton && !this.props.multiSelect && <Col width="auto"><Button className="bg-positive" onClick={() => this.buttonClick()}>{this.props.goButtonContent || "Go"}</Button></Col>}
+          {hasGoButton && !multiSelect && <Col width="auto"><Button className="bg-positive" onClick={() => this.buttonClick()}>{goButtonContent || "Go"}</Button></Col>}
         </Row>
-        <ValidationLabel message={validationMessage} mode={this.props.validationMode} wrapper={p => <Row height="auto"><Col {...p} /></Row>} />
+        <ValidationLabel message={validationMessage} mode={validationMode} wrapper={p => <Row height="auto"><Col {...p} /></Row>} />
       </Grid>)
   }
 }
