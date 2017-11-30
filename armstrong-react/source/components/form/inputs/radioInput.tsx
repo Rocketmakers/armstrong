@@ -2,7 +2,7 @@ import * as React from "react";
 import { IFormInputHTMLProps, generateUniqueId } from "../form";
 import { ClassHelpers } from "../../../utilities/classNames";
 
-export interface IRadioInputProps extends IFormInputHTMLProps<HTMLInputElement> {
+export interface IRadioInputProps extends IFormInputHTMLProps<RadioInput, React.InputHTMLAttributes<HTMLInputElement>> {
   labelContent: string | React.ReactElement<any>;
 }
 
@@ -12,7 +12,7 @@ export class RadioInput extends React.Component<IRadioInputProps, {}> {
   }
   render() {
     const validationMessage = this.props["data-validation-message"]
-    const { labelContent, validationMode, ...attrs } = this.props
+    const { ref, labelContent, validationMode, ...attrs } = this.props
     const id = generateUniqueId(u => "radio_" + u);
     const classes = ClassHelpers.classNames(
       "armstrong-input",

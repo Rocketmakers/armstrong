@@ -8,7 +8,7 @@ export interface ISelectInputOption {
   name: string;
 }
 
-export interface ISelectInputProps extends IFormInputHTMLProps<HTMLSelectElement> {
+export interface ISelectInputProps extends IFormInputHTMLProps<SelectInput, React.SelectHTMLAttributes<HTMLSelectElement>> {
   options: ISelectInputOption[];
   change?: (selected: ISelectInputOption) => void;
   optionLabel?: string
@@ -21,7 +21,7 @@ export class SelectInput extends React.Component<ISelectInputProps, {}> {
     optionLabel: "[Select]",
     validationMode: "none"
   }
-  private change = (e) => {
+  private change = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const { change, onChange, options } = this.props
     change && change(options[e.target["selectedIndex"] - 1]);
     onChange && onChange(e);
@@ -38,7 +38,7 @@ export class SelectInput extends React.Component<ISelectInputProps, {}> {
   }
   render() {
     const validationMessage = this.props["data-validation-message"]
-    const { options, change, onChange, optionLabel, validationMode, enableOptionLabel, ...attrs } = this.props
+    const { ref, options, change, onChange, optionLabel, validationMode, enableOptionLabel, ...attrs } = this.props
     const classes = ClassHelpers.classNames(
       "armstrong-input",
       "select-input",

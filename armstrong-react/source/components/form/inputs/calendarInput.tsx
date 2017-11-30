@@ -11,7 +11,7 @@ import { isLocaleSet } from "../../../config/config"
 import { ValidationLabel } from "../validationWrapper";
 import { ClassHelpers } from "../../../utilities/classNames";
 
-export interface ICalendarInputProps extends IFormInputHTMLProps<CalendarInput> {
+export interface ICalendarInputProps extends IFormInputHTMLProps<CalendarInput, React.InputHTMLAttributes<HTMLInputElement>> {
   date?: string;
   format?: string;
   min?: string;
@@ -193,7 +193,7 @@ export class CalendarInput extends React.Component<ICalendarInputProps, ICalenda
     }
   }
 
-  resetState(props: ICalendarInputProps): void {
+  resetState(props: Readonly<ICalendarInputProps>): void {
     const selectedDate = props.date ? moment(props.date, isoFormat, true) : null;
     if (selectedDate) {
       this.setState({

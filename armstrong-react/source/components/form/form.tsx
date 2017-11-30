@@ -50,15 +50,14 @@ export function generateUniqueId(formatter?: (unique: string) => string) {
 
 export type ValidationModes = "none" | "icon" | "below" | "both";
 
-export interface IFormInputProps<T> extends React.Props<T> {
+export type ValidationProps = {
   /** (string) How to display validation messages */
   validationMode?: ValidationModes;
 }
 
-export interface IFormInputHTMLProps<T> extends React.HTMLProps<T> {
-  /** (string) How to display validation messages */
-  validationMode?: ValidationModes;
-}
+export type IFormInputProps<T> = React.Props<T> & ValidationProps
+
+export type IFormInputHTMLProps<T, E = React.HTMLAttributes<HTMLElement>> = React.ClassAttributes<T> & E & ValidationProps
 
 
 export interface IFormValidationResult {
