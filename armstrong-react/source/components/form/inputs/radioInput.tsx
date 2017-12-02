@@ -10,9 +10,24 @@ export class RadioInput extends React.Component<IRadioInputProps, {}> {
   static defaultProps = {
     validationMode: "none"
   }
+
+  private input: HTMLInputElement;
+
+  public focus() {
+    if (this.input) {
+      this.input.focus()
+    }
+  }
+
+  public blur() {
+    if (this.input) {
+      this.input.blur()
+    }
+  }
+
   render() {
     const validationMessage = this.props["data-validation-message"]
-    const { ref, labelContent, validationMode, ...attrs } = this.props
+    const { labelContent, validationMode, ...attrs } = this.props
     const id = generateUniqueId(u => "radio_" + u);
     const classes = ClassHelpers.classNames(
       "armstrong-input",
@@ -24,7 +39,7 @@ export class RadioInput extends React.Component<IRadioInputProps, {}> {
     );
     return (
       <div className={classes} title={validationMessage}>
-        <input id={id} { ...attrs } type="radio" data-validation-message={validationMessage} />
+        <input id={id} { ...attrs } ref={i => this.input = i} type="radio" data-validation-message={validationMessage} />
         <label htmlFor={id} />
         <label className="radio-label" htmlFor={id}>{labelContent}</label>
       </div>

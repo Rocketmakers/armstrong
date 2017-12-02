@@ -31,7 +31,7 @@ export class TextInput extends React.Component<ITextInputProps, {}> {
   }
   render() {
     const validationMessage = this.props["data-validation-message"]
-    const { ref, className, readonly, rightOverlayText, leftOverlayText, type, leftIcon, rightIcon, multiLine, validationMode, placeholder, children, ...attrs } = this.props
+    const { className, readonly, rightOverlayText, leftOverlayText, type, leftIcon, rightIcon, multiLine, validationMode, placeholder, children, ...attrs } = this.props
     var classes = ClassHelpers.classNames(
       "armstrong-input",
       "text-input",
