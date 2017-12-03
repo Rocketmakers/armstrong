@@ -31,6 +31,10 @@ This provides the bridge between the data source and the form elements
 */
 export interface IDataBinder<T>{
   lastDataPathSet?: string
+  /** Gets a value for the key name (does NOT use dot notation)*/
+  getKeyValue<TKey extends keyof T>(keyName: TKey): T[TKey];
+  /** Sets a value for the key name (does NOT use dot notation)*/
+  setKeyValue<TKey extends keyof T>(keyName: TKey, value: T[TKey]): void;
   /** Gets a value for the data path (uses dot notation)*/
   getValue(dataPath: string): any;
   /** Sets a value for the data path (uses dot notation)*/

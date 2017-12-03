@@ -10,16 +10,25 @@ import { ClassHelpers } from "../../utilities/classNames";
 class JsonEntityBinder<T> implements IDataBinder<T>{
   constructor(private data: T) { }
   lastDataPathSet?: string
-  getValue(dataPath: string): any {
+
+  getKeyValue = <TKey extends keyof T>(keyName: TKey): T[TKey] => {
+    return this.data[keyName]
+  }
+
+  setKeyValue = <TKey extends keyof T>(keyName: TKey, value: T[TKey]): void => {
+    this.data[keyName] = value
+  }
+
+  getValue = (dataPath: string): any => {
     return PropertyPathResolver.getValue(this.data, dataPath)
   }
 
-  setValue(dataPath: string, value: any): void {
+  setValue = (dataPath: string, value: any): void => {
     PropertyPathResolver.setValue(this.data, dataPath, value)
     this.lastDataPathSet = dataPath
   }
 
-  toJson(): T {
+  toJson = (): T => {
     return this.data;
   }
 }
