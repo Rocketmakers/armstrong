@@ -19,7 +19,7 @@ export class PropertyPathResolver {
     const parts = dataPath.split(".");
     return _.reduce(parts, (result,p: string, index: number)=>{
       if (!result || !p){
-        throw new Error(`${dataPath} not found in data - failed on '${p}' (part: ${index})`);
+        throw new Error(`armstrong-react: Your form binding ${dataPath} is incorrect! getValue failed on '${p}' (part: ${index})`);
       }
       return result[p]
     }, data);
@@ -36,7 +36,7 @@ export class PropertyPathResolver {
     const lastIndex = parts.length - 1;
     _.each(parts, (p,index) => {
       if (!data || !p){
-        throw new Error(`${dataPath} not found in data - failed on '${p}' (part: ${index})`);
+        throw new Error(`armstrong-react: Your form binding ${dataPath} is incorrect! setValue failed on '${p}' (part: ${index})`);
       }
       if (index === lastIndex) {
         data[p] = value;

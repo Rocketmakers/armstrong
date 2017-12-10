@@ -165,58 +165,58 @@ export class AutoCompleteFormBinder implements IFormBinder<IAutoCompleteInputPro
 /** Form Binder helpers */
 export class FormBinder {
   /** bind a custom form binder */
-  static custom<P>(formBinder: IFormBinder<P, any>): IFormBinderInjector<P> {
+  custom<P>(formBinder: IFormBinder<P, any>): IFormBinderInjector<P> {
     return updateFormBinderInjector({} as any, formBinder)
   }
 
   /** bind to a 'hidden' input */
-  static hidden<TDataPropValue>(dataName: string, valueConverter?: IInputValueConverter<TDataPropValue>) {
+  hidden<TDataPropValue>(dataName: string, valueConverter?: IInputValueConverter<TDataPropValue>) {
     return this.defaultInputFormBinder(dataName, "hidden", valueConverter)
   }
 
   /** bind a string property to a 'password' input */
-  static password<TDataPropValue>(dataName: string, valueConverter?: IInputValueConverter<TDataPropValue>) {
+  password<TDataPropValue>(dataName: string, valueConverter?: IInputValueConverter<TDataPropValue>) {
     return this.defaultInputFormBinder(dataName, "password", valueConverter)
   }
 
   /** bind a string property to a 'text' input */
-  static text<TDataPropValue>(dataName: string, valueConverter?: IInputValueConverter<TDataPropValue>) {
+  text<TDataPropValue>(dataName: string, valueConverter?: IInputValueConverter<TDataPropValue>) {
     return this.defaultInputFormBinder(dataName, "text", valueConverter)
   }
 
   /** bind a string property to a 'email' input */
-  static textEmail<TDataPropValue>(dataName: string, valueConverter?: IInputValueConverter<TDataPropValue>) {
+  textEmail<TDataPropValue>(dataName: string, valueConverter?: IInputValueConverter<TDataPropValue>) {
     return this.defaultInputFormBinder(dataName, "email", valueConverter)
   }
 
-  static autoCompleteInput(dataName: string, getItemFromId?: (id: string) => IAutoCompleteOption) {
-    return FormBinder.custom(new AutoCompleteFormBinder(dataName, getItemFromId));
+  autoCompleteInput(dataName: string, getItemFromId?: (id: string) => IAutoCompleteOption) {
+    return this.custom(new AutoCompleteFormBinder(dataName, getItemFromId));
   }
 
   /** bind a 'date' string property to a CalendarInput (e.g. YYYY-MM-DD) */
-  static calendarInput(dataName: string) {
-    return FormBinder.custom(new CalendarInputFormBinder(dataName));
+  calendarInput(dataName: string) {
+    return this.custom(new CalendarInputFormBinder(dataName));
   }
 
   /** bind a 'date' string property to a DateInput (e.g. YYYY-MM-DD) */
-  static dateInput(dataName: string) {
-    return FormBinder.custom(new DateInputFormBinder(dataName));
+  dateInput(dataName: string) {
+    return this.custom(new DateInputFormBinder(dataName));
   }
 
   /** bind a 'time' string property to a TimeInput (e.g. HH:MM) */
-  static timeInput(dataName: string) {
-    return FormBinder.custom(new TimeInputFormBinder(dataName));
+  timeInput(dataName: string) {
+    return this.custom(new TimeInputFormBinder(dataName));
   }
 
-  private static defaultInputFormBinder<TDataPropValue, TTo>(dataName: string, type: string, valueConverter?: IValueConverter<TDataPropValue, TTo>, propertySet = "value") {
-    let adaptorInjector = FormBinder.custom(new InputFormBinder(dataName, propertySet, valueConverter));
+  private defaultInputFormBinder<TDataPropValue, TTo>(dataName: string, type: string, valueConverter?: IValueConverter<TDataPropValue, TTo>, propertySet = "value") {
+    let adaptorInjector = this.custom(new InputFormBinder(dataName, propertySet, valueConverter));
     adaptorInjector["type"] = type;
     return adaptorInjector;
   }
 
   /** bind a number property to a range */
-  static range(dataName: string, options?: INumericOptions) {
-    let adaptorInjector = FormBinder.custom(new InputFormBinder(dataName, "value"));
+  range(dataName: string, options?: INumericOptions) {
+    let adaptorInjector = this.custom(new InputFormBinder(dataName, "value"));
     if (options) {
       adaptorInjector["min"] = options.min;
       adaptorInjector["max"] = options.max;
@@ -225,15 +225,15 @@ export class FormBinder {
     return adaptorInjector;
   }
 
-  /** uncontroller text input */
-  static defaultText<TDataPropValue>(dataName: string, valueConverter?: IInputValueConverter<TDataPropValue>) {
-    return FormBinder.custom(new InputFormBinder(dataName, "defaultValue", valueConverter, "value"));
+  /** uncontrolled text input */
+  defaultText<TDataPropValue>(dataName: string, valueConverter?: IInputValueConverter<TDataPropValue>) {
+    return this.custom(new InputFormBinder(dataName, "defaultValue", valueConverter, "value"));
   }
 
   /** bind a number property to a 'text' input */
-  static textNumeric(dataName: string, options?: INumericOptions) {
+  textNumeric(dataName: string, options?: INumericOptions) {
     const converter = options ? new NumericValueConverter(options) : NumericValueConverter.instance;
-    let adaptorInjector = FormBinder.custom(new InputFormBinder(dataName, "defaultValue", converter, "value"));
+    let adaptorInjector = this.custom(new InputFormBinder(dataName, "defaultValue", converter, "value"));
     adaptorInjector["type"] = "number";
     adaptorInjector["onKeyDown"] = e => KeyboardHelper.numericKeyPress(e, options);
     if (options) {
@@ -244,69 +244,69 @@ export class FormBinder {
   }
 
   /** bind a TDataPropValue property to a select */
-  static selectCustom<TDataPropValue>(dataName: string, valueConverter?: IInputValueConverter<TDataPropValue>) {
-    return FormBinder.custom(new InputFormBinder(dataName, "value", valueConverter));
+  selectCustom<TDataPropValue>(dataName: string, valueConverter?: IInputValueConverter<TDataPropValue>) {
+    return this.custom(new InputFormBinder(dataName, "value", valueConverter));
   }
 
   /** bind a string property to a select */
-  static select(dataName: string) {
-    return FormBinder.selectCustom(dataName, DefaultValueConverter.instance);
+  select(dataName: string) {
+    return this.selectCustom(dataName, DefaultValueConverter.instance);
   }
 
   /** bind a number property to a select */
-  static selectNumeric(dataName: string) {
-    return FormBinder.selectCustom(dataName, NumericValueConverter.instance);
+  selectNumeric(dataName: string) {
+    return this.selectCustom(dataName, NumericValueConverter.instance);
   }
 
   /** bind a TDataPropValue[] property to a multi select */
-  static selectMultipleCustom<TDataPropValue>(dataName: string, valueConverter?: IValueConverter<TDataPropValue, string[]>) {
-    return FormBinder.custom(new SelectMultipleFormBinder(dataName, valueConverter));
+  selectMultipleCustom<TDataPropValue>(dataName: string, valueConverter?: IValueConverter<TDataPropValue, string[]>) {
+    return this.custom(new SelectMultipleFormBinder(dataName, valueConverter));
   }
 
   /** bind a string[] property to a multi select */
-  static selectMultiple(dataName: string) {
-    return FormBinder.selectMultipleCustom(dataName);
+  selectMultiple(dataName: string) {
+    return this.selectMultipleCustom(dataName);
   }
 
   /** bind a number[] property to a multi select */
-  static selectMultipleNumeric(dataName: string) {
-    return FormBinder.selectMultipleCustom(dataName, MultipleNumericValueConverter.instance);
+  selectMultipleNumeric(dataName: string) {
+    return this.selectMultipleCustom(dataName, MultipleNumericValueConverter.instance);
   }
 
   /** bind a TDataPropValue property to a 'checkbox' input */
-  static checkboxCustom<TDataPropValue>(/** helooo */dataName: string, valueConverter?: IValueConverter<TDataPropValue, boolean>) {
-    let adaptorInjector = FormBinder.custom(new CheckboxFormBinder(dataName, valueConverter));
+  checkboxCustom<TDataPropValue>(dataName: string, valueConverter?: IValueConverter<TDataPropValue, boolean>) {
+    let adaptorInjector = this.custom(new CheckboxFormBinder(dataName, valueConverter));
     adaptorInjector["type"] = "checkbox";
     return adaptorInjector;
     //return this.defaultInputFormBinder(dataName, "checkbox", valueConverter, "checked")
   }
 
   /** bind a boolean property to a 'checkbox' input */
-  static checkbox(dataName: string) {
-    return FormBinder.checkboxCustom(dataName);
+  checkbox(dataName: string) {
+    return this.checkboxCustom(dataName);
   }
 
   /** bind a TDataPropValue property to a 'radio' input, using trueValue and falseValue equality testing */
-  static checkboxConvert<TDataPropValue>(dataName: string, trueValue: TDataPropValue, falseValue: TDataPropValue) {
-    return FormBinder.checkboxCustom(dataName, new CheckboxValueConverter(trueValue, falseValue));
+  checkboxConvert<TDataPropValue>(dataName: string, trueValue: TDataPropValue, falseValue: TDataPropValue) {
+    return this.checkboxCustom(dataName, new CheckboxValueConverter(trueValue, falseValue));
   }
 
   /** bind a TDataPropValue property to a 'radio' input */
-  static radioCustom<TDataPropValue>(dataName: string, value: string, valueConverter: IInputValueConverter<TDataPropValue>) {
-    let adaptorInjector = FormBinder.custom(new RadioFormBinder(dataName, "checked", valueConverter, "value"));
+  radioCustom<TDataPropValue>(dataName: string, value: string, valueConverter: IInputValueConverter<TDataPropValue>) {
+    let adaptorInjector = this.custom(new RadioFormBinder(dataName, "checked", valueConverter, "value"));
     adaptorInjector["type"] = "radio";
     adaptorInjector["value"] = value;
     return adaptorInjector;
   }
 
   /** bind a string property to a 'radio' input */
-  static radio(dataName: string, value: string) {
-    return FormBinder.radioCustom(dataName, value, DefaultValueConverter.instance);
+  radio(dataName: string, value: string) {
+    return this.radioCustom(dataName, value, DefaultValueConverter.instance);
   }
 
   /** bind a number property to a 'radio' input */
-  static radioNumeric(dataName: string, value: number) {
-    return FormBinder.radioCustom(dataName, value.toString(), NumericValueConverter.instance);
+  radioNumeric(dataName: string, value: number) {
+    return this.radioCustom(dataName, value.toString(), NumericValueConverter.instance);
   }
 }
 

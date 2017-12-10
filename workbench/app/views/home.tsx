@@ -7,8 +7,8 @@ export class Home extends React.Component<{}, { dialogOpen?: boolean, canClick?:
   /**
    *
    */
-  constructor() {
-    super();
+  constructor(props: {}) {
+    super(props);
     this.state = { dialogOpen: false, canClick: true, pending: false }
   }
   private tabControl: TabControl;

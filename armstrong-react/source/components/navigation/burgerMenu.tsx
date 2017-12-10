@@ -67,10 +67,13 @@ export class BurgerMenu extends React.Component<IBurgerMenuProps, {}>{
   }
 
   componentDidMount() {
-    let appNode = document.getElementById(this.props.bodyId || "host");
+    const id = this.props.bodyId || "host"
+    const appNode = document.getElementById(id);
     if (!appNode) {
-      throw new Error(`Cannot find document node of ${this.props.bodyId || "host"}`)
+      console.error(`Cannot find document node of ${id}`)
+      return
     }
+
     this.appNode = appNode;
     this.renderToPortal(this.renderNav(this.props.children))
   }

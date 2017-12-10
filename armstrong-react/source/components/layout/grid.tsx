@@ -47,6 +47,10 @@ export class Grid extends React.Component<IGrid, {}> {
   }
 }
 
+function sizeErrorMessage(size: string, sizeValue: string, controlPath: string) {
+  return `Unsupported ${size} property '${sizeValue}' on ${controlPath}. If you are using a string, make sure it is either 'auto' or follows the pattern '[number]*'`
+}
+
 export interface IRow extends React.HTMLProps<HTMLDivElement> {
   /** (number | string) Sets a fixed height for the row, or 'auto' to grow to fit its content */
   height?: number | string;
@@ -93,7 +97,7 @@ export function Row(props: IRow) {
         styles = _.extend({ flex: `${spans}` }, styles);
       }
       else {
-        throw new Error(`Unsupported height property '${height}' on Grid Row. If you are using a string, make sure it is either 'auto' or follows the pattern '[number]*'`)
+        console.error(sizeErrorMessage("height", height, "Grid > Row"))
       }
     }
   }
@@ -161,7 +165,7 @@ export function Col(props: ICol) {
         styles = _.extend({ flex: `${spans}` }, styles);
       }
       else {
-        throw new Error(`Unsupported width property '${width}' on Grid > Row > Col. If you are using a string, make sure it is either 'auto' or follows the pattern '[number]*'`)
+        console.error(sizeErrorMessage("width", width, "Grid > Row > Col"))
       }
     }
   }

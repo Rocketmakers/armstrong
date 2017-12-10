@@ -3,7 +3,7 @@ import { PropTypes } from "prop-types";
 import * as _ from "underscore";
 import { IFormBinder, IDataBinder, IFormBinderInjector, getFormBinderFromInjector, updateFormBinderInjector } from "./formCore";
 import { FormBinder } from "./formBinders";
-import { PropertyPathResolver } from "./properyPathResolver";
+import { PropertyPathResolver } from "./propertyPathResolver";
 import { ClassHelpers } from "../../utilities/classNames";
 
 /** The default Json Entity binder - NOTE, the original instance provided is MUTABLE */
@@ -140,7 +140,7 @@ export class Form extends React.Component<IFormProps, {}>{
     form: PropTypes.object
   };
 
-  static Bind = FormBinder;
+  static Bind = new FormBinder();
 
   static jsonDataBinder<T>(data: T): IDataBinder<T> {
     return new JsonEntityBinder(data);

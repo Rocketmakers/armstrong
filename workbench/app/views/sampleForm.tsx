@@ -1,18 +1,7 @@
 import * as React from "react";
 import { Form, TextInput, DateInput, AutoCompleteInput, TimeInput, CalendarInput, SelectInput, ISelectInputProps, Button, CheckboxInput, RadioInput, IDataBinder, IFormBinder } from "armstrong-react";
+import { CustomTextInput } from "./customBinding";
 
-class CustomFormBinder implements IFormBinder<ISelectInputProps, any> {
-    constructor(public dataPath: string) { }
-    setElementProperty(props: ISelectInputProps, dataBinder: IDataBinder<any>): void {
-        props.value = dataBinder.getValue(this.dataPath)
-    }
-    handleValueChanged(props: ISelectInputProps, dataBinder: IDataBinder<any>, notifyChanged: () => void): void {
-        props.change = c => {
-            dataBinder.setValue(this.dataPath, c.id)
-            notifyChanged()
-        }
-    }
-}
 export interface ISample {
     id: string
     name: string
@@ -57,19 +46,19 @@ export class SampleForm extends React.Component<ISampleForm, { binder: IDataBind
     }
     render() {
         let validations = [
-            {attribute:"name", message:"arghhh"},
-            {attribute:"date", message:"arghhh"},
-            {attribute:"time", message:"arghhh"},
-            {attribute:"auto", message:"arghhh"},
-            {attribute:"autoMulti", message:"arghhh"},
-            {attribute:"expiry", message:"arghhh"},
-            {attribute:"accepts", message:"arghhh"},
-            {attribute:"divisionId", message:"arghhh"},
-            {attribute:"division2Id", message:"arghhh"},
-            {attribute:"userType", message:"arghhh"},
-            {attribute:"userTypeNumeric", message:"arghhh"},
-            {attribute:"reputation", message:"arghhh"},
-            {attribute:"password", message:"arghhh"},
+            { attribute: "name", message: "arghhh" },
+            { attribute: "date", message: "arghhh" },
+            { attribute: "time", message: "arghhh" },
+            { attribute: "auto", message: "arghhh" },
+            { attribute: "autoMulti", message: "arghhh" },
+            { attribute: "expiry", message: "arghhh" },
+            { attribute: "accepts", message: "arghhh" },
+            { attribute: "divisionId", message: "arghhh" },
+            { attribute: "division2Id", message: "arghhh" },
+            { attribute: "userType", message: "arghhh" },
+            { attribute: "userTypeNumeric", message: "arghhh" },
+            { attribute: "reputation", message: "arghhh" },
+            { attribute: "password", message: "arghhh" },
         ];
         return (
             <Form dataBinder={this.state.binder} validationResults={validations} onDataBinderChange={d => this.setState({ binder: d })}>
@@ -95,6 +84,8 @@ export class SampleForm extends React.Component<ISampleForm, { binder: IDataBind
                     <TextInput placeholder="numbers plz" {...Form.Bind.textNumeric("reputation") } />
                     <TextInput {...Form.Bind.password("password") } />
                     <TextInput {...Form.Bind.text("name") } />
+                    <label>Boom Custom</label>
+                    <CustomTextInput {...Form.Bind.customTextInput("name") } />
                     <TextInput defaultValue={this.state.binder.toJson().name} />
                 </div>
                 <div>

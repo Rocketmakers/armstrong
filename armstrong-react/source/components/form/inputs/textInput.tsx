@@ -29,6 +29,13 @@ export class TextInput extends React.Component<ITextInputProps, {}> {
       this.input.blur()
     }
   }
+
+  public select() {
+    if (this.input) {
+      this.input.select()
+    }
+  }
+  
   render() {
     const validationMessage = this.props["data-validation-message"]
     const { className, readonly, rightOverlayText, leftOverlayText, type, leftIcon, rightIcon, multiLine, validationMode, placeholder, children, ...attrs } = this.props
