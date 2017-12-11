@@ -8,7 +8,7 @@
     "start-workbench": "cd workbench && yarn start",
     "start-docs": "cd docs && yarn start",
     "start-armstrong": "cd armstrong-react && yarn run watch",
-    "start": "parallelshell -v \"yarn run start-workbench\" \"yarn run start-armstrong\" \"yarn run start-docs\""
+    "start": "parallelshell -v \"yarn run start-workbench\" \"yarn run start-armstrong\""
   },
   "repository": {
     "type": "git",

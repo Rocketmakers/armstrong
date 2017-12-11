@@ -1,4 +1,5 @@
 import * as React from "react";
+import * as ReactDOM from "react-dom";
 import { PropTypes } from "prop-types";
 import * as _ from "underscore";
 import { IFormBinder, IDataBinder, IFormBinderInjector, getFormBinderFromInjector, updateFormBinderInjector } from "./formCore";
@@ -7,41 +8,41 @@ import { PropertyPathResolver } from "./propertyPathResolver";
 import { ClassHelpers } from "../../utilities/classNames";
 
 /** The default Json Entity binder - NOTE, the original instance provided is MUTABLE */
-class JsonEntityBinder<T> implements IDataBinder<T>{
-  constructor(private data: T) { }
-  lastDataPathSet?: string
+class JsonEntityBinder<T> implements IDataBinder<T> {
+  constructor(private data: T) {}
+  lastDataPathSet?: string;
 
   getKeyValue = <TKey extends keyof T>(keyName: TKey): T[TKey] => {
-    return this.data[keyName]
-  }
+    return this.data[keyName];
+  };
 
   setKeyValue = <TKey extends keyof T>(keyName: TKey, value: T[TKey]): void => {
-    this.data[keyName] = value
-  }
+    this.data[keyName] = value;
+  };
 
   getValue = (dataPath: string): any => {
-    return PropertyPathResolver.getValue(this.data, dataPath)
-  }
+    return PropertyPathResolver.getValue(this.data, dataPath);
+  };
 
   setValue = (dataPath: string, value: any): void => {
-    PropertyPathResolver.setValue(this.data, dataPath, value)
-    this.lastDataPathSet = dataPath
-  }
+    PropertyPathResolver.setValue(this.data, dataPath, value);
+    this.lastDataPathSet = dataPath;
+  };
 
   toJson = (): T => {
     return this.data;
-  }
+  };
 }
 
 export class FormDataClone {
   static json<T>(source: T) {
-    return JSON.parse(JSON.stringify(source)) as T
+    return JSON.parse(JSON.stringify(source)) as T;
   }
 
   static custom<T>(source: T) {
     const clone = _.clone(source);
     _.keys(clone).map(key => {
-      const value = clone[key]
+      const value = clone[key];
       if (_.isObject(value)) {
         clone[key] = FormDataClone.custom(value);
       }
@@ -49,12 +50,11 @@ export class FormDataClone {
 
     return clone;
   }
-
 }
 
 export function generateUniqueId(formatter?: (unique: string) => string) {
-  const u = `${Math.random()}`
-  return formatter ? formatter(u) : u
+  const u = `${Math.random()}`;
+  return formatter ? formatter(u) : u;
 }
 
 export type ValidationModes = "none" | "icon" | "below" | "both";
@@ -62,19 +62,18 @@ export type ValidationModes = "none" | "icon" | "below" | "both";
 export type ValidationProps = {
   /** (string) How to display validation messages */
   validationMode?: ValidationModes;
-}
+};
 
-export type IFormInputProps<T> = React.Props<T> & ValidationProps
+export type IFormInputProps<T> = React.Props<T> & ValidationProps;
 
-export type IFormInputHTMLProps<T, E = React.HTMLAttributes<HTMLElement>> = React.ClassAttributes<T> & E & ValidationProps
-
+export type IFormInputHTMLProps<T, E = React.HTMLAttributes<HTMLElement>> = React.ClassAttributes<T> & E & ValidationProps;
 
 export interface IFormValidationResult {
   /** The attribute (dataPath) of the invalid entry */
-  attribute: string
+  attribute: string;
 
   /** The validation message */
-  message: string
+  message: string;
 }
 
 export interface IFormProps extends React.HTMLProps<Form> {
@@ -92,6 +91,9 @@ export interface IFormProps extends React.HTMLProps<Form> {
 
   /** (string) How to display validation messages. 'icon' (default) shows a small exclamation symbol in the right of the field, 'below' shows the message below the field, while 'both' is a combination, and none hides all validation UI */
   validationMode?: "none" | "icon" | "below" | "both";
+
+  /** (boolean) Automatically focus the first input (if it's empty) when the form is rendered */
+  focusFirstEmptyInput?: boolean;
 }
 
 export interface IFormContext {
@@ -99,16 +101,16 @@ export interface IFormContext {
   dataBinder: IDataBinder<any>;
 
   /** If the Form is nested inside another Form, the IFormContext of the parent Form */
-  parent: IFormContext
+  parent: IFormContext;
 }
 
 export function extractChildValidationResults(validationResults: IFormValidationResult[], dataPath: string) {
-  const vr = validationResults && _.filter(validationResults, vr => vr.attribute.indexOf(dataPath + ".") === 0)
+  const vr = validationResults && _.filter(validationResults, vr => vr.attribute.indexOf(dataPath + ".") === 0);
   if (!vr) {
-    return
+    return;
   }
 
-  return vr.map(a => ({ ...a, attribute: a.attribute.substring(dataPath.length + 1) }))
+  return vr.map(a => ({ ...a, attribute: a.attribute.substring(dataPath.length + 1) }));
 }
 
 /**
@@ -116,15 +118,29 @@ A stateless data bindable form - state is held within the 'dataBinder' property
 NOTE: This is designed to render all elements in the form on every change. This allows other participating elements to react to these changes
 NOTE: This element provides a react context, this can be used to get access to the Forms dataBinder (or any parent Form dataBinder when nested)
 */
-export class Form extends React.Component<IFormProps, {}>{
+export class Form extends React.Component<IFormProps, {}> {
+  private formDom: HTMLElement;
+
   static defaultProps: Partial<IFormProps> = {
     validationMode: "icon"
-  }
+  };
 
-  static contextTypes = { "form": PropTypes.object }
+  static contextTypes = { form: PropTypes.object };
 
   static getFormContext(context: any) {
-    return context["form"] as IFormContext
+    return context["form"] as IFormContext;
+  }
+
+  componentDidMount() {
+    if (this.props.focusFirstEmptyInput) {
+      let f = this.formDom;
+      let input: HTMLInputElement = f.querySelector('input:not([type="hidden"]');
+      if (input) {
+        if (!input.value) {
+          input.focus();
+        }
+      }
+    }
   }
 
   getChildContext() {
@@ -150,17 +166,20 @@ export class Form extends React.Component<IFormProps, {}>{
     return new JsonEntityBinder(FormDataClone.custom(data));
   }
 
-  private preventDefault = (e) => { e.preventDefault(); return false }
+  private preventDefault = e => {
+    e.preventDefault();
+    return false;
+  };
 
   render() {
     const ch = this.processChildren(this.props.children, this.props.validationMode);
-    const hasParentForm = !!Form.getFormContext(this.context)
-    const className = ClassHelpers.classNames("form", hasParentForm && "form-nested", this.props.className)
-    return hasParentForm ? React.createFactory("div")({ className: className }, ch) : React.createFactory("form")({ className: className, onSubmit: this.preventDefault }, ch)
+    const hasParentForm = !!Form.getFormContext(this.context);
+    const className = ClassHelpers.classNames("form", hasParentForm && "form-nested", this.props.className);
+    return hasParentForm ? React.createFactory("div")({ className: className, ref: r => (this.formDom = r) }, ch) : React.createFactory("form")({ className: className, onSubmit: this.preventDefault, ref: r => (this.formDom = r) }, ch);
   }
 
   private processChildren(node: React.ReactNode, validationMode: "none" | "icon" | "below" | "both") {
-    const validationResults = this.props.validationResults
+    const validationResults = this.props.validationResults;
     return React.Children.map(node, (element: React.ReactElement<React.HTMLProps<HTMLElement>>) => {
       if (!element) {
         return;
@@ -175,22 +194,21 @@ export class Form extends React.Component<IFormProps, {}>{
         props["validationMode"] = validationMode;
       }
 
-
       let children = element.props.children;
 
       const fbi = props as IFormBinderInjector<any>;
       const formBinder = getFormBinderFromInjector(fbi);
       if (formBinder) {
-        updateFormBinderInjector(fbi, null)
+        updateFormBinderInjector(fbi, null);
         if (validationResults && validationResults.length) {
           const vr: IFormValidationResult = _.find(validationResults, vr => vr.attribute === formBinder.dataPath);
           if (vr) {
             props["data-validation-message"] = vr.message;
           } else {
             // use for child form
-            const childValidators = extractChildValidationResults(validationResults, formBinder.dataPath)
+            const childValidators = extractChildValidationResults(validationResults, formBinder.dataPath);
             if (childValidators && childValidators.length) {
-              props["validationResults"] = childValidators
+              props["validationResults"] = childValidators;
             }
           }
 
@@ -209,11 +227,11 @@ export class Form extends React.Component<IFormProps, {}>{
       }
 
       return React.cloneElement<any, any>(element, props, children);
-    })
+    });
   }
 
   private notifyChange = () => {
-    this.props.onDataBinderChange && this.props.onDataBinderChange(this.props.dataBinder)
-    this.props.onDataChanged && this.props.onDataChanged(this.props.dataBinder.toJson())
-  }
+    this.props.onDataBinderChange && this.props.onDataBinderChange(this.props.dataBinder);
+    this.props.onDataChanged && this.props.onDataChanged(this.props.dataBinder.toJson());
+  };
 }

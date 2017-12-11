@@ -1,15 +1,14 @@
 // LIBS
-import * as React from 'react';
-import * as ReactDOM from 'react-dom';
-import { Router, Route } from 'react-router';
-import { Grid, Row, Col, ArmstrongConfig } from 'armstrong-react';
+import * as React from "react";
+import * as ReactDOM from "react-dom";
+import { Router, Route } from "react-router";
+import { Grid, Row, Col, ArmstrongConfig } from "armstrong-react";
 
 // VIEWS
 import { Home } from "./views/home";
 import { Test } from "./views/test";
 import { List } from "./views/list";
 import { Form } from "./views/form";
-
 
 // STYLES
 import "./theme/theme";
@@ -19,8 +18,8 @@ import "./theme/theme";
 
 // APP WRAPPER
 class App extends React.Component<any, { nav: boolean }> {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = { nav: true };
   }
   navigateTo(path: string) {
@@ -32,11 +31,9 @@ class App extends React.Component<any, { nav: boolean }> {
       <main>
         <Grid debugMode={true} fillContainer={true}>
           <Row>
-            <Col className="bg-gray-dark"/>
-            <Col width={1100}>
-              { this.props.children }
-            </Col>
-            <Col className="bg-gray-dark"/>
+            <Col className="bg-gray-dark" />
+            <Col width={1100}>{this.props.children}</Col>
+            <Col className="bg-gray-dark" />
           </Row>
         </Grid>
       </main>
@@ -46,4 +43,9 @@ class App extends React.Component<any, { nav: boolean }> {
 
 ArmstrongConfig.setLocale("en-GB");
 
-ReactDOM.render(<App><Home /></App>, document.getElementById('host'));
+ReactDOM.render(
+  <App>
+    <Form />
+  </App>,
+  document.getElementById("host")
+);
