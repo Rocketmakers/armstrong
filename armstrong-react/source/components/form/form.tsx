@@ -134,7 +134,7 @@ export class Form extends React.Component<IFormProps, {}> {
   componentDidMount() {
     if (this.props.focusFirstEmptyInput) {
       let f = this.formDom;
-      let inputs: any = f.querySelectorAll("input[type=text], textarea");
+      let inputs: any = f.querySelectorAll("input[type=text]:not(:disabled), textarea");
       if (inputs[0]) {
         if (!inputs[0].value) {
           inputs[0].focus();
