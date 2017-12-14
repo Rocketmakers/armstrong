@@ -1,3 +1,4 @@
+@import "fonts";
 @import "icomoon";
 @import "~armstrong-react/dist/imports";
 @import "~armstrong-react/dist/core";
@@ -33,11 +34,15 @@ html,
   .tab-item-header {
     background-color: red;
     margin-right: 10px;
-    &.selected{
+    &.selected {
       background-color: green;
     }
   }
 }
 
-
-.animatable{ display: inline-block; background: $brand-primary; padding: 20px; color: white }
+.animatable {
+  display: inline-block;
+  background: $brand-primary;
+  padding: 20px;
+  color: white;
+}

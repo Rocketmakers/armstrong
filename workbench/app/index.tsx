@@ -12,6 +12,7 @@ import { Form } from "./views/form";
 
 // STYLES
 import "./theme/theme";
+import { NewTest } from "./views/newTest";
 
 // HISTORY
 //const hist = history();
@@ -45,7 +46,7 @@ ArmstrongConfig.setLocale("en-GB");
 
 ReactDOM.render(
   <App>
-    <Form />
+    <NewTest />
   </App>,
   document.getElementById("host")
 );

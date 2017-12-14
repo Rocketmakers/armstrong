@@ -1,4 +1,4 @@
-export {IInputValueConverter, IValueConverter} from './components/form/formValueConverters';
+export { IInputValueConverter, IValueConverter } from "./components/form/formValueConverters";
 /***********************************************************************************
   ARMSTRONG TSX COMPONENT EXPORTS
   all components (and appropriate interfaces) to be consumed must be exported here
@@ -16,6 +16,7 @@ export { ISelectInputProps, SelectInput, ISelectInputOption } from "./components
 export { DateInput, IDateInputProps } from "./components/form/inputs/dateInput";
 export { TimeInput, ITimeInputProps } from "./components/form/inputs/timeInput";
 export { CalendarInput, ICalendarInputProps } from "./components/form/inputs/calendarInput";
+export { TagInput, ITagInputProps } from "./components/form/inputs/tagInput";
 export { ITextInputProps, TextInput } from "./components/form/inputs/textInput";
 export { IAutoCompleteInputProps, AutoCompleteInput, IAutoCompleteOption } from "./components/form/inputs/autoCompleteInput";
 export { IDataBinder, IFormBinder } from "./components/form/formCore";
@@ -41,7 +42,7 @@ export { TabControl, TabItem, ITabItemProps, ITabControlProps, ITabControlState 
 // Utility
 export { Sample, ISampleProps, IPropInfo } from "./components/utility/sample";
 
-import * as ArmstrongConfig from "./config/config"
-export { ClassHelpers } from './utilities/classNames';
+import * as ArmstrongConfig from "./config/config";
+export { ClassHelpers } from "./utilities/classNames";
 export { ValidationLabel, ValidationWrapper } from "./components/form/validationWrapper";
 export { ArmstrongConfig };

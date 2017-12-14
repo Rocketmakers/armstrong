@@ -1,56 +1,48 @@
 import * as React from "react";
 import * as _ from "underscore";
 import { IFormBinder, IDataBinder, IFormBinderInjector, getFormBinderFromInjector, updateFormBinderInjector } from "./formCore";
-import {
-  IOneWayValueConverter,
-  IValueConverter,
-  IInputValueConverter,
-  CheckboxValueConverter,
-  NumericValueConverter,
-  MultipleNumericValueConverter,
-  INumericOptions,
-  DefaultValueConverter
-} from "./formValueConverters";
+import { IOneWayValueConverter, IValueConverter, IInputValueConverter, CheckboxValueConverter, NumericValueConverter, MultipleNumericValueConverter, INumericOptions, DefaultValueConverter } from "./formValueConverters";
 import { FormBinderBase } from "./formBinderBase";
 import { ICalendarInputProps } from "./inputs/calendarInput";
 import { IDateInputProps } from "./inputs/dateInput";
 import { ITimeInputProps } from "./inputs/timeInput";
 import { IAutoCompleteInputProps, IAutoCompleteOption } from "./inputs/autoCompleteInput";
 import { Formatting } from "../../utilities/formatting";
+import { ITagInputProps } from "./inputs/tagInput";
 
 /** An input FormBinder that sets native 'value' and 'onChange: (e) => void' properties */
 export class InputFormBinder<TDataPropValue, TComponentPropValue> extends FormBinderBase<React.DOMAttributes<{}>, TDataPropValue, TComponentPropValue> {
   setElementProperty(props: React.DOMAttributes<any>, dataBinder: IDataBinder<any>) {
-    super.setElementProperty(props, dataBinder)
+    super.setElementProperty(props, dataBinder);
     const v = props[this.propertySet];
     if (Formatting.isNullOrUndefined(v)) {
-      props[this.propertySet] = this.getDefaultInputValue()
+      props[this.propertySet] = this.getDefaultInputValue();
     }
   }
 
   protected getDefaultInputValue(): any {
-    return ""
+    return "";
   }
 
   handleValueChanged(props: React.DOMAttributes<any>, dataBinder: IDataBinder<any>, notifyChanged: () => void) {
-    props.onChange = (e) => {
+    props.onChange = e => {
       this.onChanged(dataBinder, e.currentTarget[this.propertyGet], notifyChanged);
     };
   }
 }
 
-export class SelectMultipleFormBinder<TDataProp> extends InputFormBinder<TDataProp, string[]>{
+export class SelectMultipleFormBinder<TDataProp> extends InputFormBinder<TDataProp, string[]> {
   constructor(dataPath: string, valueConverter?: IValueConverter<TDataProp, string[]>) {
-    super(dataPath, "value", valueConverter)
+    super(dataPath, "value", valueConverter);
   }
 
   setElementProperty(props: React.DOMAttributes<any>, dataBinder: IDataBinder<any>) {
-    super.setElementProperty(props, dataBinder)
-    props["multiple"] = true
+    super.setElementProperty(props, dataBinder);
+    props["multiple"] = true;
   }
 
   handleValueChanged(props: React.DOMAttributes<any>, dataBinder: IDataBinder<any>, notifyChanged: () => void) {
-    props.onChange = (e) => {
+    props.onChange = e => {
       this.onChanged(dataBinder, this.getSelectValues(e.currentTarget), notifyChanged);
     };
   }
@@ -59,7 +51,7 @@ export class SelectMultipleFormBinder<TDataProp> extends InputFormBinder<TDataPr
     const result: string[] = [];
     const options = select && select.options;
     if (!options) {
-      return result
+      return result;
     }
     for (let i = 0; i < options.length; i++) {
       let opt = options[i];
@@ -71,12 +63,12 @@ export class SelectMultipleFormBinder<TDataProp> extends InputFormBinder<TDataPr
   }
 }
 
-export class CheckboxFormBinder<TDataPropValue, TComponentPropValue> extends InputFormBinder<TDataPropValue, TComponentPropValue>{
+export class CheckboxFormBinder<TDataPropValue, TComponentPropValue> extends InputFormBinder<TDataPropValue, TComponentPropValue> {
   constructor(dataPath: string, valueConverter?: IValueConverter<TDataPropValue, TComponentPropValue>) {
-    super(dataPath, "checked", valueConverter)
+    super(dataPath, "checked", valueConverter);
   }
   protected getDefaultInputValue() {
-    return false
+    return false;
   }
 }
 
@@ -88,36 +80,36 @@ export class RadioFormBinder<TDataPropValue, TComponentPropValue> extends InputF
   }
 }
 
-export class DateInputFormBinder extends FormBinderBase<IDateInputProps, string, string>{
+export class DateInputFormBinder extends FormBinderBase<IDateInputProps, string, string> {
   constructor(dataPath: string) {
-    super(dataPath, "date")
+    super(dataPath, "date");
   }
 
   handleValueChanged(props: IDateInputProps, dataBinder: IDataBinder<any>, notifyChanged: () => void) {
-    props.onChange = (e) => {
+    props.onChange = e => {
       this.onChanged(dataBinder, e, notifyChanged);
     };
   }
 }
 
-export class TimeInputFormBinder extends FormBinderBase<ITimeInputProps, string, string>{
+export class TimeInputFormBinder extends FormBinderBase<ITimeInputProps, string, string> {
   constructor(dataPath: string) {
-    super(dataPath, "time")
+    super(dataPath, "time");
   }
   static customValue(dataName: string) {
     return new TimeInputFormBinder(dataName);
   }
 
   handleValueChanged(props: ITimeInputProps, dataBinder: IDataBinder<any>, notifyChanged: () => void) {
-    props.onChange = (e) => {
+    props.onChange = e => {
       this.onChanged(dataBinder, e, notifyChanged);
     };
   }
 }
 
-export class CalendarInputFormBinder extends FormBinderBase<ICalendarInputProps, string, string>{
+export class CalendarInputFormBinder extends FormBinderBase<ICalendarInputProps, string, string> {
   constructor(dataPath: string) {
-    super(dataPath, "date")
+    super(dataPath, "date");
   }
 
   static customValue(dataName: string) {
@@ -125,40 +117,53 @@ export class CalendarInputFormBinder extends FormBinderBase<ICalendarInputProps,
   }
 
   handleValueChanged(props: ICalendarInputProps, dataBinder: IDataBinder<any>, notifyChanged: () => void) {
-    props.onDateChanged = (e) => this.onChanged(dataBinder, e, notifyChanged);
+    props.onDateChanged = e => this.onChanged(dataBinder, e, notifyChanged);
   }
 }
 
 export class AutoCompleteFormBinder implements IFormBinder<IAutoCompleteInputProps, any> {
-  constructor(public dataPath: string, private getItemFromId?: (id: string) => IAutoCompleteOption) { }
+  constructor(public dataPath: string, private getItemFromId?: (id: string) => IAutoCompleteOption) {}
   setElementProperty(props: IAutoCompleteInputProps, dataBinder: IDataBinder<any>): void {
     const value = dataBinder.getValue(this.dataPath);
     if (_.isArray(value)) {
       if (this.getItemFromId) {
-        props.value = value.map(v => this.getItemFromId(v))
-        return
+        props.value = value.map(v => this.getItemFromId(v));
+        return;
       }
-      props.value = props.options ? props.options.filter(o => value.indexOf(o.id) > -1) : []
-      return
+      props.value = props.options ? props.options.filter(o => value.indexOf(o.id) > -1) : [];
+      return;
     }
     if (this.getItemFromId) {
-      props.value = this.getItemFromId(value)
-      return
+      props.value = this.getItemFromId(value);
+      return;
     }
 
-    props.value = props.options && props.options.filter(o => value === o.id)[0]
+    props.value = props.options && props.options.filter(o => value === o.id)[0];
   }
 
   handleValueChanged(props: IAutoCompleteInputProps, dataBinder: IDataBinder<any>, notifyChanged: () => void): void {
     props.onSelected = c => {
       if (_.isArray(c)) {
-        dataBinder.setValue(this.dataPath, c.map(cc => cc.id))
+        dataBinder.setValue(this.dataPath, c.map(cc => cc.id));
+      } else {
+        dataBinder.setValue(this.dataPath, c.id);
       }
-      else {
-        dataBinder.setValue(this.dataPath, c.id)
-      }
-      notifyChanged()
-    }
+      notifyChanged();
+    };
+  }
+}
+
+export class TagInputFormBinder implements IFormBinder<ITagInputProps, any> {
+  constructor(public dataPath: string) {}
+  setElementProperty(props: IAutoCompleteInputProps, dataBinder: IDataBinder<any>): void {
+    const value = dataBinder.getValue(this.dataPath);
+    props.value = value;
+  }
+
+  handleValueChanged(props: ITagInputProps, dataBinder: IDataBinder<any>, notifyChanged: () => void): void {
+    props.onChange = tags => {
+      dataBinder.setValue(this.dataPath, tags);
+    };
   }
 }
 
@@ -166,31 +171,36 @@ export class AutoCompleteFormBinder implements IFormBinder<IAutoCompleteInputPro
 export class FormBinder {
   /** bind a custom form binder */
   custom<P>(formBinder: IFormBinder<P, any>): IFormBinderInjector<P> {
-    return updateFormBinderInjector({} as any, formBinder)
+    return updateFormBinderInjector({} as any, formBinder);
   }
 
   /** bind to a 'hidden' input */
   hidden<TDataPropValue>(dataName: string, valueConverter?: IInputValueConverter<TDataPropValue>) {
-    return this.defaultInputFormBinder(dataName, "hidden", valueConverter)
+    return this.defaultInputFormBinder(dataName, "hidden", valueConverter);
   }
 
   /** bind a string property to a 'password' input */
   password<TDataPropValue>(dataName: string, valueConverter?: IInputValueConverter<TDataPropValue>) {
-    return this.defaultInputFormBinder(dataName, "password", valueConverter)
+    return this.defaultInputFormBinder(dataName, "password", valueConverter);
   }
 
   /** bind a string property to a 'text' input */
   text<TDataPropValue>(dataName: string, valueConverter?: IInputValueConverter<TDataPropValue>) {
-    return this.defaultInputFormBinder(dataName, "text", valueConverter)
+    return this.defaultInputFormBinder(dataName, "text", valueConverter);
   }
 
   /** bind a string property to a 'email' input */
   textEmail<TDataPropValue>(dataName: string, valueConverter?: IInputValueConverter<TDataPropValue>) {
-    return this.defaultInputFormBinder(dataName, "email", valueConverter)
+    return this.defaultInputFormBinder(dataName, "email", valueConverter);
   }
 
   autoCompleteInput(dataName: string, getItemFromId?: (id: string) => IAutoCompleteOption) {
     return this.custom(new AutoCompleteFormBinder(dataName, getItemFromId));
+  }
+
+  /** bind a 'value' string array property to a TagInput (e.g. ["cool", "guys", "only"]) */
+  tagInput(dataName: string) {
+    return this.custom(new TagInputFormBinder(dataName));
   }
 
   /** bind a 'date' string property to a CalendarInput (e.g. YYYY-MM-DD) */
@@ -237,8 +247,8 @@ export class FormBinder {
     adaptorInjector["type"] = "number";
     adaptorInjector["onKeyDown"] = e => KeyboardHelper.numericKeyPress(e, options);
     if (options) {
-      adaptorInjector["min"] = options.min
-      adaptorInjector["max"] = options.max
+      adaptorInjector["min"] = options.min;
+      adaptorInjector["max"] = options.max;
     }
     return adaptorInjector;
   }
@@ -315,13 +325,13 @@ class KeyboardHelper {
     if (options) {
       if (options.allowNegative) {
         if (options.decimals) {
-          return /[\d\.\-]/
+          return /[\d\.\-]/;
         }
-        return /[\d\-]/
+        return /[\d\-]/;
       }
 
       if (options.decimals) {
-        return /[\d\.]/
+        return /[\d\.]/;
       }
     }
 
