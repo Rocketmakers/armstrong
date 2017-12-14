@@ -82,14 +82,17 @@ export class TimeInput extends React.Component<ITimeInputProps, ITimerInputState
 
   private handleDataChanged = (d: ITimerInputState) => {
     this.setState(d, () => {
-      if (!this.props.onChange || Formatting.isNullOrUndefined(d.hours) || Formatting.isNullOrUndefined(d.minutes)) {
-        if (this.props.zeroMinutesOnHourSelected && !Formatting.isNullOrUndefined(d.hours) && Formatting.isNullOrUndefined(d.minutes)) {
-          this.setState({ minutes: 0 });
-        }
+      if (!this.props.onChange || Formatting.isNullOrUndefined(d.hours)) {
         return;
       }
-
-      this.props.onChange(`${d.hours}:${d.minutes}`);
+      if (Formatting.isNullOrUndefined(d.minutes)) {
+        if (this.props.zeroMinutesOnHourSelected) {
+          this.setState({ minutes: 0 });
+          this.props.onChange(`${Formatting.twoDigitNumber(d.hours)}:00`);
+        }
+      } else {
+        this.props.onChange(`${Formatting.twoDigitNumber(d.hours)}:${Formatting.twoDigitNumber(d.minutes)}`);
+      }
     });
   };
 
