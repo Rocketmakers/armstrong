@@ -218,11 +218,8 @@ class FormElementProcessor {
   static processChildren(formProps: IFormCoreProps, node: React.ReactNode, notifyChange: () => void) {
     const validationResults = formProps.validationResults;
     return React.Children.map(node, (element) => {
-      if (!React.isValidElement<React.HTMLProps<HTMLElement>>(element)) {
-        return
-      }
-      if (!element.props) {
-        return element;
+      if (!React.isValidElement<React.HTMLProps<HTMLElement>>(element) || !element.props) {
+        return element
       }
 
       let props: React.DOMAttributes<HTMLElement> = _.extend({}, element.props);
