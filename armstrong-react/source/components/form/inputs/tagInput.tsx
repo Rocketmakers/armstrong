@@ -73,8 +73,17 @@ export class TagInput extends React.Component<ITagInputProps, { tags: string[]; 
     }
   }
 
+  private makeComparison(value: string){
+    return value ? value.trim().toLowerCase() : ""
+  }
+
   private filterSuggestions(value: string){
-    let filteredSuggestions = this.props.suggestions.filter(s => s.toLowerCase().lastIndexOf(value.toLowerCase(), 0) === 0);
+    value = this.makeComparison(value)
+    if (!value){
+      return []
+    }
+    
+    let filteredSuggestions = this.props.suggestions.filter(s => this.makeComparison(s).lastIndexOf(value, 0) === 0);
     return filteredSuggestions.filter(s => this.state.tags.indexOf(s) === -1);
   }
 
