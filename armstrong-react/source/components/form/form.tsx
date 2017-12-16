@@ -2,7 +2,7 @@ import * as React from "react";
 import * as ReactDOM from "react-dom";
 import { PropTypes } from "prop-types";
 import * as _ from "underscore";
-import { IFormBinder, IDataBinder, IFormBinderInjector, getFormBinderFromInjector, updateFormBinderInjector } from "./formCore";
+import { IFormBinder, IDataBinder, IFormBinderInjector, getFormBinderFromInjector, updateFormBinderInjector, IFormValidationResult } from "./formCore";
 import { FormBinder } from "./formBinders";
 import { PropertyPathResolver } from "./propertyPathResolver";
 import { ClassHelpers } from "../../utilities/classNames";
@@ -67,14 +67,6 @@ export type ValidationProps = {
 export type IFormInputProps<T> = React.Props<T> & ValidationProps;
 
 export type IFormInputHTMLProps<T, E = React.HTMLAttributes<HTMLElement>> = React.ClassAttributes<T> & E & ValidationProps;
-
-export interface IFormValidationResult {
-  /** The attribute (dataPath) of the invalid entry */
-  attribute: string;
-
-  /** The validation message */
-  message: string;
-}
 
 export interface IFormCoreProps {
   /** The forms data binder instance, this contains the data that is used by bound form elements*/
@@ -251,7 +243,7 @@ class FormElementProcessor {
           }
         }
 
-        formBinder.setElementProperty(props, formProps.dataBinder);
+        formBinder.setElementProperty(props, formProps.dataBinder, validationResults);
         formBinder.handleValueChanged(props, formProps.dataBinder, notifyChange);
         if (formBinder.extender) {
           formBinder.extender(props, formProps.dataBinder, notifyChange);

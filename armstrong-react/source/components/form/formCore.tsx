@@ -1,5 +1,13 @@
 import * as React from "react";
 
+export interface IFormValidationResult {
+  /** The attribute (dataPath) of the invalid entry */
+  attribute: string;
+
+  /** The validation message */
+  message: string;
+}
+
 /**
 Form Binder Core interface
 The defintion of a form binder
@@ -11,7 +19,7 @@ export interface IFormBinder<TComponentProps, TData>{
   /**
   Augment the component props that will be applied to the forms child element being bound
   */
-  setElementProperty(props: TComponentProps, dataBinder:IDataBinder<TData>): void;
+  setElementProperty(props: TComponentProps, dataBinder:IDataBinder<TData>, validationResults?: IFormValidationResult[]): void;
 
   /**
   Add the value changed event handler, calling the supplied `notifyChanged` function when a change event has occured
