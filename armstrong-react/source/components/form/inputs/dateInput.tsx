@@ -47,7 +47,7 @@ export interface IDateInputState {
 }
 
 export class DateInput extends React.Component<IDateInputProps, IDateInputState> {
-  static defaultProps = {
+  static defaultProps: Partial<IDateInputProps> = {
     yearLabel: "Year",
     monthLabel: "Month",
     dayLabel: "Day",

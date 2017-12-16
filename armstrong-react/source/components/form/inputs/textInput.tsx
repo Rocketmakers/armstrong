@@ -15,7 +15,7 @@ export type ITextInputProps = IFormInputHTMLProps<TextInput, React.InputHTMLAttr
 }
 
 export class TextInput extends React.Component<ITextInputProps, {}> {
-  static defaultProps = {
+  static defaultProps: Partial<ITextInputProps> = {
     validationMode: "none"
   }
   public input: HTMLInputElement | HTMLTextAreaElement;

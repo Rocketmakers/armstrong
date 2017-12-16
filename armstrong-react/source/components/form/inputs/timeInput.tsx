@@ -40,7 +40,7 @@ export interface ITimerInputState {
 export class TimeInput extends React.Component<ITimeInputProps, ITimerInputState> {
   private static hours = _.range(0, 24);
 
-  static defaultProps = {
+  static defaultProps: Partial<ITimeInputProps> = {
     time: "",
     hourLabel: "HH",
     minuteLabel: "MM",

@@ -16,7 +16,7 @@ export interface ISelectInputProps extends IFormInputHTMLProps<SelectInput, Reac
 }
 
 export class SelectInput extends React.Component<ISelectInputProps, {}> {
-  static defaultProps = {
+  static defaultProps: Partial<ISelectInputProps> = {
     optionLabel: "[Select]",
     validationMode: "none"
   }

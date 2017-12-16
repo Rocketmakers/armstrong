@@ -41,7 +41,7 @@ export class CalendarInput extends React.Component<ICalendarInputProps, ICalenda
   private inputElement: HTMLInputElement;
   private bodyElement: HTMLDivElement;
 
-  static defaultProps = {
+  static defaultProps: Partial<ICalendarInputProps> = {
     format: 'L',
     validationMode: "none"
   }

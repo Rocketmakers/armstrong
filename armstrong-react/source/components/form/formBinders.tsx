@@ -155,7 +155,7 @@ export class AutoCompleteFormBinder implements IFormBinder<IAutoCompleteInputPro
 
 export class TagInputFormBinder implements IFormBinder<ITagInputProps, any> {
   constructor(public dataPath: string) {}
-  setElementProperty(props: IAutoCompleteInputProps, dataBinder: IDataBinder<any>): void {
+  setElementProperty(props: ITagInputProps, dataBinder: IDataBinder<any>): void {
     const value = dataBinder.getValue(this.dataPath);
     props.value = value;
   }
@@ -163,6 +163,7 @@ export class TagInputFormBinder implements IFormBinder<ITagInputProps, any> {
   handleValueChanged(props: ITagInputProps, dataBinder: IDataBinder<any>, notifyChanged: () => void): void {
     props.onChange = tags => {
       dataBinder.setValue(this.dataPath, tags);
+      notifyChanged()
     };
   }
 }

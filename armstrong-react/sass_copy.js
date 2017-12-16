@@ -13,7 +13,7 @@ watcher
         console.error(`exec error: ${error}`);
         return;
       }
-      console.log(`${stdout}`);
+      console.log(`Scss: ${stdout}`);
       if (stderr) {
         console.log(`stderr: ${stderr}`);
       }

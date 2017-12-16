@@ -7,7 +7,7 @@ export interface ICheckboxInputProps extends IFormInputHTMLProps<CheckboxInput, 
 }
 
 export class CheckboxInput extends React.Component<ICheckboxInputProps, {}> {
-  static defaultProps = {
+  static defaultProps: Partial<ICheckboxInputProps> = {
     validationMode: "none"
   }
 

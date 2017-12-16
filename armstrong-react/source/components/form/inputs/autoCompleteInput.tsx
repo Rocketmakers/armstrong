@@ -71,7 +71,7 @@ export class AutoCompleteInput extends React.Component<IAutoCompleteInputProps, 
   private diacriticsStripper: DiacriticsStripper;
   // drive this through css ideally. Currently fixed height plus border (50 + 2px)
   private itemHeight = 52;
-  static defaultProps = {
+  static defaultProps: Partial<IAutoCompleteInputProps> = {
     remoteThrottle: 500,
     minimumLength: 1,
     validationMode: "none"

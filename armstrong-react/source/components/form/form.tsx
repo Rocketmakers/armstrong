@@ -9,7 +9,7 @@ import { ClassHelpers } from "../../utilities/classNames";
 
 /** The default Json Entity binder - NOTE, the original instance provided is MUTABLE */
 class JsonEntityBinder<T> implements IDataBinder<T> {
-  constructor(private data: T) {}
+  constructor(private data: T) { }
   lastDataPathSet?: string;
 
   getKeyValue = <TKey extends keyof T>(keyName: TKey): T[TKey] => {
@@ -76,21 +76,23 @@ export interface IFormValidationResult {
   message: string;
 }
 
-export interface IFormProps extends React.HTMLProps<Form> {
+export interface IFormCoreProps {
   /** The forms data binder instance, this contains the data that is used by bound form elements*/
   dataBinder: IDataBinder<any>;
-
-  /** Called when bound form data changes: NOTE, this is called on every key stroke/interaction on any of the bound fields */
-  onDataChanged?: (data?: any) => void;
-
-  /** Called when bound form data changes: NOTE, this is called on every key stroke/interaction on any of the bound fields */
-  onDataBinderChange?: (dataBinder: IDataBinder<any>) => void;
 
   /** An optional array of validation results - bound controls whose dataBinder dataPath matches an attribute will be annotated with a 'data-validation-message' property */
   validationResults?: IFormValidationResult[];
 
   /** (string) How to display validation messages. 'icon' (default) shows a small exclamation symbol in the right of the field, 'below' shows the message below the field, while 'both' is a combination, and none hides all validation UI */
-  validationMode?: "none" | "icon" | "below" | "both";
+  validationMode?: ValidationModes
+}
+
+export interface IFormProps extends React.HTMLProps<Form>, IFormCoreProps {
+  /** Called when bound form data changes: NOTE, this is called on every key stroke/interaction on any of the bound fields */
+  onDataChanged?: (data?: any) => void;
+
+  /** Called when bound form data changes: NOTE, this is called on every key stroke/interaction on any of the bound fields */
+  onDataBinderChange?: (dataBinder: IDataBinder<any>) => void;
 
   /** (boolean) Automatically focus the first input (if it's empty) when the form is rendered */
   focusFirstEmptyInput?: boolean;
@@ -99,6 +101,12 @@ export interface IFormProps extends React.HTMLProps<Form> {
 export interface IFormContext {
   /** The dataBinder of the Form */
   dataBinder: IDataBinder<any>;
+
+  /** The core properties of the form */
+  coreProps: IFormCoreProps
+
+  /** Notifies any change made to the bound form data */
+  notifyChange: () => void
 
   /** If the Form is nested inside another Form, the IFormContext of the parent Form */
   parent: IFormContext;
@@ -111,6 +119,25 @@ export function extractChildValidationResults(validationResults: IFormValidation
   }
 
   return vr.map(a => ({ ...a, attribute: a.attribute.substring(dataPath.length + 1) }));
+}
+
+export class ParentFormContext extends React.Component {
+  static contextTypes = { form: PropTypes.object };
+
+  render() {
+    const context = Form.getFormContext(this.context)
+    if (!context){
+      console.error("A ParentFormBinder should be rendered within the context of a parent Form")
+    }
+    
+    const children = context ? FormElementProcessor.processChildren(context.coreProps, this.props.children, context.notifyChange) : this.props.children;
+
+    return (
+      <>
+      {children}
+      </>
+    )
+  }
 }
 
 /**
@@ -134,21 +161,21 @@ export class Form extends React.Component<IFormProps, {}> {
   componentDidMount() {
     if (this.props.focusFirstEmptyInput) {
       let f = this.formDom;
-      let inputs: any = f.querySelectorAll("input[type=text]:not(:disabled), textarea");
-      if (inputs[0]) {
-        if (!inputs[0].value) {
-          inputs[0].focus();
-        }
+      let inputs = f.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>("input[type=text]:not(:disabled), textarea");
+      if (inputs[0] && !inputs[0].value) {
+        inputs[0].focus();
       }
     }
   }
 
-  getChildContext() {
+  getChildContext(): { form: IFormContext } {
     return {
       form: {
         dataBinder: this.props.dataBinder,
-        parent: this.context["form"]
-      } as IFormContext
+        coreProps: this.props,
+        parent: this.context["form"],
+        notifyChange: this.notifyChange
+      }
     };
   }
 
@@ -171,18 +198,28 @@ export class Form extends React.Component<IFormProps, {}> {
     return false;
   };
 
+  private setRef = (r: HTMLElement) => (this.formDom = r)
   render() {
-    const ch = this.processChildren(this.props.children, this.props.validationMode);
+    const ch = FormElementProcessor.processChildren(this.props, this.props.children, this.notifyChange);
     const hasParentForm = !!Form.getFormContext(this.context);
     const className = ClassHelpers.classNames("form", hasParentForm && "form-nested", this.props.className);
-    return hasParentForm ? React.createFactory("div")({ className: className, ref: r => (this.formDom = r) }, ch) : React.createFactory("form")({ className: className, onSubmit: this.preventDefault, ref: r => (this.formDom = r) }, ch);
+    return hasParentForm ?
+      React.createFactory("div")({ className: className, ref: this.setRef }, ch) :
+      React.createFactory("form")({ className: className, onSubmit: this.preventDefault, ref: this.setRef }, ch);
   }
 
-  private processChildren(node: React.ReactNode, validationMode: "none" | "icon" | "below" | "both") {
-    const validationResults = this.props.validationResults;
-    return React.Children.map(node, (element: React.ReactElement<React.HTMLProps<HTMLElement>>) => {
-      if (!element) {
-        return;
+  private notifyChange = () => {
+    this.props.onDataBinderChange && this.props.onDataBinderChange(this.props.dataBinder);
+    this.props.onDataChanged && this.props.onDataChanged(this.props.dataBinder.toJson());
+  };
+}
+
+class FormElementProcessor {
+  static processChildren(formProps: IFormCoreProps, node: React.ReactNode, notifyChange: () => void) {
+    const validationResults = formProps.validationResults;
+    return React.Children.map(node, (element) => {
+      if (!React.isValidElement<React.HTMLProps<HTMLElement>>(element)) {
+        return
       }
       if (!element.props) {
         return element;
@@ -190,16 +227,16 @@ export class Form extends React.Component<IFormProps, {}> {
 
       let props: React.DOMAttributes<HTMLElement> = _.extend({}, element.props);
 
-      if (validationMode && props["validationMode"]) {
-        props["validationMode"] = validationMode;
+      if (formProps.validationMode && props["validationMode"]) {
+        props["validationMode"] = formProps.validationMode;
       }
 
       let children = element.props.children;
 
-      const fbi = props as IFormBinderInjector<any>;
-      const formBinder = getFormBinderFromInjector(fbi);
+      const injector = props as IFormBinderInjector<any>;
+      const formBinder = getFormBinderFromInjector(injector);
       if (formBinder) {
-        updateFormBinderInjector(fbi, null);
+        updateFormBinderInjector(injector, null);
         if (validationResults && validationResults.length) {
           const vr: IFormValidationResult = _.find(validationResults, vr => vr.attribute === formBinder.dataPath);
           if (vr) {
@@ -212,26 +249,21 @@ export class Form extends React.Component<IFormProps, {}> {
             }
           }
 
-          if (validationMode && props["validationMode"]) {
-            props["validationMode"] = validationMode;
+          if (formProps.validationMode && props["validationMode"]) {
+            props["validationMode"] = formProps.validationMode;
           }
         }
 
-        formBinder.setElementProperty(props, this.props.dataBinder);
-        formBinder.handleValueChanged(props, this.props.dataBinder, this.notifyChange);
+        formBinder.setElementProperty(props, formProps.dataBinder);
+        formBinder.handleValueChanged(props, formProps.dataBinder, notifyChange);
         if (formBinder.extender) {
-          formBinder.extender(props, this.props.dataBinder, this.notifyChange);
+          formBinder.extender(props, formProps.dataBinder, notifyChange);
         }
       } else if (children) {
-        children = this.processChildren(children, validationMode);
+        children = FormElementProcessor.processChildren(formProps, children, notifyChange);
       }
 
       return React.cloneElement<any, any>(element, props, children);
     });
   }
-
-  private notifyChange = () => {
-    this.props.onDataBinderChange && this.props.onDataBinderChange(this.props.dataBinder);
-    this.props.onDataChanged && this.props.onDataChanged(this.props.dataBinder.toJson());
-  };
 }

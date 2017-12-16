@@ -7,7 +7,7 @@ export interface IRadioInputProps extends IFormInputHTMLProps<RadioInput, React.
 }
 
 export class RadioInput extends React.Component<IRadioInputProps, {}> {
-  static defaultProps = {
+  static defaultProps: Partial<IRadioInputProps> = {
     validationMode: "none"
   }
 

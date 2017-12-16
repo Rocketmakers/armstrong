@@ -7,25 +7,33 @@ import { ClassHelpers } from "../../../utilities/classNames";
 
 export type ITagInputProps = IFormInputHTMLProps<TagInput, React.InputHTMLAttributes<HTMLInputElement>> & {
   suggestions?: string[];
-  onChange?: (tags: string[]) => any;
+  onChange?: (tags: string[]) => void;
   value?: string[];
 };
 
-export class TagInput extends React.Component<ITagInputProps, { tags: string[]; suggestions: string[] }> {
-  static defaultProps = {};
+export class TagInput extends React.Component<ITagInputProps, { tags: string[]; suggestions: string[], suggestionIndex: number }> {
+  static defaultProps: Partial<ITagInputProps> = {};
   public input: HTMLInputElement | HTMLTextAreaElement;
   constructor(props) {
     super(props);
-    this.state = { tags: [], suggestions: [] };
+    this.state = { tags: [], suggestions: [], suggestionIndex: -1 };
   }
+
   public focus() {
     if (this.input) {
       this.input.focus();
     }
   }
+
   public blur() {
     if (this.input) {
       this.input.blur();
+    }
+  }
+
+  componentWillReceiveProps(nextProps: ITagInputProps) {
+    if (nextProps.value !== this.props.value) {
+      this.setState({ tags: nextProps.value || [] });
     }
   }
 
@@ -34,46 +42,80 @@ export class TagInput extends React.Component<ITagInputProps, { tags: string[]; 
   }
 
   findOne(haystack: any[], arr: any[]) {
-    return arr.some(function(v) {
+    return arr.some(function (v) {
       return haystack.indexOf(v) >= 0;
     });
   }
 
-  handleKeys(e: React.KeyboardEvent<HTMLInputElement>) {
+  private onKeyUp(e: React.KeyboardEvent<HTMLInputElement>) {
     let input = e.target;
     let value = input["value"];
-    if (e.keyCode === 13 && value) {
-      let match = this.state.tags.indexOf(value);
-      if (match === -1) {
-        let tags = [...this.state.tags, value];
-        this.setState({ tags, suggestions: [] });
-        this.props.onChange(tags);
-      }
-      input["value"] = "";
-      return;
+    switch (e.keyCode) {
+      case 40: // ArrowDown
+      case 38: // ArrowUp}
+        return
+      case 13:
+        if (value) {
+          if (this.state.tags.indexOf(value) === -1) {
+            let tags = [...this.state.tags, value];
+            this.notifyTagsChange(tags)
+          }
+          input["value"] = "";
+          return;
+        }
+        break;
     }
+
     if (value) {
-      let filteredSuggestions = this.props.suggestions.filter(s => s.lastIndexOf(value, 0) === 0);
-      let suggestions = filteredSuggestions.filter(s => this.state.tags.indexOf(s) === -1);
-      this.setState({ suggestions });
+      this.notifySuggestionsChange(this.filterSuggestions(value));
     } else {
-      this.setState({ suggestions: [] });
+      this.notifySuggestionsChange();
     }
   }
-  handleDeletion(e: React.KeyboardEvent<HTMLInputElement>) {
+
+  private filterSuggestions(value: string){
+    let filteredSuggestions = this.props.suggestions.filter(s => s.toLowerCase().lastIndexOf(value.toLowerCase(), 0) === 0);
+    return filteredSuggestions.filter(s => this.state.tags.indexOf(s) === -1);
+  }
+
+  private onKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
     let input = e.target;
     let value = input["value"];
-    if (e.keyCode === 8 && this.state.tags.length !== 0 && !value) {
-      let tags = _.clone(this.state.tags);
-      tags.splice(-1, 1);
-      this.setState({ tags, suggestions: [] });
-      this.props.onChange(tags);
+    const { suggestionIndex, suggestions } = this.state
+
+    switch (e.keyCode) {
+      case 8: // delete
+        if (this.state.tags.length !== 0 && !value) {
+          let tags = _.clone(this.state.tags);
+          tags.splice(-1, 1);
+          this.notifyTagsChange(tags)
+        }
+
+        break;
+      case 40: // ArrowDown
+        if (suggestionIndex < suggestions.length - 1) {
+          this.setState({ suggestionIndex: suggestionIndex + 1 })
+        }
+        e.preventDefault()
+        break
+      case 38: // ArrowUp}
+        if (suggestionIndex > -1) {
+          this.setState({ suggestionIndex: suggestionIndex - 1 })
+        }
+        e.preventDefault()
+        break
+      case 13:
+        const suggestion = suggestions[suggestionIndex]
+        if (suggestion) {
+          this.addTag(suggestion)
+        }
+        break;
     }
   }
+
   addTag(tag: string) {
     let tags = [...this.state.tags, tag];
-    this.setState({ tags, suggestions: [] });
-    this.props.onChange(tags);
+    this.notifyTagsChange(tags)
     this.input.value = "";
     this.input.focus();
   }
@@ -81,8 +123,24 @@ export class TagInput extends React.Component<ITagInputProps, { tags: string[]; 
   removeTag(index: number) {
     let tags = _.clone(this.state.tags);
     tags.splice(index, 1);
-    this.setState({ tags });
+    this.notifyTagsChange(tags)
     this.input.focus();
+  }
+
+  private notifyTagsChange = (tags: string[]) => {
+    this.setState({ tags, suggestions: [] })
+    this.props.onChange(tags)
+  }
+
+  private notifySuggestionsChange = (suggestions: string[] = []) => {
+    this.setState({ suggestions, suggestionIndex: -1 })
+  }
+
+  private renderSuggestions(suggestions: string[]) {
+    if (!suggestions || !suggestions.length) {
+      return null
+    }
+    return <div className="suggestions">{suggestions.map((s, i) => <div key={s} className={ClassHelpers.classNames({ selected: i === this.state.suggestionIndex })} onClick={() => this.addTag(s)}>{s}</div>)}</div>
   }
 
   render() {
@@ -93,13 +151,13 @@ export class TagInput extends React.Component<ITagInputProps, { tags: string[]; 
     return (
       <div className={classes}>
         {this.state.tags.map((t, i) => (
-          <div className="tag">
+          <div key={t} className="tag">
             {t}
             <Icon icon={Icon.Icomoon.cross} onClick={() => this.removeTag(i)} />
           </div>
         ))}
-        <input onKeyDown={e => this.handleDeletion(e)} ref={r => (this.input = r)} onKeyUp={e => this.handleKeys(e)} type="text" />
-        {this.props.suggestions && this.state.suggestions.length !== 0 && <div className="suggestions">{this.state.suggestions.map(s => <div onClick={() => this.addTag(s)}>{s}</div>)}</div>}
+        <input onKeyDown={e => this.onKeyDown(e)} ref={r => (this.input = r)} onKeyUp={e => this.onKeyUp(e)} type="text" />
+        {this.renderSuggestions(this.state.suggestions)}
         <ValidationLabel message={validationMessage} mode={this.props.validationMode} />
       </div>
     );
