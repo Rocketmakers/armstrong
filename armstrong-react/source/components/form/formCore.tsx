@@ -1,5 +1,18 @@
 import * as React from "react";
 
+export namespace DataValidationMessage{
+  const attributeName = "data-validation-message"
+  export function spread(message: string){
+    return {[attributeName]: message}
+  }
+  export function set(props, message: string){
+    props[attributeName] = message
+  }
+  export function get(props) : string {
+    return props[attributeName]
+  }
+}
+
 export interface IFormValidationResult {
   /** The attribute (dataPath) of the invalid entry */
   attribute: string;

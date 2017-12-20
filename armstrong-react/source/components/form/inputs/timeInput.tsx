@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as _ from "underscore";
 import { IFormInputProps } from "../form";
-import { IDataBinder, getEventTargetAs } from "../formCore";
+import { IDataBinder, getEventTargetAs, DataValidationMessage } from "../formCore";
 import { FormBinderBase } from "../formBinderBase";
 import { DateHelpers } from "../../../utilities/dateHelpers";
 import { Form } from "../form";
@@ -97,7 +97,7 @@ export class TimeInput extends React.Component<ITimeInputProps, ITimerInputState
   };
 
   render() {
-    const validationMessage = this.props["data-validation-message"];
+    const validationMessage = DataValidationMessage.get(this.props)
     const minutes = _.range(0, 60, this.props.minuteStep || 1);
     const hourOptions = buildOptions(this.props.hourLabel, TimeInput.hours, v => v, v => Formatting.twoDigitNumber(v));
     const minuteOptions = buildOptions(this.props.minuteLabel, minutes, v => v, v => Formatting.twoDigitNumber(v));
@@ -110,12 +110,12 @@ export class TimeInput extends React.Component<ITimeInputProps, ITimerInputState
         <Grid>
           <Row>
             <Col>
-              <select tabIndex={this.props.tabIndex} {...Form.Bind.selectNumeric("hours")} disabled={this.props.disabled} data-validation-message={validationMessage}>
+              <select tabIndex={this.props.tabIndex} {...Form.Bind.selectNumeric("hours") } disabled={this.props.disabled} {...DataValidationMessage.spread(validationMessage) } >
                 {hourOptions}
               </select>
             </Col>
             <Col>
-              <select tabIndex={this.props.tabIndex} {...Form.Bind.selectNumeric("minutes")} disabled={this.props.disabled} data-validation-message={validationMessage}>
+              <select tabIndex={this.props.tabIndex} {...Form.Bind.selectNumeric("minutes") } disabled={this.props.disabled} {...DataValidationMessage.spread(validationMessage) } >
                 {minuteOptions}
               </select>
             </Col>

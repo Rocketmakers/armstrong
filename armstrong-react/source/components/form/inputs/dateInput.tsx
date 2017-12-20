@@ -9,6 +9,7 @@ import { buildOptions } from "./options";
 import { Formatting } from "../../../utilities/formatting";
 import { ValidationLabel } from "../validationWrapper";
 import { ClassHelpers } from "../../../utilities/classNames";
+import { DataValidationMessage } from '../formCore';
 
 export type DateParts = "day" | "month" | "year"
 
@@ -101,7 +102,7 @@ export class DateInput extends React.Component<IDateInputProps, IDateInputState>
   }
 
   render() {
-    const validationMessage = this.props["data-validation-message"]
+    const validationMessage = DataValidationMessage.get(this.props)
     const { dayLabel, monthLabel, yearLabel, futureDates, yearsFromNow, startYearCap, className, validationMode, disabled, datePartOrder, tabIndex } = this.props
     const options = {
       "day": buildOptions(dayLabel, this.getDaysArrayByMonth(), v => v, v => Formatting.twoDigitNumber(parseInt(v))),

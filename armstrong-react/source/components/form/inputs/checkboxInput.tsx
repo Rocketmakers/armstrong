@@ -1,6 +1,7 @@
 import * as React from "react";
 import { IFormInputHTMLProps, generateUniqueId } from "../form";
 import { ClassHelpers } from "../../../utilities/classNames";
+import { DataValidationMessage } from '../formCore';
 
 export interface ICheckboxInputProps extends IFormInputHTMLProps<CheckboxInput, React.InputHTMLAttributes<HTMLInputElement>> {
   labelContent: string | React.ReactElement<any>;
@@ -26,7 +27,7 @@ export class CheckboxInput extends React.Component<ICheckboxInputProps, {}> {
 
   render() {
     const id = generateUniqueId(u => "checkbox_" + u);
-    const validationMessage = this.props["data-validation-message"]
+    const validationMessage = DataValidationMessage.get(this.props)
     const { validationMode, labelContent, ...attrs } = this.props
     const classes = ClassHelpers.classNames(
       "armstrong-input",

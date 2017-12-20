@@ -2,7 +2,7 @@ import * as React from "react";
 import * as ReactDOM from "react-dom";
 import { PropTypes } from "prop-types";
 import * as _ from "underscore";
-import { IFormBinder, IDataBinder, IFormBinderInjector, getFormBinderFromInjector, updateFormBinderInjector, IFormValidationResult } from "./formCore";
+import { IFormBinder, IDataBinder, IFormBinderInjector, getFormBinderFromInjector, updateFormBinderInjector, IFormValidationResult, DataValidationMessage } from "./formCore";
 import { FormBinder } from "./formBinders";
 import { PropertyPathResolver } from "./propertyPathResolver";
 import { ClassHelpers } from "../../utilities/classNames";
@@ -216,9 +216,10 @@ class FormElementProcessor {
 
       let props: React.DOMAttributes<HTMLElement> = _.extend({}, element.props);
 
-      if (formProps.validationMode && props["validationMode"]) {
-        props["validationMode"] = formProps.validationMode;
-      }
+      // TODO: Was this needed - its set below if a form binder exists!
+      // if (formProps.validationMode && props["validationMode"]) {
+      //   props["validationMode"] = formProps.validationMode;
+      // }
 
       let children = element.props.children;
 
@@ -229,7 +230,7 @@ class FormElementProcessor {
         if (validationResults && validationResults.length) {
           const vr: IFormValidationResult = _.find(validationResults, vr => vr.attribute === formBinder.dataPath);
           if (vr) {
-            props["data-validation-message"] = vr.message;
+            DataValidationMessage.set(props, vr.message);
           } else {
             // use for child form
             const childValidators = extractChildValidationResults(validationResults, formBinder.dataPath);

@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as _ from "underscore";
-import * as JSXToString from "jsx-to-string";
+import * as JSXToString from "react-element-to-jsx-string";
 import * as ReactServerDOM from "react-dom/server";
 import { Grid, Row, Col } from './../../../source/components/layout/grid';
 

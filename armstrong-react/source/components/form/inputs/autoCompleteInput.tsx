@@ -6,7 +6,7 @@ import { Icon } from './../../display/icon';
 import { Grid, Row, Col } from './../../layout/grid';
 import { Button } from './../../interaction/button';
 import { DiacriticsStripper } from '../../../utilities/diacriticsStripper';
-import { IDataBinder, getEventTargetAs } from "../formCore";
+import { IDataBinder, getEventTargetAs, DataValidationMessage } from "../formCore";
 import { ValidationLabel } from "../validationWrapper";
 import { ClassHelpers } from "../../../utilities/classNames";
 
@@ -319,7 +319,7 @@ export class AutoCompleteInput extends React.Component<IAutoCompleteInputProps, 
     })
   }
   render() {
-    const validationMessage = this.props["data-validation-message"]
+    const validationMessage = DataValidationMessage.get(this.props)
 
     const classes = ClassHelpers.classNames(
       "armstrong-input",
@@ -378,7 +378,7 @@ export class AutoCompleteInput extends React.Component<IAutoCompleteInputProps, 
             {this.state.open &&
               <div className={ClassHelpers.classNames("autocomplete-select-list-wrapper", this.props.multiSelect ? 'multi-select' : '')}>
                 <input type="text"
-                  data-validation-message={validationMessage}
+                  {...DataValidationMessage.spread(validationMessage)}
                   style={{ marginTop: `${this.props.multiSelect && this.state.showOnTop && `${this.state.topOffset}px`}` }}
                   value={this.state.query}
                   onKeyUp={(e) => this.checkKey(e)}

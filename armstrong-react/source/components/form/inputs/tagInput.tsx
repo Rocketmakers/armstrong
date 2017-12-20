@@ -4,6 +4,7 @@ import { IFormInputHTMLProps } from "../form";
 import { Icon } from "./../../display/icon";
 import { ValidationLabel } from "../validationWrapper";
 import { ClassHelpers } from "../../../utilities/classNames";
+import { DataValidationMessage } from '../formCore';
 
 export type ITagInputProps = IFormInputHTMLProps<TagInput, React.InputHTMLAttributes<HTMLInputElement>> & {
   suggestions?: string[];
@@ -82,7 +83,7 @@ export class TagInput extends React.Component<ITagInputProps, { tags: string[]; 
     if (!value){
       return []
     }
-    
+
     let filteredSuggestions = this.props.suggestions.filter(s => this.makeComparison(s).lastIndexOf(value, 0) === 0);
     return filteredSuggestions.filter(s => this.state.tags.indexOf(s) === -1);
   }
@@ -153,7 +154,7 @@ export class TagInput extends React.Component<ITagInputProps, { tags: string[]; 
   }
 
   render() {
-    const validationMessage = this.props["data-validation-message"];
+    const validationMessage = DataValidationMessage.get(this.props)
     var classes = ClassHelpers.classNames("armstrong-input", "tag-input", this.props.className, {
       "show-validation": this.props.validationMode !== "none" && validationMessage
     });

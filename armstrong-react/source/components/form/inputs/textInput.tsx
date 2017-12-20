@@ -3,6 +3,7 @@ import { IFormInputHTMLProps } from "../form";
 import { Icon } from "./../../display/icon";
 import { ValidationLabel } from "../validationWrapper";
 import { ClassHelpers } from "../../../utilities/classNames";
+import { DataValidationMessage } from '../formCore';
 
 export type ITextInputProps = IFormInputHTMLProps<TextInput, React.InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement> | React.TextareaHTMLAttributes<HTMLInputElement | HTMLTextAreaElement>> & {
   multiLine?: boolean;
@@ -37,7 +38,7 @@ export class TextInput extends React.Component<ITextInputProps, {}> {
   }
   
   render() {
-    const validationMessage = this.props["data-validation-message"]
+    const validationMessage = DataValidationMessage.get(this.props)
     const { className, readonly, rightOverlayText, leftOverlayText, type, leftIcon, rightIcon, multiLine, validationMode, placeholder, children, ...attrs } = this.props
     var classes = ClassHelpers.classNames(
       "armstrong-input",

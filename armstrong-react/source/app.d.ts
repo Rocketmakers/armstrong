@@ -1,4 +1,4 @@
-declare module "jsx-to-string" {
+declare module "react-element-to-jsx-string" {
   namespace JSXToString { }
 
   function JSXToString(element: any): string;

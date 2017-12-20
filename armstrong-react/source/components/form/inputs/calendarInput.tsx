@@ -10,6 +10,7 @@ import { Icon } from '../../display/icon';
 import { isLocaleSet } from "../../../config/config"
 import { ValidationLabel } from "../validationWrapper";
 import { ClassHelpers } from "../../../utilities/classNames";
+import { DataValidationMessage } from '../formCore';
 
 export interface ICalendarInputProps extends IFormInputHTMLProps<CalendarInput, React.InputHTMLAttributes<HTMLInputElement>> {
   date?: string;
@@ -241,7 +242,7 @@ export class CalendarInput extends React.Component<ICalendarInputProps, ICalenda
   }
 
   render() {
-    const validationMessage = this.props["data-validation-message"]
+    const validationMessage = DataValidationMessage.get(this.props)
     const { icon, placeholder, alwaysShowCalendar, disableClear, onDateChanged, className, disabled, validationMode, nativeInput, min, max, date } = this.props
     const { selectedMonthStart, pickerBodyVisible, showOnTop, inputValue, calendarOffset } = this.state
     const weekdays = _.range(0, 7).map(n => <div className="date-picker-week-day" key={`day_name_${n}`}>{moment().startOf('week').add(n, 'days').format('dd')}</div>)
@@ -270,7 +271,7 @@ export class CalendarInput extends React.Component<ICalendarInputProps, ICalenda
         <div className={rootClasses}>
           {icon && <Icon icon={icon} />}
           <input ref={i => this.inputElement = i}
-            data-validation-message={validationMessage}
+            {...DataValidationMessage.spread(validationMessage) }
             type="date"
             min={min || ''}
             max={max || ''}
@@ -286,7 +287,7 @@ export class CalendarInput extends React.Component<ICalendarInputProps, ICalenda
         <Icon icon={icon || Icon.Icomoon.calendar2} />
         {!alwaysShowCalendar &&
           <input className="cal-input" ref={i => this.inputElement = i}
-            data-validation-message={validationMessage}
+            {...DataValidationMessage.spread(validationMessage) }
             disabled={disabled}
             type="text"
             value={inputValue}

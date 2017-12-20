@@ -2,6 +2,7 @@ import * as React from "react";
 import { IFormInputHTMLProps } from "../form";
 import { buildOptions } from "./options";
 import { ClassHelpers } from "../../../utilities/classNames";
+import { DataValidationMessage } from '../formCore';
 
 export interface ISelectInputOption {
   id: number | string;
@@ -37,7 +38,7 @@ export class SelectInput extends React.Component<ISelectInputProps, {}> {
     }
   }
   render() {
-    const validationMessage = this.props["data-validation-message"]
+    const validationMessage = DataValidationMessage.get(this.props)
     const { options, change, onChange, optionLabel, validationMode, enableOptionLabel, ...attrs } = this.props
     const classes = ClassHelpers.classNames(
       "armstrong-input",
