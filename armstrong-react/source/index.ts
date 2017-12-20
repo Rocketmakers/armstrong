@@ -40,7 +40,7 @@ export { BurgerMenu, IBurgerMenuProps, BurgerMenuItem, IBurgerMenuItemProps } fr
 export { TabControl, TabItem, ITabItemProps, ITabControlProps, ITabControlState } from "./components/navigation/tabControl";
 
 // Utility
-export { Sample, ISampleProps, IPropInfo } from "./components/utility/sample";
+// export { Sample, ISampleProps, IPropInfo } from "./components/utility/sample";
 
 import * as ArmstrongConfig from "./config/config";
 export { ClassHelpers } from "./utilities/classNames";
