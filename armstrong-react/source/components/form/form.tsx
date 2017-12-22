@@ -249,6 +249,12 @@ class FormElementProcessor {
         if (formBinder.extender) {
           formBinder.extender(props, formProps.dataBinder, notifyChange);
         }
+        if (formBinder.overrideChildren){
+          const newChildren = formBinder.overrideChildren(props, formProps.dataBinder)
+          if (typeof newChildren !== undefined){
+            children = FormElementProcessor.processChildren(formProps, newChildren, notifyChange);
+          }
+        }
       } else if (children) {
         children = FormElementProcessor.processChildren(formProps, children, notifyChange);
       }

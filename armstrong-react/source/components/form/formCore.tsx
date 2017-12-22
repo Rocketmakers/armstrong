@@ -40,6 +40,11 @@ export interface IFormBinder<TComponentProps, TData>{
   handleValueChanged(props: TComponentProps, dataBinder:IDataBinder<TData>, notifyChanged: () => void): void;
 
   /**
+  Override the children for the element
+   */
+  overrideChildren?(props: TComponentProps, dataBinder:IDataBinder<TData>): React.ReactNode
+
+  /**
   An optional additional set of component props that allows consumers of your FormBinder to add, change or remove the properties that will be applied to the target element
   */
   extender?(props: TComponentProps, dataBinder:IDataBinder<TData>, notifyChanged: () => void): void;

@@ -168,11 +168,29 @@ export class TagInputFormBinder implements IFormBinder<ITagInputProps, any> {
   }
 }
 
+class ChildrenBinder<TValue, TProps = HTMLElement> implements IFormBinder<TProps, any> {
+  constructor(public dataPath: string, private childrenFactory: (value: TValue, props?: TProps, dataBinder?: IDataBinder<any>) => React.ReactNode) { }
+  setElementProperty(props: TProps, dataBinder: IDataBinder<any>): void {
+  }
+
+  handleValueChanged(props: TProps, dataBinder: IDataBinder<any>, notifyChanged: () => void): void {
+  }
+
+  overrideChildren(props: TProps, dataBinder: IDataBinder<any>){
+    return this.childrenFactory(dataBinder.getValue(this.dataPath), props, dataBinder)
+  }
+}
+
 /** Form Binder helpers */
 export class FormBinder {
   /** bind a custom form binder */
   custom<P>(formBinder: IFormBinder<P, any>): IFormBinderInjector<P> {
     return updateFormBinderInjector({} as any, formBinder);
+  }
+
+  /** Override the children of the React element - used for label binding */
+  children<TValue, TProps = HTMLElement>(name: string, childrenFactory: (value: TValue, props?: TProps, dataBinder?: IDataBinder<any>) => React.ReactNode) {
+    return this.custom(new ChildrenBinder<TValue, TProps>(name, childrenFactory));
   }
 
   /** bind to a 'hidden' input */
