@@ -177,7 +177,7 @@ class ChildrenBinder<TValue, TProps = HTMLElement> implements IFormBinder<TProps
   }
 
   overrideChildren(props: TProps, dataBinder: IDataBinder<any>){
-    return <>{this.childrenFactory(dataBinder.getValue(this.dataPath), props, dataBinder)}</>
+    return this.childrenFactory(dataBinder.getValue(this.dataPath), props, dataBinder)
   }
 }
 
