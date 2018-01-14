@@ -93,7 +93,7 @@ export class Dialog extends React.Component<IDialogProps, {}>{
     if (node == null) {
       this.portalNode = node = document.createElement('div');
       this.portalNode.classList.add('dialog-layer');
-      if (this.props.closeOnBackgroundClick) {
+      if (props.closeOnBackgroundClick) {
         this.portalNode.onclick = (e) => {
           let clickedElement = e.target as HTMLElement;
           if (clickedElement && clickedElement.classList.contains("dialog-layer")) {
@@ -101,8 +101,8 @@ export class Dialog extends React.Component<IDialogProps, {}>{
           }
         }
       }
-      if (this.props.layerClass) {
-        this.portalNode.classList.add(this.props.layerClass);
+      if (props.layerClass) {
+        this.portalNode.classList.add(props.layerClass);
       }
       node.id = this.dialogId || generateUniqueId(u => `dialog-layer-${u}`);
       this.appNode.appendChild(node);
@@ -143,17 +143,17 @@ export class Dialog extends React.Component<IDialogProps, {}>{
   }
 
   private renderDialog(newProps: IDialogProps) {
-    var style = { width: this.props.width || "500px", height: this.props.height || "auto" }
+    var style = { width: newProps.width || "500px", height: newProps.height || "auto" }
     return (
-      <div className={`dialog${this.props.className ? ` ${this.props.className}` : ''}`} style={style} id={this.dialogId}>
-        {!this.props.title &&
+      <div className={`dialog${newProps.className ? ` ${newProps.className}` : ''}`} style={style} id={this.dialogId}>
+        {!newProps.title &&
           <div className="dialog-close-button-no-title" onClick={() => this.xClicked()}>
             <Icon icon={Icon.Icomoon.cross} />
           </div>
         }
-        {this.props.title &&
+        {newProps.title &&
           <div className="dialog-header">
-            {this.props.title}
+            {newProps.title}
             <div className="dialog-close-button" onClick={() => this.xClicked()}>
               <Icon icon={Icon.Icomoon.cross} />
             </div>
