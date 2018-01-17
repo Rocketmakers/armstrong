@@ -3,6 +3,7 @@ import { IFormInputHTMLProps } from "../form";
 import { buildOptions } from "./options";
 import { ClassHelpers } from "../../../utilities/classNames";
 import { DataValidationMessage } from '../formCore';
+import { ValidationLabel } from "../validationWrapper";
 
 export interface ISelectInputOption {
   id: number | string;
@@ -54,6 +55,7 @@ export class SelectInput extends React.Component<ISelectInputProps, {}> {
         <select {...attrs } ref={r => this.select = r} onChange={this.change}>
           {buildOptions(optionLabel, options, o => o.id, o => o.name, !!enableOptionLabel)}
         </select>
+        <ValidationLabel message={validationMessage} mode={validationMode} />
       </div>
     );
   }
