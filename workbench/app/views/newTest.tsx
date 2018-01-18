@@ -29,7 +29,10 @@ export class NewTest extends React.Component<{}, { binder: IDataBinder<{ tags: s
           <TagInput {...Form.Bind.tagInput("tags") } suggestions={suggestions} />
           <TimeInput zeroMinutesOnHourSelected={true} {...Form.Bind.timeInput("time") } />
           <Button onClick={() => alert(JSON.stringify(this.state.binder.toJson()))}>bam</Button>
-          <CodeInput {...Form.Bind.codeInput("code") } length={4} />
+          <br />
+          <br />
+          <br />
+          <CodeInput {...Form.Bind.codeInput("code") } lengthPerBox={[4, 2, 2]} />
         </div>
       </Form>
     );

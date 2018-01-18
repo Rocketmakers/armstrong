@@ -173,14 +173,14 @@ export class CodeInputFormBinder implements IFormBinder<ICodeInputProps, any> {
   constructor(public dataPath: string) { }
   // set the value property of the `SelectInput`
   setElementProperty(props: ICodeInputProps, dataBinder: IDataBinder<any>): void {
-    props.value = dataBinder.getValue(this.dataPath)
+    props.value = dataBinder.getValue(this.dataPath);
   }
   // handle the change property of the `SelectInput` - setting the dataBinder value and notifying on change
   handleValueChanged(props: ICodeInputProps, dataBinder: IDataBinder<any>, notifyChanged: () => void): void {
     props.onChange = c => {
-      dataBinder.setValue(this.dataPath, c)
-      notifyChanged()
-    }
+      dataBinder.setValue(this.dataPath, c);
+      notifyChanged();
+    };
   }
 }
 

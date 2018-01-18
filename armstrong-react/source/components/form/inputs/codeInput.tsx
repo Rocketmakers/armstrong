@@ -1,62 +1,63 @@
 import * as React from "react";
 import * as _ from "underscore";
-import { Grid, Row } from '../../layout/grid';
+import { IFormValidationResult, DataValidationMessage } from '../formCore';
+import { Grid, Row, Col } from '../../layout/grid';
+import { IFormInputProps, IFormInputHTMLProps } from '../form';
 import { ClassHelpers } from '../../../index';
-import { DataValidationMessage } from '../formCore';
 import { ValidationLabel } from '../validationWrapper';
-import { IFormInputHTMLProps } from '../form';
 
-export interface ICodeInputProps extends IFormInputHTMLProps<CodeInput, React.SelectHTMLAttributes<HTMLInputElement>> {
-  length: number;
-  lengthPerBox?: number;
+interface ICodeInputProps extends IFormInputHTMLProps<CodeInput, React.SelectHTMLAttributes<HTMLInputElement>> {
+  lengthPerBox: number[];
   onChange?: (value: any) => void;
   value?: string;
   placeholder?: string;
   type?: string;
   numeric?: boolean;
   readonly?: boolean;
-  blurOnEnd?: boolean;
 }
 
-export class CodeInput extends React.Component<ICodeInputProps, {}> {
+export class CodeInput extends React.Component<ICodeInputProps, { focusIndex: number }> {
   static defaultProps: Partial<ICodeInputProps> = {
-    validationMode: "none",
-    lengthPerBox: 1
+    lengthPerBox: [2, 2, 2],
+    validationMode: "none"
+  }
+  constructor(props) {
+    super(props);
+    this.state = { focusIndex: null };
   }
   private uniq = Math.random();
   focusNext(e: React.KeyboardEvent<HTMLInputElement>) {
     let movingBack = false;
-    let current = (e.target as HTMLInputElement);
+    let current = e.target as HTMLInputElement;
     let el;
-    current.value = current.value.slice(0, this.props.lengthPerBox);
+    current.value = current.value.slice(0, this.props.lengthPerBox[this.state.focusIndex]);
     if (e.keyCode === 8) {
       movingBack = true;
       if (current.value.length === 0) {
-        el = (current.previousSibling as HTMLInputElement);
+        el = current.previousSibling as HTMLInputElement;
       } else {
         el = current;
       }
     } else {
-      el = (current.nextSibling as HTMLInputElement);
+      el = current.nextSibling as HTMLInputElement;
     }
-    if (current.value.length < this.props.lengthPerBox && !movingBack) {
+    if (current.value.length < this.props.lengthPerBox[this.state.focusIndex] && !movingBack) {
       return;
     }
     if (el) {
       el.focus();
     }
-    else {
-      if (!movingBack && this.props.blurOnEnd) {
-        current.blur();
-      }
-    }
   }
   buildValue() {
     let value: string | number = "";
-    for (var index = 0; index < (this.props.length / this.props.lengthPerBox); index++) {
-      var element = document.getElementById(`input_${this.uniq}_${index}`) as HTMLInputElement;
-      value += element.value;
-    }
+
+    let current = document.getElementById(`input_${this.uniq}_0`) as HTMLInputElement;
+
+    this.props.lengthPerBox.forEach((lpb, i) => {
+      value += current.value;
+      current = current.nextSibling as HTMLInputElement;
+    });
+
     if (this.props.numeric) {
       value = parseInt(value);
     }
@@ -65,8 +66,16 @@ export class CodeInput extends React.Component<ICodeInputProps, {}> {
     }
   }
   handlePaste(e) {
-    let pasted: string = e.clipboardData.getData('text/plain');
-    pasted = pasted.substr(0, this.props.length);
+    var length = _.reduce(
+      this.props.lengthPerBox,
+      function (memo, num) {
+        return memo + num;
+      },
+      0
+    );
+    let pasted: string = e.clipboardData.getData("text/plain").replace(/\s/g, "");
+    pasted = pasted.substr(0, length);
+
     if (this.props.numeric) {
       let parsed = parseInt(pasted);
       if (isNaN(parsed)) {
@@ -75,51 +84,41 @@ export class CodeInput extends React.Component<ICodeInputProps, {}> {
       }
     }
 
-    let current = (e.target as HTMLInputElement);
+    let current = e.target as HTMLInputElement;
     let splitArray = [];
-    for (var index = 0; index < pasted.length / this.props.lengthPerBox; index++) {
-      var element = pasted.length[index];
-      var val = index * this.props.lengthPerBox;
-      splitArray.push(pasted.slice(val, val + this.props.lengthPerBox));
-    }
-    let split = splitArray.reverse();
-    this.updateAndMoveOn(current, split);
-    e.preventDefault();
-    return false;
 
+    let currentIndex = 0;
+
+    this.props.lengthPerBox.forEach((lpb, i) => {
+      let chunk = pasted.substr(currentIndex, lpb);
+      currentIndex += lpb;
+      splitArray.push(chunk);
+      current.value = chunk;
+      current = current.nextSibling as HTMLInputElement;
+    });
+
+    this.buildValue();
   }
-  updateAndMoveOn(target: HTMLInputElement, value: any[]) {
-    let newV: string = value.pop();
-    target.value = newV;
-    target.focus();
-    let newTarget = target.nextSibling as HTMLInputElement;
-    if (newTarget && value.length !== 0) {
-      this.updateAndMoveOn(newTarget, value);
-    }
-    if (!newTarget && newV.length === this.props.lengthPerBox) {
-      target.blur();
-    }
+  handleFocus(index: number, input: HTMLInputElement) {
+    this.setState({ focusIndex: index }, () => {
+      input.select();
+    });
   }
-  handleFocus(input: HTMLInputElement) {
-    input.select();
-  }
+
   componentDidMount() {
     if (this.props.value) {
-      let chunks = _.groupBy(this.props.value.split(''), (element, index) => {
-        return Math.floor(index / this.props.lengthPerBox);
+      let currentIndex = 0;
+      this.props.lengthPerBox.forEach((lpb, i) => {
+        let input = document.getElementById(`input_${this.uniq}_${i}`) as HTMLInputElement;
+        let chunk = this.props.value.substr(currentIndex, lpb);
+        currentIndex += lpb;
+        input.value = chunk;
       });
-      for (var index = 0; index < (this.props.length / this.props.lengthPerBox); index++) {
-        var element = document.getElementById(`input_${this.uniq}_${index}`) as HTMLInputElement;
-        element.value = chunks[index].join('');
-      }
-      if (this.props.onChange) {
-        this.props.onChange(this.props.value);
-      }
     }
   }
   render() {
-    const validationMessage = DataValidationMessage.get(this.props);
-    const { onChange, validationMode, ...attrs } = this.props;
+    const validationMessage = DataValidationMessage.get(this.props)
+    const { onChange, validationMode, ...attrs } = this.props
     const classes = ClassHelpers.classNames(
       "armstrong-input",
       "code-input",
@@ -131,22 +130,26 @@ export class CodeInput extends React.Component<ICodeInputProps, {}> {
     return (
       <div className={classes}>
         <div>
-          {_.range(0, (this.props.length / this.props.lengthPerBox)).map(i =>
-            <input id={`input_${this.uniq}_${i}`}
+          {this.props.lengthPerBox.map((lpb, i) => (
+            <input
+              id={`input_${this.uniq}_${i}`}
               readOnly={this.props.readonly}
               className="code-input-field"
               key={`cb_${this.uniq}_${i}`}
-              type={this.props.type || 'text'}
+              type={this.props.type || "text"}
               placeholder={this.props.placeholder}
-              maxLength={this.props.lengthPerBox}
-              onFocus={(e) => this.handleFocus(e.target as HTMLInputElement)}
+              maxLength={lpb}
+              onFocus={e => this.handleFocus(i, e.target as HTMLInputElement)}
               onKeyUp={e => this.focusNext(e)}
               onPaste={e => this.handlePaste(e)}
-              onChange={e => this.buildValue()} />)}
+              onChange={e => this.buildValue()}
+            />
+          ))}
         </div>
         <ValidationLabel message={validationMessage} mode={validationMode} />
       </div>
-    )
+    );
   }
 }
+
 

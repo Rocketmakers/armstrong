@@ -1,15 +1,16 @@
 .code-input {
-  > div{
-    display: flex;
-    .code-input-field {
-      flex: 1;
-      margin-left: $spacing-xsmall / 3;
-      margin-right: $spacing-xsmall / 3;
+    > div {
+      display: flex;
+      .code-input-field {
+        flex: 1;
+      margin-left: $spacing-xxsmall;
+      margin-right: $spacing-xxsmall;
       text-transform: uppercase;
       text-align: center;
       padding: 0;
-      height: 40px;
-      line-height: 40px;
+      height: 49px;
+      line-height: 49px;
+      margin-bottom: 10px;
 
       &:nth-of-type(1) {
         margin-left: 0;
@@ -26,6 +27,10 @@
     input::-webkit-inner-spin-button {
       -webkit-appearance: none;
       margin: 0;
+    }
+
+    &.invalid input {
+      border-color: #e30b17;
     }
   }
 }
