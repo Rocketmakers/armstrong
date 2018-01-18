@@ -18,7 +18,6 @@ export class NewTest extends React.Component<{}, { binder: IDataBinder<{ tags: s
   render() {
     let validations = [
       { attribute: "name", message: "arghhh" },
-      { attribute: "code", message: "arghhh" },
     ];
     return (
       <Form focusFirstEmptyInput={true} validationResults={validations} validationMode="both" dataBinder={this.state.binder} onDataBinderChange={d => this.setState({ binder: d })}>
