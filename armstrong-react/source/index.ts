@@ -17,6 +17,7 @@ export { DateInput, IDateInputProps } from "./components/form/inputs/dateInput";
 export { TimeInput, ITimeInputProps } from "./components/form/inputs/timeInput";
 export { CalendarInput, ICalendarInputProps } from "./components/form/inputs/calendarInput";
 export { TagInput, ITagInputProps } from "./components/form/inputs/tagInput";
+export { CodeInput, ICodeInputProps } from "./components/form/inputs/codeInput";
 export { ITextInputProps, TextInput } from "./components/form/inputs/textInput";
 export { IAutoCompleteInputProps, AutoCompleteInput, IAutoCompleteOption } from "./components/form/inputs/autoCompleteInput";
 export { IDataBinder, IFormBinder, IFormValidationResult } from "./components/form/formCore";

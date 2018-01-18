@@ -9,6 +9,7 @@ import { ITimeInputProps } from "./inputs/timeInput";
 import { IAutoCompleteInputProps, IAutoCompleteOption } from "./inputs/autoCompleteInput";
 import { Formatting } from "../../utilities/formatting";
 import { ITagInputProps } from "./inputs/tagInput";
+import { ICodeInputProps } from "./inputs/codeInput";
 
 /** An input FormBinder that sets native 'value' and 'onChange: (e) => void' properties */
 export class InputFormBinder<TDataPropValue, TComponentPropValue> extends FormBinderBase<React.DOMAttributes<{}>, TDataPropValue, TComponentPropValue> {
@@ -122,7 +123,7 @@ export class CalendarInputFormBinder extends FormBinderBase<ICalendarInputProps,
 }
 
 export class AutoCompleteFormBinder implements IFormBinder<IAutoCompleteInputProps, any> {
-  constructor(public dataPath: string, private getItemFromId?: (id: string) => IAutoCompleteOption) {}
+  constructor(public dataPath: string, private getItemFromId?: (id: string) => IAutoCompleteOption) { }
   setElementProperty(props: IAutoCompleteInputProps, dataBinder: IDataBinder<any>): void {
     const value = dataBinder.getValue(this.dataPath);
     if (_.isArray(value)) {
@@ -154,7 +155,7 @@ export class AutoCompleteFormBinder implements IFormBinder<IAutoCompleteInputPro
 }
 
 export class TagInputFormBinder implements IFormBinder<ITagInputProps, any> {
-  constructor(public dataPath: string) {}
+  constructor(public dataPath: string) { }
   setElementProperty(props: ITagInputProps, dataBinder: IDataBinder<any>): void {
     const value = dataBinder.getValue(this.dataPath);
     props.value = value;
@@ -168,6 +169,21 @@ export class TagInputFormBinder implements IFormBinder<ITagInputProps, any> {
   }
 }
 
+export class CodeInputFormBinder implements IFormBinder<ICodeInputProps, any> {
+  constructor(public dataPath: string) { }
+  // set the value property of the `SelectInput`
+  setElementProperty(props: ICodeInputProps, dataBinder: IDataBinder<any>): void {
+    props.value = dataBinder.getValue(this.dataPath)
+  }
+  // handle the change property of the `SelectInput` - setting the dataBinder value and notifying on change
+  handleValueChanged(props: ICodeInputProps, dataBinder: IDataBinder<any>, notifyChanged: () => void): void {
+    props.onChange = c => {
+      dataBinder.setValue(this.dataPath, c)
+      notifyChanged()
+    }
+  }
+}
+
 class ChildrenBinder<TValue, TProps = HTMLElement> implements IFormBinder<TProps, any> {
   constructor(public dataPath: string, private childrenFactory: (value: TValue, props?: TProps, dataBinder?: IDataBinder<any>) => React.ReactNode) { }
   setElementProperty(props: TProps, dataBinder: IDataBinder<any>): void {
@@ -176,7 +192,7 @@ class ChildrenBinder<TValue, TProps = HTMLElement> implements IFormBinder<TProps
   handleValueChanged(props: TProps, dataBinder: IDataBinder<any>, notifyChanged: () => void): void {
   }
 
-  overrideChildren(props: TProps, dataBinder: IDataBinder<any>){
+  overrideChildren(props: TProps, dataBinder: IDataBinder<any>) {
     return this.childrenFactory(dataBinder.getValue(this.dataPath), props, dataBinder)
   }
 }
@@ -220,6 +236,10 @@ export class FormBinder {
   /** bind a 'value' string array property to a TagInput (e.g. ["cool", "guys", "only"]) */
   tagInput(dataName: string) {
     return this.custom(new TagInputFormBinder(dataName));
+  }
+
+  codeInput(dataName: string) {
+    return this.custom(new CodeInputFormBinder(dataName));
   }
 
   /** bind a 'date' string property to a CalendarInput (e.g. YYYY-MM-DD) */

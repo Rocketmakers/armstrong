@@ -1,0 +1,31 @@
+.code-input {
+  > div{
+    display: flex;
+    .code-input-field {
+      flex: 1;
+      margin-left: $spacing-xsmall / 3;
+      margin-right: $spacing-xsmall / 3;
+      text-transform: uppercase;
+      text-align: center;
+      padding: 0;
+      height: 40px;
+      line-height: 40px;
+
+      &:nth-of-type(1) {
+        margin-left: 0;
+      }
+
+      &:last-of-type {
+        margin-right: 0;
+      }
+      font-family: Courier New, Courier, monospace;
+      font-weight: bold;
+    }
+
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+  }
+}
