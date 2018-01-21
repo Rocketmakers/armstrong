@@ -2,7 +2,7 @@ import * as React from "react";
 
 export namespace DataValidationMessage{
   const attributeName = "data-validation-message"
-  export function spread(message: string){
+  export function spread(message: string) : {["data-validation-message"]: string} {
     return {[attributeName]: message}
   }
   export function set(props, message: string){
