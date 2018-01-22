@@ -63,6 +63,11 @@
   box-sizing: border-box;
   background-repeat: no-repeat;
   background-size: cover;
+
+  // https://bugs.chromium.org/p/chromium/issues/detail?id=487302&desc=3
+  // https://bugzilla.mozilla.org/show_bug.cgi?id=1043520
+  min-height: 0;
+  min-width: 0;
 }
 
 .wrap-row {
