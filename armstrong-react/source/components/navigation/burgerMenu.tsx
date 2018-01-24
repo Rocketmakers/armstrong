@@ -140,7 +140,7 @@ export class BurgerMenu extends React.Component<IBurgerMenuProps, {}>{
 }
 
 
-export interface IBurgerMenuItemProps extends React.Props<BurgerMenuItem> {
+export interface IBurgerMenuItemProps extends React.HTMLProps<HTMLDivElement> {
   title: string;
   icon?: string;
   onClick?: () => void;
@@ -150,7 +150,7 @@ export interface IBurgerMenuItemProps extends React.Props<BurgerMenuItem> {
 }
 
 export class BurgerMenuItem extends React.Component<IBurgerMenuItemProps, {}> {
-  handleClick(handler) {
+  private handleClick(handler) {
     if (this.props.delayActionMs) {
       window.setTimeout(() => {
         handler()
@@ -160,10 +160,10 @@ export class BurgerMenuItem extends React.Component<IBurgerMenuItemProps, {}> {
     }
   }
   render() {
-    let attrs = _.omit(this.props, ["title", "icon", "onClick", "style", "delayActionMs", "active"]);
+    const { title, icon, onClick, style, delayActionMs, active, ...attrs } = this.props;
 
-    return <div {...attrs} role="menuitem" className={`burger-menu-item${this.props.active ? ' active' : ''}`} style={this.props.style} aria-selected={this.props.active || false} onClick={() => this.props.onClick ? this.handleClick(this.props.onClick) : null}>
-      {this.props.icon && <Icon icon={this.props.icon} />}{this.props.title}
+    return <div {...attrs} role="menuitem" className={`burger-menu-item${active ? ' active' : ''}`} style={style} aria-selected={active || false} onClick={() => onClick ? this.handleClick(onClick) : null}>
+      {icon && <Icon icon={icon} />}{title}
     </div>
   }
 }
