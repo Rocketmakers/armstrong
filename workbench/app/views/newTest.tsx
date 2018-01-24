@@ -8,6 +8,7 @@ import { TimeInput } from "../../../armstrong-react/dist/components/form/inputs/
 import { CodeInput } from "../../../armstrong-react/dist/components/form/inputs/codeInput";
 import { TextInput } from "../../../armstrong-react/dist/components/form/inputs/textInput";
 import { TabControl, TabItem } from "../../../armstrong-react/dist/components/navigation/tabControl";
+import { BurgerMenu, BurgerMenuItem } from "../../../armstrong-react/dist/components/navigation/burgerMenu";
 
 const suggestions = ["apple", "orange", "pear", "Peach", "Apple", "Avocado", "Plum"]
 
@@ -21,11 +22,14 @@ export class NewTest extends React.Component<{}, { binder: IDataBinder<{ tags: s
       { attribute: "name", message: "arghhh" },
     ];
     return (
-      <TabControl>
-        {false && <TabItem title="yo">hello</TabItem>}
-        <TabItem title="yo2">hi</TabItem>
-        <TabItem title="yo3">hey</TabItem>
-      </TabControl>
+      <div>
+        <BurgerMenu>
+          <BurgerMenuItem title="test" />
+          <BurgerMenuItem title="test" />
+          <BurgerMenuItem title="test" />
+          <BurgerMenuItem title="test" data-count={2} />
+        </BurgerMenu>
+      </div>
     );
   }
 }

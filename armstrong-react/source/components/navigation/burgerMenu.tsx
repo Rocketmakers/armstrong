@@ -1,5 +1,6 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
+import * as _ from "underscore";
 import { Icon } from "./../display/icon";
 import { generateUniqueId } from "../form/form";
 export interface IBurgerMenuProps {
@@ -159,7 +160,9 @@ export class BurgerMenuItem extends React.Component<IBurgerMenuItemProps, {}> {
     }
   }
   render() {
-    return <div role="menuitem" className={`burger-menu-item${this.props.active ? ' active' : ''}`} style={this.props.style} aria-selected={this.props.active || false} onClick={() => this.props.onClick ? this.handleClick(this.props.onClick) : null}>
+    let attrs = _.omit(this.props, ["title", "icon", "onClick", "style", "delayActionMs", "active"]);
+
+    return <div {...attrs} role="menuitem" className={`burger-menu-item${this.props.active ? ' active' : ''}`} style={this.props.style} aria-selected={this.props.active || false} onClick={() => this.props.onClick ? this.handleClick(this.props.onClick) : null}>
       {this.props.icon && <Icon icon={this.props.icon} />}{this.props.title}
     </div>
   }
