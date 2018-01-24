@@ -53,16 +53,17 @@ export class TabControl extends React.Component<ITabControlProps, ITabControlSta
         "tabs-left": tabAlignment == "left"
       }
     );
+    const filteredChildren = React.Children.toArray(children).filter(c => !!c)
     return (
       <div {...attrs} className={classes}>
         <div className="tab-control-header">
-          {React.Children.map(children, (c: React.ReactElement<any>, i: number) =>
+          {filteredChildren.map((c: React.ReactElement<any>, i: number) =>
             <div className={`tab-item-header${selectedTabIndex === i ? ' selected' : ''}`} onClick={() => this.changeTab(i)}>
               {c.props.icon ? <Icon className="m-right-xsmall" icon={c.props.icon} /> : null}{c.props.title}
             </div>
           )}
         </div>
-        {children[selectedTabIndex]}
+        {filteredChildren[selectedTabIndex]}
       </div>
     )
   }

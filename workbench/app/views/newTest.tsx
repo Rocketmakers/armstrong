@@ -7,6 +7,7 @@ import { Button } from "../../../armstrong-react/dist/components/interaction/but
 import { TimeInput } from "../../../armstrong-react/dist/components/form/inputs/timeInput";
 import { CodeInput } from "../../../armstrong-react/dist/components/form/inputs/codeInput";
 import { TextInput } from "../../../armstrong-react/dist/components/form/inputs/textInput";
+import { TabControl, TabItem } from "../../../armstrong-react/dist/components/navigation/tabControl";
 
 const suggestions = ["apple", "orange", "pear", "Peach", "Apple", "Avocado", "Plum"]
 
@@ -20,20 +21,11 @@ export class NewTest extends React.Component<{}, { binder: IDataBinder<{ tags: s
       { attribute: "name", message: "arghhh" },
     ];
     return (
-      <Form focusFirstEmptyInput={true} validationResults={validations} validationMode="both" dataBinder={this.state.binder} onDataBinderChange={d => this.setState({ binder: d })}>
-        <div className="p-medium">
-          <label>Tag your boy</label>
-          <TextInput {...Form.Bind.text("name") } />
-          <ChildFormBinding />
-          <TagInput {...Form.Bind.tagInput("tags") } suggestions={suggestions} />
-          <TimeInput zeroMinutesOnHourSelected={true} {...Form.Bind.timeInput("time") } />
-          <Button onClick={() => alert(JSON.stringify(this.state.binder.toJson()))}>bam</Button>
-          <br />
-          <br />
-          <br />
-          <CodeInput {...Form.Bind.codeInput("code") } lengthPerBox={[4, 2, 2]} />
-        </div>
-      </Form>
+      <TabControl>
+        {false && <TabItem title="yo">hello</TabItem>}
+        <TabItem title="yo2">hi</TabItem>
+        <TabItem title="yo3">hey</TabItem>
+      </TabControl>
     );
   }
 }
