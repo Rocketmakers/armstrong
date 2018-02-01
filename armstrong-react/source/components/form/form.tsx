@@ -66,7 +66,7 @@ export type ValidationProps = {
 
 export type IFormInputProps<T> = React.Props<T> & ValidationProps;
 
-export type IFormInputHTMLProps<T, E = React.HTMLAttributes<HTMLElement>> = React.ClassAttributes<T> & E & ValidationProps;
+export type IFormInputHTMLProps<E = React.HTMLAttributes<HTMLElement>> = E & ValidationProps;
 
 export interface IFormCoreProps {
   /** The forms data binder instance, this contains the data that is used by bound form elements*/
@@ -79,7 +79,7 @@ export interface IFormCoreProps {
   validationMode?: ValidationModes
 }
 
-export interface IFormProps extends React.HTMLProps<Form>, IFormCoreProps {
+export interface IFormProps extends React.FormHTMLAttributes<Form>, IFormCoreProps {
   /** Called when bound form data changes: NOTE, this is called on every key stroke/interaction on any of the bound fields */
   onDataChanged?: (data?: any) => void;
 
@@ -118,15 +118,15 @@ export class ParentFormContext extends React.Component {
 
   render() {
     const context = Form.getFormContext(this.context)
-    if (!context){
+    if (!context) {
       console.error("A ParentFormBinder should be rendered within the context of a parent Form")
     }
-    
+
     const children = context ? FormElementProcessor.processChildren(context.coreProps, this.props.children, context.notifyChange) : this.props.children;
 
     return (
       <>
-      {children}
+        {children}
       </>
     )
   }
@@ -210,7 +210,7 @@ class FormElementProcessor {
   static processChildren(formProps: IFormCoreProps, node: React.ReactNode, notifyChange: () => void) {
     const validationResults = formProps.validationResults;
     return React.Children.map(node, (element) => {
-      if (!React.isValidElement<React.HTMLProps<HTMLElement>>(element) || !element.props) {
+      if (!React.isValidElement<React.HTMLAttributes<HTMLElement>>(element) || !element.props) {
         return element
       }
 
@@ -249,9 +249,9 @@ class FormElementProcessor {
         if (formBinder.extender) {
           formBinder.extender(props, formProps.dataBinder, notifyChange);
         }
-        if (formBinder.overrideChildren){
+        if (formBinder.overrideChildren) {
           const newChildren = formBinder.overrideChildren(props, formProps.dataBinder)
-          if (typeof newChildren !== undefined){
+          if (typeof newChildren !== undefined) {
             children = FormElementProcessor.processChildren(formProps, newChildren, notifyChange);
           }
         }

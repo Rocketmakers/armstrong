@@ -2,7 +2,7 @@ import * as React from "react";
 import { Icon } from "./../display/icon";
 import { ClassHelpers } from "../../utilities/classNames";
 
-export interface ITabControlProps extends React.HTMLProps<HTMLDivElement> {
+export interface ITabControlProps extends React.HTMLAttributes<HTMLDivElement> {
   /** (number) The index of the tab selected when the control renders. Defaults to 0 */
   defaultSelectedIndex?: number;
   /** (TabItem[]) The tab items. Controls the header and the content */
@@ -70,7 +70,7 @@ export class TabControl extends React.Component<ITabControlProps, ITabControlSta
 }
 
 
-export interface ITabItemProps extends React.HTMLProps<HTMLDivElement> {
+export interface ITabItemProps extends React.HTMLAttributes<HTMLDivElement> {
   /** (string | JSX.Element) The content to use in the tab items header */
   title: any;
   /** (string (Icomoon)) An optional icon to show to the left of the title in the tab header */

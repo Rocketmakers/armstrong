@@ -10,7 +10,7 @@ export interface ISelectInputOption {
   name: string;
 }
 
-export interface ISelectInputProps extends IFormInputHTMLProps<SelectInput, React.SelectHTMLAttributes<HTMLSelectElement>> {
+export interface ISelectInputProps extends IFormInputHTMLProps<React.SelectHTMLAttributes<HTMLSelectElement>> {
   options: ISelectInputOption[];
   change?: (selected: ISelectInputOption) => void;
   optionLabel?: string
@@ -52,7 +52,7 @@ export class SelectInput extends React.Component<ISelectInputProps, {}> {
 
     return (
       <div className={classes} title={validationMessage}>
-        <select {...attrs } ref={r => this.select = r} onChange={this.change}>
+        <select {...attrs} ref={r => this.select = r} onChange={this.change}>
           {buildOptions(optionLabel, options, o => o.id, o => o.name, !!enableOptionLabel)}
         </select>
         <ValidationLabel message={validationMessage} mode={validationMode} />

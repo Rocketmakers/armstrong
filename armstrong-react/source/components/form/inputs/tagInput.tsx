@@ -6,7 +6,7 @@ import { ValidationLabel } from "../validationWrapper";
 import { ClassHelpers } from "../../../utilities/classNames";
 import { DataValidationMessage } from '../formCore';
 
-export type ITagInputProps = IFormInputHTMLProps<TagInput, React.InputHTMLAttributes<HTMLInputElement>> & {
+export type ITagInputProps = IFormInputHTMLProps<React.InputHTMLAttributes<HTMLInputElement>> & {
   suggestions?: string[];
   onChange?: (tags: string[]) => void;
   value?: string[];
@@ -74,13 +74,13 @@ export class TagInput extends React.Component<ITagInputProps, { tags: string[]; 
     }
   }
 
-  private makeComparison(value: string){
+  private makeComparison(value: string) {
     return value ? value.trim().toLowerCase() : ""
   }
 
-  private filterSuggestions(value: string){
+  private filterSuggestions(value: string) {
     value = this.makeComparison(value)
-    if (!value){
+    if (!value) {
       return []
     }
 

@@ -5,7 +5,7 @@ import { ValidationLabel } from "../validationWrapper";
 import { ClassHelpers } from "../../../utilities/classNames";
 import { DataValidationMessage } from '../formCore';
 
-export type ITextInputProps = IFormInputHTMLProps<TextInput, React.InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement> | React.TextareaHTMLAttributes<HTMLInputElement | HTMLTextAreaElement>> & {
+export type ITextInputProps = IFormInputHTMLProps<React.InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement> | React.TextareaHTMLAttributes<HTMLInputElement | HTMLTextAreaElement>> & {
   multiLine?: boolean;
   readonly?: boolean;
   rightOverlayText?: string | React.ReactElement<any>;
@@ -36,7 +36,7 @@ export class TextInput extends React.Component<ITextInputProps, {}> {
       this.input.select()
     }
   }
-  
+
   render() {
     const validationMessage = DataValidationMessage.get(this.props)
     const { className, readonly, rightOverlayText, leftOverlayText, type, leftIcon, rightIcon, multiLine, validationMode, placeholder, children, ...attrs } = this.props

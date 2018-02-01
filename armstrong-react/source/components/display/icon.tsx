@@ -3,7 +3,7 @@ import { Color } from "./../../utilities/uiHelpers";
 import { Icons } from "./../../utilities/icons";
 import { ClassHelpers } from "../../utilities/classNames";
 
-export interface IIconProps extends React.HTMLProps<HTMLElement> {
+export interface IIconProps extends React.HTMLAttributes<HTMLElement> {
   /** (string) The icons 'classname' eg Icon.Icomoon.Rocket */
   icon: string;
   /** (string) CSS classname property */
@@ -13,9 +13,9 @@ export class Icon extends React.Component<IIconProps, {}>{
   static Icomoon = Icons.Icomoon;
 
   render() {
-    const { icon, className, ...attrs} = this.props
+    const { icon, className, ...attrs } = this.props
     return (
-      <i { ...attrs } className={ClassHelpers.classNames(className, "icon", icon)} />
+      <i {...attrs} className={ClassHelpers.classNames(className, "icon", icon)} />
     );
   }
 }

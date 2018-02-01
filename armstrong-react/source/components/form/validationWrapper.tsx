@@ -1,8 +1,9 @@
 import * as React from "react";
-import { IFormInputHTMLProps, ValidationModes } from "./form";
+import { IFormInputHTMLProps, ValidationModes, ValidationProps } from "./form";
 import { ClassHelpers } from "../../utilities/classNames";
+import { HTMLAttributes } from 'react';
 
-export class ValidationWrapper extends React.Component<{ message: string } & IFormInputHTMLProps<HTMLDivElement>, {}> {
+export class ValidationWrapper extends React.Component<{ message: string } & HTMLAttributes<HTMLDivElement> & ValidationProps, {}> {
   render() {
     const { message, validationMode, className, children, ...attrs } = this.props
     return (

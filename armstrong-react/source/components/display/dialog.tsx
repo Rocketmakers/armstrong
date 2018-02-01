@@ -3,7 +3,7 @@ import * as ReactDOM from "react-dom";
 import { Icon } from "./icon";
 import { Grid, Row, Col } from './../layout/grid';
 import { generateUniqueId } from "../form/form";
-export interface IDialogProps extends React.HTMLProps<Dialog> {
+export interface IDialogProps {
   /** (string) default: 'host' - The ID of your sites body element  */
   bodyId?: string;
   /** (string) An additional class for the dialog layer, normally used for forcing higher z-index values  */
@@ -24,6 +24,10 @@ export interface IDialogProps extends React.HTMLProps<Dialog> {
   onXClicked?: () => void;
   /** (React.ReactElement<any>) An element, normally containing buttons, to put in the footer */
   footerContent?: React.ReactElement<any>;
+  /** (number) The width of the dialog */
+  width?: number
+  /** (number) The height of the dialog */
+  height?: number
 }
 
 export class Dialog extends React.Component<IDialogProps, {}>{
@@ -66,7 +70,7 @@ export class Dialog extends React.Component<IDialogProps, {}>{
     }
   }
 
-  componentWillReceiveProps(newProps: IDialogProps) {
+  componentWillReceiveProps(newProps: Readonly<{ children?: React.ReactNode }> & Readonly<IDialogProps>) {
     var open = newProps.isOpen;
     if (open && open != this.props.isOpen && this.props.onOpen) {
       this.props.onOpen();
@@ -82,7 +86,7 @@ export class Dialog extends React.Component<IDialogProps, {}>{
     }
   }
 
-  private renderToPortal(props: IDialogProps) {
+  private renderToPortal(props: Readonly<{ children?: React.ReactNode }> & Readonly<IDialogProps>) {
     let main = document.querySelector("main");
     if (main && !main.classList.contains("dialog-open")) {
       main.classList.add("dialog-open");
@@ -142,7 +146,7 @@ export class Dialog extends React.Component<IDialogProps, {}>{
     return unmounted;
   }
 
-  private renderDialog(newProps: IDialogProps) {
+  private renderDialog(newProps: Readonly<{ children?: React.ReactNode }> & Readonly<IDialogProps>) {
     var style = { width: newProps.width || "500px", height: newProps.height || "auto" }
     return (
       <div className={`dialog${newProps.className ? ` ${newProps.className}` : ''}`} style={style} id={this.dialogId}>

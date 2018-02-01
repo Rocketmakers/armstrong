@@ -3,7 +3,7 @@ import { IFormInputHTMLProps, generateUniqueId } from "../form";
 import { ClassHelpers } from "../../../utilities/classNames";
 import { DataValidationMessage } from '../formCore';
 
-export interface ICheckboxInputProps extends IFormInputHTMLProps<CheckboxInput, React.InputHTMLAttributes<HTMLInputElement>> {
+export interface ICheckboxInputProps extends IFormInputHTMLProps<React.InputHTMLAttributes<HTMLInputElement>> {
   labelContent: string | React.ReactElement<any>;
 }
 
@@ -39,7 +39,7 @@ export class CheckboxInput extends React.Component<ICheckboxInputProps, {}> {
     );
     return (
       <div className={classes}>
-        <input { ...attrs } ref={i => this.input = i} id={id} type="checkbox" />
+        <input {...attrs} ref={i => this.input = i} id={id} type="checkbox" />
         <label htmlFor={id} />
         <label className="checkbox-label" htmlFor={id}>{labelContent}</label>
       </div>

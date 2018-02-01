@@ -6,7 +6,7 @@ import { IFormInputProps, IFormInputHTMLProps } from '../form';
 import { ClassHelpers } from '../../../index';
 import { ValidationLabel } from '../validationWrapper';
 
-export interface ICodeInputProps extends IFormInputHTMLProps<CodeInput, React.SelectHTMLAttributes<HTMLInputElement>> {
+export interface ICodeInputProps extends IFormInputHTMLProps<React.SelectHTMLAttributes<HTMLInputElement>> {
   lengthPerBox: number[];
   onChange?: (value: any) => void;
   value?: string;

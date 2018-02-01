@@ -2,7 +2,7 @@ import * as React from "react";
 import { Color, LayoutHelpers } from "./../../utilities/uiHelpers";
 import { ClassHelpers } from "../../utilities/classNames";
 
-export interface IImageProps extends React.HTMLProps<HTMLImageElement> {
+export interface IImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
   /** (boolean) Should the image be circular? */
   rounded?: boolean;
   /** (string) CSS classname property */
@@ -63,7 +63,7 @@ export class Image extends React.Component<IImageProps, { source?: string }>{
     const { height, width, noPlaceholder, sampleUserSeed, sampleUser, source, className, rounded, ...attrs } = this.props
     let classes = ClassHelpers.classNames(className, { "rounded": rounded });
     return (
-      <img src={this.state.source} { ...attrs } height={height} width={width} className={classes} />
+      <img src={this.state.source} {...attrs} height={height} width={width} className={classes} />
     );
   }
 }

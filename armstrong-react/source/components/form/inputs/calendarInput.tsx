@@ -12,7 +12,7 @@ import { ValidationLabel } from "../validationWrapper";
 import { ClassHelpers } from "../../../utilities/classNames";
 import { DataValidationMessage } from '../formCore';
 
-export interface ICalendarInputProps extends IFormInputHTMLProps<CalendarInput, React.InputHTMLAttributes<HTMLInputElement>> {
+export interface ICalendarInputProps extends IFormInputHTMLProps<React.InputHTMLAttributes<HTMLInputElement>> {
   date?: string;
   format?: string;
   min?: string;
@@ -271,7 +271,7 @@ export class CalendarInput extends React.Component<ICalendarInputProps, ICalenda
         <div className={rootClasses}>
           {icon && <Icon icon={icon} />}
           <input ref={i => this.inputElement = i}
-            {...DataValidationMessage.spread(validationMessage) }
+            {...DataValidationMessage.spread(validationMessage)}
             type="date"
             min={min || ''}
             max={max || ''}
@@ -287,7 +287,7 @@ export class CalendarInput extends React.Component<ICalendarInputProps, ICalenda
         <Icon icon={icon || Icon.Icomoon.calendar2} />
         {!alwaysShowCalendar &&
           <input className="cal-input" ref={i => this.inputElement = i}
-            {...DataValidationMessage.spread(validationMessage) }
+            {...DataValidationMessage.spread(validationMessage)}
             disabled={disabled}
             type="text"
             value={inputValue}

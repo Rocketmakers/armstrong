@@ -4,7 +4,7 @@ import * as _ from "underscore";
 import { LayoutHelpers, MarginClass, PaddingClass, BgColorClass, FgColorClass, VerticalAlignment, HorizontalAlignment } from "./../../utilities/uiHelpers";
 import { ClassHelpers } from "../../utilities/classNames";
 
-export interface IGrid extends React.HTMLProps<HTMLDivElement> {
+export interface IGrid extends React.HTMLAttributes<HTMLDivElement> {
   /** (boolean) Wether to render borders around grid parts */
   debugMode?: boolean;
   /** (boolean) ADVANCED: Turns of automatic fix of safari6 compat wrapper */
@@ -51,7 +51,7 @@ function sizeErrorMessage(size: string, sizeValue: string, controlPath: string) 
   return `Unsupported ${size} property '${sizeValue}' on ${controlPath}. If you are using a string, make sure it is either 'auto' or follows the pattern '[number]*'`
 }
 
-export interface IRow extends React.HTMLProps<HTMLDivElement> {
+export interface IRow extends React.HTMLAttributes<HTMLDivElement> {
   /** (number | string) Sets a fixed height for the row, or 'auto' to grow to fit its content */
   height?: number | string;
   /** (string) CSS classname property */
@@ -110,7 +110,7 @@ export function Row(props: IRow) {
 
 }
 
-export interface ICol extends React.HTMLProps<HTMLDivElement> {
+export interface ICol extends React.HTMLAttributes<HTMLDivElement> {
   /** (HorizontalAlignment(string)) How to align content horizontally in this column */
   horizontalAlignment?: HorizontalAlignment;
   /** (HorizontalAlignment(string)) How to align content vertically in this column */
