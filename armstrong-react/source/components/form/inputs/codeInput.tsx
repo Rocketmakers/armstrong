@@ -69,7 +69,7 @@ export class CodeInput extends React.Component<ICodeInputProps, { focusIndex: nu
   handlePaste(e) {
     var length = _.reduce(
       this.props.lengthPerBox,
-      function (memo, num) {
+      function(memo, num) {
         return memo + num;
       },
       0
@@ -104,7 +104,7 @@ export class CodeInput extends React.Component<ICodeInputProps, { focusIndex: nu
     this.setState({ focusIndex: index }, () => {
       input.select();
       // ios safari fix
-      input.setSelectionRange(0, 9999);
+      //input.setSelectionRange(0, 9999);
     });
   }
 
