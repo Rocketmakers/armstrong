@@ -23,12 +23,7 @@ export class NewTest extends React.Component<{}, { binder: IDataBinder<{ tags: s
     ];
     return (
       <div>
-        <BurgerMenu>
-          <BurgerMenuItem title="test" />
-          <BurgerMenuItem title="test" />
-          <BurgerMenuItem title="test" />
-          <BurgerMenuItem title="test" data-count={2} />
-        </BurgerMenu>
+        <CodeInput lengthPerBox={[2,2,2,2]}/>
       </div>
     );
   }

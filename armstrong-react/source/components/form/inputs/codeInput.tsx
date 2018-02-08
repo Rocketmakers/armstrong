@@ -26,12 +26,13 @@ export class CodeInput extends React.Component<ICodeInputProps, { focusIndex: nu
     this.state = { focusIndex: null };
   }
   private uniq = Math.random();
-  focusNext(e: React.KeyboardEvent<HTMLInputElement>) {
+  focusNext(e: React.KeyboardEvent<HTMLInputElement>) {    
     let movingBack = false;
     let current = e.target as HTMLInputElement;
     let el;
     let currentVal = current.value.trim();
-    currentVal = currentVal.slice(0, this.props.lengthPerBox[this.state.focusIndex]);
+    let lpb = this.props.lengthPerBox[this.state.focusIndex];
+    currentVal = currentVal.slice(0, lpb);
     if (e.keyCode === 8) {
       movingBack = true;
       if (currentVal.length === 0) {
@@ -41,8 +42,12 @@ export class CodeInput extends React.Component<ICodeInputProps, { focusIndex: nu
       }
     } else {
       el = current.nextSibling as HTMLInputElement;
+      if(this.storedKey && el && !el.value){
+        el.value = this.storedKey;
+        this.storedKey = null;
+      }
     }
-    if (currentVal.length < this.props.lengthPerBox[this.state.focusIndex] && !movingBack) {
+    if (currentVal.length < lpb && !movingBack) {
       return;
     }
     if (el) {
@@ -101,11 +106,23 @@ export class CodeInput extends React.Component<ICodeInputProps, { focusIndex: nu
     this.buildValue();
   }
   handleFocus(index: number, input: HTMLInputElement) {
-    this.setState({ focusIndex: index }, () => {
-      input.select();
-      // ios safari fix
-      //input.setSelectionRange(0, 9999);
-    });
+    this.setState({ focusIndex: index });
+  }
+  private storedKey;
+  keyDown(e: React.KeyboardEvent<HTMLInputElement>){
+    let lpb = this.props.lengthPerBox[this.state.focusIndex];
+    let selectionLength = window.getSelection().toString().length;
+    if (selectionLength === lpb){
+      return;
+    }
+    if (e.currentTarget["value"].length === lpb){
+      if (e.keyCode >= 48 && e.keyCode <= 57){
+        this.storedKey = e.key;
+      }
+      if (e.keyCode >= 65 && e.keyCode <= 90){
+        this.storedKey = e.key;
+      }
+    }
   }
 
   componentDidMount() {
@@ -139,6 +156,7 @@ export class CodeInput extends React.Component<ICodeInputProps, { focusIndex: nu
               maxLength={lpb}
               onFocus={e => this.handleFocus(i, e.target as HTMLInputElement)}
               onKeyUp={e => this.focusNext(e)}
+              onKeyDown={e => this.keyDown(e)}
               onPaste={e => this.handlePaste(e)}
               onChange={e => this.buildValue()}
             />
