@@ -1,10 +1,10 @@
 import * as React from "react";
 import * as _ from "underscore";
-import { IFormValidationResult, DataValidationMessage } from '../formCore';
-import { Grid, Row, Col } from '../../layout/grid';
-import { IFormInputProps, IFormInputHTMLProps } from '../form';
-import { ClassHelpers } from '../../../index';
-import { ValidationLabel } from '../validationWrapper';
+import { IFormValidationResult, DataValidationMessage } from "../formCore";
+import { Grid, Row, Col } from "../../layout/grid";
+import { IFormInputProps, IFormInputHTMLProps } from "../form";
+import { ClassHelpers } from "../../../index";
+import { ValidationLabel } from "../validationWrapper";
 
 export interface ICodeInputProps extends IFormInputHTMLProps<React.SelectHTMLAttributes<HTMLInputElement>> {
   lengthPerBox: number[];
@@ -20,7 +20,7 @@ export class CodeInput extends React.Component<ICodeInputProps, { focusIndex: nu
   static defaultProps: Partial<ICodeInputProps> = {
     lengthPerBox: [2, 2, 2],
     validationMode: "none"
-  }
+  };
   constructor(props) {
     super(props);
     this.state = { focusIndex: null };
@@ -30,10 +30,11 @@ export class CodeInput extends React.Component<ICodeInputProps, { focusIndex: nu
     let movingBack = false;
     let current = e.target as HTMLInputElement;
     let el;
-    current.value = current.value.slice(0, this.props.lengthPerBox[this.state.focusIndex]);
+    let currentVal = current.value.trim();
+    currentVal = currentVal.slice(0, this.props.lengthPerBox[this.state.focusIndex]);
     if (e.keyCode === 8) {
       movingBack = true;
-      if (current.value.length === 0) {
+      if (currentVal.length === 0) {
         el = current.previousSibling as HTMLInputElement;
       } else {
         el = current;
@@ -41,7 +42,7 @@ export class CodeInput extends React.Component<ICodeInputProps, { focusIndex: nu
     } else {
       el = current.nextSibling as HTMLInputElement;
     }
-    if (current.value.length < this.props.lengthPerBox[this.state.focusIndex] && !movingBack) {
+    if (currentVal.length < this.props.lengthPerBox[this.state.focusIndex] && !movingBack) {
       return;
     }
     if (el) {
@@ -68,7 +69,7 @@ export class CodeInput extends React.Component<ICodeInputProps, { focusIndex: nu
   handlePaste(e) {
     var length = _.reduce(
       this.props.lengthPerBox,
-      function (memo, num) {
+      function(memo, num) {
         return memo + num;
       },
       0
@@ -117,16 +118,11 @@ export class CodeInput extends React.Component<ICodeInputProps, { focusIndex: nu
     }
   }
   render() {
-    const validationMessage = DataValidationMessage.get(this.props)
-    const { onChange, validationMode, ...attrs } = this.props
-    const classes = ClassHelpers.classNames(
-      "armstrong-input",
-      "code-input",
-      this.props.className,
-      {
-        "show-validation": (validationMode !== "none" && validationMessage)
-      }
-    );
+    const validationMessage = DataValidationMessage.get(this.props);
+    const { onChange, validationMode, ...attrs } = this.props;
+    const classes = ClassHelpers.classNames("armstrong-input", "code-input", this.props.className, {
+      "show-validation": validationMode !== "none" && validationMessage
+    });
     return (
       <div className={classes}>
         <div>
@@ -151,5 +147,3 @@ export class CodeInput extends React.Component<ICodeInputProps, { focusIndex: nu
     );
   }
 }
-
-
