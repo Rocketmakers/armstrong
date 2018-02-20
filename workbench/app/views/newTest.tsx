@@ -23,7 +23,8 @@ export class NewTest extends React.Component<{}, { binder: IDataBinder<{ tags: s
     ];
     return (
       <div>
-        <CodeInput lengthPerBox={[2,2,2,2]}/>
+        <TextInput tabIndex={1}/>
+        <CodeInput tabIndex={2} lengthPerBox={[2,2,2,2]}/>
       </div>
     );
   }

@@ -148,9 +148,15 @@ export class CodeInput extends React.Component<ICodeInputProps, { focusIndex: nu
       });
     }
   }
+  calcTabIndex(tabIndex: number | undefined, fieldIndex: number){
+    if (tabIndex === undefined || tabIndex === -1){
+      return tabIndex;
+    }
+    return tabIndex + fieldIndex;
+  }
   render() {
     const validationMessage = DataValidationMessage.get(this.props);
-    const { onChange, validationMode, ...attrs } = this.props;
+    const { onChange, validationMode, lengthPerBox, numeric, type, className, tabIndex, ...attrs } = this.props;
     const classes = ClassHelpers.classNames("armstrong-input", "code-input", this.props.className, {
       "show-validation": validationMode !== "none" && validationMessage
     });
@@ -160,8 +166,8 @@ export class CodeInput extends React.Component<ICodeInputProps, { focusIndex: nu
           {this.props.lengthPerBox.map((lpb, i) => (
             <input
               id={`input_${this.uniq}_${i}`}
-              readOnly={this.props.readonly}
               className="code-input-field"
+              tabIndex={this.calcTabIndex(this.props.tabIndex, i)}
               key={`cb_${this.uniq}_${i}`}
               type={this.props.type || "text"}
               placeholder={this.props.placeholder}
