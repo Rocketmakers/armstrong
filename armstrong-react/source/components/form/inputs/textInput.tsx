@@ -13,7 +13,7 @@ export type ITextInputProps = IFormInputHTMLProps<React.InputHTMLAttributes<HTML
   type?: string;
   leftIcon?: string;
   rightIcon?: string;
-  componentDidMount?: () => void;
+  componentDidMount?: (self: TextInput) => void;
 }
 
 export class TextInput extends React.Component<ITextInputProps, {}> {
@@ -40,7 +40,7 @@ export class TextInput extends React.Component<ITextInputProps, {}> {
 
   componentDidMount(){
     if (this.props.componentDidMount){
-      this.props.componentDidMount();
+      this.props.componentDidMount(this);
     }
   }
 
