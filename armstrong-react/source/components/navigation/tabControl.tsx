@@ -5,6 +5,8 @@ import { ClassHelpers } from "../../utilities/classNames";
 export interface ITabControlProps extends React.HTMLAttributes<HTMLDivElement> {
   /** (number) The index of the tab selected when the control renders. Defaults to 0 */
   defaultSelectedIndex?: number;
+  /** (number) The index of the tab selected. Use this if you want a stateless component */
+  forceSelectedIndex?: number;
   /** (TabItem[]) The tab items. Controls the header and the content */
   children?: React.ReactNode | TabItem | TabItem[];
   /** ((index: number) => void) Fires when the tab is changed by the user */
@@ -24,24 +26,37 @@ export class TabControl extends React.Component<ITabControlProps, ITabControlSta
   }
 
   changeTab(newIndex: number) {
-    const { onTabChanged } = this.props
-    this.setState({ selectedTabIndex: newIndex }, () => {
+    const { onTabChanged, forceSelectedIndex } = this.props
+    const tabChanged = () => {
       if (onTabChanged) {
         onTabChanged(newIndex);
       }
-    })
+    }
+    if (forceSelectedIndex === undefined) {
+      this.setState({ selectedTabIndex: newIndex }, tabChanged);
+    } else {
+      tabChanged();
+    }
   }
 
   componentWillMount() {
-    const { defaultSelectedIndex } = this.props
-    if (defaultSelectedIndex !== undefined) {
+    const { defaultSelectedIndex, forceSelectedIndex } = this.props
+    if (defaultSelectedIndex !== undefined && forceSelectedIndex === undefined) {
       this.setState({ selectedTabIndex: defaultSelectedIndex })
     }
   }
 
+  private getSelectedIndex() {
+    const { forceSelectedIndex } = this.props;
+    const { selectedTabIndex } = this.state;
+    if (forceSelectedIndex !== undefined) {
+      return forceSelectedIndex
+    }
+    return selectedTabIndex
+  }
+
   render() {
-    let { className, children, onTabChanged, tabAlignment, defaultSelectedIndex, ...attrs } = this.props
-    const { selectedTabIndex } = this.state
+    let { className, children, onTabChanged, tabAlignment, defaultSelectedIndex, forceSelectedIndex, ...attrs } = this.props
     if (!tabAlignment) {
       tabAlignment = "left"
     }
@@ -54,16 +69,17 @@ export class TabControl extends React.Component<ITabControlProps, ITabControlSta
       }
     );
     const filteredChildren = React.Children.toArray(children).filter(c => !!c)
+    const selectedIndex = this.getSelectedIndex();
     return (
       <div {...attrs} className={classes}>
         <div className="tab-control-header">
           {filteredChildren.map((c: React.ReactElement<any>, i: number) =>
-            <div className={`tab-item-header${selectedTabIndex === i ? ' selected' : ''}`} onClick={() => this.changeTab(i)}>
+            <div className={`tab-item-header${selectedIndex === i ? ' selected' : ''}`} onClick={() => this.changeTab(i)}>
               {c.props.icon ? <Icon className="m-right-xsmall" icon={c.props.icon} /> : null}{c.props.title}
             </div>
           )}
         </div>
-        {filteredChildren[selectedTabIndex]}
+        {filteredChildren[selectedIndex]}
       </div>
     )
   }
