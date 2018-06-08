@@ -59,6 +59,7 @@ export class CodeInput extends React.Component<ICodeInputProps, { focusIndex: nu
         el.value = "";
       }
     }
+    this.buildValue();
   }
   buildValue() {
     let value: string | number = "";
@@ -117,12 +118,14 @@ export class CodeInput extends React.Component<ICodeInputProps, { focusIndex: nu
   }
   private storedKey;
   keyDown(e: React.KeyboardEvent<HTMLInputElement>) {
+    console.log(e.key)
     let lpb = this.props.lengthPerBox[this.state.focusIndex];
     let selectionLength = window.getSelection().toString().length;
     if (selectionLength === lpb) {
       return;
     }
     if (e.currentTarget["value"].length === lpb) {
+
       if (e.keyCode >= 48 && e.keyCode <= 57) {
         this.storedKey = e.key;
       }

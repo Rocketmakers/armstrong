@@ -12,10 +12,13 @@ import { BurgerMenu, BurgerMenuItem } from "../../../armstrong-react/dist/compon
 
 const suggestions = ["apple", "orange", "pear", "Peach", "Apple", "Avocado", "Plum"]
 
-export class NewTest extends React.Component<{}, { binder: IDataBinder<{ tags: string[]; time: string }> }> {
+export class NewTest extends React.Component<{}, { code: string, binder: IDataBinder<{ tags: string[]; time: string; code: string }> }> {
   constructor(props) {
     super(props);
-    this.state = { binder: Form.jsonDataBinder({ tags: ["hello", "world"], time: null, code: "" }) };
+    this.state = {
+      code: "",
+      binder: Form.jsonDataBinder({ tags: ["hello", "world"], time: null, code: "" })
+     };
   }
   render() {
     let validations = [
@@ -24,7 +27,14 @@ export class NewTest extends React.Component<{}, { binder: IDataBinder<{ tags: s
     return (
       <div>
         <TextInput tabIndex={1}/>
-        <CodeInput tabIndex={2} lengthPerBox={[2,2,2,2]}/>
+        <CodeInput tabIndex={2} lengthPerBox={[2,2,2,2]} onChange={v => this.setState({ code: v})}/>
+        <p>{this.state.code}</p>
+
+        <Form dataBinder={this.state.binder} onDataBinderChange={d => this.setState({ binder: d })}>
+        <CodeInput tabIndex={2} lengthPerBox={[1, 1, 1, 1, 1, 1, 1, 1]} {...Form.Bind.codeInput("code")} />
+        </Form>
+        <p>{this.state.binder.toJson().code}</p>
+
       </div>
     );
   }

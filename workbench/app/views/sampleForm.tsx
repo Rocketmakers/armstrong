@@ -84,7 +84,7 @@ export class SampleForm extends React.Component<ISampleForm, { binder: IDataBind
         <CustomTextInput {...Form.Bind.customTextInput("name")} />
         <TextInput defaultValue={this.state.binder.toJson().name} />
 
-        <CheckboxInput labelContent="accepts" {...Form.Bind.checkbox("accepts")} />
+      <CheckboxInput labelContent="accepts" {...Form.Bind.checkbox("accepts")} />
 
         <SelectInput {...Form.Bind.selectNumeric("divisionId")} options={[{ id: 1, name: "D1" }, { id: 2, name: "D2" }, { id: 3, name: "D3" }]} />
         <select {...Form.Bind.selectNumeric("division2Id")}>
