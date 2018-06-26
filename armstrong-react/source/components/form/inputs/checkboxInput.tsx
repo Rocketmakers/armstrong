@@ -26,9 +26,9 @@ export class CheckboxInput extends React.Component<ICheckboxInputProps, {}> {
   }
 
   render() {
-    const id = generateUniqueId(u => "checkbox_" + u);
     const validationMessage = DataValidationMessage.get(this.props)
-    const { validationMode, labelContent, ...attrs } = this.props
+    const { validationMode, labelContent, id, ...attrs } = this.props
+    const autoId = id || generateUniqueId(u => "checkbox_" + u);
     const classes = ClassHelpers.classNames(
       "armstrong-input",
       "checkbox",
@@ -39,9 +39,9 @@ export class CheckboxInput extends React.Component<ICheckboxInputProps, {}> {
     );
     return (
       <div className={classes}>
-        <input {...attrs} ref={i => this.input = i} id={id} type="checkbox" />
-        <label htmlFor={id} />
-        <label className="checkbox-label" htmlFor={id}>{labelContent}</label>
+        <input {...attrs} ref={i => this.input = i} id={autoId} type="checkbox" />
+        <label htmlFor={autoId} />
+        <label className="checkbox-label" htmlFor={autoId}>{labelContent}</label>
       </div>
     );
   }

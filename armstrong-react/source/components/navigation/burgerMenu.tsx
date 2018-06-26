@@ -10,6 +10,8 @@ export interface IBurgerMenuProps {
   burgerButtonHidden?: boolean;
   onMenuToggle?: (sender: BurgerMenu) => any;
   mode?: "push" | "slide";
+  /** ID for the burger menu node, avoids auto-generation for isomorphic use. */
+  burgerMenuId?: string
 }
 
 export class BurgerMenu extends React.Component<IBurgerMenuProps, {}>{
@@ -20,7 +22,7 @@ export class BurgerMenu extends React.Component<IBurgerMenuProps, {}>{
 
   constructor(props: IBurgerMenuProps) {
     super(props);
-    this.menuId = generateUniqueId(u => `burger-menu-${u}`);
+    this.menuId = props.burgerMenuId || generateUniqueId(u => `burger-menu-${u}`);
   }
   toggleMenu() {
     if (!this.isOpen) {

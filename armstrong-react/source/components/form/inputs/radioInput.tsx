@@ -28,8 +28,8 @@ export class RadioInput extends React.Component<IRadioInputProps, {}> {
 
   render() {
     const validationMessage = DataValidationMessage.get(this.props)
-    const { labelContent, validationMode, ...attrs } = this.props
-    const id = generateUniqueId(u => "radio_" + u);
+    const { labelContent, validationMode, id, ...attrs } = this.props
+    const autoId = id || generateUniqueId(u => "radio_" + u);
     const classes = ClassHelpers.classNames(
       "armstrong-input",
       "radio",
@@ -40,9 +40,9 @@ export class RadioInput extends React.Component<IRadioInputProps, {}> {
     );
     return (
       <div className={classes} title={validationMessage}>
-        <input id={id} {...attrs} ref={i => this.input = i} type="radio" {...DataValidationMessage.spread(validationMessage)} />
-        <label htmlFor={id} />
-        <label className="radio-label" htmlFor={id}>{labelContent}</label>
+        <input id={autoId} {...attrs} ref={i => this.input = i} type="radio" {...DataValidationMessage.spread(validationMessage)} />
+        <label htmlFor={autoId} />
+        <label className="radio-label" htmlFor={autoId}>{labelContent}</label>
       </div>
     );
   }
