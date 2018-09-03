@@ -175,6 +175,7 @@ export class CodeInput extends React.Component<ICodeInputProps, { focusIndex: nu
               type={this.props.type || "text"}
               placeholder={this.props.placeholder}
               maxLength={lpb}
+              readOnly={this.props.readonly}
               onClick={e => this.handleClick(e)}
               onFocus={e => this.handleFocus(i, e.target as HTMLInputElement)}
               onKeyUp={e => this.focusNext(e)}

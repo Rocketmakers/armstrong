@@ -12,13 +12,18 @@ import { BurgerMenu, BurgerMenuItem } from "../../../armstrong-react/dist/compon
 
 const suggestions = ["apple", "orange", "pear", "Peach", "Apple", "Avocado", "Plum"]
 
-export class NewTest extends React.Component<{}, { code: string, binder: IDataBinder<{ tags: string[]; time: string; code: string }> }> {
+export class NewTest extends React.Component<{}, { code: string, binder: IDataBinder<{ tags: string[]; time: string; code: string, nested: { propA?: string, propB?: string } }> }> {
   constructor(props) {
     super(props);
     this.state = {
       code: "",
-      binder: Form.jsonDataBinder({ tags: ["hello", "world"], time: null, code: "" })
+      binder: Form.jsonDataBinder({ name: "test", tags: ["hello", "world"], time: null, code: "", nested: { propA: "cool", propB: "beans" } })
      };
+  }
+  updateProp(){
+    //this.state.binder.setValue("nested.propA", "hello");
+    this.state.binder.setKeyValue("nested", { propA: "hello", propB: "world" });
+    this.forceUpdate()
   }
   render() {
     let validations = [
@@ -26,14 +31,14 @@ export class NewTest extends React.Component<{}, { code: string, binder: IDataBi
     ];
     return (
       <div>
-        <TextInput tabIndex={1}/>
-        <CodeInput tabIndex={2} lengthPerBox={[2,2,2,2]} onChange={v => this.setState({ code: v})}/>
-        <p>{this.state.code}</p>
 
-        <Form dataBinder={this.state.binder} onDataBinderChange={d => this.setState({ binder: d })}>
-        <CodeInput tabIndex={2} lengthPerBox={[1, 1, 1, 1, 1, 1, 1, 1]} {...Form.Bind.codeInput("code")} />
+        <Form focusFirstEmptyInput={true} dataBinder={this.state.binder} validationResults={validations} onDataBinderChange={d => this.setState({ binder: d })}>
+        <TextInput {...Form.Bind.text("name")} />
+        <TextInput {...Form.Bind.text("nested.propA")} />
+        <TextInput {...Form.Bind.text("nested.propB")} />
+
         </Form>
-        <p>{this.state.binder.toJson().code}</p>
+        <Button onClick={()=> this.updateProp()}>Update nested prop</Button>
 
       </div>
     );
