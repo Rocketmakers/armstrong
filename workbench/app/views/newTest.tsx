@@ -1,5 +1,5 @@
 import * as React from "react";
-import { TagInput } from "armstrong-react";
+import { TagInput, Dialog } from "armstrong-react";
 import { IDataBinder } from "../../../armstrong-react/dist/components/form/formCore";
 import { ISample } from "./sampleForm";
 import { Form, ParentFormContext } from "../../../armstrong-react/dist/components/form/form";
@@ -18,9 +18,9 @@ export class NewTest extends React.Component<{}, { code: string, binder: IDataBi
     this.state = {
       code: "",
       binder: Form.jsonDataBinder({ name: "test", tags: ["hello", "world"], time: null, code: "", nested: { propA: "cool", propB: "beans" } })
-     };
+    };
   }
-  updateProp(){
+  updateProp() {
     //this.state.binder.setValue("nested.propA", "hello");
     this.state.binder.setKeyValue("nested", { propA: "hello", propB: "world" });
     this.forceUpdate()
@@ -33,13 +33,12 @@ export class NewTest extends React.Component<{}, { code: string, binder: IDataBi
       <div>
 
         <Form focusFirstEmptyInput={true} dataBinder={this.state.binder} validationResults={validations} onDataBinderChange={d => this.setState({ binder: d })}>
-        <TextInput {...Form.Bind.text("name")} />
-        <TextInput {...Form.Bind.text("nested.propA")} />
-        <TextInput {...Form.Bind.text("nested.propB")} />
+          <TextInput {...Form.Bind.text("name")} />
+          <TextInput {...Form.Bind.text("nested.propA")} />
+          <TextInput {...Form.Bind.text("nested.propB")} />
 
         </Form>
-        <Button onClick={()=> this.updateProp()}>Update nested prop</Button>
-
+        <Button onClick={() => this.updateProp()}>Update nested prop</Button>
       </div>
     );
   }
@@ -49,7 +48,7 @@ class ChildFormBinding extends React.Component {
   render() {
     return (
       <ParentFormContext>
-        <TagInput {...Form.Bind.tagInput("tags") } suggestions={suggestions} />
+        <TagInput {...Form.Bind.tagInput("tags")} suggestions={suggestions} />
       </ParentFormContext>
     )
   }

@@ -14,7 +14,7 @@ export class DateHelpers {
     if (Formatting.isNullOrUndefined(year)) {
       year = 2000
     }
-    let activeMoment = moment([year, month - 1, 1])
+    const activeMoment = moment([year, month - 1, 1])
     if (!activeMoment.isValid()) {
       return range1to(31)
     }
@@ -22,10 +22,10 @@ export class DateHelpers {
   }
 
   static getDateParts(date: string, includeDate = false) {
-    let d = moment(date, "YYYY-MM-DD", true);
-    const parts = { day: d.date(), month: d.month() + 1, year: d.year() };
+    const d = moment(date, "YYYY-MM-DD", true);
+    const parts: { day: number, month: number, year: number, date?: string } = { day: d.date(), month: d.month() + 1, year: d.year() };
     if (includeDate) {
-      parts["date"] = date
+      parts.date = date
     }
     return parts
   }
@@ -36,32 +36,32 @@ export class DateHelpers {
 
   static getMonthValues() {
     return _.range(0, 12).map(i => {
-      var month = moment().month(i)
+      const month = moment().month(i)
       return { value: month.format("M"), label: month.format("MMMM") }
     })
   }
 
   static isBefore(date1: string, date2: string, granularity?: string): boolean {
-    let d1 = moment(date1, "YYYY-MM-DD", true);
-    let d2 = moment(date2, "YYYY-MM-DD", true);
+    const d1 = moment(date1, "YYYY-MM-DD", true);
+    const d2 = moment(date2, "YYYY-MM-DD", true);
 
     return d1.isBefore(d2);
   }
 
   static isAfter(date1: string, date2: string, granularity?: string): boolean {
-    let d1 = moment(date1, "YYYY-MM-DD", true);
-    let d2 = moment(date2, "YYYY-MM-DD", true);
+    const d1 = moment(date1, "YYYY-MM-DD", true);
+    const d2 = moment(date2, "YYYY-MM-DD", true);
 
     return d1.isBefore(d2);
   }
 
   static isEndOfMonth(date: string): boolean {
-    const endOfMonth = moment(date).endOf('month');
-    return endOfMonth.isSame(date, 'day');
+    const endOfMonth = moment(date).endOf("month");
+    return endOfMonth.isSame(date, "day");
   }
 
   static getYearValues(futureDates: boolean, yearsFromNow = 110, startCap = 0) {
-    let r = _.range(0, yearsFromNow).map(i => futureDates ? moment().add(i, 'years').year() : moment().subtract(i, 'years').year());
+    const r = _.range(0, yearsFromNow).map(i => futureDates ? moment().add(i, "years").year() : moment().subtract(i, "years").year());
     if (startCap) {
       return futureDates ? _.reject(r, v => v < startCap) : _.reject(r, v => v > startCap);
     }
@@ -79,7 +79,7 @@ export class DateHelpers {
 
   // Time helpers
   static getTimeParts(time: string) {
-    let d = moment(time, "HH:mm", false);
+    const d = moment(time, "HH:mm", false);
     return { hours: d.hour(), minutes: d.minute() };
   }
 }

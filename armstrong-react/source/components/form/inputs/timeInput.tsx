@@ -1,15 +1,14 @@
 import * as React from "react";
 import * as _ from "underscore";
-import { IFormInputProps } from "../form";
-import { IDataBinder, getEventTargetAs, DataValidationMessage } from "../formCore";
-import { FormBinderBase } from "../formBinderBase";
-import { DateHelpers } from "../../../utilities/dateHelpers";
-import { Form } from "../form";
-import { Grid, Row, Col } from "../../layout/grid";
-import { buildOptions } from "./options";
-import { Formatting } from "../../../utilities/formatting";
-import { ValidationLabel } from "../validationWrapper";
 import { ClassHelpers } from "../../../utilities/classNames";
+import { DateHelpers } from "../../../utilities/dateHelpers";
+import { Formatting } from "../../../utilities/formatting";
+import { Col, Grid, Row } from "../../layout/grid";
+import { IFormInputProps } from "../form";
+import { Form } from "../form";
+import { DataValidationMessage } from "../formCore";
+import { ValidationLabel } from "../validationWrapper";
+import { buildOptions } from "./options";
 
 export interface ITimeInputProps extends IFormInputProps<TimeInput> {
   /** (string) CSS classname property */
@@ -44,7 +43,7 @@ export class TimeInput extends React.Component<ITimeInputProps, ITimerInputState
     time: "",
     hourLabel: "HH",
     minuteLabel: "MM",
-    validationMode: "none"
+    validationMode: "none",
   };
 
   constructor(props: ITimeInputProps) {
@@ -54,14 +53,14 @@ export class TimeInput extends React.Component<ITimeInputProps, ITimerInputState
 
   componentWillMount() {
     if (this.props.time) {
-      var time = DateHelpers.getTimeParts(this.props.time);
+      const time = DateHelpers.getTimeParts(this.props.time);
       this.setState({ hours: time.hours, minutes: time.minutes });
     }
   }
 
   componentWillReceiveProps(newProps: ITimeInputProps) {
     if (newProps.time) {
-      let newTime = DateHelpers.getTimeParts(newProps.time);
+      const newTime = DateHelpers.getTimeParts(newProps.time);
       let { hours, minutes } = this.state;
       let needsUpdate;
       if (newTime.hours !== hours) {
@@ -110,12 +109,12 @@ export class TimeInput extends React.Component<ITimeInputProps, ITimerInputState
         <Grid>
           <Row>
             <Col>
-              <select tabIndex={this.props.tabIndex} {...Form.Bind.selectNumeric("hours") } disabled={this.props.disabled} {...DataValidationMessage.spread(validationMessage) } >
+              <select tabIndex={this.props.tabIndex} {...Form.Bind.selectNumeric("hours")} disabled={this.props.disabled} {...DataValidationMessage.spread(validationMessage)} >
                 {hourOptions}
               </select>
             </Col>
             <Col>
-              <select tabIndex={this.props.tabIndex} {...Form.Bind.selectNumeric("minutes") } disabled={this.props.disabled} {...DataValidationMessage.spread(validationMessage) } >
+              <select tabIndex={this.props.tabIndex} {...Form.Bind.selectNumeric("minutes")} disabled={this.props.disabled} {...DataValidationMessage.spread(validationMessage)} >
                 {minuteOptions}
               </select>
             </Col>

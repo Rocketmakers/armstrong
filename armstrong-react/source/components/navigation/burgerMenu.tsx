@@ -1,8 +1,9 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 import * as _ from "underscore";
-import { Icon } from "./../display/icon";
 import { generateUniqueId } from "../form/form";
+import { Icon } from "./../display/icon";
+
 export interface IBurgerMenuProps {
   buttonIcon?: string;
   bodyId?: string;
@@ -14,11 +15,11 @@ export interface IBurgerMenuProps {
   burgerMenuId?: string
 }
 
-export class BurgerMenu extends React.Component<IBurgerMenuProps, {}>{
+export class BurgerMenu extends React.Component<IBurgerMenuProps, {}> {
   private appNode: HTMLElement;
   private portalNode: HTMLElement;
   private menuId: string;
-  public isOpen: boolean;
+  isOpen: boolean;
 
   constructor(props: IBurgerMenuProps) {
     super(props);
@@ -27,13 +28,12 @@ export class BurgerMenu extends React.Component<IBurgerMenuProps, {}>{
   toggleMenu() {
     if (!this.isOpen) {
       this.openMenu();
-    }
-    else {
+    } else {
       this.closeMenu();
     }
   }
-  public closeMenu() {
-    let mode = this.props.mode || "push";
+  closeMenu() {
+    const mode = this.props.mode || "push";
     if (mode === "push") {
       this.appNode.classList.remove("menu-open");
       this.appNode.classList.remove("menu-push");
@@ -46,8 +46,8 @@ export class BurgerMenu extends React.Component<IBurgerMenuProps, {}>{
       this.props.onMenuToggle(this);
     }
   }
-  public openMenu() {
-    let mode = this.props.mode || "push";
+  openMenu() {
+    const mode = this.props.mode || "push";
     if (mode === "push") {
       this.appNode.classList.add("menu-open");
       this.appNode.classList.add("menu-push");
@@ -72,6 +72,7 @@ export class BurgerMenu extends React.Component<IBurgerMenuProps, {}>{
     const id = this.props.bodyId || "host"
     const appNode = document.getElementById(id);
     if (!appNode) {
+      // tslint:disable-next-line:no-console
       console.error(`Cannot find document node of ${id}`)
       return
     }
@@ -84,8 +85,8 @@ export class BurgerMenu extends React.Component<IBurgerMenuProps, {}>{
     let node = this.portalNode;
 
     if (node == null) {
-      this.portalNode = node = document.createElement('nav');
-      this.portalNode.classList.add('burger-menu');
+      this.portalNode = node = document.createElement("nav");
+      this.portalNode.classList.add("burger-menu");
       node.id = this.menuId;
       this.appNode.insertBefore(node, this.appNode.firstChild);
     }
@@ -125,7 +126,7 @@ export class BurgerMenu extends React.Component<IBurgerMenuProps, {}>{
           <div className="burger-blocker" onClick={() => this.closeMenu()} />
         }
         <ul className="burger-menu-list" role="menu" aria-activedescendant="true" aria-expanded={this.isOpen} aria-hidden={!this.isOpen}>{React.Children.map(children, (c, index) => {
-          return <li onClick={(e) => this.closeNav(e, () => this.closeMenu())} key={`nav_item_${index}`}>{c}</li>
+          return <li onClick={e => this.closeNav(e, () => this.closeMenu())} key={`nav_item_${index}`}>{c}</li>
         })}
         </ul>
       </div>);
@@ -139,7 +140,6 @@ export class BurgerMenu extends React.Component<IBurgerMenuProps, {}>{
     )
   }
 }
-
 
 export interface IBurgerMenuItemProps extends React.HTMLAttributes<HTMLDivElement> {
   title: string;
@@ -163,7 +163,7 @@ export class BurgerMenuItem extends React.Component<IBurgerMenuItemProps, {}> {
   render() {
     const { title, icon, onClick, style, delayActionMs, active, ...attrs } = this.props;
 
-    return <div {...attrs} role="menuitem" className={`burger-menu-item${active ? ' active' : ''}`} style={style} aria-selected={active || false} onClick={() => onClick ? this.handleClick(onClick) : null}>
+    return <div {...attrs} role="menuitem" className={`burger-menu-item${active ? " active" : ""}`} style={style} aria-selected={active || false} onClick={() => onClick ? this.handleClick(onClick) : null}>
       {icon && <Icon icon={icon} />}{title}
     </div>
   }

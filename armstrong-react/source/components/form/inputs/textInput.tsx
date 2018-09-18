@@ -1,9 +1,9 @@
 import * as React from "react";
-import { IFormInputHTMLProps } from "../form";
-import { Icon } from "./../../display/icon";
-import { ValidationLabel } from "../validationWrapper";
 import { ClassHelpers } from "../../../utilities/classNames";
-import { DataValidationMessage } from '../formCore';
+import { IFormInputHTMLProps } from "../form";
+import { DataValidationMessage } from "../formCore";
+import { ValidationLabel } from "../validationWrapper";
+import { Icon } from "./../../display/icon";
 
 export type ITextInputProps = IFormInputHTMLProps<React.InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement> | React.TextareaHTMLAttributes<HTMLInputElement | HTMLTextAreaElement>> & {
   multiLine?: boolean;
@@ -18,28 +18,28 @@ export type ITextInputProps = IFormInputHTMLProps<React.InputHTMLAttributes<HTML
 
 export class TextInput extends React.Component<ITextInputProps, {}> {
   static defaultProps: Partial<ITextInputProps> = {
-    validationMode: "none"
+    validationMode: "none",
   }
-  public input: HTMLInputElement | HTMLTextAreaElement;
-  public focus() {
+  input: HTMLInputElement | HTMLTextAreaElement;
+  focus() {
     if (this.input) {
       this.input.focus()
     }
   }
-  public blur() {
+  blur() {
     if (this.input) {
       this.input.blur()
     }
   }
 
-  public select() {
+  select() {
     if (this.input) {
       this.input.select()
     }
   }
 
-  componentDidMount(){
-    if (this.props.componentDidMount){
+  componentDidMount() {
+    if (this.props.componentDidMount) {
       this.props.componentDidMount(this);
     }
   }
@@ -47,7 +47,7 @@ export class TextInput extends React.Component<ITextInputProps, {}> {
   render() {
     const validationMessage = DataValidationMessage.get(this.props)
     const { className, readonly, rightOverlayText, leftOverlayText, type, leftIcon, rightIcon, multiLine, validationMode, placeholder, children, ...attrs } = this.props
-    var classes = ClassHelpers.classNames(
+    const classes = ClassHelpers.classNames(
       "armstrong-input",
       "text-input",
       this.props.className,
@@ -57,8 +57,8 @@ export class TextInput extends React.Component<ITextInputProps, {}> {
         "has-text-overlay-left": leftOverlayText !== undefined,
         "text-input-icon-left": leftIcon !== undefined,
         "text-input-icon-right": rightIcon !== undefined,
-        "show-validation": (validationMode !== "none" && validationMessage)
-      }
+        "show-validation": (validationMode !== "none" && validationMessage),
+      },
     );
     return (
       <div className={classes} title={validationMessage}>

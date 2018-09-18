@@ -1,15 +1,13 @@
-import * as React from "react";
 import * as _ from "underscore";
-import { IFormBinder, IDataBinder } from "./formCore";
+import { IDataBinder, IFormBinder } from "./formCore";
 import { IValueConverter } from "./formValueConverters";
-import { Formatting } from "../../utilities/formatting";
 
 /**
-The (abstract) FormBinder, derive from this class to create your own custom FormBinder
-TComponentProps: The type of the props required on the component being placed inside the form
-TDataPropValue: The type of the data property being bound
-TComponentPropValue: The type of the target property being bound on the component
-*/
+ * The (abstract) FormBinder, derive from this class to create your own custom FormBinder
+ * TComponentProps: The type of the props required on the component being placed inside the form
+ * TDataPropValue: The type of the data property being bound
+ * TComponentPropValue: The type of the target property being bound on the component
+ */
 export abstract class FormBinderBase<TComponentProps, TDataPropValue, TComponentPropValue> implements IFormBinder<TComponentProps, any> {
   constructor(
     /** The name of the data property being bound  */
@@ -19,11 +17,12 @@ export abstract class FormBinderBase<TComponentProps, TDataPropValue, TComponent
     /** The converter required to convert 'dataName' to 'propertySet' (TDataPropValue to TComponentPropValue) */
     private valueConverter?: IValueConverter<TDataPropValue, TComponentPropValue>,
     /** The name of the property being read from the change event currentTarget */
-    protected propertyGet = propertySet
-  ) {}
+    protected propertyGet = propertySet,
+  ) { }
 
   /** Sets the React elements properties required in binding */
   setElementProperty(props: TComponentProps, dataBinder: IDataBinder<any>) {
+    // tslint:disable-next-line:no-string-literal
     props["name"] = this.dataPath;
     props[this.propertySet] = this.convert(dataBinder.getValue(this.dataPath));
   }

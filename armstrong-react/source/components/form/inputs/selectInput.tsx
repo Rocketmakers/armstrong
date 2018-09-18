@@ -1,9 +1,9 @@
 import * as React from "react";
-import { IFormInputHTMLProps } from "../form";
-import { buildOptions } from "./options";
 import { ClassHelpers } from "../../../utilities/classNames";
-import { DataValidationMessage } from '../formCore';
+import { IFormInputHTMLProps } from "../form";
+import { DataValidationMessage } from "../formCore";
 import { ValidationLabel } from "../validationWrapper";
+import { buildOptions } from "./options";
 
 export interface ISelectInputOption {
   id: number | string;
@@ -20,20 +20,20 @@ export interface ISelectInputProps extends IFormInputHTMLProps<React.SelectHTMLA
 export class SelectInput extends React.Component<ISelectInputProps, {}> {
   static defaultProps: Partial<ISelectInputProps> = {
     optionLabel: "[Select]",
-    validationMode: "none"
+    validationMode: "none",
   }
   private change = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const { change, onChange, options } = this.props
-    change && change(options[e.target["selectedIndex"] - 1]);
-    onChange && onChange(e);
+    if (change) { change(options[e.target.selectedIndex - 1]); }
+    if (onChange) { onChange(e); }
   }
   private select: HTMLSelectElement;
-  public focus() {
+  focus() {
     if (this.select) {
       this.select.focus()
     }
   }
-  public blur() {
+  blur() {
     if (this.select) {
       this.select.blur()
     }
@@ -46,8 +46,8 @@ export class SelectInput extends React.Component<ISelectInputProps, {}> {
       "select-input",
       this.props.className,
       {
-        "show-validation": (validationMode !== "none" && validationMessage)
-      }
+        "show-validation": (validationMode !== "none" && validationMessage),
+      },
     );
 
     return (

@@ -1,9 +1,8 @@
 import * as React from "react";
 import * as _ from "underscore";
-import { IFormValidationResult, DataValidationMessage } from "../formCore";
-import { Grid, Row, Col } from "../../layout/grid";
-import { IFormInputProps, IFormInputHTMLProps } from "../form";
 import { ClassHelpers } from "../../../index";
+import { IFormInputHTMLProps } from "../form";
+import { DataValidationMessage } from "../formCore";
 import { ValidationLabel } from "../validationWrapper";
 
 export interface ICodeInputProps extends IFormInputHTMLProps<React.SelectHTMLAttributes<HTMLInputElement>> {
@@ -19,7 +18,7 @@ export interface ICodeInputProps extends IFormInputHTMLProps<React.SelectHTMLAtt
 export class CodeInput extends React.Component<ICodeInputProps, { focusIndex: number }> {
   static defaultProps: Partial<ICodeInputProps> = {
     lengthPerBox: [2, 2, 2],
-    validationMode: "none"
+    validationMode: "none",
   };
   constructor(props) {
     super(props);
@@ -28,10 +27,10 @@ export class CodeInput extends React.Component<ICodeInputProps, { focusIndex: nu
   private uniq = Math.random();
   focusNext(e: React.KeyboardEvent<HTMLInputElement>) {
     let movingBack = false;
-    let current = e.target as HTMLInputElement;
+    const current = e.target as HTMLInputElement;
     let el;
     let currentVal = current.value.trim();
-    let lpb = this.props.lengthPerBox[this.state.focusIndex];
+    const lpb = this.props.lengthPerBox[this.state.focusIndex];
     let retFromStore = false;
     currentVal = currentVal.slice(0, lpb);
     if (e.keyCode === 8) {
@@ -72,25 +71,23 @@ export class CodeInput extends React.Component<ICodeInputProps, { focusIndex: nu
     });
 
     if (this.props.numeric) {
-      value = parseInt(value);
+      value = parseInt(value, 10);
     }
     if (this.props.onChange) {
       this.props.onChange(value);
     }
   }
   handlePaste(e) {
-    var length = _.reduce(
+    const length = _.reduce(
       this.props.lengthPerBox,
-      function(memo, num) {
-        return memo + num;
-      },
-      0
+      (memo, num) => memo + num,
+      0,
     );
     let pasted: string = e.clipboardData.getData("text/plain").replace(/\s/g, "");
     pasted = pasted.substr(0, length);
 
     if (this.props.numeric) {
-      let parsed = parseInt(pasted);
+      const parsed = parseInt(pasted, 10);
       if (isNaN(parsed)) {
         e.preventDefault();
         return false;
@@ -98,12 +95,12 @@ export class CodeInput extends React.Component<ICodeInputProps, { focusIndex: nu
     }
 
     let current = e.target as HTMLInputElement;
-    let splitArray = [];
+    const splitArray = [];
 
     let currentIndex = 0;
 
     this.props.lengthPerBox.forEach((lpb, i) => {
-      let chunk = pasted.substr(currentIndex, lpb);
+      const chunk = pasted.substr(currentIndex, lpb);
       currentIndex += lpb;
       splitArray.push(chunk);
       current.value = chunk;
@@ -118,13 +115,13 @@ export class CodeInput extends React.Component<ICodeInputProps, { focusIndex: nu
   }
   private storedKey;
   keyDown(e: React.KeyboardEvent<HTMLInputElement>) {
-    console.log(e.key)
-    let lpb = this.props.lengthPerBox[this.state.focusIndex];
-    let selectionLength = window.getSelection().toString().length;
+    // console.log(e.key)
+    const lpb = this.props.lengthPerBox[this.state.focusIndex];
+    const selectionLength = window.getSelection().toString().length;
     if (selectionLength === lpb) {
       return;
     }
-    if (e.currentTarget["value"].length === lpb) {
+    if (e.currentTarget.value.length === lpb) {
 
       if (e.keyCode >= 48 && e.keyCode <= 57) {
         this.storedKey = e.key;
@@ -144,15 +141,15 @@ export class CodeInput extends React.Component<ICodeInputProps, { focusIndex: nu
     if (this.props.value) {
       let currentIndex = 0;
       this.props.lengthPerBox.forEach((lpb, i) => {
-        let input = document.getElementById(`input_${this.uniq}_${i}`) as HTMLInputElement;
-        let chunk = this.props.value.substr(currentIndex, lpb);
+        const input = document.getElementById(`input_${this.uniq}_${i}`) as HTMLInputElement;
+        const chunk = this.props.value.substr(currentIndex, lpb);
         currentIndex += lpb;
         input.value = chunk;
       });
     }
   }
-  calcTabIndex(tabIndex: number | undefined, fieldIndex: number){
-    if (tabIndex === undefined || tabIndex === -1){
+  calcTabIndex(tabIndex: number | undefined, fieldIndex: number) {
+    if (tabIndex === undefined || tabIndex === -1) {
       return tabIndex;
     }
     return tabIndex + fieldIndex;
@@ -161,7 +158,7 @@ export class CodeInput extends React.Component<ICodeInputProps, { focusIndex: nu
     const validationMessage = DataValidationMessage.get(this.props);
     const { onChange, validationMode, lengthPerBox, numeric, type, className, tabIndex, ...attrs } = this.props;
     const classes = ClassHelpers.classNames("armstrong-input", "code-input", this.props.className, {
-      "show-validation": validationMode !== "none" && validationMessage
+      "show-validation": validationMode !== "none" && validationMessage,
     });
     return (
       <div className={classes}>

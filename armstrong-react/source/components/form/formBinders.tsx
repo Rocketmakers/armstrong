@@ -1,15 +1,15 @@
 import * as React from "react";
 import * as _ from "underscore";
-import { IFormBinder, IDataBinder, IFormBinderInjector, getFormBinderFromInjector, updateFormBinderInjector } from "./formCore";
-import { IOneWayValueConverter, IValueConverter, IInputValueConverter, CheckboxValueConverter, NumericValueConverter, MultipleNumericValueConverter, INumericOptions, DefaultValueConverter } from "./formValueConverters";
-import { FormBinderBase } from "./formBinderBase";
-import { ICalendarInputProps } from "./inputs/calendarInput";
-import { IDateInputProps } from "./inputs/dateInput";
-import { ITimeInputProps } from "./inputs/timeInput";
-import { IAutoCompleteInputProps, IAutoCompleteOption } from "./inputs/autoCompleteInput";
 import { Formatting } from "../../utilities/formatting";
-import { ITagInputProps } from "./inputs/tagInput";
+import { FormBinderBase } from "./formBinderBase";
+import { IDataBinder, IFormBinder, IFormBinderInjector, updateFormBinderInjector } from "./formCore";
+import { CheckboxValueConverter, DefaultValueConverter, IInputValueConverter, INumericOptions, IValueConverter, MultipleNumericValueConverter, NumericValueConverter } from "./formValueConverters";
+import { IAutoCompleteInputProps, IAutoCompleteOption } from "./inputs/autoCompleteInput";
+import { ICalendarInputProps } from "./inputs/calendarInput";
 import { ICodeInputProps } from "./inputs/codeInput";
+import { IDateInputProps } from "./inputs/dateInput";
+import { ITagInputProps } from "./inputs/tagInput";
+import { ITimeInputProps } from "./inputs/timeInput";
 
 /** An input FormBinder that sets native 'value' and 'onChange: (e) => void' properties */
 export class InputFormBinder<TDataPropValue, TComponentPropValue> extends FormBinderBase<React.DOMAttributes<{}>, TDataPropValue, TComponentPropValue> {
@@ -39,6 +39,7 @@ export class SelectMultipleFormBinder<TDataProp> extends InputFormBinder<TDataPr
 
   setElementProperty(props: React.DOMAttributes<any>, dataBinder: IDataBinder<any>) {
     super.setElementProperty(props, dataBinder);
+    // tslint:disable-next-line:no-string-literal
     props["multiple"] = true;
   }
 
@@ -54,8 +55,7 @@ export class SelectMultipleFormBinder<TDataProp> extends InputFormBinder<TDataPr
     if (!options) {
       return result;
     }
-    for (let i = 0; i < options.length; i++) {
-      let opt = options[i];
+    for (const opt of options) {
       if (opt.selected) {
         result.push(opt.value);
       }
@@ -76,6 +76,7 @@ export class CheckboxFormBinder<TDataPropValue, TComponentPropValue> extends Inp
 /** A radio input FormBinder */
 export class RadioFormBinder<TDataPropValue, TComponentPropValue> extends InputFormBinder<TDataPropValue, TComponentPropValue> {
   setElementProperty(props: React.DOMAttributes<any>, dataBinder: IDataBinder<any>) {
+    // tslint:disable-next-line:no-string-literal
     props["name"] = this.dataPath;
     props[this.propertySet] = this.convert(dataBinder.getValue(this.dataPath)) === props[this.propertyGet];
   }
@@ -187,9 +188,11 @@ export class CodeInputFormBinder implements IFormBinder<ICodeInputProps, any> {
 class ChildrenBinder<TValue, TProps = HTMLElement> implements IFormBinder<TProps, any> {
   constructor(public dataPath: string, private childrenFactory: (value: TValue, props?: TProps, dataBinder?: IDataBinder<any>) => React.ReactNode) { }
   setElementProperty(props: TProps, dataBinder: IDataBinder<any>): void {
+    // Do nothing
   }
 
   handleValueChanged(props: TProps, dataBinder: IDataBinder<any>, notifyChanged: () => void): void {
+    // Do nothing
   }
 
   overrideChildren(props: TProps, dataBinder: IDataBinder<any>) {
@@ -258,17 +261,21 @@ export class FormBinder {
   }
 
   private defaultInputFormBinder<TDataPropValue, TTo>(dataName: string, type: string, valueConverter?: IValueConverter<TDataPropValue, TTo>, propertySet = "value") {
-    let adaptorInjector = this.custom(new InputFormBinder(dataName, propertySet, valueConverter));
+    const adaptorInjector = this.custom(new InputFormBinder(dataName, propertySet, valueConverter));
+    // tslint:disable-next-line:no-string-literal
     adaptorInjector["type"] = type;
     return adaptorInjector;
   }
 
   /** bind a number property to a range */
   range(dataName: string, options?: INumericOptions) {
-    let adaptorInjector = this.custom(new InputFormBinder(dataName, "value"));
+    const adaptorInjector = this.custom(new InputFormBinder(dataName, "value"));
     if (options) {
+      // tslint:disable-next-line:no-string-literal
       adaptorInjector["min"] = options.min;
+      // tslint:disable-next-line:no-string-literal
       adaptorInjector["max"] = options.max;
+      // tslint:disable-next-line:no-string-literal
       adaptorInjector["step"] = options.step || 1;
     }
     return adaptorInjector;
@@ -282,11 +289,15 @@ export class FormBinder {
   /** bind a number property to a 'text' input */
   textNumeric(dataName: string, options?: INumericOptions) {
     const converter = options ? new NumericValueConverter(options) : NumericValueConverter.instance;
-    let adaptorInjector = this.custom(new InputFormBinder(dataName, "defaultValue", converter, "value"));
+    const adaptorInjector = this.custom(new InputFormBinder(dataName, "defaultValue", converter, "value"));
+    // tslint:disable-next-line:no-string-literal
     adaptorInjector["type"] = "number";
+    // tslint:disable-next-line:no-string-literal
     adaptorInjector["onKeyDown"] = e => KeyboardHelper.numericKeyPress(e, options);
     if (options) {
+      // tslint:disable-next-line:no-string-literal
       adaptorInjector["min"] = options.min;
+      // tslint:disable-next-line:no-string-literal
       adaptorInjector["max"] = options.max;
     }
     return adaptorInjector;
@@ -324,10 +335,11 @@ export class FormBinder {
 
   /** bind a TDataPropValue property to a 'checkbox' input */
   checkboxCustom<TDataPropValue>(dataName: string, valueConverter?: IValueConverter<TDataPropValue, boolean>) {
-    let adaptorInjector = this.custom(new CheckboxFormBinder(dataName, valueConverter));
+    const adaptorInjector = this.custom(new CheckboxFormBinder(dataName, valueConverter));
+    // tslint:disable-next-line:no-string-literal
     adaptorInjector["type"] = "checkbox";
     return adaptorInjector;
-    //return this.defaultInputFormBinder(dataName, "checkbox", valueConverter, "checked")
+    // return this.defaultInputFormBinder(dataName, "checkbox", valueConverter, "checked")
   }
 
   /** bind a boolean property to a 'checkbox' input */
@@ -342,8 +354,10 @@ export class FormBinder {
 
   /** bind a TDataPropValue property to a 'radio' input */
   radioCustom<TDataPropValue>(dataName: string, value: string, valueConverter: IInputValueConverter<TDataPropValue>) {
-    let adaptorInjector = this.custom(new RadioFormBinder(dataName, "checked", valueConverter, "value"));
+    const adaptorInjector = this.custom(new RadioFormBinder(dataName, "checked", valueConverter, "value"));
+    // tslint:disable-next-line:no-string-literal
     adaptorInjector["type"] = "radio";
+    // tslint:disable-next-line:no-string-literal
     adaptorInjector["value"] = value;
     return adaptorInjector;
   }
@@ -379,7 +393,7 @@ class KeyboardHelper {
 
   static numericKeyPress(e: React.KeyboardEvent<{}>, options?: INumericOptions) {
     const element = e.currentTarget as HTMLInputElement;
-    let value = element.value;
+    const value = element.value;
 
     if (e.keyCode === 189 && value.indexOf("-") !== -1) {
       e.preventDefault();

@@ -1,4 +1,3 @@
-import * as React from "react";
 import { ClassHelpers } from "./classNames";
 
 export type Size = "none" | "xxsmall" | "xsmall" | "small" | "medium" | "large" | "xlarge";
@@ -13,14 +12,13 @@ export type Color = "positive" | "negative" | "warning" | "info" | "brand-primar
 export type BgColorClass = "bg-positive" | "bg-negative" | "bg-warning" | "bg-info" | "bg-brand-primary" | "bg-gray-very-dark" | "bg-gray-dark" | "bg-gray-medium" | "bg-gray-light" | "bg-gray-very-light" | "bg-white";
 export type FgColorClass = "fg-positive" | "fg-negative" | "fg-warning" | "fg-info" | "fg-brand-primary" | "fg-gray-very-dark" | "fg-gray-dark" | "fg-gray-medium" | "fg-gray-light" | "fg-gray-very-light" | "fg-white";
 
-
 export class LayoutHelpers {
   static GetAlignmentClasses(vertical: VerticalAlignment, horizontal: HorizontalAlignment): string {
-    let classes = [];
-    if (vertical){
+    const classes = [];
+    if (vertical) {
       classes.push(`align-con-v-${vertical}`)
     }
-    if (horizontal){
+    if (horizontal) {
       classes.push(`align-con-h-${horizontal}`)
     }
     return ClassHelpers.classNames(classes);

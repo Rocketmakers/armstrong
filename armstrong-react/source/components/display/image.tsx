@@ -1,5 +1,4 @@
 import * as React from "react";
-import { Color, LayoutHelpers } from "./../../utilities/uiHelpers";
 import { ClassHelpers } from "../../utilities/classNames";
 
 export interface IImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
@@ -21,27 +20,29 @@ export interface IImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
   noPlaceholder?: boolean;
 }
 
-export class Image extends React.Component<IImageProps, { source?: string }>{
+export class Image extends React.Component<IImageProps, { source?: string }> {
   constructor(props: IImageProps) {
     super(props);
     this.state = { source: "" };
   }
   getRandomUser() {
-    const { sampleUser, sampleUserSeed } = this.props
-    var url = `https://randomuser.me/api?exc=login,name,location,email,registered,dob,phone,cell,id,nat${sampleUserSeed ? `&seed=${sampleUserSeed}` : ''}`;
-    var xmlHttp = new XMLHttpRequest();
+    const { sampleUserSeed } = this.props
+    const url = `https://randomuser.me/api?exc=login,name,location,email,registered,dob,phone,cell,id,nat${sampleUserSeed ? `&seed=${sampleUserSeed}` : ""}`;
+    const xmlHttp = new XMLHttpRequest();
     xmlHttp.onreadystatechange = () => {
-      if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
-        var response = JSON.parse(xmlHttp.responseText);
-        var pictureUrl = response.results[0].picture.large;
+      if (xmlHttp.readyState === 4 && xmlHttp.status === 200) {
+        const response = JSON.parse(xmlHttp.responseText);
+        const pictureUrl = response.results[0].picture.large;
         this.setState({ source: pictureUrl });
       }
     }
     xmlHttp.open("GET", url, true);
     xmlHttp.send(null);
   }
+
   componentDidMount() {
-    let { height, width, sampleUser, source, noPlaceholder } = this.props
+    let { height, width } = this.props
+    const { sampleUser, source, noPlaceholder } = this.props
     if (!height && width) {
       height = width;
     }
@@ -50,18 +51,17 @@ export class Image extends React.Component<IImageProps, { source?: string }>{
     }
 
     if (source) {
-      this.setState({ source: source });
-    }
-    else if (sampleUser) {
+      this.setState({ source });
+    } else if (sampleUser) {
       this.getRandomUser();
-    }
-    else if (!noPlaceholder && !sampleUser) {
+    } else if (!noPlaceholder && !sampleUser) {
       this.setState({ source: `http://dummyimage.com/${height}x${width}/4f5c69/ffffff.png` });
     }
   }
+
   render() {
     const { height, width, noPlaceholder, sampleUserSeed, sampleUser, source, className, rounded, ...attrs } = this.props
-    let classes = ClassHelpers.classNames(className, { "rounded": rounded });
+    const classes = ClassHelpers.classNames(className, { rounded });
     return (
       <img src={this.state.source} {...attrs} height={height} width={width} className={classes} />
     );

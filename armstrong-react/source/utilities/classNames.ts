@@ -2,20 +2,19 @@ export class ClassHelpers {
   static hasOwn = {}.hasOwnProperty;
 
   static classNames(...args) {
-    var classes = [];
+    const classes = [];
 
-    for (var i = 0; i < args.length; i++) {
-      var arg = args[i];
-      if (!arg) continue;
+    for (const arg of args) {
+      if (!arg) { continue; }
 
-      var argType = typeof arg;
+      const argType = typeof arg;
 
-      if (argType === 'string' || argType === 'number') {
+      if (argType === "string" || argType === "number") {
         classes.push(arg);
       } else if (Array.isArray(arg)) {
         classes.push(this.classNames.apply(null, arg));
-      } else if (argType === 'object') {
-        for (var key in arg) {
+      } else if (argType === "object") {
+        for (const key in arg) {
           if (this.hasOwn.call(arg, key) && arg[key]) {
             classes.push(key);
           }
@@ -23,6 +22,6 @@ export class ClassHelpers {
       }
     }
 
-    return classes.join(' ');
+    return classes.join(" ");
   }
 }

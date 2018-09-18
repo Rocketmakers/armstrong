@@ -1,8 +1,8 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 import * as _ from "underscore";
-import { LayoutHelpers, MarginClass, PaddingClass, BgColorClass, FgColorClass, VerticalAlignment, HorizontalAlignment } from "./../../utilities/uiHelpers";
 import { ClassHelpers } from "../../utilities/classNames";
+import { BgColorClass, FgColorClass, HorizontalAlignment, LayoutHelpers, MarginClass, PaddingClass, VerticalAlignment } from "./../../utilities/uiHelpers";
 
 export interface IGrid extends React.HTMLAttributes<HTMLDivElement> {
   /** (boolean) Wether to render borders around grid parts */
@@ -29,13 +29,12 @@ export class Grid extends React.Component<IGrid, {}> {
       {
         "fill-container": fillContainer,
         "grid-debug": debugMode,
-        "table-grid": table
-      }
+        "table-grid": table,
+      },
     );
     if (fillContainer && !disableFlexOverride) {
       return React.createElement(tagName || "div", { className: "flex-override" }, <div {...attrs} className={classes} />)
-    }
-    else {
+    } else {
       return React.createElement(tagName || "div", { ...attrs, className: classes });
     }
   }
@@ -81,22 +80,19 @@ export function Row(props: IRow) {
 
   const classes = ClassHelpers.classNames(className, "row", needsFixed() ? "no-flex" : "");
   let styles = style;
-  let colStyles;
   if (height) {
     if (typeof height === "number") {
       styles = _.extend({ height: `${height}px` }, styles);
     } else {
-      let hString = (height as string);
-      let starIndex = hString.indexOf('*');
+      const hString = (height as string);
+      const starIndex = hString.indexOf("*");
       if (height === "auto") {
-
-      }
-      else if (starIndex !== -1 && parseFloat(hString)) {
-        let hString = (height as string);
-        var spans = hString.substr(0, starIndex);
+        // do nothing
+      } else if (starIndex !== -1 && parseFloat(hString)) {
+        const spans = (height as string).substr(0, starIndex);
         styles = _.extend({ flex: `${spans}` }, styles);
-      }
-      else {
+      } else {
+        // tslint:disable-next-line:no-console
         console.error(sizeErrorMessage("height", height, "Grid > Row"))
       }
     }
@@ -104,8 +100,8 @@ export function Row(props: IRow) {
 
   return React.createElement(tagName || "div", { ...attrs, className: classes, style: styles },
     React.Children.map(props.children, (c: React.ReactElement<any>) => {
-      return c ? React.cloneElement(c, { style: colStyles ? _.extend(colStyles, c.props.style) : c.props.style }) : null
-    })
+      return c ? React.cloneElement(c, { style: c.props.style }) : null
+    }),
   )
 
 }
@@ -145,31 +141,28 @@ export function Col(props: ICol) {
     alignmentClasses,
     {
       "no-flex": needsFixed(),
-    }
+    },
   );
 
   let styles = style;
-
 
   if (width) {
     if (typeof width === "number") {
       styles = _.extend({ maxwidth: `${width}px`, width: "100%" }, styles);
     } else {
-      let wString = (width as string);
-      let starIndex = wString.indexOf('*');
+      const wString = (width as string);
+      const starIndex = wString.indexOf("*");
       if (width === "auto") {
-
-      }
-      else if (starIndex !== -1 && parseFloat(wString)) {
-        var spans = wString.substr(0, starIndex);
+        // do nothing
+      } else if (starIndex !== -1 && parseFloat(wString)) {
+        const spans = wString.substr(0, starIndex);
         styles = _.extend({ flex: `${spans}` }, styles);
-      }
-      else {
+      } else {
+        // tslint:disable-next-line:no-console
         console.error(sizeErrorMessage("width", width, "Grid > Row > Col"))
       }
     }
   }
-
 
   if (typeof width === "number") {
     styles = _.extend({ maxWidth: `${width}px`, width: "100%" }, styles);

@@ -1,14 +1,14 @@
 import * as React from "react";
 
-export namespace DataValidationMessage{
+export namespace DataValidationMessage {
   const attributeName = "data-validation-message"
-  export function spread(message: string) : {["data-validation-message"]: string} {
-    return {[attributeName]: message}
+  export function spread(message: string): { ["data-validation-message"]: string } {
+    return { [attributeName]: message }
   }
-  export function set(props, message: string){
+  export function set(props, message: string) {
     props[attributeName] = message
   }
-  export function get(props) : string {
+  export function get(props): string {
     return props[attributeName]
   }
 }
@@ -22,56 +22,56 @@ export interface IFormValidationResult {
 }
 
 /**
-Form Binder Core interface
-The defintion of a form binder
-*/
-export interface IFormBinder<TComponentProps, TData>{
+ * Form Binder Core interface
+ * The defintion of a form binder
+ */
+export interface IFormBinder<TComponentProps, TData> {
   /** The path used to bind to the data object */
   dataPath: string
 
   /**
-  Augment the component props that will be applied to the forms child element being bound
-  */
-  setElementProperty(props: TComponentProps, dataBinder:IDataBinder<TData>, validationResults?: IFormValidationResult[]): void;
-
-  /**
-  Add the value changed event handler, calling the supplied `notifyChanged` function when a change event has occured
-  */
-  handleValueChanged(props: TComponentProps, dataBinder:IDataBinder<TData>, notifyChanged: () => void): void;
-
-  /**
-  Override the children for the element
+   * Augment the component props that will be applied to the forms child element being bound
    */
-  overrideChildren?(props: TComponentProps, dataBinder:IDataBinder<TData>): React.ReactNode
+  setElementProperty(props: TComponentProps, dataBinder: IDataBinder<TData>, validationResults?: IFormValidationResult[]): void;
 
   /**
-  An optional additional set of component props that allows consumers of your FormBinder to add, change or remove the properties that will be applied to the target element
-  */
-  extender?(props: TComponentProps, dataBinder:IDataBinder<TData>, notifyChanged: () => void): void;
+   * Add the value changed event handler, calling the supplied `notifyChanged` function when a change event has occured
+   */
+  handleValueChanged(props: TComponentProps, dataBinder: IDataBinder<TData>, notifyChanged: () => void): void;
+
+  /**
+   * Override the children for the element
+   */
+  overrideChildren?(props: TComponentProps, dataBinder: IDataBinder<TData>): React.ReactNode
+
+  /**
+   * An optional additional set of component props that allows consumers of your FormBinder to add, change or remove the properties that will be applied to the target element
+   */
+  extender?(props: TComponentProps, dataBinder: IDataBinder<TData>, notifyChanged: () => void): void;
 }
 
 /**
-The Form Data Binder Core interface
-Wraps access to the data being bound to the form.
-This provides the bridge between the data source and the form elements
-*/
-export interface IDataBinder<T>{
+ * The Form Data Binder Core interface
+ * Wraps access to the data being bound to the form.
+ * This provides the bridge between the data source and the form elements
+ */
+export interface IDataBinder<T> {
   lastDataPathSet?: string
-  /** Gets a value for the key name (does NOT use dot notation)*/
+  /** Gets a value for the key name (does NOT use dot notation) */
   getKeyValue<TKey extends keyof T>(keyName: TKey): T[TKey];
-  /** Sets a value for the key name (does NOT use dot notation)*/
+  /** Sets a value for the key name (does NOT use dot notation) */
   setKeyValue<TKey extends keyof T>(keyName: TKey, value: T[TKey]): void;
-  /** Gets a value for the data path (uses dot notation)*/
+  /** Gets a value for the data path (uses dot notation) */
   getValue(dataPath: string): any;
-  /** Sets a value for the data path (uses dot notation)*/
+  /** Sets a value for the data path (uses dot notation) */
   setValue(dataPath: string, value: any): void;
-  /** Gets the inner data as the native object*/
+  /** Gets the inner data as the native object */
   toJson(): T;
 }
 
 const FormBinderInjectorKey = "data-form-binder"
 /** Used to inject properties onto React components to permit form binding */
-export interface IFormBinderInjector<TComponentProps>{
+export interface IFormBinderInjector<TComponentProps> {
   "data-form-binder": IFormBinder<TComponentProps, any>
 }
 
@@ -80,10 +80,10 @@ export function getFormBinderFromInjector<TComponentProps>(injector: IFormBinder
 }
 
 export function updateFormBinderInjector<TComponentProps>(target: IFormBinderInjector<TComponentProps>, formBinder: IFormBinder<TComponentProps, any>): IFormBinderInjector<TComponentProps> {
-    target[FormBinderInjectorKey] = formBinder
-    return target
+  target[FormBinderInjectorKey] = formBinder
+  return target
 }
 
 export function getEventTargetAs<T extends HTMLElement>(evt: React.FormEvent<any>) {
-    return evt.target as T
+  return evt.target as T
 }

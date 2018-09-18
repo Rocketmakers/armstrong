@@ -1,9 +1,8 @@
-import * as React from "react";
 import * as _ from "underscore";
-import {Formatting} from "../../utilities/formatting";
+import { Formatting } from "../../utilities/formatting";
 
 /** The core value converter */
-export interface IValueConverter<TFrom, TTo>{
+export interface IValueConverter<TFrom, TTo> {
   /** convert TFrom to TTo */
   convert?: IOneWayValueConverter<TFrom, TTo>;
   /** convert TTo to TFrom */
@@ -11,24 +10,21 @@ export interface IValueConverter<TFrom, TTo>{
 }
 
 /** The core one way value converter */
-export interface IOneWayValueConverter<TFrom, TTo>{
-  /** convert TFrom to TTo */
-  (from: TFrom): TTo;
-}
+export type IOneWayValueConverter<TFrom, TTo> = (from: TFrom) => TTo;
 
 /** The core 'text' input value converter (always requires a string ) */
-export interface IInputValueConverter<TDataPropValue> extends IValueConverter<TDataPropValue, string>{
+export interface IInputValueConverter<TDataPropValue> extends IValueConverter<TDataPropValue, string> {
 }
 
 /** The core 'checkbox' input value converter (always requires a boolean) */
 export class CheckboxValueConverter<TDataPropValue> implements IValueConverter<TDataPropValue, boolean> {
-  constructor(private trueValue: TDataPropValue, private falseValue: TDataPropValue){
+  constructor(private trueValue: TDataPropValue, private falseValue: TDataPropValue) {
   }
-  convert(data: TDataPropValue){
+  convert(data: TDataPropValue) {
     return data === this.trueValue;
   }
 
-  convertBack(value: boolean){
+  convertBack(value: boolean) {
     if (value) {
       return this.trueValue;
     }
@@ -39,16 +35,16 @@ export class CheckboxValueConverter<TDataPropValue> implements IValueConverter<T
 
 /** The Default pass-through Value converter */
 export class DefaultValueConverter implements IInputValueConverter<string> {
-  convert(data: string){
+  convert(data: string) {
     return data;
   }
-  convertBack(value: string){
+  convertBack(value: string) {
     return value;
   }
   static instance = new DefaultValueConverter();
 }
 
-export interface INumericOptions{
+export interface INumericOptions {
   /** allow negative values? */
   allowNegative?: boolean;
   /** number of decimals */
@@ -63,16 +59,16 @@ export interface INumericOptions{
 
 /** A Numeric Value converter to handle converting typed text to a number */
 export class NumericValueConverter implements IInputValueConverter<number> {
-  constructor(private options?: INumericOptions){
+  constructor(private options?: INumericOptions) {
   }
 
-  convert(data: number){
-    let v = (Formatting.isNullOrUndefined(data) || data === "" as any) ? null : data.toFixed(this.options && this.options.decimals);
+  convert(data: number) {
+    const v = (Formatting.isNullOrUndefined(data) || data === "" as any) ? null : data.toFixed(this.options && this.options.decimals);
     return v;
   }
 
-  convertBack(value: string){
-    try{
+  convertBack(value: string) {
+    try {
       if (!value.length) {
         return null;
       }
@@ -90,16 +86,16 @@ export class NumericValueConverter implements IInputValueConverter<number> {
         return null;
       }
 
-      if (this.options){
-        if (!Formatting.isNullOrUndefined(this.options.max)){
+      if (this.options) {
+        if (!Formatting.isNullOrUndefined(this.options.max)) {
           v = Math.min(v, this.options.max)
         }
-        if (!Formatting.isNullOrUndefined(this.options.min)){
+        if (!Formatting.isNullOrUndefined(this.options.min)) {
           v = Math.max(v, this.options.min)
         }
       }
       return v;
-    }catch(e){
+    } catch (e) {
       return null;
     }
   }
@@ -109,10 +105,10 @@ export class NumericValueConverter implements IInputValueConverter<number> {
 
 export class MultipleNumericValueConverter implements IValueConverter<number[], string[]> {
   private static converter = NumericValueConverter.instance
-  convert(data: number[]){
+  convert(data: number[]) {
     return data.map(d => MultipleNumericValueConverter.converter.convert(d));
   }
-  convertBack(value: string[]){
+  convertBack(value: string[]) {
     return value.map(d => MultipleNumericValueConverter.converter.convertBack(d));
   }
 

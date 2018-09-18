@@ -1,10 +1,10 @@
 import * as React from "react";
 import * as _ from "underscore";
-import { IFormInputHTMLProps } from "../form";
-import { Icon } from "./../../display/icon";
-import { ValidationLabel } from "../validationWrapper";
 import { ClassHelpers } from "../../../utilities/classNames";
-import { DataValidationMessage } from '../formCore';
+import { IFormInputHTMLProps } from "../form";
+import { DataValidationMessage } from "../formCore";
+import { ValidationLabel } from "../validationWrapper";
+import { Icon } from "./../../display/icon";
 
 export type ITagInputProps = IFormInputHTMLProps<React.InputHTMLAttributes<HTMLInputElement>> & {
   suggestions?: string[];
@@ -14,19 +14,19 @@ export type ITagInputProps = IFormInputHTMLProps<React.InputHTMLAttributes<HTMLI
 
 export class TagInput extends React.Component<ITagInputProps, { tags: string[]; suggestions: string[], suggestionIndex: number }> {
   static defaultProps: Partial<ITagInputProps> = {};
-  public input: HTMLInputElement | HTMLTextAreaElement;
+  input: HTMLInputElement | HTMLTextAreaElement;
   constructor(props) {
     super(props);
     this.state = { tags: [], suggestions: [], suggestionIndex: -1 };
   }
 
-  public focus() {
+  focus() {
     if (this.input) {
       this.input.focus();
     }
   }
 
-  public blur() {
+  blur() {
     if (this.input) {
       this.input.blur();
     }
@@ -43,14 +43,13 @@ export class TagInput extends React.Component<ITagInputProps, { tags: string[]; 
   }
 
   findOne(haystack: any[], arr: any[]) {
-    return arr.some(function (v) {
-      return haystack.indexOf(v) >= 0;
-    });
+    return arr.some(v => haystack.indexOf(v) >= 0);
   }
 
   private onKeyUp(e: React.KeyboardEvent<HTMLInputElement>) {
-    let input = e.target;
-    let value = input["value"];
+    const input = e.target;
+    // tslint:disable-next-line:no-string-literal
+    const value = input["value"];
     switch (e.keyCode) {
       case 40: // ArrowDown
       case 38: // ArrowUp}
@@ -58,9 +57,10 @@ export class TagInput extends React.Component<ITagInputProps, { tags: string[]; 
       case 13:
         if (value) {
           if (this.state.tags.indexOf(value) === -1) {
-            let tags = [...this.state.tags, value];
+            const tags = [...this.state.tags, value];
             this.notifyTagsChange(tags)
           }
+          // tslint:disable-next-line:no-string-literal
           input["value"] = "";
           return;
         }
@@ -84,19 +84,20 @@ export class TagInput extends React.Component<ITagInputProps, { tags: string[]; 
       return []
     }
 
-    let filteredSuggestions = this.props.suggestions.filter(s => this.makeComparison(s).lastIndexOf(value, 0) === 0);
+    const filteredSuggestions = this.props.suggestions.filter(s => this.makeComparison(s).lastIndexOf(value, 0) === 0);
     return filteredSuggestions.filter(s => this.state.tags.indexOf(s) === -1);
   }
 
   private onKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
-    let input = e.target;
-    let value = input["value"];
+    const input = e.target;
+    // tslint:disable-next-line:no-string-literal
+    const value = input["value"];
     const { suggestionIndex, suggestions } = this.state
 
     switch (e.keyCode) {
       case 8: // delete
         if (this.state.tags.length !== 0 && !value) {
-          let tags = _.clone(this.state.tags);
+          const tags = _.clone(this.state.tags);
           tags.splice(-1, 1);
           this.notifyTagsChange(tags)
         }
@@ -124,14 +125,14 @@ export class TagInput extends React.Component<ITagInputProps, { tags: string[]; 
   }
 
   addTag(tag: string) {
-    let tags = [...this.state.tags, tag];
+    const tags = [...this.state.tags, tag];
     this.notifyTagsChange(tags)
     this.input.value = "";
     this.input.focus();
   }
 
   removeTag(index: number) {
-    let tags = _.clone(this.state.tags);
+    const tags = _.clone(this.state.tags);
     tags.splice(index, 1);
     this.notifyTagsChange(tags)
     this.input.focus();
@@ -155,8 +156,8 @@ export class TagInput extends React.Component<ITagInputProps, { tags: string[]; 
 
   render() {
     const validationMessage = DataValidationMessage.get(this.props)
-    var classes = ClassHelpers.classNames("armstrong-input", "tag-input", this.props.className, {
-      "show-validation": this.props.validationMode !== "none" && validationMessage
+    const classes = ClassHelpers.classNames("armstrong-input", "tag-input", this.props.className, {
+      "show-validation": this.props.validationMode !== "none" && validationMessage,
     });
     return (
       <div className={classes}>

@@ -46,7 +46,8 @@ ArmstrongConfig.setLocale("en-GB");
 
 ReactDOM.render(
   <App>
-    <NewTest />
+    {/* <NewTest /> */}
+    <Home />
   </App>,
   document.getElementById("host")
 );

@@ -1,6 +1,6 @@
 import * as React from "react";
-import { Icon } from "./../display/icon";
 import { ClassHelpers } from "../../utilities/classNames";
+import { Icon } from "./../display/icon";
 
 export interface ITabControlProps extends React.HTMLAttributes<HTMLDivElement> {
   /** (number) The index of the tab selected when the control renders. Defaults to 0 */
@@ -56,7 +56,8 @@ export class TabControl extends React.Component<ITabControlProps, ITabControlSta
   }
 
   render() {
-    let { className, children, onTabChanged, tabAlignment, defaultSelectedIndex, forceSelectedIndex, ...attrs } = this.props
+    let { tabAlignment } = this.props
+    const { className, children, onTabChanged, defaultSelectedIndex, forceSelectedIndex, ...attrs } = this.props
     if (!tabAlignment) {
       tabAlignment = "left"
     }
@@ -64,9 +65,9 @@ export class TabControl extends React.Component<ITabControlProps, ITabControlSta
       className,
       "tab-control",
       {
-        "tabs-right": tabAlignment == "right",
-        "tabs-left": tabAlignment == "left"
-      }
+        "tabs-right": tabAlignment === "right",
+        "tabs-left": tabAlignment === "left",
+      },
     );
     const filteredChildren = React.Children.toArray(children).filter(c => !!c)
     const selectedIndex = this.getSelectedIndex();
@@ -74,9 +75,9 @@ export class TabControl extends React.Component<ITabControlProps, ITabControlSta
       <div {...attrs} className={classes}>
         <div className="tab-control-header">
           {filteredChildren.map((c: React.ReactElement<any>, i: number) =>
-            <div key={i} className={`tab-item-header${selectedIndex === i ? ' selected' : ''}`} onClick={() => this.changeTab(i)}>
+            <div key={i} className={`tab-item-header${selectedIndex === i ? " selected" : ""}`} onClick={() => this.changeTab(i)}>
               {c.props.icon ? <Icon className="m-right-xsmall" icon={c.props.icon} /> : null}{c.props.title}
-            </div>
+            </div>,
           )}
         </div>
         {filteredChildren[selectedIndex]}
@@ -84,7 +85,6 @@ export class TabControl extends React.Component<ITabControlProps, ITabControlSta
     )
   }
 }
-
 
 export interface ITabItemProps extends React.HTMLAttributes<HTMLDivElement> {
   /** (string | JSX.Element) The content to use in the tab items header */
@@ -96,6 +96,6 @@ export interface ITabItemProps extends React.HTMLAttributes<HTMLDivElement> {
 export class TabItem extends React.Component<ITabItemProps, {}> {
   render() {
     const { className, title, children, ...attrs } = this.props
-    return <div {...attrs} className={`tab-content${className ? ` ${className}` : ''}`}>{children}</div>
+    return <div {...attrs} className={`tab-content${className ? ` ${className}` : ""}`}>{children}</div>
   }
 }

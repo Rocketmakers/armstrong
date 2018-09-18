@@ -14,8 +14,8 @@ export class VirtualList extends React.Component<IVirtualListProps, { items?: Ar
   private scanAhead = 10;
   private itemCap = 10000;
   private useAnimationRequestFrame = false;
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = { items: this.generateItems(), currentIndex: 0 }
   }
   generateItems() {
@@ -70,7 +70,7 @@ export class VirtualList extends React.Component<IVirtualListProps, { items?: Ar
   }
   getComplexTemplate() {
     return (
-      <div style={{ height: '100%', backgroundImage: `url('http://lorempixel.com/400/200/')`}}></div>
+      <div style={{ height: '100%', backgroundImage: `url('http://lorempixel.com/400/200/')` }}></div>
     )
   }
   render() {

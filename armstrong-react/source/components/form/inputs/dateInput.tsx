@@ -1,15 +1,14 @@
 import * as React from "react";
-import * as moment from "moment";
 import * as _ from "underscore";
-import { IFormInputProps, generateUniqueId } from "../form";
-import { Form } from "../form";
-import { Grid, Row, Col } from "../../layout/grid";
-import { DateHelpers } from '../../../utilities/dateHelpers';
-import { buildOptions } from "./options";
-import { Formatting } from "../../../utilities/formatting";
-import { ValidationLabel } from "../validationWrapper";
 import { ClassHelpers } from "../../../utilities/classNames";
-import { DataValidationMessage } from '../formCore';
+import { DateHelpers } from "../../../utilities/dateHelpers";
+import { Formatting } from "../../../utilities/formatting";
+import { Col, Grid, Row } from "../../layout/grid";
+import { Form } from "../form";
+import { generateUniqueId, IFormInputProps } from "../form";
+import { DataValidationMessage } from "../formCore";
+import { ValidationLabel } from "../validationWrapper";
+import { buildOptions } from "./options";
 
 export type DateParts = "day" | "month" | "year"
 
@@ -36,7 +35,7 @@ export interface IDateInputProps extends IFormInputProps<DateInput> {
   monthLabel?: string;
   /** (string) The day label - default to `Day` */
   dayLabel?: string;
-  /** Control date part order (`day`, `month`, `year`)*/
+  /** Control date part order (`day`, `month`, `year`) */
   datePartOrder?: DateParts[];
 }
 
@@ -53,7 +52,7 @@ export class DateInput extends React.Component<IDateInputProps, IDateInputState>
     monthLabel: "Month",
     dayLabel: "Day",
     datePartOrder: ["day", "month", "year"],
-    validationMode: "none"
+    validationMode: "none",
   }
 
   private cId = generateUniqueId(u => `di_${u}`);
@@ -74,6 +73,7 @@ export class DateInput extends React.Component<IDateInputProps, IDateInputState>
 
   private validateProps(props: IDateInputProps) {
     if (props.datePartOrder.indexOf("month") === -1) {
+      // tslint:disable-next-line:no-console
       console.error("A DateInput must include `month` in the datePartOrder")
     }
   }
@@ -105,9 +105,9 @@ export class DateInput extends React.Component<IDateInputProps, IDateInputState>
     const validationMessage = DataValidationMessage.get(this.props)
     const { dayLabel, monthLabel, yearLabel, futureDates, yearsFromNow, startYearCap, className, validationMode, disabled, datePartOrder, tabIndex } = this.props
     const options = {
-      "day": buildOptions(dayLabel, this.getDaysArrayByMonth(), v => v, v => Formatting.twoDigitNumber(parseInt(v))),
-      "month": buildOptions(monthLabel, DateHelpers.getMonthValues(), v => v.value, v => v.label),
-      "year": buildOptions(yearLabel, DateHelpers.getYearValues(futureDates, yearsFromNow, startYearCap), v => v, v => v.toString())
+      day: buildOptions(dayLabel, this.getDaysArrayByMonth(), v => v, v => Formatting.twoDigitNumber(parseInt(v, 10))),
+      month: buildOptions(monthLabel, DateHelpers.getMonthValues(), v => v.value, v => v.label),
+      year: buildOptions(yearLabel, DateHelpers.getYearValues(futureDates, yearsFromNow, startYearCap), v => v, v => v.toString()),
     }
     const classes = ClassHelpers.classNames(
       "armstrong-input",
@@ -115,8 +115,8 @@ export class DateInput extends React.Component<IDateInputProps, IDateInputState>
       className,
       {
         "show-validation": (validationMode !== "none" && validationMessage),
-        "input-disabled": disabled
-      }
+        "input-disabled": disabled,
+      },
     );
     return (
       <Form
@@ -128,7 +128,7 @@ export class DateInput extends React.Component<IDateInputProps, IDateInputState>
             {datePartOrder.map((key, idx) => {
               return (
                 <Col key={idx}>
-                  <select tabIndex={tabIndex} {...Form.Bind.selectNumeric(key) } disabled={disabled}>
+                  <select tabIndex={tabIndex} {...Form.Bind.selectNumeric(key)} disabled={disabled}>
                     {options[key]}
                   </select>
                 </Col>

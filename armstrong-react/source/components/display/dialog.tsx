@@ -1,8 +1,8 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import { Icon } from "./icon";
-import { Grid, Row, Col } from './../layout/grid';
 import { generateUniqueId } from "../form/form";
+import { Icon } from "./icon";
+
 export interface IDialogProps {
   /** (string) default: 'host' - The ID of your sites body element  */
   bodyId?: string;
@@ -30,7 +30,7 @@ export interface IDialogProps {
   height?: number
 }
 
-export class Dialog extends React.Component<IDialogProps, {}>{
+export class Dialog extends React.Component<IDialogProps, {}> {
   private dialogContentElement;
 
   private appNode: HTMLElement;
@@ -50,7 +50,7 @@ export class Dialog extends React.Component<IDialogProps, {}>{
   }
 
   private close() {
-    let main = document.querySelector("main");
+    const main = document.querySelector("main");
     if (main && main.classList.contains("dialog-open")) {
       main.classList.remove("dialog-open");
     }
@@ -71,8 +71,8 @@ export class Dialog extends React.Component<IDialogProps, {}>{
   }
 
   componentWillReceiveProps(newProps: Readonly<{ children?: React.ReactNode }> & Readonly<IDialogProps>) {
-    var open = newProps.isOpen;
-    if (open && open != this.props.isOpen && this.props.onOpen) {
+    const open = newProps.isOpen;
+    if (open && open !== this.props.isOpen && this.props.onOpen) {
       this.props.onOpen();
     }
     if (open) {
@@ -87,7 +87,7 @@ export class Dialog extends React.Component<IDialogProps, {}>{
   }
 
   private renderToPortal(props: Readonly<{ children?: React.ReactNode }> & Readonly<IDialogProps>) {
-    let main = document.querySelector("main");
+    const main = document.querySelector("main");
     if (main && !main.classList.contains("dialog-open")) {
       main.classList.add("dialog-open");
     }
@@ -95,11 +95,11 @@ export class Dialog extends React.Component<IDialogProps, {}>{
     let node = this.portalNode;
 
     if (node == null) {
-      this.portalNode = node = document.createElement('div');
-      this.portalNode.classList.add('dialog-layer');
+      this.portalNode = node = document.createElement("div");
+      this.portalNode.classList.add("dialog-layer");
       if (props.closeOnBackgroundClick) {
-        this.portalNode.onclick = (e) => {
-          let clickedElement = e.target as HTMLElement;
+        this.portalNode.onclick = e => {
+          const clickedElement = e.target as HTMLElement;
           if (clickedElement && clickedElement.classList.contains("dialog-layer")) {
             this.close();
           }
@@ -135,7 +135,7 @@ export class Dialog extends React.Component<IDialogProps, {}>{
     this.portalNode.onclick = null;
     const unmounted = ReactDOM.unmountComponentAtNode(this.portalNode);
     if (unmounted) {
-      let body = document.getElementById(this.props.bodyId || "host");
+      const body = document.getElementById(this.props.bodyId || "host");
       if (body && this.portalNode) {
         body.removeChild(this.portalNode);
       }
@@ -147,9 +147,9 @@ export class Dialog extends React.Component<IDialogProps, {}>{
   }
 
   private renderDialog(newProps: Readonly<{ children?: React.ReactNode }> & Readonly<IDialogProps>) {
-    var style = { width: newProps.width || "500px", height: newProps.height || "auto" }
+    const style = { width: newProps.width || "500px", height: newProps.height || "auto" }
     return (
-      <div className={`dialog${newProps.className ? ` ${newProps.className}` : ''}`} style={style} id={this.dialogId}>
+      <div className={`dialog${newProps.className ? ` ${newProps.className}` : ""}`} style={style} id={this.dialogId}>
         {!newProps.title &&
           <div className="dialog-close-button-no-title" onClick={() => this.xClicked()}>
             <Icon icon={Icon.Icomoon.cross} />

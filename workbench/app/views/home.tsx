@@ -1,6 +1,6 @@
 // IMPORTS
 import * as React from 'react';
-import { Icon, TabControl, Button, Grid, Row, Col, AutoCompleteInput, Sample, SelectInput, TabItem, Dialog } from "armstrong-react";
+import { TabControl, Button, Grid, Row, Col, AutoCompleteInput, SelectInput, TabItem, Dialog } from "armstrong-react";
 import { SampleForm } from "./sampleForm";
 
 export class Home extends React.Component<{}, { dialogOpen?: boolean, canClick?: boolean, pending?: boolean }> {
@@ -17,7 +17,7 @@ export class Home extends React.Component<{}, { dialogOpen?: boolean, canClick?:
     let options = [{ id: 3, name: 'é' }, { id: 4, name: 'e' }, { id: 4, name: 'ę' }];
     return (
       <div>
-      <Grid debugMode={true} className="m-bottom-xlarge">
+        <Grid debugMode={true} className="m-bottom-xlarge">
           <Row className="bg-brand-primary" height={60}>
             <Col>
               HEADER
@@ -43,31 +43,31 @@ export class Home extends React.Component<{}, { dialogOpen?: boolean, canClick?:
           </Row>
           <Row>
             <Col>
-            <Grid debugMode={true}>
-              <Row className="bg-red" height={60}>
-                <Col>
-                  HEADER
+              <Grid debugMode={true}>
+                <Row className="bg-red" height={60}>
+                  <Col>
+                    HEADER
             </Col>
-              </Row>
-              <Row>
-                <Col width={300}>1</Col>
-                <Col>2</Col>
-                <Col width="auto">3</Col>
-                <Col>4</Col>
-                <Col>
-                  <Grid debugMode={true}>>
+                </Row>
                 <Row>
-                      <Col>5</Col>
-                      <Col>6</Col>
-                      <Col>7</Col>
-                      <Col>8</Col>
-                      <Col>waddup
+                  <Col width={300}>1</Col>
+                  <Col>2</Col>
+                  <Col width="auto">3</Col>
+                  <Col>4</Col>
+                  <Col>
+                    <Grid debugMode={true}>>
+                <Row>
+                        <Col>5</Col>
+                        <Col>6</Col>
+                        <Col>7</Col>
+                        <Col>8</Col>
+                        <Col>waddup
                   </Col>
-                    </Row>
-                  </Grid>
-                </Col>
-              </Row>
-            </Grid>
+                      </Row>
+                    </Grid>
+                  </Col>
+                </Row>
+              </Grid>
             </Col>
           </Row>
         </Grid>
@@ -75,7 +75,7 @@ export class Home extends React.Component<{}, { dialogOpen?: boolean, canClick?:
         <Button disabled={true} onClick={() => alert('testing 123')}>test disabled</Button>
         <Button onClick={() => this.setState({ pending: !this.state.pending })}>waddup?</Button>
         <Button rounded={true} pending={this.state.pending} >waddup!</Button>
-        <SampleForm sample={{ id: "s101", name: "Keith2", tags: [], accepts: true, birthMonthDay:"12-14" }} />
+        <SampleForm sample={{ id: "s101", name: "Keith2", tags: [], accepts: true, birthMonthDay: "12-14" }} />
         <AutoCompleteInput ignoreDiacritics={true} options={options} />
 
         <Button onClick={() => this.setState({ dialogOpen: true })}>open dialog plz</Button>
@@ -86,7 +86,7 @@ export class Home extends React.Component<{}, { dialogOpen?: boolean, canClick?:
           oh sheee, waddup?<Button onClick={() => this.setState({ canClick: false })}>disable BUTT</Button>
         </Dialog>
 
-        <Sample title="Select Input"
+        {/* <Sample title="Select Input"
           description="A select input with 4 options"
           component={
             <SelectInput change={(i) => alert(i)}
@@ -122,9 +122,9 @@ export class Home extends React.Component<{}, { dialogOpen?: boolean, canClick?:
               <TabItem title="Tab 4">I am the content for tab 4</TabItem>
             </TabControl>
           } />
-
+ */}
         <Button className="m-top-large" onClick={() => this.tabControl.changeTab(3)}>Change to tab 4</Button>
-        </div>
+      </div>
     );
   }
 }

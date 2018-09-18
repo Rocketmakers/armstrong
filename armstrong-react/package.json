@@ -1,6 +1,6 @@
 {
   "name": "armstrong-react",
-  "version": "2.5.19",
+  "version": "3.0.0",
   "description": "Rocketmakers Armstrong library of React components",
   "main": "./dist/index.js",
   "style": "./dist/style.scss",
@@ -11,7 +11,8 @@
     "build": "yarn run build-ts && yarn run build-scss",
     "watch-scss": "node sass_copy.js",
     "watch-ts": "tsc -p source -d -w",
-    "watch": "parallelshell -v \"yarn run watch-ts\" \"yarn run watch-scss\""
+    "watch": "parallelshell -v \"yarn run watch-ts\" \"yarn run watch-scss\"",
+    "lint": "tslint -c tslint.json 'source/**/*.ts{,x}'"
   },
   "repository": {
     "type": "git",
@@ -25,10 +26,10 @@
   "author": "developers@rocketmakers.com",
   "license": "MIT",
   "dependencies": {
-    "moment": "^2.18.1",
-    "prop-types": "^15.6.0",
-    "tslib": "^1.8.1",
-    "underscore": "^1.8.3"
+    "moment": "^2.22.2",
+    "prop-types": "^15.6.2",
+    "tslib": "^1.9.3",
+    "underscore": "^1.9.1"
   },
   "peerDependencies": {
     "@types/react": "16.x",
@@ -36,15 +37,17 @@
     "react-dom": "16.x"
   },
   "devDependencies": {
-    "@types/react": "16.0.36",
-    "@types/react-dom": "^16.0.3",
-    "@types/underscore": "^1.8.6",
-    "chokidar": "^1.7.0",
+    "@types/node": "9.6.31",
+    "@types/react": "16.4.14",
+    "@types/react-dom": "^16.0.7",
+    "@types/underscore": "^1.8.9",
+    "chokidar": "^2.0.4",
     "import-resolve": "^0.4.0",
     "parallelshell": "^3.0.2",
-    "react": "^16.2.0",
-    "react-dom": "^16.2.0",
-    "ts-loader": "^3.2.0",
-    "typescript": "~2.7.1"
+    "react": "^16.5.1",
+    "react-dom": "^16.5.1",
+    "ts-loader": "^3.5.0",
+    "tslint": "^5.11.0",
+    "typescript": "~3.0.3"
   }
 }

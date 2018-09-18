@@ -1,7 +1,7 @@
 import * as React from "react";
-import { IFormInputHTMLProps, generateUniqueId } from "../form";
 import { ClassHelpers } from "../../../utilities/classNames";
-import { DataValidationMessage } from '../formCore';
+import { generateUniqueId, IFormInputHTMLProps } from "../form";
+import { DataValidationMessage } from "../formCore";
 
 export interface IRadioInputProps extends IFormInputHTMLProps<React.InputHTMLAttributes<HTMLInputElement>> {
   labelContent: string | React.ReactElement<any>;
@@ -9,18 +9,18 @@ export interface IRadioInputProps extends IFormInputHTMLProps<React.InputHTMLAtt
 
 export class RadioInput extends React.Component<IRadioInputProps, {}> {
   static defaultProps: Partial<IRadioInputProps> = {
-    validationMode: "none"
+    validationMode: "none",
   }
 
   private input: HTMLInputElement;
 
-  public focus() {
+  focus() {
     if (this.input) {
       this.input.focus()
     }
   }
 
-  public blur() {
+  blur() {
     if (this.input) {
       this.input.blur()
     }
@@ -35,8 +35,8 @@ export class RadioInput extends React.Component<IRadioInputProps, {}> {
       "radio",
       this.props.className,
       {
-        "show-validation": (validationMode !== "none" && validationMessage)
-      }
+        "show-validation": (validationMode !== "none" && validationMessage),
+      },
     );
     return (
       <div className={classes} title={validationMessage}>
