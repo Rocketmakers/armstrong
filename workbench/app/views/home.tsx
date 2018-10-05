@@ -1,6 +1,6 @@
 // IMPORTS
 import * as React from 'react';
-import { TabControl, Button, Grid, Row, Col, AutoCompleteInput, SelectInput, TabItem, Dialog } from "armstrong-react";
+import { TabControl, Button, Grid, Row, Col, AutoCompleteInput, SelectInput, TabItem, Dialog, BurgerMenu, BurgerMenuItem } from "armstrong-react";
 import { SampleForm } from "./sampleForm";
 
 export class Home extends React.Component<{}, { dialogOpen?: boolean, canClick?: boolean, pending?: boolean }> {
@@ -19,6 +19,11 @@ export class Home extends React.Component<{}, { dialogOpen?: boolean, canClick?:
       <div>
         <Grid debugMode={true} className="m-bottom-xlarge">
           <Row className="bg-brand-primary" height={60}>
+          <Col width={50}>
+    <BurgerMenu mode="slide" wrappingComponent={<div/>} closeOnNavigate={true} >
+            <BurgerMenuItem title="hello world"/>
+          </BurgerMenu>
+          </Col>
             <Col>
               HEADER
             </Col>

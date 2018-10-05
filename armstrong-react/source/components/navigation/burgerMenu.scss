@@ -28,6 +28,22 @@ main {
   }
 }
 
+.burger-blocker {
+  position: fixed;
+  height: 100vh;
+  width: 100vw;
+  background-color: rgba(0, 0, 0, 0.3);
+  top: 0;
+  left: 250px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 255;
+  pointer-events: none;
+  transition: opacity 0.2s;
+  opacity: 0;
+}
+
 nav.burger-menu {
   position: fixed;
   top: 0;
@@ -35,25 +51,12 @@ nav.burger-menu {
   left: -250px;
   width: 250px;
   max-width: calc(100vw - 50px);
-  z-index: 255;
+  z-index: 256;
   & > div{
       height: 100%;
   }
 
-  .burger-blocker {
-    position: absolute;
-    height: 100vh;
-    width: 100vw;
-    background-color: rgba(0, 0, 0, 0.3);
-    top: 0;
-    left: 250px;
-    right: 0;
-    bottom: 0;
-    z-index: 0;
-    pointer-events: none;
-    transition: opacity 0.2s;
-    opacity: 0;
-  }
+
 
   ul.burger-menu-list {
     list-style: none;
