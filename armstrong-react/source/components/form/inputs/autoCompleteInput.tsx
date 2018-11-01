@@ -52,6 +52,8 @@ export interface IAutoCompleteInputProps extends IFormInputProps<AutoCompleteInp
   multiSelect?: boolean;
   /** (boolean) wether or not to strip diacritical marks */
   ignoreDiacritics?: boolean;
+  /** (()=> string) fired every time the value changes */
+  onChange?: (val: string) => void;
 }
 
 export interface IAutoCompleteInputState {
@@ -340,6 +342,9 @@ export class AutoCompleteInput extends React.Component<IAutoCompleteInputProps, 
   private prevFilter: string;
   checkToFilter(query: string) {
     this.setState({ query }, () => {
+      if (this.props.onChange){
+        this.props.onChange(query);
+      }
       if (this.state.query !== this.prevFilter) {
         this.prevFilter = this.state.query;
         this.filter(this.state.query);
