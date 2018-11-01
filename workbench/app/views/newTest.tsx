@@ -1,5 +1,5 @@
 import * as React from "react";
-import { TagInput, Dialog } from "armstrong-react";
+import { TagInput, Dialog, AutoCompleteInput, IAutoCompleteOption } from "armstrong-react";
 import { IDataBinder } from "../../../armstrong-react/dist/components/form/formCore";
 import { ISample } from "./sampleForm";
 import { Form, ParentFormContext } from "../../../armstrong-react/dist/components/form/form";
@@ -29,6 +29,7 @@ export class NewTest extends React.Component<{}, { code: string, binder: IDataBi
     let validations = [
       { attribute: "name", message: "arghhh" },
     ];
+    let options: IAutoCompleteOption[] = [{ id: 1, name: "adam", style: { backgroundImage: 'url(myphoto.jpg)' } }]
     return (
       <div>
 
@@ -36,6 +37,7 @@ export class NewTest extends React.Component<{}, { code: string, binder: IDataBi
           <TextInput {...Form.Bind.text("name")} />
           <TextInput {...Form.Bind.text("nested.propA")} />
           <TextInput {...Form.Bind.text("nested.propB")} />
+          <AutoCompleteInput/>
 
         </Form>
         <Button onClick={() => this.updateProp()}>Update nested prop</Button>
