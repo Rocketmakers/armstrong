@@ -88,6 +88,9 @@ export interface IFormProps extends React.FormHTMLAttributes<Form>, IFormCorePro
 
   /** (boolean) Automatically focus the first input (if it's empty) when the form is rendered */
   focusFirstEmptyInput?: boolean;
+
+  /** (() => void) Allows custom submit handling */
+  onSubmit?: () => void;
 }
 
 export interface IFormContext {
@@ -187,6 +190,9 @@ export class Form extends React.Component<IFormProps, {}> {
   }
 
   private preventDefault = e => {
+    if (this.props.onSubmit){
+      this.props.onSubmit();
+    }
     e.preventDefault();
     return false;
   };
