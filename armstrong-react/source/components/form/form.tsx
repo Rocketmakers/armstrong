@@ -142,7 +142,7 @@ export class ParentFormContext extends React.Component {
  * NOTE: This element provides a react context, this can be used to get access to the Forms dataBinder (or any parent Form dataBinder when nested)
  */
 export class Form extends React.Component<IFormProps, {}> {
-  private formDom: HTMLElement;
+  public formDom: HTMLElement;
 
   static defaultProps: Partial<IFormProps> = {
     validationMode: "icon",
