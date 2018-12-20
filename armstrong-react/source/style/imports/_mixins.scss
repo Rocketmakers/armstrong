@@ -6,9 +6,9 @@
 }
 
 @mixin button-shadow($color) {
-    box-shadow: 0 4px 0 $color / 1.2;
+    box-shadow: 0 4px 0 darken($color, 20%);
     &:active:not(:disabled){
-      box-shadow: 0 2px 0 $color / 1.2;
+      box-shadow: 0 2px 0 darken($color, 20%);
     }
 }
 
