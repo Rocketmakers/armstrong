@@ -95,6 +95,16 @@ $responsive-sizes: (
   @include row-setup(4, 3%);
 }
 
+.grid.rs-xlarge-5col > .row,
+.row.rs-xlarge-5col {
+  @include row-setup(5, 3%);
+}
+
+.grid.rs-xlarge-6col > .row,
+.row.rs-xlarge-6col {
+  @include row-setup(6, 3%);
+}
+
 .col.rs-xlarge-unfix {
   @include unfix();
 }
@@ -134,7 +144,7 @@ $responsive-sizes: (
   @media (max-width: #{nth($size, 2)}) {
     //Do this loop for each column limit, from 1col to 4col
 
-    @for $n from 1 through 4 {
+    @for $n from 1 through 6 {
       .grid.rs-#{nth($size, 1)}-#{$n}col > .row,
       .row.rs-#{nth($size, 1)}-#{$n}col {
         @include row-setup($n, 3%);
