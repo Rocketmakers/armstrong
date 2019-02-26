@@ -1,6 +1,5 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import { generateUniqueId } from "../form/form";
 import { Icon } from "./icon";
 
 export interface IDialogProps {
@@ -31,149 +30,77 @@ export interface IDialogProps {
 }
 
 export class Dialog extends React.Component<IDialogProps, {}> {
-  private dialogContentElement;
-
-  private appNode: HTMLElement;
-  private portalNode: HTMLElement;
   private dialogId: string;
 
-  private closeClicked() {
-    this.close();
+  static defaultProps: Partial<IDialogProps> = {
+    bodyId: "host",
+  };
+
+  private handleBackgroundClick(e: React.MouseEvent<HTMLDivElement>) {
+    if (this.props.closeOnBackgroundClick) {
+      const clickedElement = e.target as HTMLElement;
+      if (clickedElement && clickedElement.classList.contains("dialog-layer")) {
+        this.props.onClose();
+      }
+    }
   }
 
   private xClicked() {
     if (this.props.onXClicked) {
       this.props.onXClicked();
     } else {
-      this.close();
+      this.props.onClose();
     }
   }
 
-  private close() {
-    const main = document.querySelector("main");
-    if (main && main.classList.contains("dialog-open")) {
-      main.classList.remove("dialog-open");
-    }
-    this.props.onClose();
-    this.unmountPortalNode();
-  }
-
-  private scrollToTop() {
-    this.dialogContentElement.scrollTop = 0;
-  }
-
-  componentDidMount() {
-    this.dialogContentElement = document.getElementById("dialog-content");
-    this.appNode = document.getElementById(this.props.bodyId || "host");
-    if (this.props.isOpen) {
-      this.renderToPortal(this.props)
-    }
-  }
-
-  componentWillReceiveProps(newProps: Readonly<{ children?: React.ReactNode }> & Readonly<IDialogProps>) {
-    const open = newProps.isOpen;
-    if (open && open !== this.props.isOpen && this.props.onOpen) {
-      this.props.onOpen();
-    }
-    if (open) {
-      this.renderToPortal(newProps)
-    }
-    if (!open && this.props.isOpen) {
-      if (this.props.onClose) {
-        this.props.onClose();
-      }
-      this.unmountPortalNode();
-    }
-  }
-
-  private renderToPortal(props: Readonly<{ children?: React.ReactNode }> & Readonly<IDialogProps>) {
-    const main = document.querySelector("main");
-    if (main && !main.classList.contains("dialog-open")) {
-      main.classList.add("dialog-open");
-    }
-    let element = this.renderDialog(props)
-    let node = this.portalNode;
-
-    if (node == null) {
-      this.portalNode = node = document.createElement("div");
-      this.portalNode.classList.add("dialog-layer");
-      if (props.closeOnBackgroundClick) {
-        this.portalNode.onclick = e => {
-          const clickedElement = e.target as HTMLElement;
-          if (clickedElement && clickedElement.classList.contains("dialog-layer")) {
-            this.close();
-          }
-        }
-      }
-      if (props.layerClass) {
-        this.portalNode.classList.add(props.layerClass);
-      }
-      node.id = this.dialogId || generateUniqueId(u => `dialog-layer-${u}`);
-      this.appNode.appendChild(node);
-    }
-
-    // Renders can return null, but ReactDOM.render() doesn't like being asked
-    // to render null. If "element" is `null`, just render a noscript element,
-    // like React does when an element's render returns null.
-    if (element === null) {
-      element = React.createFactory("noscript")();
-    }
-
-    // use ReactDOM.unstable_renderSubtreeIntoContainer function instead of
-    // render. This allows use to retain "this.context" for the "element"
-    ReactDOM.unstable_renderSubtreeIntoContainer(this, element, node);
-  }
-
-  componentWillUnmount() {
-    this.unmountPortalNode();
-  }
-
-  private unmountPortalNode() {
-    if (!this.portalNode) {
-      return;
-    }
-    this.portalNode.onclick = null;
-    const unmounted = ReactDOM.unmountComponentAtNode(this.portalNode);
-    if (unmounted) {
-      const body = document.getElementById(this.props.bodyId || "host");
-      if (body && this.portalNode) {
-        body.removeChild(this.portalNode);
-      }
-    }
-    if (this.portalNode) {
-      delete this.portalNode;
-    }
-    return unmounted;
-  }
-
-  private renderDialog(newProps: Readonly<{ children?: React.ReactNode }> & Readonly<IDialogProps>) {
-    const style = { width: newProps.width || "500px", height: newProps.height || "auto" }
+  private renderDialog() {
+    let props = this.props;
+    const style = { width: props.width || "500px", height: props.height || "auto" }
     return (
-      <div className={`dialog${newProps.className ? ` ${newProps.className}` : ""}`} style={style} id={this.dialogId}>
-        {!newProps.title &&
-          <div className="dialog-close-button-no-title" onClick={() => this.xClicked()}>
-            <Icon icon={Icon.Icomoon.cross} />
-          </div>
-        }
-        {newProps.title &&
-          <div className="dialog-header">
-            {newProps.title}
-            <div className="dialog-close-button" onClick={() => this.xClicked()}>
+      <div className={`dialog-layer${this.props.layerClass ? ` ${this.props.layerClass}` : ''}`} onClick={e => this.handleBackgroundClick(e)}>
+        <div className={`dialog${props.className ? ` ${props.className}` : ""}`} style={style} >
+          {!props.title &&
+            <div className="dialog-close-button-no-title" onClick={() => this.xClicked()}>
               <Icon icon={Icon.Icomoon.cross} />
             </div>
+          }
+          {props.title &&
+            <div className="dialog-header">
+              {props.title}
+              <div className="dialog-close-button" onClick={() => this.xClicked()}>
+                <Icon icon={Icon.Icomoon.cross} />
+              </div>
+            </div>
+          }
+          <div className="dialog-content" id="dialog-content">
+            {props.children}
           </div>
-        }
-        <div className="dialog-content" id="dialog-content">
-          {newProps.children}
+          {props.footerContent && <div className="dialog-footer">{props.footerContent}</div>}
         </div>
-        {newProps.footerContent && <div className="dialog-footer">{newProps.footerContent}</div>}
       </div>
     )
   }
 
+  componentWillReceiveProps(newProps: Readonly<{ children?: React.ReactNode }> & Readonly<IDialogProps>) {
+    if (this.props.isOpen !== newProps.isOpen) {
+      const main = document.querySelector("main");
+      if (!newProps.isOpen) {
+        if (main && main.classList.contains("dialog-open")) {
+          main.classList.remove("dialog-open");
+        }
+        this.props.onClose();
+      } else {
+        if (main && !main.classList.contains("dialog-open")) {
+          main.classList.add("dialog-open");
+        }
+        if (this.props.onOpen){
+          this.props.onOpen();
+        }
+      }
+    }
+  }
+
   render() {
-    return (
-      <noscript />
-    );
+    return this.props.isOpen ? ReactDOM.createPortal(this.renderDialog(), document.getElementById(this.props.bodyId)) : null
   }
 }
