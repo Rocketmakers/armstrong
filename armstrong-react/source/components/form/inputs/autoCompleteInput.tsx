@@ -138,23 +138,30 @@ export class AutoCompleteInput extends React.Component<IAutoCompleteInputProps, 
 
   }
   focusInput(e: React.MouseEvent<any>) {
-    if (!this.state.open && !getEventTargetAs(e).classList.contains("clear-selected")) {
-      this.setState({ open: true, showOnTop: this.shouldShowOnTop() }, () => {
-        const foundNode = ReactDOM.findDOMNode(this);
-        if (!isElement(foundNode)) {
-          return
-        }
-        const element = foundNode.querySelector("input")
-        if (!element) {
-          return
-        }
-        element.focus()
-        document.addEventListener("click", this, false);
-        if (this.props.remoteQueryOnOpen) {
-          this.filterRemote("", true);
-        }
-      })
+    if (!e) {
+      this.handleFocus();
     }
+    else if (!this.state.open && !getEventTargetAs(e).classList.contains("clear-selected")) {
+      this.handleFocus();
+    }
+  }
+
+  handleFocus(){
+    this.setState({ open: true, showOnTop: this.shouldShowOnTop() }, () => {
+      const foundNode = ReactDOM.findDOMNode(this);
+      if (!isElement(foundNode)) {
+        return
+      }
+      const element = foundNode.querySelector("input")
+      if (!element) {
+        return
+      }
+      element.focus()
+      document.addEventListener("click", this, false);
+      if (this.props.remoteQueryOnOpen) {
+        this.filterRemote("", true);
+      }
+    })
   }
 
   handleEvent(e: Event) {
@@ -344,7 +351,7 @@ export class AutoCompleteInput extends React.Component<IAutoCompleteInputProps, 
   private prevFilter: string;
   checkToFilter(query: string) {
     this.setState({ query }, () => {
-      if (this.props.onChange){
+      if (this.props.onChange) {
         this.props.onChange(query);
       }
       if (this.state.query !== this.prevFilter) {
