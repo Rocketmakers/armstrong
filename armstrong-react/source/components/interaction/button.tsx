@@ -14,40 +14,45 @@ export interface IButtonProps extends React.ButtonHTMLAttributes<HTMLButtonEleme
   pending?: boolean;
 }
 
-export class Button extends React.Component<IButtonProps> {
+export interface IButtonRef { focus: () => void, blur: () => void }
 
-  private handleClick = e => {
-    const { onClick, pending } = this.props
+function ButtonRef(props: IButtonProps, ref: React.Ref<IButtonRef>) {
+  const { onClick, leftIcon, rightIcon, className, rounded, pending, disabled, type, children, ...attrs } = props
+
+  const buttonRef = React.useRef<HTMLButtonElement>()
+  React.useImperativeHandle(ref, () => ({
+    focus: () => {
+      if (buttonRef) { buttonRef.current.focus() }
+    },
+    blur: () => {
+      if (buttonRef) { buttonRef.current.blur() }
+    },
+  }))
+
+  const handleClick = React.useCallback(e => {
     if (onClick && !pending) {
       onClick(e);
     }
-  }
+  }, [onClick, pending])
 
-  input: HTMLButtonElement;
-  focus() {
-    if (this.input) { this.input.focus() }
-  }
-  blur() {
-    if (this.input) { this.input.blur() }
-  }
-  render() {
-    const { onClick, leftIcon, rightIcon, className, rounded, pending, disabled, type, children, ...attrs } = this.props
-    const classes = ClassHelpers.classNames(
-      "btn",
-      className,
-      {
-        "rounded": rounded,
-        "icon-button-left": leftIcon !== undefined,
-        "icon-button-right": rightIcon !== undefined,
-        "pending": pending,
-      },
-    );
-    return (
-      <button disabled={pending || disabled} type={type || "button"} onClick={this.handleClick} {...attrs} ref={r => this.input = r} className={classes}>
-        {leftIcon && <Icon className="left-icon" icon={leftIcon} />}
-        {children}
-        {rightIcon && <Icon className="right-icon" icon={rightIcon} />}
-      </button>
-    );
-  }
+  const classes = ClassHelpers.classNames(
+    "btn",
+    className,
+    {
+      "rounded": rounded,
+      "icon-button-left": leftIcon !== undefined,
+      "icon-button-right": rightIcon !== undefined,
+      "pending": pending,
+    },
+  );
+  return (
+    <button ref={buttonRef} disabled={pending || disabled} type={type || "button"} onClick={handleClick} {...attrs} className={classes}>
+      {leftIcon && <Icon className="left-icon" icon={leftIcon} />}
+      {children}
+      {rightIcon && <Icon className="right-icon" icon={rightIcon} />}
+    </button>
+  );
+
 }
+
+export const Button = React.forwardRef(ButtonRef)

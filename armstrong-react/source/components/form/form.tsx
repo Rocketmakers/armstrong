@@ -136,13 +136,47 @@ export class ParentFormContext extends React.Component {
   }
 }
 
+type IHookFormProps = Pick<IFormProps, Exclude<keyof IFormProps, "dataBinder" | "onDataBinderChange">>
+
+function reducer(state, action) {
+  switch (action.type) {
+    case 'toggle':
+      return !state;
+    default:
+      throw new Error();
+  }
+}
+
+export interface IUseForm<T> {
+  binder: IDataBinder<T>
+  bind: FormBinder<T>
+  DataForm: React.FunctionComponent<IHookFormProps>
+}
+
+export function useForm<T>(initialData: T, dontCloneData: boolean = false): IUseForm<T> {
+  const [state, dispatch] = React.useReducer(reducer, false)
+  const binder = React.useMemo(() => {
+    return dontCloneData ? Form.jsonDataBinder(initialData) : Form.jsonDataBinderWithClone(initialData)
+  }, [initialData, dontCloneData])
+
+  const bind = React.useMemo(() => {
+    //console.log("bind")
+    return new FormBinder<T>()
+  }, [])
+
+  const DataForm = React.useCallback<React.FunctionComponent<IHookFormProps>>((p) => {
+    return <Form {...p} dataBinder={binder} onDataBinderChange={() => dispatch({ type: "toggle" })} />
+  }, [binder])
+
+  return { binder, bind, DataForm }
+}
 /**
  * A stateless data bindable form - state is held within the 'dataBinder' property
  * NOTE: This is designed to render all elements in the form on every change. This allows other participating elements to react to these changes
  * NOTE: This element provides a react context, this can be used to get access to the Forms dataBinder (or any parent Form dataBinder when nested)
  */
 export class Form extends React.Component<IFormProps, {}> {
-  public formDom: HTMLElement;
+  formDom: HTMLElement;
 
   static defaultProps: Partial<IFormProps> = {
     validationMode: "icon",
@@ -179,7 +213,7 @@ export class Form extends React.Component<IFormProps, {}> {
     form: PropTypes.object,
   };
 
-  static Bind = new FormBinder();
+  static Bind = new FormBinder<any>();
 
   static jsonDataBinder<T>(data: T): IDataBinder<T> {
     return new JsonEntityBinder(data);
@@ -190,7 +224,7 @@ export class Form extends React.Component<IFormProps, {}> {
   }
 
   private preventDefault = e => {
-    if (this.props.onSubmit){
+    if (this.props.onSubmit) {
       this.props.onSubmit();
     }
     e.preventDefault();

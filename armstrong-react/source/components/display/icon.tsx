@@ -8,13 +8,12 @@ export interface IIconProps extends React.HTMLAttributes<HTMLElement> {
   /** (string) CSS classname property */
   className?: string;
 }
-export class Icon extends React.Component<IIconProps, {}> {
-  static Icomoon = Icons.Icomoon;
 
-  render() {
-    const { icon, className, ...attrs } = this.props
-    return (
-      <i {...attrs} className={ClassHelpers.classNames(className, "icon", icon)} />
-    );
-  }
+export function Icon(props: IIconProps) {
+  const { icon, className, ...attrs } = props
+  return (
+    <i {...attrs} className={ClassHelpers.classNames(className, "icon", icon)} />
+  );
 }
+
+Icon.Icomoon = Icons.Icomoon

@@ -19,31 +19,32 @@ export interface IGrid extends React.HTMLAttributes<HTMLDivElement> {
   tagName?: keyof React.ReactHTML;
 }
 
-export class Grid extends React.Component<IGrid, {}> {
-  render() {
-    const originalClassName = this.props.className;
-    const { className, debugMode, disableFlexOverride, table, fillContainer, tagName, ...attrs } = this.props
-    const classes = ClassHelpers.classNames(
-      originalClassName,
-      "grid",
-      {
-        "fill-container": fillContainer,
-        "grid-debug": debugMode,
-        "table-grid": table,
-      },
-    );
-    if (fillContainer && !disableFlexOverride) {
-      return React.createElement(tagName || "div", { className: "flex-override" }, <div {...attrs} className={classes} />)
-    } else {
-      return React.createElement(tagName || "div", { ...attrs, className: classes });
-    }
+export function Grid(props: IGrid) {
+  // const originalClassName = props.className;
+  const { className, debugMode, disableFlexOverride, table, fillContainer, tagName, ...attrs } = props
+
+  const classes = ClassHelpers.classNames(
+    className,
+    "grid",
+    {
+      "fill-container": fillContainer,
+      "grid-debug": debugMode,
+      "table-grid": table,
+    },
+  );
+
+  if (fillContainer && !disableFlexOverride) {
+    React.useEffect(() => {
+      const domNode = ReactDOM.findDOMNode(this);
+      if (!domNode) {
+        return
+      }
+      (domNode.parentElement as HTMLElement).style.position = "relative";
+    }, [])
+    return React.createElement(tagName || "div", { className: "flex-override" }, <div {...attrs} className={classes} />)
   }
-  componentDidMount() {
-    const { fillContainer, disableFlexOverride } = this.props
-    if (fillContainer && !disableFlexOverride) {
-      (ReactDOM.findDOMNode(this).parentElement as HTMLElement).style.position = "relative";
-    }
-  }
+
+  return React.createElement(tagName || "div", { ...attrs, className: classes });
 }
 
 function sizeErrorMessage(size: string, sizeValue: string, controlPath: string) {

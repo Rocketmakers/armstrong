@@ -30,8 +30,6 @@ export interface IDialogProps {
 }
 
 export class Dialog extends React.Component<IDialogProps, {}> {
-  private dialogId: string;
-
   static defaultProps: Partial<IDialogProps> = {
     bodyId: "host",
   };
@@ -54,10 +52,10 @@ export class Dialog extends React.Component<IDialogProps, {}> {
   }
 
   private renderDialog() {
-    let props = this.props;
+    const props = this.props;
     const style = { width: props.width || "500px", height: props.height || "auto" }
     return (
-      <div className={`dialog-layer${this.props.layerClass ? ` ${this.props.layerClass}` : ''}`} onClick={e => this.handleBackgroundClick(e)}>
+      <div className={`dialog-layer${this.props.layerClass ? ` ${this.props.layerClass}` : ""}`} onClick={e => this.handleBackgroundClick(e)}>
         <div className={`dialog${props.className ? ` ${props.className}` : ""}`} style={style} >
           {!props.title &&
             <div className="dialog-close-button-no-title" onClick={() => this.xClicked()}>
@@ -93,7 +91,7 @@ export class Dialog extends React.Component<IDialogProps, {}> {
         if (main && !main.classList.contains("dialog-open")) {
           main.classList.add("dialog-open");
         }
-        if (this.props.onOpen){
+        if (this.props.onOpen) {
           this.props.onOpen();
         }
       }
