@@ -29,10 +29,10 @@ export { IFormProps, Form, useForm, ParentFormContext, IFormContext, FormDataClo
 export { IButtonProps, Button, IButtonRef } from "./components/interaction/button";
 
 // Layout
-export { IGrid, Grid, IRow, Row, ICol, Col } from "./components/layout/grid";
+export { IGridProps, Grid, IRowProps, Row, IColProps, Col } from "./components/layout/grid";
 
 // UI Helpers
-export { Color, Size, Side, HorizontalAlignment, VerticalAlignment, LayoutHelpers } from "./utilities/uiHelpers";
+export { Color, Size, Side, HorizontalAlignment, VerticalAlignment, LayoutHelpers } from "./utilities/layoutHelpers";
 
 // Icons
 export { Icons } from "./utilities/icons";
@@ -45,6 +45,6 @@ export { TabControl, TabItem, ITabItemProps, ITabControlProps, ITabControlState 
 // export { Sample, ISampleProps, IPropInfo } from "./components/utility/sample";
 
 import * as ArmstrongConfig from "./config/config";
-export { ClassHelpers } from "./utilities/classNames";
+export { ClassHelpers } from "./utilities/classHelpers";
 export { ValidationLabel, ValidationWrapper } from "./components/form/validationWrapper";
 export { ArmstrongConfig };

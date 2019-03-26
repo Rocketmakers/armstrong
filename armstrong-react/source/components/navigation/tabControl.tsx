@@ -1,5 +1,5 @@
 import * as React from "react";
-import { ClassHelpers } from "../../utilities/classNames";
+import { ClassHelpers } from "../../utilities/classHelpers";
 import { Icon } from "./../display/icon";
 
 export interface ITabControlProps extends React.HTMLAttributes<HTMLDivElement> {

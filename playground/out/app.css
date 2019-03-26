@@ -5757,21 +5757,20 @@ img.rounded {
       display: flex;
       align-items: center;
       justify-content: center;
-      background-color: rgba(0, 0, 0, 0.2);
+      color: #4f5c69;
       height: 100%;
       width: 50px;
       position: absolute;
       right: 0;
-      top: 0;
-      color: white; }
+      top: 0; }
     .dialog-layer .dialog .dialog-close-button-no-title {
       height: 50px;
       background: none;
       color: rgba(0, 0, 0, 0.7); }
     .dialog-layer .dialog .dialog-header {
       flex: 0 0 auto;
-      background-color: #4f5c69;
-      color: #ffffff;
+      border-bottom: 1px solid #d6dce1;
+      color: #4f5c69;
       padding: 1rem;
       position: relative; }
 

@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as _ from "underscore";
-import { ClassHelpers } from "../../utilities/classNames";
+import { ClassHelpers } from "../../utilities/classHelpers";
 import { Icon } from "./../display/icon";
 
 export interface IButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {

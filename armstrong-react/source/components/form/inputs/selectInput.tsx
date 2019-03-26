@@ -1,5 +1,5 @@
 import * as React from "react";
-import { ClassHelpers } from "../../../utilities/classNames";
+import { ClassHelpers } from "../../../utilities/classHelpers";
 import { IFormInputHTMLProps } from "../form";
 import { DataValidationMessage } from "../formCore";
 import { ValidationLabel } from "../validationWrapper";

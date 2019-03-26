@@ -75,13 +75,12 @@ $dialog-header-height: 50px;
         display: flex;
         align-items: center;
         justify-content: center;
-        background-color: rgba(0,0,0,0.2);
+        color: $gray-base;
         height: 100%;
         width: $dialog-header-height;
         position: absolute;
         right: 0;
         top: 0;
-        color: white;
       }
 
     .dialog-close-button-no-title{
@@ -93,8 +92,8 @@ $dialog-header-height: 50px;
 
     .dialog-header {
       flex: 0 0 auto;
-      background-color: $gray-base;
-      color: $white;
+      border-bottom: 1px solid $gray-light;
+      color: $gray-base;
       padding: $spacing-small;
       position: relative;
     }

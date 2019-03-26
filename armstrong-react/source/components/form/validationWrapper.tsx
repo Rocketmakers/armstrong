@@ -1,6 +1,6 @@
 import * as React from "react";
 import { HTMLAttributes } from "react";
-import { ClassHelpers } from "../../utilities/classNames";
+import { ClassHelpers } from "../../utilities/classHelpers";
 import { ValidationModes, ValidationProps } from "./form";
 
 export class ValidationWrapper extends React.Component<{ message: string } & HTMLAttributes<HTMLDivElement> & ValidationProps, {}> {

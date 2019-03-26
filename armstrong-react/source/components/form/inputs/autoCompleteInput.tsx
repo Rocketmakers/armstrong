@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 import * as _ from "underscore";
-import { ClassHelpers } from "../../../utilities/classNames";
+import { ClassHelpers } from "../../../utilities/classHelpers";
 import { DiacriticsStripper } from "../../../utilities/diacriticsStripper";
 import { IFormInputProps } from "../form";
 import { DataValidationMessage, getEventTargetAs, IDataBinder } from "../formCore";

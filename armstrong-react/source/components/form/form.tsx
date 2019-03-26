@@ -1,7 +1,7 @@
 import * as PropTypes from "prop-types";
 import * as React from "react";
 import * as _ from "underscore";
-import { ClassHelpers } from "../../utilities/classNames";
+import { ClassHelpers } from "../../utilities/classHelpers";
 import { FormBinder } from "./formBinders";
 import { DataValidationMessage, getFormBinderFromInjector, IDataBinder, IFormBinderInjector, IFormValidationResult, updateFormBinderInjector } from "./formCore";
 import { PropertyPathResolver } from "./propertyPathResolver";

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { ClassHelpers } from "../../utilities/classNames";
+import { ClassHelpers } from "../../utilities/classHelpers";
 import { Icons } from "./../../utilities/icons";
 
 export interface IIconProps extends React.HTMLAttributes<HTMLElement> {

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { ClassHelpers } from "../../utilities/classNames";
+import { ClassHelpers } from "../../utilities/classHelpers";
 
 export interface IImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
   /** (boolean) Should the image be circular? */

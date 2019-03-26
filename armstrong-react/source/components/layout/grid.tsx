@@ -1,69 +1,51 @@
 import * as React from "react";
-import * as ReactDOM from "react-dom";
 import * as _ from "underscore";
-import { ClassHelpers } from "../../utilities/classNames";
-import { BgColorClass, FgColorClass, HorizontalAlignment, LayoutHelpers, MarginClass, PaddingClass, VerticalAlignment } from "./../../utilities/uiHelpers";
-
-export interface IGrid extends React.HTMLAttributes<HTMLDivElement> {
-  /** (boolean) Wether to render borders around grid parts */
-  debugMode?: boolean;
-  /** (boolean) ADVANCED: Turns of automatic fix of safari6 compat wrapper */
-  disableFlexOverride?: boolean;
-  /** (string) CSS classname property */
-  className?: string | MarginClass | PaddingClass | BgColorClass | FgColorClass;
-  /** (boolean) Render the first row to simulate a table header */
-  table?: boolean;
-  /** (boolean) Wether the table should expand and divide to fill its container */
-  fillContainer?: boolean;
-  /** (string) An HTML tag to use for the root element instead of <div> */
-  tagName?: keyof React.ReactHTML;
-}
-
-export function Grid(props: IGrid) {
-  // const originalClassName = props.className;
-  const { className, debugMode, disableFlexOverride, table, fillContainer, tagName, ...attrs } = props
-
-  const classes = ClassHelpers.classNames(
-    className,
-    "grid",
-    {
-      "fill-container": fillContainer,
-      "grid-debug": debugMode,
-      "table-grid": table,
-    },
-  );
-
-  if (fillContainer && !disableFlexOverride) {
-    React.useEffect(() => {
-      const domNode = ReactDOM.findDOMNode(this);
-      if (!domNode) {
-        return
-      }
-      (domNode.parentElement as HTMLElement).style.position = "relative";
-    }, [])
-    return React.createElement(tagName || "div", { className: "flex-override" }, <div {...attrs} className={classes} />)
-  }
-
-  return React.createElement(tagName || "div", { ...attrs, className: classes });
-}
+import { ClassHelpers } from "../../utilities/classHelpers";
+import { HorizontalAlignment, VerticalAlignment, LayoutHelpers } from "../../utilities/layoutHelpers";
 
 function sizeErrorMessage(size: string, sizeValue: string, controlPath: string) {
   return `Unsupported ${size} property '${sizeValue}' on ${controlPath}. If you are using a string, make sure it is either 'auto' or follows the pattern '[number]*'`
 }
 
-export interface IRow extends React.HTMLAttributes<HTMLDivElement> {
+export interface IGridProps extends React.HTMLAttributes<HTMLDivElement> {
+  /** (boolean) Wether to render borders around grid parts */
+  debugMode?: boolean;
+  /** (string) CSS classname property */
+  className?: string;
+  /** (boolean) Wether the table should expand and divide to fill its container */
+  fillContainer?: boolean;
+  /** (string) An HTML tag to use for the root element instead of <div> */
+  tagName?: keyof React.ReactHTML;
+  /** (Col[]) A row must contain one or many <Col/> elements */
+  children?: React.ReactNode;
+}
+
+export function Grid(props: IGridProps) {
+  const originalClassName = props.className;
+  const { className, debugMode, fillContainer, tagName, ...attrs } = props;
+  const classes = ClassHelpers.classNames(
+    originalClassName,
+    "grid",
+    {
+      "fill-container": fillContainer,
+      "grid-debug": debugMode
+    },
+  );
+  return React.createElement(tagName || "div", { ...attrs, className: classes })
+}
+
+export interface IRowProps extends React.HTMLAttributes<HTMLDivElement> {
   /** (number | string) Sets a fixed height for the row, or 'auto' to grow to fit its content */
   height?: number | string;
   /** (string) CSS classname property */
-  className?: string | MarginClass | PaddingClass | BgColorClass | FgColorClass;
+  className?: string;
   /** (string) An HTML tag to use for the root element instead of <div> */
   tagName?: string;
   /** (Col[]) A row must contain one or many <Col/> elements */
   children?: React.ReactNode;
 }
 
-export function Row(props: IRow) {
-  const { className, height, tagName, style, ...attrs } = props
+export function Row(props: IRowProps) {
 
   function needsFixed() {
     if (!height) {
@@ -79,8 +61,10 @@ export function Row(props: IRow) {
     return false;
   }
 
+  const { className, height, tagName, style, ...attrs } = props;
   const classes = ClassHelpers.classNames(className, "row", needsFixed() ? "no-flex" : "");
   let styles = style;
+
   if (height) {
     if (typeof height === "number") {
       styles = _.extend({ height: `${height}px` }, styles);
@@ -104,10 +88,9 @@ export function Row(props: IRow) {
       return c ? React.cloneElement(c, { style: c.props.style }) : null
     }),
   )
-
 }
 
-export interface ICol extends React.HTMLAttributes<HTMLDivElement> {
+export interface IColProps extends React.HTMLAttributes<HTMLDivElement> {
   /** (HorizontalAlignment(string)) How to align content horizontally in this column */
   horizontalAlignment?: HorizontalAlignment;
   /** (HorizontalAlignment(string)) How to align content vertically in this column */
@@ -117,10 +100,10 @@ export interface ICol extends React.HTMLAttributes<HTMLDivElement> {
   /** (string) An HTML tag to use for the root element instead of <div> */
   tagName?: string;
   /** (string) CSS classname property */
-  className?: string | MarginClass | PaddingClass | BgColorClass | FgColorClass;
+  className?: string;
 }
 
-export function Col(props: ICol) {
+export function Col(props: IColProps) {
   const { className, width, horizontalAlignment, verticalAlignment, tagName, style, ...attrs } = props
   function needsFixed() {
     if (!width) {

@@ -1,4 +1,4 @@
-import { ClassHelpers } from "./classNames";
+import { ClassHelpers } from "./classHelpers";
 
 export type Size = "none" | "xxsmall" | "xsmall" | "small" | "medium" | "large" | "xlarge";
 export type Side = "top" | "left" | "right" | "bottom" | "all";

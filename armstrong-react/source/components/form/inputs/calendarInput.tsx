@@ -3,7 +3,7 @@ import * as React from "react";
 import * as ReactDOM from "react-dom";
 import * as _ from "underscore";
 import { isLocaleSet } from "../../../config/config"
-import { ClassHelpers } from "../../../utilities/classNames";
+import { ClassHelpers } from "../../../utilities/classHelpers";
 import { Icon } from "../../display/icon";
 import { Col, Grid, Row } from "../../layout/grid";
 import { IFormInputHTMLProps } from "../form";

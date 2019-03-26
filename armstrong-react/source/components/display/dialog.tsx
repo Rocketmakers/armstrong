@@ -1,104 +1,76 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
+import { useCallback } from "react";
 import { Icon } from "./icon";
 
-export interface IDialogProps {
-  /** (string) default: 'host' - The ID of your sites body element  */
-  bodyId?: string;
+export interface IDialogProps extends React.HTMLAttributes<HTMLElement> {
+  /** (string) The title of the dialog */
+  title?: string;
+  /** (string) default: '#host' - The selector of the element you'd like to inject the dialog into */
+  bodySelector?: string;
   /** (string) An additional class for the dialog layer, normally used for forcing higher z-index values  */
   layerClass?: string;
-  /** (string) CSS classname property */
-  className?: string;
-  /** (string) The title to use in the dialogs header */
-  title?: string;
   /** (boolean) Setting this to true or false will open or close the dialog */
   isOpen: boolean;
-  /** (boolean) Controls wether the dialog closes when the background overlay is clicked */
-  closeOnBackgroundClick?: boolean;
-  /** (()=> void) Event to fire when the dialog is closed */
-  onClose: () => void;
-  /** (()=> void) Event to fire when the dialog is opened */
-  onOpen?: () => void;
-  /** (()=> void) Event to fire when the x button is clicked. Use this to confirm (double dialogs) */
-  onXClicked?: () => void;
-  /** (React.ReactElement<any>) An element, normally containing buttons, to put in the footer */
-  footerContent?: React.ReactElement<any>;
   /** (number) The width of the dialog */
   width?: number
   /** (number) The height of the dialog */
   height?: number
+  /** (()=> void) Event to fire when the dialog is closed */
+  onClose: () => void;
+  /** (()=> void) Event to fire when the x button is clicked. Use this to confirm (double dialogs) */
+  onXClicked?: () => void;
+  /** (boolean) Controls wether the dialog closes when the background overlay is clicked */
+  closeOnBackgroundClick?: boolean;
 }
 
-export class Dialog extends React.Component<IDialogProps, {}> {
-  static defaultProps: Partial<IDialogProps> = {
-    bodyId: "host",
-  };
+export const Dialog : React.FC<IDialogProps> = (props) => {
 
-  private handleBackgroundClick(e: React.MouseEvent<HTMLDivElement>) {
-    if (this.props.closeOnBackgroundClick) {
-      const clickedElement = e.target as HTMLElement;
-      if (clickedElement && clickedElement.classList.contains("dialog-layer")) {
-        this.props.onClose();
+  const style = { width: props.width || "500px", height: props.height || "auto" }
+
+  const handleBackgroundClick = useCallback(
+    e => {
+      if (props.closeOnBackgroundClick !== false) {
+        const clickedElement = e.target as HTMLElement;
+        if (clickedElement && clickedElement.classList.contains("dialog-layer")) {
+          props.onClose();
+        }
       }
-    }
-  }
+    }, [props.closeOnBackgroundClick]
+  )
 
-  private xClicked() {
-    if (this.props.onXClicked) {
-      this.props.onXClicked();
-    } else {
-      this.props.onClose();
-    }
-  }
+  const handleXClick = useCallback(
+    () => {
+      if (props.onXClicked){
+        props.onXClicked()
+      }else{
+        props.onClose();
+      }
+    }, [props.onXClicked]
+  )
 
-  private renderDialog() {
-    const props = this.props;
-    const style = { width: props.width || "500px", height: props.height || "auto" }
-    return (
-      <div className={`dialog-layer${this.props.layerClass ? ` ${this.props.layerClass}` : ""}`} onClick={e => this.handleBackgroundClick(e)}>
-        <div className={`dialog${props.className ? ` ${props.className}` : ""}`} style={style} >
-          {!props.title &&
-            <div className="dialog-close-button-no-title" onClick={() => this.xClicked()}>
-              <Icon icon={Icon.Icomoon.cross} />
-            </div>
-          }
-          {props.title &&
-            <div className="dialog-header">
-              {props.title}
-              <div className="dialog-close-button" onClick={() => this.xClicked()}>
-                <Icon icon={Icon.Icomoon.cross} />
-              </div>
-            </div>
-          }
-          <div className="dialog-content" id="dialog-content">
-            {props.children}
+  const dialog = (
+    <div className={`dialog-layer${props.layerClass ? ` ${props.layerClass}` : ''}`} onClick={handleBackgroundClick}>
+      <div className={`dialog${props.className ? ` ${props.className}` : ""}`} style={style} >
+        {!props.title &&
+          <div className="dialog-close-button-no-title" onClick={handleXClick}>
+            <Icon icon={Icon.Icomoon.cross2} />
           </div>
-          {props.footerContent && <div className="dialog-footer">{props.footerContent}</div>}
+        }
+        {props.title &&
+          <div className="dialog-header">
+            {props.title}
+            <div className="dialog-close-button" onClick={handleXClick}>
+              <Icon icon={Icon.Icomoon.cross2} />
+            </div>
+          </div>
+        }
+        <div className="dialog-content" id="dialog-content">
+          {props.children}
         </div>
       </div>
-    )
-  }
+    </div>
+  )
 
-  componentWillReceiveProps(newProps: Readonly<{ children?: React.ReactNode }> & Readonly<IDialogProps>) {
-    if (this.props.isOpen !== newProps.isOpen) {
-      const main = document.querySelector("main");
-      if (!newProps.isOpen) {
-        if (main && main.classList.contains("dialog-open")) {
-          main.classList.remove("dialog-open");
-        }
-        this.props.onClose();
-      } else {
-        if (main && !main.classList.contains("dialog-open")) {
-          main.classList.add("dialog-open");
-        }
-        if (this.props.onOpen) {
-          this.props.onOpen();
-        }
-      }
-    }
-  }
-
-  render() {
-    return this.props.isOpen ? ReactDOM.createPortal(this.renderDialog(), document.getElementById(this.props.bodyId)) : null
-  }
+  return props.isOpen ? ReactDOM.createPortal(dialog, document.querySelector(props.bodySelector || "#host")) : null
 }

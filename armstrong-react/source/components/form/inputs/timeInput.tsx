@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as _ from "underscore";
-import { ClassHelpers } from "../../../utilities/classNames";
+import { ClassHelpers } from "../../../utilities/classHelpers";
 import { DateHelpers } from "../../../utilities/dateHelpers";
 import { Formatting } from "../../../utilities/formatting";
 import { Col, Grid, Row } from "../../layout/grid";
