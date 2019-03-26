@@ -1,9 +1,9 @@
-import * as PropTypes from "prop-types";
 import * as React from "react";
 import * as _ from "underscore";
 import { ClassHelpers } from "../../utilities/classHelpers";
 import { FormBinder } from "./formBinders";
 import { DataValidationMessage, getFormBinderFromInjector, IDataBinder, IFormBinderInjector, IFormValidationResult, updateFormBinderInjector } from "./formCore";
+import { FormBinderKey, IArrayProp, IObjectProp, PropertyPathFor, PropType, toDataPath } from "./propertyPathBuilder";
 import { PropertyPathResolver } from "./propertyPathResolver";
 
 /** The default Json Entity binder - NOTE, the original instance provided is MUTABLE */
@@ -79,7 +79,7 @@ export interface IFormCoreProps {
   validationMode?: ValidationModes
 }
 
-export interface IFormProps extends React.FormHTMLAttributes<Form>, IFormCoreProps {
+export interface IFormProps extends React.FormHTMLAttributes<typeof Form>, IFormCoreProps {
   /** Called when bound form data changes: NOTE, this is called on every key stroke/interaction on any of the bound fields */
   onDataChanged?: (data?: any) => void;
 
@@ -116,23 +116,62 @@ export function extractChildValidationResults(validationResults: IFormValidation
   return vrs.map(a => ({ ...a, attribute: a.attribute.substring(dataPath.length + 1) }));
 }
 
-export class ParentFormContext extends React.Component {
-  static contextTypes = { form: PropTypes.object };
+export interface IUseParentForm<T> {
+  bind: FormBinder<T>
+  DataForm: React.FunctionComponent<{}>
+}
 
-  render() {
-    const context = Form.getFormContext(this.context)
-    if (!context) {
-      // tslint:disable-next-line:no-console
-      console.error("A ParentFormBinder should be rendered within the context of a parent Form")
-    }
+export function useParentForm<TDataBinder, X>(context: FormHookContext<TDataBinder>, dataName: (builder: PropType<TDataBinder>) => IObjectProp<X>): IUseParentForm<X>
+export function useParentForm<TDataBinder, X>(context: FormHookContext<TDataBinder>, dataName: (builder: PropType<TDataBinder>) => IArrayProp<X>): IUseParentForm<X[]>
+export function useParentForm<TDataBinder, TKey extends Extract<keyof TDataBinder, string>>(context: FormHookContext<TDataBinder>, dataName: TKey): IUseParentForm<TDataBinder[TKey]>
+export function useParentForm<TDataBinder>(context: FormHookContext<TDataBinder>, parentPath?: FormBinderKey<TDataBinder>): IUseParentForm<any> {
+  return { DataForm: ParentFormContext, bind: new FormBinder<TDataBinder>(toDataPath(parentPath)) }
+}
 
-    const children = context ? FormElementProcessor.processChildren(context.coreProps, this.props.children, context.notifyChange) : this.props.children;
+export function ParentFormContext(props: { children: React.ReactNode }) {
+  const { children } = props
+  return (
+    <FormContext.Consumer>
+      {context => {
+        if (!context) {
+          // tslint:disable-next-line:no-console
+          console.error("A ParentFormBinder should be rendered within the context of a parent Form")
+        }
 
-    return (
-      <>
-        {children}
-      </>
-    )
+        return context ? FormElementProcessor.processChildren(context.coreProps, children, context.notifyChange) : children;
+      }}
+    </FormContext.Consumer>
+  )
+}
+
+interface IFC<TDataBinder> {
+  <X>(builder: PropType<TDataBinder>): IObjectProp<X>
+  <X>(builder: PropType<TDataBinder>): IArrayProp<X>
+  dataName: Extract<keyof TDataBinder, string>
+}
+
+export function useFormContext<TDataBinder>() {
+  return {
+    Form: (props: { initialData: TDataBinder, dontCloneData?: boolean, children: (value: IUseFormBase<TDataBinder>) => React.ReactNode }) => {
+      const { initialData, dontCloneData, children } = props
+      const { DataForm, ...rest } = useForm(initialData, dontCloneData)
+      return (
+        <DataForm>
+          {children(rest)}
+        </DataForm>
+      )
+    },
+    ChildForm: (props: { children: (value: IUseFormBase<TDataBinder>) => React.ReactNode }) => {
+      const ctx = React.useContext(FormContext)
+      if (!ctx) {
+        return null
+      }
+      return (
+        <ParentFormContext>
+          {props.children({ bind: new FormBinder<TDataBinder>(), binder: ctx && ctx.dataBinder })}
+        </ParentFormContext>
+      )
+    },
   }
 }
 
@@ -140,112 +179,105 @@ type IHookFormProps = Pick<IFormProps, Exclude<keyof IFormProps, "dataBinder" | 
 
 function reducer(state, action) {
   switch (action.type) {
-    case 'toggle':
+    case "toggle":
       return !state;
     default:
       throw new Error();
   }
 }
 
-export interface IUseForm<T> {
+export interface IUseFormBase<T> {
   binder: IDataBinder<T>
   bind: FormBinder<T>
+}
+
+export interface IUseForm<T> extends IUseFormBase<T> {
   DataForm: React.FunctionComponent<IHookFormProps>
+  context: FormHookContext<T>
+}
+
+export class FormHookContext<TDataBinder> {
+  useForm<X>(dataName: (builder: PropType<TDataBinder>) => IObjectProp<X>): IUseParentForm<X>
+  useForm<X>(dataName: (builder: PropType<TDataBinder>) => IArrayProp<X>): IUseParentForm<X[]>
+  useForm<TKey extends Extract<keyof TDataBinder, string>>(dataName: TKey): IUseParentForm<TDataBinder[TKey]>
+  useForm(): IUseParentForm<TDataBinder>
+  useForm(dataPath?: FormBinderKey<TDataBinder>): IUseParentForm<any> {
+    return { DataForm: ParentFormContext, bind: new FormBinder<TDataBinder>(toDataPath(dataPath)) }
+  }
 }
 
 export function useForm<T>(initialData: T, dontCloneData: boolean = false): IUseForm<T> {
-  const [state, dispatch] = React.useReducer(reducer, false)
+  const [, dispatch] = React.useReducer(reducer, false)
   const binder = React.useMemo(() => {
     return dontCloneData ? Form.jsonDataBinder(initialData) : Form.jsonDataBinderWithClone(initialData)
   }, [initialData, dontCloneData])
 
   const bind = React.useMemo(() => {
-    //console.log("bind")
+    // console.log("bind")
     return new FormBinder<T>()
   }, [])
 
-  const DataForm = React.useCallback<React.FunctionComponent<IHookFormProps>>((p) => {
+  const DataForm = React.useCallback<React.FunctionComponent<IHookFormProps>>(p => {
     return <Form {...p} dataBinder={binder} onDataBinderChange={() => dispatch({ type: "toggle" })} />
   }, [binder])
 
-  return { binder, bind, DataForm }
+  return { binder, bind, DataForm, context: new FormHookContext<T>() }
 }
+
+const FormContext = React.createContext<IFormContext>(undefined);
+
 /**
  * A stateless data bindable form - state is held within the 'dataBinder' property
  * NOTE: This is designed to render all elements in the form on every change. This allows other participating elements to react to these changes
  * NOTE: This element provides a react context, this can be used to get access to the Forms dataBinder (or any parent Form dataBinder when nested)
  */
-export class Form extends React.Component<IFormProps, {}> {
-  formDom: HTMLElement;
-
-  static defaultProps: Partial<IFormProps> = {
-    validationMode: "icon",
-  };
-
-  static contextTypes = { form: PropTypes.object };
-
-  static getFormContext(context: any) {
-    return context.form as IFormContext;
-  }
-
-  componentDidMount() {
-    if (this.props.focusFirstEmptyInput) {
-      const f = this.formDom;
-      const inputs = f.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>("input[type=text]:not(:disabled), textarea:not(:disabled)");
+export function Form(props: IFormProps) {
+  const { focusFirstEmptyInput, onSubmit, onDataBinderChange, onDataChanged, dataBinder, children, className, validationMode } = props
+  const formDom = React.useRef<HTMLElement>()
+  React.useEffect(() => {
+    if (focusFirstEmptyInput) {
+      const inputs = formDom.current.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>("input[type=text]:not(:disabled), textarea:not(:disabled)");
       if (inputs[0] && !inputs[0].value) {
         inputs[0].focus();
       }
     }
-  }
+  })
 
-  getChildContext(): { form: IFormContext } {
-    return {
-      form: {
-        dataBinder: this.props.dataBinder,
-        coreProps: this.props,
-        parent: this.context.form,
-        notifyChange: this.notifyChange,
-      },
-    };
-  }
-
-  static childContextTypes = {
-    form: PropTypes.object,
-  };
-
-  static Bind = new FormBinder<any>();
-
-  static jsonDataBinder<T>(data: T): IDataBinder<T> {
-    return new JsonEntityBinder(data);
-  }
-
-  static jsonDataBinderWithClone<T>(data: T): IDataBinder<T> {
-    return new JsonEntityBinder(FormDataClone.custom(data));
-  }
-
-  private preventDefault = e => {
-    if (this.props.onSubmit) {
-      this.props.onSubmit();
+  const preventDefault = React.useCallback(e => {
+    if (onSubmit) {
+      onSubmit();
     }
     e.preventDefault();
     return false;
-  };
+  }, [onSubmit]);
 
-  private setRef = (r: HTMLElement) => (this.formDom = r)
-  render() {
-    const ch = FormElementProcessor.processChildren(this.props, this.props.children, this.notifyChange);
-    const hasParentForm = !!Form.getFormContext(this.context);
-    const className = ClassHelpers.classNames("form", hasParentForm && "form-nested", this.props.className);
-    return hasParentForm ?
-      React.createFactory("div")({ className, ref: this.setRef }, ch) :
-      React.createFactory("form")({ className, onSubmit: this.preventDefault, ref: this.setRef }, ch);
-  }
+  const notifyChange = React.useCallback(() => {
+    if (onDataBinderChange) { onDataBinderChange(dataBinder); }
+    if (onDataChanged) { onDataChanged(dataBinder.toJson()); }
+  }, [onDataBinderChange, onDataChanged, dataBinder]);
 
-  private notifyChange = () => {
-    if (this.props.onDataBinderChange) { this.props.onDataBinderChange(this.props.dataBinder); }
-    if (this.props.onDataChanged) { this.props.onDataChanged(this.props.dataBinder.toJson()); }
-  };
+  const ch = FormElementProcessor.processChildren({ ...props, validationMode: validationMode || "icon" }, children, notifyChange);
+  const context = React.useContext(FormContext)
+  const hasParentForm = !!context
+
+  const className1 = ClassHelpers.classNames("form", hasParentForm && "form-nested", className);
+  return <FormContext.Provider value={{
+    dataBinder,
+    coreProps: props,
+    parent: context,
+    notifyChange,
+  }}> {hasParentForm ?
+    React.createFactory("div")({ className: className1, ref: formDom }, ch) :
+    React.createFactory("form")({ className: className1, onSubmit: preventDefault, ref: formDom }, ch)
+    }
+  </FormContext.Provider>
 }
+
+Form.Bind = new FormBinder<any>();
+
+Form.jsonDataBinder = function <T>(data: T): IDataBinder<T> { return new JsonEntityBinder(data) }
+
+Form.jsonDataBinderWithClone = function <T>(data: T): IDataBinder<T> { return new JsonEntityBinder(FormDataClone.custom(data)) }
 
 class FormElementProcessor {
   static processChildren(formProps: IFormCoreProps, node: React.ReactNode, notifyChange: () => void) {

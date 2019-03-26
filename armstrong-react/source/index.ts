@@ -23,7 +23,7 @@ export { IAutoCompleteInputProps, AutoCompleteInput, IAutoCompleteOption } from 
 export { IDataBinder, IFormBinder, IFormValidationResult } from "./components/form/formCore";
 export { FormBinderBase } from "./components/form/formBinderBase";
 export { FormBinder, InputFormBinder } from "./components/form/formBinders";
-export { IFormProps, Form, useForm, ParentFormContext, IFormContext, FormDataClone, generateUniqueId, extractChildValidationResults } from "./components/form/form";
+export { IFormProps, Form, useForm, ParentFormContext, useFormContext, FormHookContext, IFormContext, FormDataClone, generateUniqueId, extractChildValidationResults } from "./components/form/form";
 
 // Interaction
 export { IButtonProps, Button, IButtonRef } from "./components/interaction/button";

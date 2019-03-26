@@ -19,6 +19,42 @@ export interface IAutoCompleteOption {
   prefixElement?: JSX.Element;
 }
 
+export function useThrottle<TValue>(value: TValue, limit: number, onValueChange?: (value: TValue) => void) {
+  const [throttledValue, setThrottledValue] = React.useState(value);
+  const lastRan = React.useRef(Date.now());
+
+  React.useEffect(
+    () => {
+      const handler = setTimeout(() => {
+        if (Date.now() - lastRan.current >= limit) {
+          setThrottledValue(value);
+          if (onValueChange) { onValueChange(value) }
+          lastRan.current = Date.now();
+        }
+      }, limit - (Date.now() - lastRan.current));
+
+      return () => {
+        clearTimeout(handler);
+      };
+    },
+    [value, limit]);
+
+  return throttledValue;
+}
+
+export function remoteOptions(remoteQuery?: (query: string) => Promise<IAutoCompleteOption[]>) {
+  const [options, setOptions] = React.useState<IAutoCompleteOption[]>([])
+  const [filter, setFilter] = React.useState("")
+  const onFilterChanged = React.useCallback((query: string) => {
+    remoteQuery(query).then(opts => setOptions(opts)).catch(e => {
+      // tslint:disable-next-line: no-console
+      console.log("Unable to perform query");
+    })
+  }, [remoteQuery])
+  useThrottle(filter, 2000, onFilterChanged)
+  return { options, setFilter }
+}
+
 export interface IAutoCompleteInputProps extends IFormInputProps<AutoCompleteInput> {
   /** (string) CSS classname property */
   className?: string;
@@ -146,7 +182,7 @@ export class AutoCompleteInput extends React.Component<IAutoCompleteInputProps, 
     }
   }
 
-  handleFocus(){
+  handleFocus() {
     this.setState({ open: true, showOnTop: this.shouldShowOnTop() }, () => {
       const foundNode = ReactDOM.findDOMNode(this);
       if (!isElement(foundNode)) {

@@ -7,9 +7,9 @@ class PropertyNameProvider<T> implements IObjectProp<T>, IArrayProp<T>, IPathRes
     return this as any as PropType<T[K]>
   }
 
-  index(index: number): IObjectProp<T> {
+  index(index: number): PropType<T> {
     this.parts.push(`${index}`)
-    return this;
+    return this as any as PropType<T>;
   }
 
   resolve() {
@@ -26,7 +26,7 @@ export interface IObjectProp<T> {
 }
 
 export interface IArrayProp<T> {
-  index(index: number): IObjectProp<T>
+  index(index: number): PropType<T>
 }
 
 export type PropertyPathFor<T, X> = (builder: PropType<T>) => IObjectProp<X> | IArrayProp<X>
@@ -36,4 +36,21 @@ export class PropertyPath {
     const a = b(new PropertyNameProvider<T>() as any)
     return (a as any as IPathResolve).resolve()
   }
+}
+
+export type FormBinderKey<T, X = any> = Extract<keyof T, string> | PropertyPathFor<T, X>
+
+function toString<T>(param: FormBinderKey<T>) {
+  if (typeof param === "string") {
+    return param
+  }
+
+  return PropertyPath.for(param)
+}
+
+export function toDataPath<T>(param: FormBinderKey<T>, parentPath?: string) {
+  if (param === undefined) {
+    return
+  }
+  return parentPath ? `${parentPath}.${toString(param)}` : toString(param)
 }

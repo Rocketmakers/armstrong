@@ -10,7 +10,7 @@ import { ICodeInputProps } from "./inputs/codeInput";
 import { IDateInputProps } from "./inputs/dateInput";
 import { ITagInputProps } from "./inputs/tagInput";
 import { ITimeInputProps } from "./inputs/timeInput";
-import { IArrayProp, PropertyPath, PropertyPathFor } from "./propertyPathBuilder";
+import { FormBinderKey, IArrayProp, IObjectProp, PropType, toDataPath } from "./propertyPathBuilder";
 
 /** An input FormBinder that sets native 'value' and 'onChange: (e) => void' properties */
 export class InputFormBinder<TDataPropValue, TComponentPropValue> extends FormBinderBase<React.DOMAttributes<{}>, TDataPropValue, TComponentPropValue> {
@@ -201,31 +201,15 @@ class ChildrenBinder<TValue, TProps = HTMLElement> implements IFormBinder<TProps
   }
 }
 
-type FormBinderKey<T, X = any> = Extract<keyof T, string> | PropertyPathFor<T, X>
-
-function toString1<T>(param: FormBinderKey<T>) {
-  if (typeof param === "string") {
-    return param
-  }
-
-  return PropertyPath.for(param)
-}
-
-function toString<T>(param: FormBinderKey<T>, parentPath: string) {
-  return parentPath ? `${parentPath}.${toString1(param)}` : toString1(param)
-}
-
 /** Form Binder helpers */
 export class FormBinder<TDataBinder> {
   constructor(private parentPath?: string) { }
 
-  createChildBinder1<X>(dataName: PropertyPathFor<TDataBinder, X>) {
-    type A = ReturnType<PropertyPathFor<TDataBinder, X>>
-    return new FormBinder<A extends IArrayProp<X> ? X[] : X>(PropertyPath.for(dataName))
-  }
-
-  createChildBinder<TKey extends Extract<keyof TDataBinder, string>>(dataName: TKey) {
-    return new FormBinder<TDataBinder[TKey]>(dataName)
+  createChildBinder<X>(dataName: (builder: PropType<TDataBinder>) => IObjectProp<X>): FormBinder<X>
+  createChildBinder<X>(dataName: (builder: PropType<TDataBinder>) => IArrayProp<X>): FormBinder<X[]>
+  createChildBinder<TKey extends Extract<keyof TDataBinder, string>>(dataName: TKey): FormBinder<TDataBinder[TKey]>
+  createChildBinder(dataName: FormBinderKey<TDataBinder>): FormBinder<any> {
+    return new FormBinder(toDataPath(dataName, this.parentPath))
   }
 
   /** bind a custom form binder */
@@ -235,7 +219,7 @@ export class FormBinder<TDataBinder> {
 
   /** Override the children of the React element - used for label binding */
   children<TValue, TProps = HTMLElement>(dataName: FormBinderKey<TDataBinder>, childrenFactory: (value: TValue, props?: TProps, dataBinder?: IDataBinder<any>) => React.ReactNode) {
-    return this.custom(new ChildrenBinder<TValue, TProps>(toString(dataName, this.parentPath), childrenFactory));
+    return this.custom(new ChildrenBinder<TValue, TProps>(toDataPath(dataName, this.parentPath), childrenFactory));
   }
 
   /** bind to a 'hidden' input */
@@ -259,35 +243,35 @@ export class FormBinder<TDataBinder> {
   }
 
   autoCompleteInput(dataName: FormBinderKey<TDataBinder>, getItemFromId?: (id: string) => IAutoCompleteOption) {
-    return this.custom(new AutoCompleteFormBinder(toString(dataName, this.parentPath), getItemFromId));
+    return this.custom(new AutoCompleteFormBinder(toDataPath(dataName, this.parentPath), getItemFromId));
   }
 
   /** bind a 'value' string array property to a TagInput (e.g. ["cool", "guys", "only"]) */
   tagInput(dataName: FormBinderKey<TDataBinder>) {
-    return this.custom(new TagInputFormBinder(toString(dataName, this.parentPath)));
+    return this.custom(new TagInputFormBinder(toDataPath(dataName, this.parentPath)));
   }
 
   codeInput(dataName: FormBinderKey<TDataBinder>) {
-    return this.custom(new CodeInputFormBinder(toString(dataName, this.parentPath)));
+    return this.custom(new CodeInputFormBinder(toDataPath(dataName, this.parentPath)));
   }
 
   /** bind a 'date' string property to a CalendarInput (e.g. YYYY-MM-DD) */
   calendarInput(dataName: FormBinderKey<TDataBinder>) {
-    return this.custom(new CalendarInputFormBinder(toString(dataName, this.parentPath)));
+    return this.custom(new CalendarInputFormBinder(toDataPath(dataName, this.parentPath)));
   }
 
   /** bind a 'date' string property to a DateInput (e.g. YYYY-MM-DD) */
   dateInput(dataName: FormBinderKey<TDataBinder>) {
-    return this.custom(new DateInputFormBinder(toString(dataName, this.parentPath)));
+    return this.custom(new DateInputFormBinder(toDataPath(dataName, this.parentPath)));
   }
 
   /** bind a 'time' string property to a TimeInput (e.g. HH:MM) */
   timeInput(dataName: FormBinderKey<TDataBinder>) {
-    return this.custom(new TimeInputFormBinder(toString(dataName, this.parentPath)));
+    return this.custom(new TimeInputFormBinder(toDataPath(dataName, this.parentPath)));
   }
 
   private defaultInputFormBinder<TDataPropValue, TTo>(dataName: FormBinderKey<TDataBinder>, type: string, valueConverter?: IValueConverter<TDataPropValue, TTo>, propertySet = "value") {
-    const adaptorInjector = this.custom(new InputFormBinder(toString(dataName, this.parentPath), propertySet, valueConverter));
+    const adaptorInjector = this.custom(new InputFormBinder(toDataPath(dataName, this.parentPath), propertySet, valueConverter));
     // tslint:disable-next-line:no-string-literal
     adaptorInjector["type"] = type;
     return adaptorInjector;
@@ -295,7 +279,7 @@ export class FormBinder<TDataBinder> {
 
   /** bind a number property to a range */
   range(dataName: FormBinderKey<TDataBinder>, options?: INumericOptions) {
-    const adaptorInjector = this.custom(new InputFormBinder(toString(dataName, this.parentPath), "value"));
+    const adaptorInjector = this.custom(new InputFormBinder(toDataPath(dataName, this.parentPath), "value"));
     if (options) {
       // tslint:disable-next-line:no-string-literal
       adaptorInjector["min"] = options.min;
@@ -309,13 +293,13 @@ export class FormBinder<TDataBinder> {
 
   /** uncontrolled text input */
   defaultText<TDataPropValue>(dataName: FormBinderKey<TDataBinder>, valueConverter?: IInputValueConverter<TDataPropValue>) {
-    return this.custom(new InputFormBinder(toString(dataName, this.parentPath), "defaultValue", valueConverter, "value"));
+    return this.custom(new InputFormBinder(toDataPath(dataName, this.parentPath), "defaultValue", valueConverter, "value"));
   }
 
   /** bind a number property to a 'text' input */
   textNumeric(dataName: FormBinderKey<TDataBinder>, options?: INumericOptions) {
     const converter = options ? new NumericValueConverter(options) : NumericValueConverter.instance;
-    const adaptorInjector = this.custom(new InputFormBinder(toString(dataName, this.parentPath), "defaultValue", converter, "value"));
+    const adaptorInjector = this.custom(new InputFormBinder(toDataPath(dataName, this.parentPath), "defaultValue", converter, "value"));
     // tslint:disable-next-line:no-string-literal
     adaptorInjector["type"] = "number";
     // tslint:disable-next-line:no-string-literal
@@ -331,7 +315,7 @@ export class FormBinder<TDataBinder> {
 
   /** bind a TDataPropValue property to a select */
   selectCustom<TDataPropValue>(dataName: FormBinderKey<TDataBinder>, valueConverter?: IInputValueConverter<TDataPropValue>) {
-    return this.custom(new InputFormBinder(toString(dataName, this.parentPath), "value", valueConverter));
+    return this.custom(new InputFormBinder(toDataPath(dataName, this.parentPath), "value", valueConverter));
   }
 
   /** bind a string property to a select */
@@ -346,7 +330,7 @@ export class FormBinder<TDataBinder> {
 
   /** bind a TDataPropValue[] property to a multi select */
   selectMultipleCustom<TDataPropValue>(dataName: FormBinderKey<TDataBinder>, valueConverter?: IValueConverter<TDataPropValue, string[]>) {
-    return this.custom(new SelectMultipleFormBinder(toString(dataName, this.parentPath), valueConverter));
+    return this.custom(new SelectMultipleFormBinder(toDataPath(dataName, this.parentPath), valueConverter));
   }
 
   /** bind a string[] property to a multi select */
@@ -361,7 +345,7 @@ export class FormBinder<TDataBinder> {
 
   /** bind a TDataPropValue property to a 'checkbox' input */
   checkboxCustom<TDataPropValue>(dataName: FormBinderKey<TDataBinder>, valueConverter?: IValueConverter<TDataPropValue, boolean>) {
-    const adaptorInjector = this.custom(new CheckboxFormBinder(toString(dataName, this.parentPath), valueConverter));
+    const adaptorInjector = this.custom(new CheckboxFormBinder(toDataPath(dataName, this.parentPath), valueConverter));
     // tslint:disable-next-line:no-string-literal
     adaptorInjector["type"] = "checkbox";
     return adaptorInjector;
@@ -380,7 +364,7 @@ export class FormBinder<TDataBinder> {
 
   /** bind a TDataPropValue property to a 'radio' input */
   radioCustom<TDataPropValue>(dataName: FormBinderKey<TDataBinder>, value: string, valueConverter: IInputValueConverter<TDataPropValue>) {
-    const adaptorInjector = this.custom(new RadioFormBinder(toString(dataName, this.parentPath), "checked", valueConverter, "value"));
+    const adaptorInjector = this.custom(new RadioFormBinder(toDataPath(dataName, this.parentPath), "checked", valueConverter, "value"));
     // tslint:disable-next-line:no-string-literal
     adaptorInjector["type"] = "radio";
     // tslint:disable-next-line:no-string-literal

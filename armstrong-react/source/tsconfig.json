@@ -1,21 +1,25 @@
 {
-    "compileOnSave": false,
-    "compilerOptions": {
-        "target": "es5",
-        "module": "commonjs",
-        "isolatedModules": false,
-        "experimentalDecorators": true,
-        "emitDecoratorMetadata": true,
-        "jsx": "react",
-        "declaration": false,
-        "noImplicitAny": false,
-        "removeComments": false,
-        "sourceMap": false,
-        "noLib": false,
-        "preserveConstEnums": false,
-        "suppressImplicitAnyIndexErrors": true,
-        "outDir": "../dist",
-        "importHelpers": true,
-        "moduleResolution": "node"
-    }
+  "compileOnSave": false,
+  "compilerOptions": {
+    "target": "es5",
+    "module": "commonjs",
+    "isolatedModules": false,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "jsx": "react",
+    "declaration": false,
+    "noImplicitAny": false,
+    "removeComments": false,
+    "sourceMap": false,
+    "noLib": false,
+    "preserveConstEnums": false,
+    "suppressImplicitAnyIndexErrors": true,
+    "outDir": "../dist",
+    "importHelpers": true,
+    "moduleResolution": "node",
+    "lib": [
+      "es2015",
+      "dom"
+    ]
+  }
 }
