@@ -22,10 +22,10 @@ function ButtonRef(props: IButtonProps, ref: React.Ref<IButtonRef>) {
   const buttonRef = React.useRef<HTMLButtonElement>()
   React.useImperativeHandle(ref, () => ({
     focus: () => {
-      if (buttonRef) { buttonRef.current.focus() }
+      if (buttonRef.current) { buttonRef.current.focus() }
     },
     blur: () => {
-      if (buttonRef) { buttonRef.current.blur() }
+      if (buttonRef.current) { buttonRef.current.blur() }
     },
   }))
 

@@ -7,16 +7,29 @@ import { FormBinderKey, IArrayProp, IObjectProp, PropertyPathFor, PropType, toDa
 import { PropertyPathResolver } from "./propertyPathResolver";
 
 /** The default Json Entity binder - NOTE, the original instance provided is MUTABLE */
-class JsonEntityBinder<T> implements IDataBinder<T> {
+class JsonDataBinder<T> implements IDataBinder<T> {
   constructor(private data: T) { }
   lastDataPathSet?: string;
 
-  getKeyValue = <TKey extends keyof T>(keyName: TKey): T[TKey] => {
-    return this.data[keyName];
+  getKeyValue<X>(dataName: (builder: PropType<T>) => IObjectProp<X>): X
+  getKeyValue<X>(dataName: (builder: PropType<T>) => IArrayProp<X>): X[]
+  getKeyValue<TKey extends keyof T>(keyName: TKey): T[TKey];
+  getKeyValue(keyName: any): any {
+    return this.data[toDataPath(keyName)];
   };
 
-  setKeyValue = <TKey extends keyof T>(keyName: TKey, value: T[TKey]): void => {
-    this.data[keyName] = value;
+  setKeyValue<X>(dataName: (builder: PropType<T>) => IObjectProp<X>, value: X): void
+  setKeyValue<X>(dataName: (builder: PropType<T>) => IArrayProp<X>, value: X[]): void
+  setKeyValue<TKey extends keyof T>(keyName: TKey, value: T[TKey]): void;
+  setKeyValue(keyName: any, value: any): void {
+    if (_.isString(keyName)) {
+      this.data[keyName] = value;
+      this.lastDataPathSet = keyName;
+      return
+    }
+    const dataPath = toDataPath(keyName)
+    PropertyPathResolver.setValue(this.data, dataPath, value)
+    this.lastDataPathSet = dataPath;
   };
 
   getValue = (dataPath: string): any => {
@@ -121,10 +134,10 @@ export interface IUseParentForm<T> {
   DataForm: React.FunctionComponent<{}>
 }
 
-export function useParentForm<TDataBinder, X>(context: FormHookContext<TDataBinder>, dataName: (builder: PropType<TDataBinder>) => IObjectProp<X>): IUseParentForm<X>
-export function useParentForm<TDataBinder, X>(context: FormHookContext<TDataBinder>, dataName: (builder: PropType<TDataBinder>) => IArrayProp<X>): IUseParentForm<X[]>
-export function useParentForm<TDataBinder, TKey extends Extract<keyof TDataBinder, string>>(context: FormHookContext<TDataBinder>, dataName: TKey): IUseParentForm<TDataBinder[TKey]>
-export function useParentForm<TDataBinder>(context: FormHookContext<TDataBinder>, parentPath?: FormBinderKey<TDataBinder>): IUseParentForm<any> {
+export function useParentForm<TDataBinder, X>(context: UseFormContext<TDataBinder>, dataName: (builder: PropType<TDataBinder>) => IObjectProp<X>): IUseParentForm<X>
+export function useParentForm<TDataBinder, X>(context: UseFormContext<TDataBinder>, dataName: (builder: PropType<TDataBinder>) => IArrayProp<X>): IUseParentForm<X[]>
+export function useParentForm<TDataBinder, TKey extends Extract<keyof TDataBinder, string>>(context: UseFormContext<TDataBinder>, dataName: TKey): IUseParentForm<TDataBinder[TKey]>
+export function useParentForm<TDataBinder>(context: UseFormContext<TDataBinder>, parentPath?: FormBinderKey<TDataBinder>): IUseParentForm<any> {
   return { DataForm: ParentFormContext, bind: new FormBinder<TDataBinder>(toDataPath(parentPath)) }
 }
 
@@ -150,7 +163,7 @@ interface IFC<TDataBinder> {
   dataName: Extract<keyof TDataBinder, string>
 }
 
-export function useFormContext<TDataBinder>() {
+export function createFormContext<TDataBinder>() {
   return {
     Form: (props: { initialData: TDataBinder, dontCloneData?: boolean, children: (value: IUseFormBase<TDataBinder>) => React.ReactNode }) => {
       const { initialData, dontCloneData, children } = props
@@ -177,15 +190,6 @@ export function useFormContext<TDataBinder>() {
 
 type IHookFormProps = Pick<IFormProps, Exclude<keyof IFormProps, "dataBinder" | "onDataBinderChange">>
 
-function reducer(state, action) {
-  switch (action.type) {
-    case "toggle":
-      return !state;
-    default:
-      throw new Error();
-  }
-}
-
 export interface IUseFormBase<T> {
   binder: IDataBinder<T>
   bind: FormBinder<T>
@@ -193,10 +197,10 @@ export interface IUseFormBase<T> {
 
 export interface IUseForm<T> extends IUseFormBase<T> {
   DataForm: React.FunctionComponent<IHookFormProps>
-  context: FormHookContext<T>
+  context: UseFormContext<T>
 }
 
-export class FormHookContext<TDataBinder> {
+export class UseFormContext<TDataBinder> {
   useForm<X>(dataName: (builder: PropType<TDataBinder>) => IObjectProp<X>): IUseParentForm<X>
   useForm<X>(dataName: (builder: PropType<TDataBinder>) => IArrayProp<X>): IUseParentForm<X[]>
   useForm<TKey extends Extract<keyof TDataBinder, string>>(dataName: TKey): IUseParentForm<TDataBinder[TKey]>
@@ -207,7 +211,7 @@ export class FormHookContext<TDataBinder> {
 }
 
 export function useForm<T>(initialData: T, dontCloneData: boolean = false): IUseForm<T> {
-  const [, dispatch] = React.useReducer(reducer, false)
+  const [__, dispatch] = React.useReducer<React.Reducer<boolean, {}>>(state => !state, false);
   const binder = React.useMemo(() => {
     return dontCloneData ? Form.jsonDataBinder(initialData) : Form.jsonDataBinderWithClone(initialData)
   }, [initialData, dontCloneData])
@@ -217,11 +221,13 @@ export function useForm<T>(initialData: T, dontCloneData: boolean = false): IUse
     return new FormBinder<T>()
   }, [])
 
-  const DataForm = React.useCallback<React.FunctionComponent<IHookFormProps>>(p => {
-    return <Form {...p} dataBinder={binder} onDataBinderChange={() => dispatch({ type: "toggle" })} />
-  }, [binder])
+  const onDataBinderChange = React.useCallback(() => dispatch({}), [dispatch]);
 
-  return { binder, bind, DataForm, context: new FormHookContext<T>() }
+  const DataForm = React.useCallback<React.FunctionComponent<IHookFormProps>>(p => {
+    return <Form {...p} dataBinder={binder} onDataBinderChange={onDataBinderChange} />
+  }, [binder, onDataBinderChange])
+
+  return { binder, bind, DataForm, context: new UseFormContext<T>() }
 }
 
 const FormContext = React.createContext<IFormContext>(undefined);
@@ -275,9 +281,9 @@ export function Form(props: IFormProps) {
 
 Form.Bind = new FormBinder<any>();
 
-Form.jsonDataBinder = function <T>(data: T): IDataBinder<T> { return new JsonEntityBinder(data) }
+Form.jsonDataBinder = function <T>(data: T): IDataBinder<T> { return new JsonDataBinder(data) }
 
-Form.jsonDataBinderWithClone = function <T>(data: T): IDataBinder<T> { return new JsonEntityBinder(FormDataClone.custom(data)) }
+Form.jsonDataBinderWithClone = function <T>(data: T): IDataBinder<T> { return new JsonDataBinder(FormDataClone.custom(data)) }
 
 class FormElementProcessor {
   static processChildren(formProps: IFormCoreProps, node: React.ReactNode, notifyChange: () => void) {

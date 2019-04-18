@@ -1,4 +1,5 @@
 import * as React from "react";
+import { PropType, IObjectProp, IArrayProp } from './propertyPathBuilder';
 
 export namespace DataValidationMessage {
   const attributeName = "data-validation-message"
@@ -58,8 +59,12 @@ export interface IFormBinder<TComponentProps, TData> {
 export interface IDataBinder<T> {
   lastDataPathSet?: string
   /** Gets a value for the key name (does NOT use dot notation) */
+  getKeyValue<X>(dataName: (builder: PropType<T>) => IObjectProp<X>): X
+  getKeyValue<X>(dataName: (builder: PropType<T>) => IArrayProp<X>): X[]
   getKeyValue<TKey extends keyof T>(keyName: TKey): T[TKey];
   /** Sets a value for the key name (does NOT use dot notation) */
+  setKeyValue<X>(dataName: (builder: PropType<T>) => IObjectProp<X>, value: X): void
+  setKeyValue<X>(dataName: (builder: PropType<T>) => IArrayProp<X>, value: X[]): void
   setKeyValue<TKey extends keyof T>(keyName: TKey, value: T[TKey]): void;
   /** Gets a value for the data path (uses dot notation) */
   getValue(dataPath: string): any;
@@ -67,6 +72,8 @@ export interface IDataBinder<T> {
   setValue(dataPath: string, value: any): void;
   /** Gets the inner data as the native object */
   toJson(): T;
+
+  //createChildBinder()
 }
 
 const FormBinderInjectorKey = "data-form-binder"

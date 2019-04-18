@@ -17,7 +17,7 @@ export class ValidationWrapper extends React.Component<{ message: string } & HTM
 
 export class ValidationLabel extends React.Component<{ message: string, mode: ValidationModes, wrapper?: React.StatelessComponent<any> }, {}> {
   render() {
-    const { message, mode, wrapper } = this.props
+    const { message, mode, wrapper: Wrapper } = this.props
     if (!message || mode === "none") {
       return null;
     }
@@ -25,7 +25,6 @@ export class ValidationLabel extends React.Component<{ message: string, mode: Va
       <label className={ClassHelpers.classNames("validation-message", `validation-message-${mode}`)} title={message}>
         {(mode === "both" || mode === "below") && message}
       </label>)
-    const Wrapper = wrapper
     if (Wrapper) {
       return <Wrapper>{validationLabel}</Wrapper>
     }

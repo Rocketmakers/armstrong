@@ -9,6 +9,7 @@ import { ValidationLabel } from "../validationWrapper";
 import { Icon } from "./../../display/icon";
 import { Button } from "./../../interaction/button";
 import { Col, Grid, Row } from "./../../layout/grid";
+import { arrayToggleItem } from './arrayItems';
 
 export interface IAutoCompleteOption {
   id: number | string;
@@ -52,7 +53,59 @@ export function remoteOptions(remoteQuery?: (query: string) => Promise<IAutoComp
     })
   }, [remoteQuery])
   useThrottle(filter, 2000, onFilterChanged)
-  return { options, setFilter }
+  return { options, filter, setFilter }
+}
+
+
+interface IACI<TValue> {
+  filter: string
+  onFilterChange: (v: string) => void
+  options: IAutoCompleteOption[]
+  value: TValue
+  onValueChange: (o: TValue) => void
+}
+
+
+type IAC1<TM extends true | false, TO> = { multiSelect: TM } & IACI<TO>
+//type IAC = ({ multiSelect: false } & IACI<IAutoCompleteOption>) | ({ multiSelect: true } & IACI<IAutoCompleteOption[]>)
+type IAC = IAC1<false, IAutoCompleteOption> | IAC1<true, IAutoCompleteOption[]>
+
+// export const AC: React.FunctionComponent<IAC> = p => {
+//   if (p.multiSelect) {
+//     p.value
+//     return <AutoCompleteMultiInput {...p} />
+//   } else {
+//     p.value
+//     return <AutoCompleteSingleInput {...p} />
+//   }
+// }
+
+export const AutoCompleteSingleInput: React.FunctionComponent<IACI<IAutoCompleteOption>> = p => {
+  const { filter, onFilterChange, options, value, onValueChange } = p
+  return (
+    <>
+      <input value={filter} onChange={e => onFilterChange(e.currentTarget.value)} />
+      <div>{value && <span onClick={() => onValueChange(undefined)}>{value.name}</span>}</div>
+      <ul>
+        {options.map(o => <li key={o.id} onClick={() => onValueChange(value && value.id === o.id ? undefined : o)}>{o.name}</li>)}
+      </ul>
+    </>
+  )
+}
+
+export const AutoCompleteMultiInput: React.FunctionComponent<IACI<IAutoCompleteOption[]>> = p => {
+  const { filter, onFilterChange, options, value, onValueChange } = p
+  return (
+    <>
+      <div>
+        {value && value.length > 0 && value.map((o, i) => <span onClick={() => onValueChange(arrayToggleItem(value, o))} key={o.id}>{o.name}</span>)}
+        <span><input value={filter} onChange={e => onFilterChange(e.currentTarget.value)} /></span>
+      </div>
+      <ul>
+        {options.map(o => <li key={o.id} onClick={() => onValueChange(arrayToggleItem(value, o))}>{o.name}</li>)}
+      </ul>
+    </>
+  )
 }
 
 export interface IAutoCompleteInputProps extends IFormInputProps<AutoCompleteInput> {
@@ -74,7 +127,7 @@ export interface IAutoCompleteInputProps extends IFormInputProps<AutoCompleteInp
   remoteQuery?: (query: string) => Promise<IAutoCompleteOption[]>;
   /** (boolean) If set to true, a blank query will be executed as soon as the control is focused */
   remoteQueryOnOpen?: boolean;
-  /** (boolean) If set to true, a button will appear along side the box which selects the currently hilighted option on click */
+  /** (boolean) If set to true, a button will appear along side the box which selects the currently highlighted option on click */
   hasGoButton?: boolean;
   /** (React.ReactElement<any> | string) The content of the go button. Can be text or any element */
   goButtonContent?: React.ReactElement<any> | string;
@@ -481,7 +534,81 @@ export class AutoCompleteInput extends React.Component<IAutoCompleteInputProps, 
   }
 }
 
-function getNoResults(search: string, message: string | JSX.Element | ((value: string) => string | JSX.Element)): string | JSX.Element {
+// export function ACI(props:{hasGoButton?: boolean, goButtonContent?: string, canClear?: boolean, options: IAutoCompleteOption[], noResultsMessage?: MessageComponent, placeholder?: string, multiSelect?: boolean, visibleItems?: number}) {
+//   return (
+//     <Grid
+//       title={validationMessage}
+//       onClick={e => this.focusInput(e)}
+//       className={classes}>
+//       <Row>
+//         <Col className="drop-down-controls">
+//           {(!state.open || props.multiSelect) &&
+//             <Grid className="autocomplete-value-display">
+//               <Row>
+//                 <Col>
+//                   {state.selectedValue &&
+//                     <div className="selected-value-wrapper">
+//                       {state.selectedValue && props.multiSelect ? (state.selectedValue as IAutoCompleteOption[]).map(ddo =>
+//                         <div key={`multi-select-item-${ddo.id}`} className={`multi-select-item multi-select-item-part${ddo.className ? ` ${ddo.className}` : ""}`} onClick={() => handleSelection(ddo)} >{ddo.name}<Icon className="multi-select-item-part" icon={Icon.Icomoon.cross} /></div>) : (state.selectedValue as IAutoCompleteOption).name}
+//                     </div>
+//                   }
+//                   {(props.multiSelect && (state.selectedValue as IAutoCompleteOption[]).length === 0) &&
+//                     <div className="placeholder">
+//                       &nbsp;
+//                     <div className="placeholder-value">{!state.open && (props.placeholder || "start typing to filter results...")}</div>
+//                     </div>
+//                   }
+//                   {!props.multiSelect && state.selectedValue === null &&
+//                     <div className="placeholder">
+//                       &nbsp;
+//                     <div className="placeholder-value">{props.placeholder || "start typing to filter results..."}</div>
+//                     </div>
+//                   }
+//                 </Col>
+//                 {!props.multiSelect && state.selectedValue && props.canClear &&
+//                   <Col width="auto" className="clear-selected p-right-xsmall" onClick={() => setState({ selectedValue: props.multiSelect ? [] : null, open: false, query: "", filteredOptions: props.options || [] })}>
+//                     <Icon icon={Icon.Icomoon.cross} />
+//                   </Col>
+//                 }
+//                 {props.multiSelect && (state.selectedValue as IAutoCompleteOption[]).length !== 0 && props.canClear &&
+//                   <Col width="auto" className="clear-selected p-right-xsmall" onClick={() => setState({ selectedValue: props.multiSelect ? [] : null, open: false, query: "", filteredOptions: props.options || [] })}>
+//                     <Icon icon={Icon.Icomoon.cross} />
+//                   </Col>
+//                 }
+//               </Row>
+//             </Grid>
+//           }
+//           {state.open &&
+//             <div className={ClassHelpers.classNames("autocomplete-select-list-wrapper", props.multiSelect ? "multi-select" : "")}>
+//               <input type="text"
+//                 {...DataValidationMessage.spread(validationMessage)}
+//                 style={{ marginTop: `${props.multiSelect && state.showOnTop && `${state.topOffset}px`}` }}
+//                 value={state.query}
+//                 onKeyUp={e => checkKey(e)}
+//                 onChange={e => checkToFilter(getEventTargetAs<HTMLInputElement>(e).value)}
+//                 placeholder={props.placeholder || "start typing to filter results..."} />
+//               {state.remoteSearching && <Icon className="spinner fg-info" icon={Icon.Icomoon.spinner2} />}
+//               <div data-id="autocomplete-select-list"
+//                 className={`autocomplete-select-list${state.showOnTop ? " on-top" : ""}`}
+//                 style={{ maxHeight: `${(props.visibleItems || 3) * itemHeight}px`, marginTop: `${state.topOffset}px` }}>
+//                 {state.filteredOptions && state.filteredOptions.map((o, i) =>
+//                   <div data-index={i} key={`dd-item-${i}`} style={o.style} className={`dd-list-item${o.className ? ` ${o.className}` : ""}${i === state.selectedIndex ? " selected" : ""}${(props.multiSelect && _.some((state.selectedValue as IAutoCompleteOption[]), ddo => ddo.id === o.id)) ? " in-selected-list" : ""}`}
+//                     onClick={() => handleSelection(o)}>{o.prefixElement}{o.name}</div>)}
+//                 {state.filteredOptions.length === 0 && state.query && <div className="dd-list-item-no-select">{getNoResults(state.query, props.noResultsMessage)}</div>}
+//               </div>
+//             </div>
+//           }
+//         </Col>
+//         {props.hasGoButton && !props.multiSelect && <Col width="auto"><Button className="bg-positive" onClick={() => buttonClick()}>{props.goButtonContent || "Go"}</Button></Col>}
+//       </Row>
+//       <ValidationLabel message={validationMessage} mode={this.props.validationMode} wrapper={p => <Row height="auto"><Col {...p} /></Row>} />
+//     </Grid>)
+// }
+
+type StringOrElement = string | JSX.Element
+type MessageComponent = StringOrElement | ((value: string) => StringOrElement)
+
+function getNoResults(search: string, message: MessageComponent): string | JSX.Element {
   if (!message) {
     return "No results..."
   }
