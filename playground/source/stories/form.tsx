@@ -13,11 +13,6 @@ storiesOf("Form", Form)
 
 function PersonUseForm(props: { data: IPersonData }) {
   const { DataForm, bind, binder, context } = useForm(props.data)
-  binder.getValue("a.b.c.0.d")
-  binder.setValue("a.b.c.0.d", "ddd")
-
-  binder.getKeyValue("firstName")
-  binder.setKeyValue("firstName", "name")
 
   const ab = bind.createChildBinder("address")
   const jb = bind.createChildBinder("jobs")
@@ -28,7 +23,7 @@ function PersonUseForm(props: { data: IPersonData }) {
         <TextInput {...bind.text("firstName")} />
       </div>
       <TextInput {...bind.text("lastName")} />
-      <TextInput {...bind.text(b => b.prop("jobs").index(0).prop("address"))} />
+      <TextInput {...bind.text(b => b.prop("jobs").index(0).prop("address").prop("line1"))} />
       <TextInput {...bind.text(b => b.prop("address").prop("line1"))} />
       <TextInput {...ab.text("line1")} />
       {binder.getKeyValue("jobs").map((job, i) => <TextInput {...jb.text(b => b.index(i).prop("org"))} />)}
