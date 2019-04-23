@@ -21,6 +21,7 @@ export interface ICalendarInputProps extends IFormInputHTMLProps<React.InputHTML
   icon?: string;
   disabled?: boolean;
   disableClear?: boolean;
+  clearButtonProps?: React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>;
 }
 
 export interface ICalendarInputState {
@@ -240,7 +241,7 @@ export class CalendarInput extends React.Component<ICalendarInputProps, ICalenda
 
   render() {
     const validationMessage = DataValidationMessage.get(this.props)
-    const { icon, placeholder, alwaysShowCalendar, disableClear, onDateChanged, className, disabled, validationMode, nativeInput, min, max, date } = this.props
+    const { icon, placeholder, alwaysShowCalendar, disableClear, onDateChanged, className, disabled, validationMode, nativeInput, min, max, date, clearButtonProps } = this.props
     const { selectedMonthStart, pickerBodyVisible, showOnTop, inputValue, calendarOffset } = this.state
     const weekdays = _.range(0, 7).map(n => <div className="date-picker-week-day" key={`day_name_${n}`}>{moment().startOf("week").add(n, "days").format("dd")}</div>)
     const days = this.getDaysInMonth();
@@ -295,7 +296,7 @@ export class CalendarInput extends React.Component<ICalendarInputProps, ICalenda
           />
         }
         {!alwaysShowCalendar && date && !disableClear &&
-          <div className="clear-date-button" onClick={() => onDateChanged(null)}><Icon icon={Icon.Icomoon.cross} /></div>
+          <div className="clear-date-button" onClick={() => onDateChanged(null)} {...(clearButtonProps || {})}><Icon icon={Icon.Icomoon.cross} /></div>
         }
         <div ref={b => this.bodyElement = b} className={classes} style={{ top: `${calendarOffset}px` }}>
           <div className="date-picker-body-wrapper">
