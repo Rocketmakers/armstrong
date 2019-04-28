@@ -10,24 +10,36 @@ interface IComponentStory {
   comp: React.FunctionComponent<any>
 }
 const comps: IComponentStories[] = []
+/*
 
+.row {
+  display: flex;
+}
+
+.column {
+  flex: 50%;
+}
+*/
 export function StoryHost() {
   const [Comp, setComp] = React.useState<React.FunctionComponent<any>>(null)
   return (
-    <div>
-      <ul>
-        {comps.map((c, i) => {
-          return (
-            <li key={i}>
-              {c.name}
-              <ul>
-                {c.stories.map((s, j) => <li key={j} onClick={() => setComp(s.comp)}>{s.name}</li>)}
-              </ul>
-            </li>
-          )
-        })}
-      </ul>
-      {Comp}
+    <div style={{ display: "flex" }}>
+      <div style={{ flex: "30%" }}>
+        <ul>
+          {comps.map((c, i) => {
+            return (
+              <li key={i}>
+                {c.name}
+                <ul>
+                  {c.stories.map((s, j) => <li key={j} onClick={() => setComp(s.comp)}>{s.name}</li>)}
+                </ul>
+              </li>
+            )
+          })}
+        </ul>
+      </div>
+      <div style={{ flex: "70%" }}>{Comp}</div>
+
     </div>
   )
 }

@@ -6,6 +6,7 @@
   "style": "./dist/style.scss",
   "typings": "./dist/index.d.ts",
   "scripts": {
+    "test": "yarn build-ts && mocha --reporter spec",
     "build-ts": "tsc --pretty -p source -d",
     "build-scss": "node sass_concat.js",
     "build": "yarn run build-ts && yarn run build-scss",
@@ -37,17 +38,19 @@
     "react-dom": "16.x"
   },
   "devDependencies": {
-    "@types/node": "9.6.31",
-    "@types/react": "16.8.8",
-    "@types/react-dom": "^16.8.3",
-    "@types/underscore": "^1.8.13",
+    "@types/mocha": "^5.2.6",
+    "@types/node": "11.13.5",
+    "@types/react": "16.8.13",
+    "@types/react-dom": "^16.8.4",
+    "@types/underscore": "^1.8.14",
     "chokidar": "^2.1.5",
     "import-resolve": "^0.4.0",
+    "mocha": "^6.1.4",
     "parallelshell": "^3.0.2",
-    "react": "^16.8.5",
-    "react-dom": "^16.8.5",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
     "ts-loader": "^5.3.3",
-    "tslint": "^5.14.0",
-    "typescript": "~3.3.4000"
+    "tslint": "^5.16.0",
+    "typescript": "~3.4.4"
   }
 }

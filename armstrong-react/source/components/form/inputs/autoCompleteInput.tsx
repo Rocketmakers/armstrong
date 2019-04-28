@@ -4,12 +4,11 @@ import * as _ from "underscore";
 import { ClassHelpers } from "../../../utilities/classHelpers";
 import { DiacriticsStripper } from "../../../utilities/diacriticsStripper";
 import { IFormInputProps } from "../form";
-import { DataValidationMessage, getEventTargetAs, IDataBinder } from "../formCore";
+import { DataValidationMessage, getEventTargetAs } from "../formCore";
 import { ValidationLabel } from "../validationWrapper";
 import { Icon } from "./../../display/icon";
 import { Button } from "./../../interaction/button";
 import { Col, Grid, Row } from "./../../layout/grid";
-import { arrayToggleItem } from './arrayItems';
 
 export interface IAutoCompleteOption {
   id: number | string;
@@ -18,94 +17,6 @@ export interface IAutoCompleteOption {
   className?: string;
   style?: React.CSSProperties;
   prefixElement?: JSX.Element;
-}
-
-export function useThrottle<TValue>(value: TValue, limit: number, onValueChange?: (value: TValue) => void) {
-  const [throttledValue, setThrottledValue] = React.useState(value);
-  const lastRan = React.useRef(Date.now());
-
-  React.useEffect(
-    () => {
-      const handler = setTimeout(() => {
-        if (Date.now() - lastRan.current >= limit) {
-          setThrottledValue(value);
-          if (onValueChange) { onValueChange(value) }
-          lastRan.current = Date.now();
-        }
-      }, limit - (Date.now() - lastRan.current));
-
-      return () => {
-        clearTimeout(handler);
-      };
-    },
-    [value, limit]);
-
-  return throttledValue;
-}
-
-export function remoteOptions(remoteQuery?: (query: string) => Promise<IAutoCompleteOption[]>) {
-  const [options, setOptions] = React.useState<IAutoCompleteOption[]>([])
-  const [filter, setFilter] = React.useState("")
-  const onFilterChanged = React.useCallback((query: string) => {
-    remoteQuery(query).then(opts => setOptions(opts)).catch(e => {
-      // tslint:disable-next-line: no-console
-      console.log("Unable to perform query");
-    })
-  }, [remoteQuery])
-  useThrottle(filter, 2000, onFilterChanged)
-  return { options, filter, setFilter }
-}
-
-
-interface IACI<TValue> {
-  filter: string
-  onFilterChange: (v: string) => void
-  options: IAutoCompleteOption[]
-  value: TValue
-  onValueChange: (o: TValue) => void
-}
-
-
-type IAC1<TM extends true | false, TO> = { multiSelect: TM } & IACI<TO>
-//type IAC = ({ multiSelect: false } & IACI<IAutoCompleteOption>) | ({ multiSelect: true } & IACI<IAutoCompleteOption[]>)
-type IAC = IAC1<false, IAutoCompleteOption> | IAC1<true, IAutoCompleteOption[]>
-
-// export const AC: React.FunctionComponent<IAC> = p => {
-//   if (p.multiSelect) {
-//     p.value
-//     return <AutoCompleteMultiInput {...p} />
-//   } else {
-//     p.value
-//     return <AutoCompleteSingleInput {...p} />
-//   }
-// }
-
-export const AutoCompleteSingleInput: React.FunctionComponent<IACI<IAutoCompleteOption>> = p => {
-  const { filter, onFilterChange, options, value, onValueChange } = p
-  return (
-    <>
-      <input value={filter} onChange={e => onFilterChange(e.currentTarget.value)} />
-      <div>{value && <span onClick={() => onValueChange(undefined)}>{value.name}</span>}</div>
-      <ul>
-        {options.map(o => <li key={o.id} onClick={() => onValueChange(value && value.id === o.id ? undefined : o)}>{o.name}</li>)}
-      </ul>
-    </>
-  )
-}
-
-export const AutoCompleteMultiInput: React.FunctionComponent<IACI<IAutoCompleteOption[]>> = p => {
-  const { filter, onFilterChange, options, value, onValueChange } = p
-  return (
-    <>
-      <div>
-        {value && value.length > 0 && value.map((o, i) => <span onClick={() => onValueChange(arrayToggleItem(value, o))} key={o.id}>{o.name}</span>)}
-        <span><input value={filter} onChange={e => onFilterChange(e.currentTarget.value)} /></span>
-      </div>
-      <ul>
-        {options.map(o => <li key={o.id} onClick={() => onValueChange(arrayToggleItem(value, o))}>{o.name}</li>)}
-      </ul>
-    </>
-  )
 }
 
 export interface IAutoCompleteInputProps extends IFormInputProps<AutoCompleteInput> {
@@ -229,8 +140,7 @@ export class AutoCompleteInput extends React.Component<IAutoCompleteInputProps, 
   focusInput(e: React.MouseEvent<any>) {
     if (!e) {
       this.handleFocus();
-    }
-    else if (!this.state.open && !getEventTargetAs(e).classList.contains("clear-selected")) {
+    } else if (!this.state.open && !getEventTargetAs(e).classList.contains("clear-selected")) {
       this.handleFocus();
     }
   }

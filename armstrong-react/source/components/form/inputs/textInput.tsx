@@ -26,6 +26,7 @@ export class TextInput extends React.Component<ITextInputProps, {}> {
       this.input.focus()
     }
   }
+
   blur() {
     if (this.input) {
       this.input.blur()

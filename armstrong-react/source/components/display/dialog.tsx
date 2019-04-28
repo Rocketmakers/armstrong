@@ -1,6 +1,6 @@
 import * as React from "react";
-import * as ReactDOM from "react-dom";
 import { useCallback } from "react";
+import * as ReactDOM from "react-dom";
 import { Icon } from "./icon";
 
 export interface IDialogProps extends React.HTMLAttributes<HTMLElement> {
@@ -24,53 +24,150 @@ export interface IDialogProps extends React.HTMLAttributes<HTMLElement> {
   closeOnBackgroundClick?: boolean;
 }
 
-export const Dialog : React.FC<IDialogProps> = (props) => {
-
-  const style = { width: props.width || "500px", height: props.height || "auto" }
-
-  const handleBackgroundClick = useCallback(
-    e => {
+export const Dialog: React.FC<IDialogProps> = props => {
+  const onClose = useCallback((reason: DialogLayerCloseReason) => {
+    if (reason === "background") {
       if (props.closeOnBackgroundClick !== false) {
-        const clickedElement = e.target as HTMLElement;
-        if (clickedElement && clickedElement.classList.contains("dialog-layer")) {
-          props.onClose();
-        }
-      }
-    }, [props.closeOnBackgroundClick]
-  )
-
-  const handleXClick = useCallback(
-    () => {
-      if (props.onXClicked){
-        props.onXClicked()
-      }else{
         props.onClose();
       }
-    }, [props.onXClicked]
-  )
+      return
+    }
+
+    if (props.onXClicked) {
+      props.onXClicked()
+    } else {
+      props.onClose();
+    }
+  }, [props.closeOnBackgroundClick, props.onClose, props.onXClicked])
 
   const dialog = (
-    <div className={`dialog-layer${props.layerClass ? ` ${props.layerClass}` : ''}`} onClick={handleBackgroundClick}>
-      <div className={`dialog${props.className ? ` ${props.className}` : ""}`} style={style} >
-        {!props.title &&
-          <div className="dialog-close-button-no-title" onClick={handleXClick}>
+    <DialogLayer title={props.title} layerClass={props.layerClass} className={props.className} width={props.width} height={props.height} onClose={onClose}>
+      {props.children}
+    </DialogLayer>)
+
+  return props.isOpen ? ReactDOM.createPortal(dialog, document.querySelector(props.bodySelector || "#host")) : null
+}
+
+type DialogLayerCloseReason = "x-clicked" | "background" | "user"
+
+//type DialogLayerCloseEvent = React.MouseEvent<HTMLElement> & { reason?: DialogLayerCloseReason }
+export interface IDialogLayerProps {
+  title?: string
+  layerClass?: string
+  className?: string
+  width?: number
+  height?: number
+  onClose: (e: DialogLayerCloseReason) => void
+}
+
+export const DialogLayer: React.FC<IDialogLayerProps> = ({ title, children, className, height, width, onClose, layerClass }) => {
+  const onCloseByBackground = React.useCallback((e: React.MouseEvent<HTMLElement>) => {
+    const clickedElement = e.target as HTMLElement;
+    if (clickedElement && clickedElement.classList && clickedElement.classList.contains("dialog-layer")) {
+      //e.reason = "background"
+      onClose("background");
+    }
+  }, [onClose])
+
+  const onCloseByX = React.useCallback((e: React.MouseEvent<HTMLElement>) => {
+    //e.reason = "x-clicked"
+    onClose("x-clicked")
+  }, [onClose])
+
+  return (
+    <div className={`dialog-layer${layerClass ? ` ${layerClass}` : ""}`} onClick={onCloseByBackground}>
+      <DialogPresenter title={title} className={className} width={width} height={height} onClose={onCloseByX}>
+        {children}
+      </DialogPresenter>
+    </div>
+  )
+}
+
+export interface IDialogPresenterProps {
+  title?: string
+  className?: string
+  width?: number
+  height?: number
+  onClose: (e: React.MouseEvent<HTMLElement>) => void
+}
+
+export const DialogPresenter: React.FC<IDialogPresenterProps> = ({ title, children, className, height, width, onClose }) => {
+  const style = React.useMemo(() => ({ width: width || "500px", height: height || "auto" }), [width, height])
+  return (
+    <div className={`dialog${className ? ` ${className}` : ""}`} style={style} >
+      {!title &&
+        <div className="dialog-close-button-no-title" onClick={onClose}>
+          <Icon icon={Icon.Icomoon.cross2} />
+        </div>
+      }
+      {title &&
+        <div className="dialog-header">
+          {title}
+          <div className="dialog-close-button" onClick={onClose}>
             <Icon icon={Icon.Icomoon.cross2} />
           </div>
-        }
-        {props.title &&
-          <div className="dialog-header">
-            {props.title}
-            <div className="dialog-close-button" onClick={handleXClick}>
-              <Icon icon={Icon.Icomoon.cross2} />
-            </div>
-          </div>
-        }
-        <div className="dialog-content" id="dialog-content">
-          {props.children}
         </div>
+      }
+      <div className="dialog-content" id="dialog-content">
+        {children}
       </div>
     </div>
   )
+}
 
-  return props.isOpen ? ReactDOM.createPortal(dialog, document.querySelector(props.bodySelector || "#host")) : null
+export interface IUseDialogProps {
+  onClose: () => void
+}
+
+export interface IUseDialogSettings extends IUsePortalSettings {
+  beforeDialogClose?: (reason: DialogLayerCloseReason) => Promise<boolean>
+}
+
+export function useDialog(DialogLayerComponent: React.FC<IUseDialogProps>, settings?: IUseDialogSettings) {
+  return usePortal(p => {
+    const onClose = React.useCallback(async (reason: DialogLayerCloseReason) => {
+      if (settings && settings.beforeDialogClose) {
+        if (await settings.beforeDialogClose(reason)) {
+          p.onClose()
+        }
+        return
+      }
+      p.onClose()
+    }, [p.onClose, settings && settings.beforeDialogClose])
+    const onUserClose = React.useCallback(() => onClose("user"), [onClose])
+    return (
+      <DialogLayer onClose={onClose}>
+        <DialogLayerComponent onClose={onUserClose} />
+      </DialogLayer>
+    )
+  }, settings)
+}
+
+export interface IUsePortalSettings {
+  hostElement?: string
+  initiallyOpen?: boolean
+}
+
+interface IPortalState {
+  open: boolean
+  portal: React.ReactPortal
+}
+
+const defaultState: IPortalState = { open: false, portal: null }
+
+export function usePortal(PortalComponent: React.FC<IUseDialogProps>, settings?: IUsePortalSettings) {
+  const portal = React.useMemo(() => {
+    return ReactDOM.createPortal(<PortalComponent onClose={() => setState(defaultState)} />, document.querySelector(settings && settings.hostElement || "#host"))
+  }, [PortalComponent, settings && settings.hostElement])
+
+  const open = React.useCallback(() => {
+    setState({ open: true, portal })
+  }, [PortalComponent, settings && settings.hostElement])
+
+  const [state, setState] = React.useState<IPortalState>(settings && !!settings.initiallyOpen ? { open: true, portal } : defaultState)
+
+  return {
+    open,
+    portal: state.portal,
+  }
 }

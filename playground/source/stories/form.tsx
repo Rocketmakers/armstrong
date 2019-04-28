@@ -1,21 +1,36 @@
 import { storiesOf } from "../story-host";
-import { Form, useForm, TextInput, UseFormContext, createFormContext } from '../_symlink';
+import { Form, useForm, TextInput, UseFormContext, createFormContext, IUseFormProps } from '../_symlink';
 import * as React from 'react'
-import { IUseFormBase, ParentFormContext } from '../_symlink/components/form/form';
 
 storiesOf("Form", Form)
   .add("useForm", () => {
-    return <PersonUseForm data={{ firstName: "keith", lastName: "walker", address: { line1: "home" }, jobs: [{ org: "Rocketmakers", address: { line1: "here" } }, { org: "BBC", address: { line1: "there" } }] }} />
+    const data = React.useMemo(() => ({ firstName: "keith", lastName: "walker", address: { line1: "home" }, jobs: [{ org: "Rocketmakers", address: { line1: "here" } }, { org: "BBC", address: { line1: "there" } }] }), [])
+    return <PersonUseForm data={data} />
   })
   .add("createFormContext", () => {
     return <PersonForm />
   })
 
-function PersonUseForm(props: { data: IPersonData }) {
-  const { DataForm, bind, binder, context } = useForm(props.data)
+// function useDidUpdateEffect(fn: React.EffectCallback, deps?: React.DependencyList) {
+//   const didMountRef = React.useRef(false);
 
-  const ab = bind.createChildBinder("address")
+//   React.useEffect(() => {
+//     if (didMountRef.current) {
+//       fn();
+//     }
+//     else {
+//       didMountRef.current = true;
+//     }
+//   }, deps);
+// }
+
+function PersonUseForm(props: { data: IPersonData }) {
+  const { DataForm, bind, dataBinder: binder, context } = useForm(props.data)
+
+  const ab = bind.createChildBinder(b => b.prop("address"))
   const jb = bind.createChildBinder("jobs")
+
+  // useDidUpdateEffect(() => console.log("HEY"), [binder.getKeyValue("firstName")])
 
   return (
     <DataForm>
@@ -94,8 +109,8 @@ function PersonForm() {
   )
 }
 
-function PersonFormFields(props: IUseFormBase<IPersonData>) {
-  const { bind, binder } = props
+function PersonFormFields(props: IUseFormProps<IPersonData>) {
+  const { bind, dataBinder: binder } = props
   return (
     <>
       <TextInput placeholder="firstName" {...bind.text("firstName")} />
@@ -114,7 +129,7 @@ function PersonSubForm() {
 }
 
 
-function PersonSubFormFields(props: IUseFormBase<IPersonData>) {
+function PersonSubFormFields(props: IUseFormProps<IPersonData>) {
   const { bind } = props
   return (
     <>

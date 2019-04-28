@@ -7,7 +7,8 @@ export { IInputValueConverter, IValueConverter } from "./components/form/formVal
 // Display
 export { IIconProps, Icon } from "./components/display/icon";
 export { IImageProps, Image, useDummyImageSrc, useRandomUserImageSrc } from "./components/display/image";
-export { IDialogProps, Dialog } from "./components/display/dialog";
+export { IDialogProps, Dialog, useDialog, IUseDialogProps, DialogLayer } from "./components/display/dialog";
+export { DialogProvider, IDialogProviderProps, useDialogProvider } from "./components/display/dialogProvider";
 
 // Form
 export { ICheckboxInputProps, CheckboxInput } from "./components/form/inputs/checkboxInput";
@@ -19,12 +20,12 @@ export { CalendarInput, ICalendarInputProps } from "./components/form/inputs/cal
 export { TagInput, ITagInputProps } from "./components/form/inputs/tagInput";
 export { CodeInput, ICodeInputProps } from "./components/form/inputs/codeInput";
 export { ITextInputProps, TextInput } from "./components/form/inputs/textInput";
-export { IAutoCompleteInputProps, AutoCompleteInput, IAutoCompleteOption, remoteOptions } from "./components/form/inputs/autoCompleteInput";
+export { IAutoCompleteInputProps, AutoCompleteInput, IAutoCompleteOption } from "./components/form/inputs/autoCompleteInput";
 export { IDataBinder, IFormBinder, IFormValidationResult } from "./components/form/formCore";
 export { FormBinderBase } from "./components/form/formBinderBase";
 export { FormBinder, InputFormBinder } from "./components/form/formBinders";
-export { IFormProps, Form, useForm, ParentFormContext, createFormContext, UseFormContext, IFormContext, FormDataClone, generateUniqueId, extractChildValidationResults } from "./components/form/form";
-
+export { IFormProps, Form, ParentFormContext, IFormContext, FormDataClone, generateUniqueId, extractChildValidationResults } from "./components/form/form";
+export { useForm, createFormContext, UseFormContext, IUseFormProps } from "./components/form/formHooks"
 // Interaction
 export { IButtonProps, Button, IButtonRef } from "./components/interaction/button";
 
