@@ -1,10 +1,17 @@
 import * as React from "react";
 import * as _ from "underscore";
 import { ClassHelpers } from "../../../utilities/classHelpers";
+import { useDidUpdateEffect } from "../../../utilities/hooks";
 import { IFormInputHTMLProps } from "../form";
 import { DataValidationMessage } from "../formCore";
 import { ValidationLabel } from "../validationWrapper";
 import { Icon } from "./../../display/icon";
+
+export interface ITagInput {
+  focus: () => void
+  blur: () => void
+  select: () => void
+}
 
 export type ITagInputProps = IFormInputHTMLProps<React.InputHTMLAttributes<HTMLInputElement>> & {
   suggestions?: string[];
@@ -12,165 +19,172 @@ export type ITagInputProps = IFormInputHTMLProps<React.InputHTMLAttributes<HTMLI
   value?: string[];
 };
 
-export class TagInput extends React.Component<ITagInputProps, { tags: string[]; suggestions: string[], suggestionIndex: number }> {
-  static defaultProps: Partial<ITagInputProps> = {};
-  input: HTMLInputElement | HTMLTextAreaElement;
-  constructor(props) {
-    super(props);
-    this.state = { tags: [], suggestions: [], suggestionIndex: -1 };
-  }
+function makeComparison(value: string) {
+  return value ? value.trim().toLowerCase() : ""
+}
 
-  focus() {
-    if (this.input) {
-      this.input.focus();
+const TagInputRef: React.RefForwardingComponent<ITagInput, ITagInputProps> = (props, ref) => {
+
+  const { value, validationMode, className, onChange } = props
+
+  const [suggestionIndex, setSuggestionIndex] = React.useState(-1)
+  const [tags, setTags] = React.useState<string[]>(value || [])
+  const [suggestions, setSuggestions] = React.useState<string[]>([])
+
+  const input = React.useRef<HTMLInputElement>(undefined);
+  const refCallback = React.useCallback<() => ITagInput>(() => {
+    return {
+      focus() {
+        if (input.current) {
+          input.current.focus()
+        }
+      },
+      blur() {
+        if (input.current) {
+          input.current.blur()
+        }
+      },
+      select() {
+        if (input.current) {
+          input.current.select()
+        }
+      },
     }
-  }
+  }, [input])
 
-  blur() {
-    if (this.input) {
-      this.input.blur();
+  React.useImperativeHandle(ref, refCallback, [refCallback])
+
+  useDidUpdateEffect(() => {
+    setTags(value || [])
+  }, value)
+
+  const filterSuggestions = React.useCallback((newValue: string) => {
+    newValue = makeComparison(newValue)
+    if (!newValue) {
+      return []
     }
-  }
 
-  componentWillReceiveProps(nextProps: ITagInputProps) {
-    if (nextProps.value !== this.props.value) {
-      this.setState({ tags: nextProps.value || [] });
-    }
-  }
+    const filteredSuggestions = props.suggestions.filter(s => makeComparison(s).lastIndexOf(newValue, 0) === 0);
+    return filteredSuggestions.filter(s => tags.indexOf(s) === -1);
+  }, [props.suggestions])
 
-  componentWillMount() {
-    this.setState({ tags: this.props.value || [] });
-  }
+  const notifyTagsChange = React.useCallback((newTags: string[]) => {
+    setTags(newTags)
+    setSuggestions([])
+    onChange(newTags)
+  }, [onChange])
 
-  findOne(haystack: any[], arr: any[]) {
-    return arr.some(v => haystack.indexOf(v) >= 0);
-  }
+  const notifySuggestionsChange = React.useCallback((newSuggestions: string[] = []) => {
+    setSuggestions(newSuggestions)
+    setSuggestionIndex(-1)
+  }, [])
 
-  private onKeyUp(e: React.KeyboardEvent<HTMLInputElement>) {
-    const input = e.target;
+  const onKeyUp = React.useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
+    const target = e.target;
     // tslint:disable-next-line:no-string-literal
-    const value = input["value"];
+    const targetValue = target["value"];
     switch (e.keyCode) {
       case 40: // ArrowDown
       case 38: // ArrowUp}
         return
       case 13:
-        if (value) {
-          if (this.state.tags.indexOf(value) === -1) {
-            const tags = [...this.state.tags, value];
-            this.notifyTagsChange(tags)
+        if (targetValue) {
+          if (tags.indexOf(targetValue) === -1) {
+            const newTags = [...tags, targetValue];
+            notifyTagsChange(newTags)
           }
           // tslint:disable-next-line:no-string-literal
-          input["value"] = "";
+          target["value"] = "";
           return;
         }
         break;
     }
 
-    if (value) {
-      this.notifySuggestionsChange(this.filterSuggestions(value));
+    if (targetValue) {
+      notifySuggestionsChange(filterSuggestions(targetValue));
     } else {
-      this.notifySuggestionsChange();
+      notifySuggestionsChange();
     }
-  }
+  }, [tags, filterSuggestions, notifySuggestionsChange])
 
-  private makeComparison(value: string) {
-    return value ? value.trim().toLowerCase() : ""
-  }
-
-  private filterSuggestions(value: string) {
-    value = this.makeComparison(value)
-    if (!value) {
-      return []
-    }
-
-    const filteredSuggestions = this.props.suggestions.filter(s => this.makeComparison(s).lastIndexOf(value, 0) === 0);
-    return filteredSuggestions.filter(s => this.state.tags.indexOf(s) === -1);
-  }
-
-  private onKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
-    const input = e.target;
+  const onKeyDown = React.useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
+    const target = e.target;
     // tslint:disable-next-line:no-string-literal
-    const value = input["value"];
-    const { suggestionIndex, suggestions } = this.state
+    const targetValue = target["value"];
 
     switch (e.keyCode) {
       case 8: // delete
-        if (this.state.tags.length !== 0 && !value) {
-          const tags = _.clone(this.state.tags);
-          tags.splice(-1, 1);
-          this.notifyTagsChange(tags)
+        if (tags.length !== 0 && !targetValue) {
+          const newTags = _.clone(tags);
+          newTags.splice(-1, 1);
+          notifyTagsChange(newTags)
         }
 
         break;
       case 40: // ArrowDown
         if (suggestionIndex < suggestions.length - 1) {
-          this.setState({ suggestionIndex: suggestionIndex + 1 })
+          setSuggestionIndex(suggestionIndex + 1)
         }
         e.preventDefault()
         break
       case 38: // ArrowUp}
         if (suggestionIndex > -1) {
-          this.setState({ suggestionIndex: suggestionIndex - 1 })
+          setSuggestionIndex(suggestionIndex - 1)
         }
         e.preventDefault()
         break
       case 13:
         const suggestion = suggestions[suggestionIndex]
         if (suggestion) {
-          this.addTag(suggestion)
+          addTag(suggestion)
         }
         break;
     }
-  }
+  }, [tags, suggestionIndex, suggestions, notifyTagsChange])
 
-  addTag(tag: string) {
-    const tags = [...this.state.tags, tag];
-    this.notifyTagsChange(tags)
-    this.input.value = "";
-    this.input.focus();
-  }
+  const addTag = React.useCallback((tag: string) => () => {
+    notifyTagsChange([...tags, tag])
+    input.current.value = "";
+    input.current.focus();
+  }, [tags, notifyTagsChange, input])
 
-  removeTag(index: number) {
-    const tags = _.clone(this.state.tags);
-    tags.splice(index, 1);
-    this.notifyTagsChange(tags)
-    this.input.focus();
-  }
+  const removeTag = React.useCallback((index: number) => () => {
+    notifyTagsChange(tags.filter((__, idx) => idx !== index))
+    input.current.focus();
+  }, [tags, notifyTagsChange, input])
 
-  private notifyTagsChange = (tags: string[]) => {
-    this.setState({ tags, suggestions: [] })
-    this.props.onChange(tags)
-  }
-
-  private notifySuggestionsChange = (suggestions: string[] = []) => {
-    this.setState({ suggestions, suggestionIndex: -1 })
-  }
-
-  private renderSuggestions(suggestions: string[]) {
-    if (!suggestions || !suggestions.length) {
+  const renderSuggestions = React.useCallback((newSuggestions: string[]) => {
+    if (!newSuggestions || !newSuggestions.length) {
       return null
     }
-    return <div className="suggestions">{suggestions.map((s, i) => <div key={s} className={ClassHelpers.classNames({ selected: i === this.state.suggestionIndex })} onClick={() => this.addTag(s)}>{s}</div>)}</div>
-  }
+    return <div className="suggestions">{newSuggestions.map((s, i) => <div key={s} className={ClassHelpers.classNames({ selected: i === suggestionIndex })} onClick={addTag(s)}>{s}</div>)}</div>
+  }, [])
 
-  render() {
-    const validationMessage = DataValidationMessage.get(this.props)
-    const classes = ClassHelpers.classNames("armstrong-input", "tag-input", this.props.className, {
-      "show-validation": this.props.validationMode !== "none" && validationMessage,
-    });
-    return (
-      <div className={classes}>
-        {this.state.tags.map((t, i) => (
-          <div key={t} className="tag">
-            {t}
-            <Icon icon={Icon.Icomoon.cross} onClick={() => this.removeTag(i)} />
-          </div>
-        ))}
-        <input onKeyDown={e => this.onKeyDown(e)} ref={r => (this.input = r)} onKeyUp={e => this.onKeyUp(e)} type="text" />
-        {this.renderSuggestions(this.state.suggestions)}
-        <ValidationLabel message={validationMessage} mode={this.props.validationMode} />
-      </div>
-    );
-  }
+  const validationMessage = DataValidationMessage.get(props)
+
+  const classes = React.useMemo(() => {
+    return ClassHelpers.classNames(
+      "armstrong-input",
+      "tag-input",
+      className,
+      {
+        "show-validation": validationMode !== "none" && validationMessage,
+      })
+  }, [className, validationMode, validationMessage]);
+
+  return (
+    <div className={classes}>
+      {tags.map((t, i) => (
+        <div key={t} className="tag">
+          {t}
+          <Icon icon={Icon.Icomoon.cross} onClick={removeTag(i)} />
+        </div>
+      ))}
+      <input onKeyDown={onKeyDown} ref={input} onKeyUp={onKeyUp} type="text" />
+      {renderSuggestions(suggestions)}
+      <ValidationLabel message={validationMessage} mode={validationMode} />
+    </div>
+  );
 }
+
+export const TagInput = React.forwardRef(TagInputRef)

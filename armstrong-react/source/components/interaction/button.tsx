@@ -14,9 +14,9 @@ export interface IButtonProps extends React.ButtonHTMLAttributes<HTMLButtonEleme
   pending?: boolean;
 }
 
-export interface IButtonRef { focus: () => void, blur: () => void }
+export interface IButton { focus: () => void, blur: () => void }
 
-function ButtonRef(props: IButtonProps, ref: React.Ref<IButtonRef>) {
+const ButtonRef: React.RefForwardingComponent<IButton, IButtonProps> = (props, ref) => {
   const { onClick, leftIcon, rightIcon, className, rounded, pending, disabled, type, children, ...attrs } = props
 
   const buttonRef = React.useRef<HTMLButtonElement>()
@@ -27,7 +27,7 @@ function ButtonRef(props: IButtonProps, ref: React.Ref<IButtonRef>) {
     blur: () => {
       if (buttonRef.current) { buttonRef.current.blur() }
     },
-  }))
+  }), [buttonRef.current])
 
   const handleClick = React.useCallback(e => {
     if (onClick && !pending) {

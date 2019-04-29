@@ -3,15 +3,16 @@ import * as _ from "underscore";
 import { ClassHelpers } from "../../../utilities/classHelpers";
 import { DateHelpers } from "../../../utilities/dateHelpers";
 import { Formatting } from "../../../utilities/formatting";
+import { useDidUpdateEffect } from "../../../utilities/hooks";
 import { Col, Grid, Row } from "../../layout/grid";
 import { IFormInputProps } from "../form";
-import { Form } from "../form";
 import { DataValidationMessage } from "../formCore";
+import { useForm } from "../formHooks";
 import { ValidationLabel } from "../validationWrapper";
 import { buildOptions } from "./options";
 
-export interface ITimeInputProps extends IFormInputProps<TimeInput> {
-  /** (string) CSS classname property */
+export interface ITimeInputProps extends IFormInputProps<typeof TimeInput> {
+  /** (string) CSS className property */
   className?: string;
   /** (number) The tab index of the first select */
   tabIndex?: number;
@@ -36,33 +37,25 @@ export interface ITimerInputState {
   minutes?: number;
 }
 
-export class TimeInput extends React.Component<ITimeInputProps, ITimerInputState> {
-  private static hours = _.range(0, 24);
+const hoursRange = _.range(0, 24);
 
-  static defaultProps: Partial<ITimeInputProps> = {
-    time: "",
-    hourLabel: "HH",
-    minuteLabel: "MM",
-    validationMode: "none",
-  };
+export const TimeInput: React.FC<ITimeInputProps> = props => {
+  const { className, disabled, hourLabel, minuteLabel, minuteStep, onChange, tabIndex, time, validationMode, zeroMinutesOnHourSelected } = props
 
-  constructor(props: ITimeInputProps) {
-    super(props);
-    this.state = { hours: null, minutes: null };
-  }
+  const [timeState, setTimeState] = React.useState<ITimerInputState>({ hours: null, minutes: null })
 
-  componentWillMount() {
-    if (this.props.time) {
-      const time = DateHelpers.getTimeParts(this.props.time);
-      this.setState({ hours: time.hours, minutes: time.minutes });
+  React.useEffect(() => {
+    if (time) {
+      const newTime = DateHelpers.getTimeParts(time);
+      setTimeState({ hours: newTime.hours, minutes: newTime.minutes });
     }
-  }
+  }, [])
 
-  componentWillReceiveProps(newProps: ITimeInputProps) {
-    if (newProps.time) {
-      const newTime = DateHelpers.getTimeParts(newProps.time);
-      let { hours, minutes } = this.state;
+  useDidUpdateEffect(() => {
+    if (time) {
+      const newTime = DateHelpers.getTimeParts(time);
       let needsUpdate;
+      let { hours, minutes } = timeState
       if (newTime.hours !== hours) {
         hours = newTime.hours;
         needsUpdate = true;
@@ -72,64 +65,69 @@ export class TimeInput extends React.Component<ITimeInputProps, ITimerInputState
         needsUpdate = true;
       }
       if (needsUpdate) {
-        this.setState({ hours, minutes });
+        setTimeState({ hours, minutes })
       }
     } else {
-      this.setState({ hours: null, minutes: null });
+      setTimeState({ hours: null, minutes: null })
     }
-  }
+  }, [time])
 
-  private handleDataChanged = (d: ITimerInputState) => {
-    this.setState(d, () => {
-      if (!this.props.onChange || Formatting.isNullOrUndefined(d.hours)) {
-        return;
-      }
-      if (Formatting.isNullOrUndefined(d.minutes)) {
-        if (this.props.zeroMinutesOnHourSelected) {
-          this.setState({ minutes: 0 });
-          this.props.onChange(`${Formatting.twoDigitNumber(d.hours)}:00`);
-        }
-      } else {
-        this.props.onChange(`${Formatting.twoDigitNumber(d.hours)}:${Formatting.twoDigitNumber(d.minutes)}`);
-      }
-    });
-  };
+  const handleDataChanged = React.useCallback((d: ITimerInputState) => {
+    setTimeState(d)
+    if (!onChange || Formatting.isNullOrUndefined(d.hours)) {
+      return;
+    }
 
-  render() {
-    const validationMessage = DataValidationMessage.get(this.props)
-    const minutes = _.range(0, 60, this.props.minuteStep || 1);
-    const hourOptions = buildOptions(this.props.hourLabel, TimeInput.hours, v => v, v => Formatting.twoDigitNumber(v));
-    const minuteOptions = buildOptions(this.props.minuteLabel, minutes, v => v, v => Formatting.twoDigitNumber(v));
-    return (
-      <Form
-        className={ClassHelpers.classNames("time-input", "armstrong-input", this.props.className, this.props.disabled ? "input-disabled" : null, { "show-validation": this.props.validationMode !== "none" && validationMessage })}
-        dataBinder={Form.jsonDataBinder(this.state)}
-        onDataChanged={this.handleDataChanged}
-        title={validationMessage}>
-        <Grid>
-          <Row>
-            <Col>
-              <select tabIndex={this.props.tabIndex} {...Form.Bind.selectNumeric("hours")} disabled={this.props.disabled} {...DataValidationMessage.spread(validationMessage)} >
-                {hourOptions}
-              </select>
-            </Col>
-            <Col>
-              <select tabIndex={this.props.tabIndex} {...Form.Bind.selectNumeric("minutes")} disabled={this.props.disabled} {...DataValidationMessage.spread(validationMessage)} >
-                {minuteOptions}
-              </select>
-            </Col>
-          </Row>
-          <ValidationLabel
-            message={validationMessage}
-            mode={this.props.validationMode}
-            wrapper={p => (
-              <Row height="auto">
-                <Col {...p} />
-              </Row>
-            )}
-          />
-        </Grid>
-      </Form>
-    );
-  }
+    if (Formatting.isNullOrUndefined(d.minutes)) {
+      if (zeroMinutesOnHourSelected) {
+        setTimeState({ hours: timeState.hours, minutes: 0 })
+        onChange(`${Formatting.twoDigitNumber(d.hours)}:00`);
+      }
+    } else {
+      onChange(`${Formatting.twoDigitNumber(d.hours)}:${Formatting.twoDigitNumber(d.minutes)}`);
+    }
+  }, [])
+
+  const validationMessage = DataValidationMessage.get(props)
+  const minutesRange = _.range(0, 60, minuteStep || 1);
+  const hourOptions = buildOptions(hourLabel, hoursRange, v => v, v => Formatting.twoDigitNumber(v));
+  const minuteOptions = buildOptions(minuteLabel, minutesRange, v => v, v => Formatting.twoDigitNumber(v));
+  const { DataForm, bind } = useForm(timeState)
+  return (
+    <DataForm
+      className={ClassHelpers.classNames("time-input", "armstrong-input", className, disabled ? "input-disabled" : null, { "show-validation": validationMode !== "none" && validationMessage })}
+      onDataChanged={handleDataChanged}
+      title={validationMessage}>
+      <Grid>
+        <Row>
+          <Col>
+            <select tabIndex={tabIndex} {...bind.selectNumeric("hours")} disabled={disabled} {...DataValidationMessage.spread(validationMessage)} >
+              {hourOptions}
+            </select>
+          </Col>
+          <Col>
+            <select tabIndex={tabIndex} {...bind.selectNumeric("minutes")} disabled={disabled} {...DataValidationMessage.spread(validationMessage)} >
+              {minuteOptions}
+            </select>
+          </Col>
+        </Row>
+        <ValidationLabel
+          message={validationMessage}
+          mode={validationMode}
+          wrapper={p => (
+            <Row height="auto">
+              <Col {...p} />
+            </Row>
+          )}
+        />
+      </Grid>
+    </DataForm>
+  );
+}
+
+TimeInput.defaultProps = {
+  time: "",
+  hourLabel: "HH",
+  minuteLabel: "MM",
+  validationMode: "none",
 }

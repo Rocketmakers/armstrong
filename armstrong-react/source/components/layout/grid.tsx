@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as _ from "underscore";
 import { ClassHelpers } from "../../utilities/classHelpers";
-import { HorizontalAlignment, VerticalAlignment, LayoutHelpers } from "../../utilities/layoutHelpers";
+import { HorizontalAlignment, LayoutHelpers, VerticalAlignment } from "../../utilities/layoutHelpers";
 
 function sizeErrorMessage(size: string, sizeValue: string, controlPath: string) {
   return `Unsupported ${size} property '${sizeValue}' on ${controlPath}. If you are using a string, make sure it is either 'auto' or follows the pattern '[number]*'`
@@ -16,22 +16,26 @@ export interface IGridProps extends React.HTMLAttributes<HTMLDivElement> {
   fillContainer?: boolean;
   /** (string) An HTML tag to use for the root element instead of <div> */
   tagName?: keyof React.ReactHTML;
-  /** (Col[]) A row must contain one or many <Col/> elements */
-  children?: React.ReactNode;
+  /** (Row[]) A row must contain one or many <Row/> elements */
+  children?: React.ReactElement<IRowProps> | Array<React.ReactElement<IRowProps>>;
 }
 
-export function Grid(props: IGridProps) {
-  const originalClassName = props.className;
+export const Grid: React.FC<IGridProps> = props => {
   const { className, debugMode, fillContainer, tagName, ...attrs } = props;
-  const classes = ClassHelpers.classNames(
-    originalClassName,
+  const classes = React.useMemo(() => ClassHelpers.classNames(
+    className,
     "grid",
     {
       "fill-container": fillContainer,
-      "grid-debug": debugMode
+      "grid-debug": debugMode,
     },
-  );
-  return React.createElement(tagName || "div", { ...attrs, className: classes })
+  ), [className, fillContainer, debugMode]);
+
+  return React.createElement(tagName, { ...attrs, className: classes })
+}
+
+Grid.defaultProps = {
+  tagName: "div",
 }
 
 export interface IRowProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -42,52 +46,58 @@ export interface IRowProps extends React.HTMLAttributes<HTMLDivElement> {
   /** (string) An HTML tag to use for the root element instead of <div> */
   tagName?: string;
   /** (Col[]) A row must contain one or many <Col/> elements */
-  children?: React.ReactNode;
+  children?: React.ReactElement<IColProps> | Array<React.ReactElement<IColProps>>;
 }
 
-export function Row(props: IRowProps) {
-
-  function needsFixed() {
-    if (!height) {
-      return false;
-    }
-    if (typeof height === "number") {
-      return true
-    } else {
-      if (height === "auto") {
-        return true;
-      }
-    }
+function needsFixedHeight(height: string | number) {
+  if (!height) {
     return false;
   }
 
-  const { className, height, tagName, style, ...attrs } = props;
-  const classes = ClassHelpers.classNames(className, "row", needsFixed() ? "no-flex" : "");
-  let styles = style;
-
-  if (height) {
-    if (typeof height === "number") {
-      styles = _.extend({ height: `${height}px` }, styles);
-    } else {
-      const hString = (height as string);
-      const starIndex = hString.indexOf("*");
-      if (height === "auto") {
-        // do nothing
-      } else if (starIndex !== -1 && parseFloat(hString)) {
-        const spans = (height as string).substr(0, starIndex);
-        styles = _.extend({ flex: `${spans}` }, styles);
-      } else {
-        // tslint:disable-next-line:no-console
-        console.error(sizeErrorMessage("height", height, "Grid > Row"))
-      }
-    }
+  if (typeof height === "number") {
+    return true
   }
 
-  return React.createElement(tagName || "div", { ...attrs, className: classes, style: styles },
+  if (height === "auto") {
+    return true;
+  }
+
+  return false;
+}
+
+export const Row: React.FC<IRowProps> = props => {
+
+  const { className, height, tagName, style, ...attrs } = props;
+  const classes = React.useMemo(() => ClassHelpers.classNames(className, "row", needsFixedHeight(height) ? "no-flex" : ""), [className, height]);
+  const styles = React.useMemo(() => {
+    if (height) {
+      if (typeof height === "number") {
+        return _.extend({ height: `${height}px` }, style);
+      }
+      if (height === "auto") {
+        return style
+      }
+
+      const starIndex = height.indexOf("*");
+      if (starIndex !== -1 && parseFloat(height)) {
+        const spans = height.substr(0, starIndex);
+        return _.extend({ flex: `${spans}` }, style);
+      }
+
+      // tslint:disable-next-line:no-console
+      console.error(sizeErrorMessage("height", height, "Grid > Row"))
+    }
+  }, [style, height])
+
+  return React.createElement(tagName, { ...attrs, className: classes, style: styles },
     React.Children.map(props.children, (c: React.ReactElement<any>) => {
       return c ? React.cloneElement(c, { style: c.props.style }) : null
     }),
   )
+}
+
+Row.defaultProps = {
+  tagName: "div",
 }
 
 export interface IColProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -103,54 +113,62 @@ export interface IColProps extends React.HTMLAttributes<HTMLDivElement> {
   className?: string;
 }
 
-export function Col(props: IColProps) {
-  const { className, width, horizontalAlignment, verticalAlignment, tagName, style, ...attrs } = props
-  function needsFixed() {
-    if (!width) {
-      return false;
-    }
-    if (typeof width === "number") {
-      return true
-    } else {
-      if (width === "auto") {
-        return true;
-      }
-    }
+function needsFixedWidth(width: string | number) {
+  if (!width) {
     return false;
   }
-  const alignmentClasses = LayoutHelpers.GetAlignmentClasses(verticalAlignment, horizontalAlignment);
-  const classes = ClassHelpers.classNames(
+
+  if (typeof width === "number") {
+    return true
+  }
+
+  if (width === "auto") {
+    return true;
+  }
+
+  return false;
+}
+
+export const Col: React.FC<IColProps> = props => {
+  const { className, width, horizontalAlignment, verticalAlignment, tagName, style, ...attrs } = props
+  const alignmentClasses = React.useMemo(() => LayoutHelpers.GetAlignmentClasses(verticalAlignment, horizontalAlignment), [verticalAlignment, horizontalAlignment]);
+  const classes = React.useMemo(() => ClassHelpers.classNames(
     "col",
     className,
     alignmentClasses,
     {
-      "no-flex": needsFixed(),
+      "no-flex": needsFixedWidth(width),
     },
-  );
+  ), [className, alignmentClasses, width]);
 
-  let styles = style;
-
-  if (width) {
-    if (typeof width === "number") {
-      styles = _.extend({ maxwidth: `${width}px`, width: "100%" }, styles);
-    } else {
-      const wString = (width as string);
-      const starIndex = wString.indexOf("*");
-      if (width === "auto") {
-        // do nothing
-      } else if (starIndex !== -1 && parseFloat(wString)) {
-        const spans = wString.substr(0, starIndex);
-        styles = _.extend({ flex: `${spans}` }, styles);
-      } else {
-        // tslint:disable-next-line:no-console
-        console.error(sizeErrorMessage("width", width, "Grid > Row > Col"))
+  const styles = React.useMemo(() => {
+    if (width) {
+      if (typeof width === "number") {
+        return _.extend({ maxwidth: `${width}px`, width: "100%" }, style);
       }
+
+      if (width === "auto") {
+        return style
+      }
+
+      const starIndex = width.indexOf("*");
+      if (starIndex !== -1 && parseFloat(width)) {
+        const spans = width.substr(0, starIndex);
+        return _.extend({ flex: `${spans}` }, style);
+      }
+      // tslint:disable-next-line:no-console
+      console.error(sizeErrorMessage("width", width, "Grid > Row > Col"))
     }
-  }
 
-  if (typeof width === "number") {
-    styles = _.extend({ maxWidth: `${width}px`, width: "100%" }, styles);
-  }
+    if (typeof width === "number") {
+      return _.extend({ maxWidth: `${width}px`, width: "100%" }, style);
+    }
+    return style
+  }, [style, width])
 
-  return React.createElement(tagName || "div", { ...attrs, className: classes, style: styles })
+  return React.createElement(tagName, { ...attrs, className: classes, style: styles })
+}
+
+Col.defaultProps = {
+  tagName: "div",
 }

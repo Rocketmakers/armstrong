@@ -1,10 +1,10 @@
 import { storiesOf } from "../story-host";
-import { Form, useForm, TextInput, UseFormContext, createFormContext, IUseFormProps } from '../_symlink';
+import { Form, useForm, TextInput, UseFormContext, createFormContext, IUseFormProps, TimeInput, SelectInput, CheckboxInput } from '../_symlink';
 import * as React from 'react'
 
 storiesOf("Form", Form)
   .add("useForm", () => {
-    const data = React.useMemo(() => ({ firstName: "keith", lastName: "walker", address: { line1: "home" }, jobs: [{ org: "Rocketmakers", address: { line1: "here" } }, { org: "BBC", address: { line1: "there" } }] }), [])
+    const data = React.useMemo(() => ({ firstName: "keith", active: true, lastName: "walker", time: "11:15", type: null, address: { line1: "home" }, jobs: [{ org: "Rocketmakers", address: { line1: "here" } }, { org: "BBC", address: { line1: "there" } }] }), [])
     return <PersonUseForm data={data} />
   })
   .add("createFormContext", () => {
@@ -38,6 +38,9 @@ function PersonUseForm(props: { data: IPersonData }) {
         <TextInput {...bind.text("firstName")} />
       </div>
       <TextInput {...bind.text("lastName")} />
+      <TimeInput {...bind.timeInput("time")} />
+      <SelectInput {...bind.select("type")} options={[{ id: "a", name: "A" }, { id: "b", name: "B" }]} />
+      <CheckboxInput labelContent="Active" {...bind.checkbox("active")} />
       <TextInput {...bind.text(b => b.prop("jobs").index(0).prop("address").prop("line1"))} />
       <TextInput {...bind.text(b => b.prop("address").prop("line1"))} />
       <TextInput {...ab.text("line1")} />
@@ -76,13 +79,16 @@ const PersonFormContext = createFormContext<IPersonData>()
 
 interface IAddressData { line1: string }
 interface IJobData { org: string, address: IAddressData }
-interface IPersonData { firstName: string, lastName: string, address: IAddressData, jobs: IJobData[], jobsOfJobs?: IJobData[][] }
+interface IPersonData { firstName: string, lastName: string, time: string, active: boolean, type: string, address: IAddressData, jobs: IJobData[], jobsOfJobs?: IJobData[][] }
 
 function PersonForm() {
 
   const data: IPersonData = {
     firstName: "keith",
     lastName: "walker",
+    active: false,
+    time: "10:00",
+    type: null,
     address: {
       line1: "home"
     },

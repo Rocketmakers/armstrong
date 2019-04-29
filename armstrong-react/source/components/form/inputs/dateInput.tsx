@@ -3,17 +3,18 @@ import * as _ from "underscore";
 import { ClassHelpers } from "../../../utilities/classHelpers";
 import { DateHelpers } from "../../../utilities/dateHelpers";
 import { Formatting } from "../../../utilities/formatting";
+import { useDidUpdateEffect } from "../../../utilities/hooks";
 import { Col, Grid, Row } from "../../layout/grid";
-import { Form } from "../form";
-import { generateUniqueId, IFormInputProps } from "../form";
+import { IFormInputProps } from "../form";
 import { DataValidationMessage } from "../formCore";
+import { useForm } from "../formHooks";
 import { ValidationLabel } from "../validationWrapper";
 import { buildOptions } from "./options";
 
 export type DateParts = "day" | "month" | "year"
 
-export interface IDateInputProps extends IFormInputProps<DateInput> {
-  /** (string) CSS classname property */
+export interface IDateInputProps extends IFormInputProps<typeof DateInput> {
+  /** (string) CSS className property */
   className?: string;
   /** (number) The tab index of the first select */
   tabIndex?: number;
@@ -46,98 +47,97 @@ export interface IDateInputState {
   date?: string;
 }
 
-export class DateInput extends React.Component<IDateInputProps, IDateInputState> {
-  static defaultProps: Partial<IDateInputProps> = {
-    yearLabel: "Year",
-    monthLabel: "Month",
-    dayLabel: "Day",
-    datePartOrder: ["day", "month", "year"],
-    validationMode: "none",
-  }
+export const DateInput: React.FC<IDateInputProps> = props => {
+  const { dayLabel, monthLabel, yearLabel, futureDates, yearsFromNow, startYearCap, className, validationMode, disabled, datePartOrder, tabIndex, date, onChange } = props
 
-  private cId = generateUniqueId(u => `di_${u}`);
-  constructor(props: IDateInputProps) {
-    super(props);
-    this.validateProps(props)
-    this.state = { day: null, month: null, year: null, date: null };
-  }
-  getDaysArrayByMonth(): string[] {
-    return DateHelpers.getDaysArrayByMonth(this.state.month, this.state.year)
-  }
+  const [dateState, setDateState] = React.useState<IDateInputState>({ day: null, month: null, year: null, date: null })
+  const daysArrayByMonth = React.useMemo(() => {
+    return DateHelpers.getDaysArrayByMonth(dateState.month, dateState.year)
+  }, [dateState.month, dateState.year]);
 
-  componentWillMount() {
-    if (this.props.date) {
-      this.setState(DateHelpers.getDateParts(this.props.date));
+  React.useEffect(() => {
+    validateProps()
+    if (date) {
+      setDateState(DateHelpers.getDateParts(date));
     }
-  }
+  }, [])
 
-  private validateProps(props: IDateInputProps) {
-    if (props.datePartOrder.indexOf("month") === -1) {
+  const validateProps = React.useCallback(() => {
+    if (datePartOrder.indexOf("month") === -1) {
       // tslint:disable-next-line:no-console
       console.error("A DateInput must include `month` in the datePartOrder")
     }
-  }
+  }, [datePartOrder])
 
-  componentWillReceiveProps(newProps: IDateInputProps) {
-    this.validateProps(newProps)
-    if (newProps.date !== this.props.date) {
-      if (newProps.date) {
-        this.setState(DateHelpers.getDateParts(newProps.date, true))
-      } else {
-        this.setState({ day: null, month: null, year: null, date: null })
-      }
+  useDidUpdateEffect(() => {
+    validateProps()
+    if (date) {
+      setDateState(DateHelpers.getDateParts(date, true))
+    } else {
+      setDateState({ day: null, month: null, year: null, date: null })
     }
-  }
+  }, [date])
 
-  private handleDataChanged = (d: IDateInputState) => {
-    const { datePartOrder, onChange } = this.props
-    const date = DateHelpers.toDateFormat(d)
-    const day = datePartOrder.indexOf("day") === -1 ? { day: 1 } : undefined
-    const year = datePartOrder.indexOf("year") === -1 ? { year: 2000 } : undefined
-    this.setState(_.extend({}, d, { date }, day, year), () => {
-      if (onChange && date) {
-        onChange(date);
-      }
-    })
-  }
+  const handleDataChanged = React.useCallback((d: IDateInputState) => {
+    const newDate = DateHelpers.toDateFormat(d)
+    const day = datePartOrder.indexOf("day") === -1 ? 1 : null
+    const year = datePartOrder.indexOf("year") === -1 ? 2000 : null
+    setDateState({ ...d, date: newDate, day, year })
+    if (onChange && newDate) {
+      onChange(newDate);
+    }
 
-  render() {
-    const validationMessage = DataValidationMessage.get(this.props)
-    const { dayLabel, monthLabel, yearLabel, futureDates, yearsFromNow, startYearCap, className, validationMode, disabled, datePartOrder, tabIndex } = this.props
-    const options = {
-      day: buildOptions(dayLabel, this.getDaysArrayByMonth(), v => v, v => Formatting.twoDigitNumber(parseInt(v, 10))),
+  }, [datePartOrder, onChange])
+
+  const validationMessage = DataValidationMessage.get(props)
+
+  const options = React.useMemo(() => {
+    return {
+      day: buildOptions(dayLabel, daysArrayByMonth, v => v, v => Formatting.twoDigitNumber(parseInt(v, 10))),
       month: buildOptions(monthLabel, DateHelpers.getMonthValues(), v => v.value, v => v.label),
       year: buildOptions(yearLabel, DateHelpers.getYearValues(futureDates, yearsFromNow, startYearCap), v => v, v => v.toString()),
     }
-    const classes = ClassHelpers.classNames(
-      "armstrong-input",
-      "date-input",
-      className,
-      {
-        "show-validation": (validationMode !== "none" && validationMessage),
-        "input-disabled": disabled,
-      },
-    );
-    return (
-      <Form
-        className={classes} title={validationMessage}
-        onDataChanged={this.handleDataChanged}
-        dataBinder={Form.jsonDataBinder(this.state)}>
-        <Grid>
-          <Row>
-            {datePartOrder.map((key, idx) => {
-              return (
-                <Col key={idx}>
-                  <select tabIndex={tabIndex} {...Form.Bind.selectNumeric(key)} disabled={disabled}>
-                    {options[key]}
-                  </select>
-                </Col>
-              )
-            })}
-          </Row>
-          <ValidationLabel message={validationMessage} mode={validationMode} wrapper={p => <Row height="auto"><Col {...p} /></Row>} />
-        </Grid>
-      </Form>
-    )
-  }
+  }, [dayLabel, monthLabel, yearLabel, daysArrayByMonth, futureDates, yearsFromNow, startYearCap])
+
+  const classes = React.useMemo(() => ClassHelpers.classNames(
+    "armstrong-input",
+    "date-input",
+    className,
+    {
+      "show-validation": (validationMode !== "none" && validationMessage),
+      "input-disabled": disabled,
+    },
+  ), [className, validationMessage, validationMode, disabled]);
+
+  const { DataForm, bind } = useForm(dateState)
+
+  return (
+    <DataForm
+      className={classes}
+      title={validationMessage}
+      onDataChanged={handleDataChanged}>
+      <Grid>
+        <Row>
+          {datePartOrder.map((key, idx) => {
+            return (
+              <Col key={idx}>
+                <select tabIndex={tabIndex} {...bind.selectNumeric(key)} disabled={disabled}>
+                  {options[key]}
+                </select>
+              </Col>
+            )
+          })}
+        </Row>
+        <ValidationLabel message={validationMessage} mode={validationMode} wrapper={p => <Row height="auto"><Col {...p} /></Row>} />
+      </Grid>
+    </DataForm>
+  )
+}
+
+DateInput.defaultProps = {
+  yearLabel: "Year",
+  monthLabel: "Month",
+  dayLabel: "Day",
+  datePartOrder: ["day", "month", "year"],
+  validationMode: "none",
 }

@@ -49,6 +49,11 @@ interface IDialogStackRef {
 function DialogStackRef(props: {}, ref: React.Ref<IDialogStackRef>) {
   const [dialogContent, setDialogContent] = React.useState<IDialogContent[]>([])
 
+
+  const closeDialog = React.useCallback(() => {
+    setDialogContent([..._.first(dialogContent, dialogContent.length - 1)])
+  }, [dialogContent, setDialogContent])
+
   React.useImperativeHandle(ref, () => ({
     useDialogPromise<T>(Body: React.FC<IDialogProviderProps<T>>, settings?: IDialogSettings) {
       return new Promise<T>(async (resolve) => {
@@ -65,12 +70,7 @@ function DialogStackRef(props: {}, ref: React.Ref<IDialogStackRef>) {
         setDialogContent([...dialogContent, { body: <Body close={close} choose={choose} />, close, ...(settings || {}) }])
       })
     }
-  }))
-
-
-  const closeDialog = () => {
-    setDialogContent([..._.first(dialogContent, dialogContent.length - 1)])
-  }
+  }), [dialogContent, closeDialog, setDialogContent])
 
   return (
     <>
