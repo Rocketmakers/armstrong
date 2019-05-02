@@ -56,6 +56,8 @@ export interface IAutoCompleteInputProps extends IFormInputProps<AutoCompleteInp
   ignoreDiacritics?: boolean;
   /** (()=> string) fired every time the value changes */
   onChange?: (val: string) => void;
+  /** (number) height of each item in the list in px */
+  itemHeight?: number
 }
 
 export interface IAutoCompleteInputState {
@@ -78,11 +80,13 @@ export class AutoCompleteInput extends React.Component<IAutoCompleteInputProps, 
   private timer: number;
   private diacriticsStripper: DiacriticsStripper;
   // drive this through css ideally. Currently fixed height plus border (50 + 2px)
-  private itemHeight = 52;
+
   static defaultProps: Partial<IAutoCompleteInputProps> = {
     remoteThrottle: 500,
     minimumLength: 1,
     validationMode: "none",
+    itemHeight: 52,
+    visibleItems: 3
   }
   constructor(props: IAutoCompleteInputProps) {
     super(props);
@@ -213,7 +217,7 @@ export class AutoCompleteInput extends React.Component<IAutoCompleteInputProps, 
   }
 
   shouldShowOnTop(): boolean {
-    const height = (this.itemHeight * 3) + 50;
+    const height = (this.props.itemHeight * this.props.visibleItems) + 50;
     const foundNode = ReactDOM.findDOMNode(this)
     if (!isElement(foundNode)) {
       return
@@ -243,7 +247,7 @@ export class AutoCompleteInput extends React.Component<IAutoCompleteInputProps, 
     }
     if (e.keyCode === 40 && this.state.filteredOptions.length !== 0) {
       // DOWN ARROW
-      const offsetIndex = Math.min((this.props.visibleItems || 3) - 1, this.state.offsetIndex + 1);
+      const offsetIndex = Math.min((this.props.visibleItems) - 1, this.state.offsetIndex + 1);
       const selectedIndex = Math.min(this.state.selectedIndex + 1, this.state.filteredOptions.length - 1);
       const foundNode = ReactDOM.findDOMNode(this)
       if (!isElement(foundNode)) {
@@ -254,7 +258,7 @@ export class AutoCompleteInput extends React.Component<IAutoCompleteInputProps, 
       this.setState({ offsetIndex });
 
       if (offsetIndex >= 2) {
-        listElement.scrollTop = (selectedIndex - 2) * this.itemHeight;
+        listElement.scrollTop = (selectedIndex - 2) * this.props.itemHeight;
       }
 
       const selectedItem = this.state.filteredOptions[selectedIndex]
@@ -275,7 +279,7 @@ export class AutoCompleteInput extends React.Component<IAutoCompleteInputProps, 
       this.setState({ offsetIndex });
 
       if (offsetIndex === 0) {
-        listElement.scrollTop = (selectedIndex) * this.itemHeight;
+        listElement.scrollTop = (selectedIndex) * this.props.itemHeight;
       }
 
       const selectedItem = this.state.filteredOptions[selectedIndex]
@@ -429,7 +433,7 @@ export class AutoCompleteInput extends React.Component<IAutoCompleteInputProps, 
                 {this.state.remoteSearching && <Icon className="spinner fg-info" icon={Icon.Icomoon.spinner2} />}
                 <div data-id="autocomplete-select-list"
                   className={`autocomplete-select-list${this.state.showOnTop ? " on-top" : ""}`}
-                  style={{ maxHeight: `${(this.props.visibleItems || 3) * this.itemHeight}px`, marginTop: `${this.state.topOffset}px` }}>
+                  style={{ maxHeight: `${(this.props.visibleItems) * this.props.itemHeight}px`, marginTop: `${this.state.topOffset}px` }}>
                   {this.state.filteredOptions && this.state.filteredOptions.map((o, i) =>
                     <div data-index={i} key={`dd-item-${i}`} style={o.style} className={`dd-list-item${o.className ? ` ${o.className}` : ""}${i === this.state.selectedIndex ? " selected" : ""}${(this.props.multiSelect && _.some((this.state.selectedValue as IAutoCompleteOption[]), ddo => ddo.id === o.id)) ? " in-selected-list" : ""}`}
                       onClick={() => this.handleSelection(o)}>{o.prefixElement}{o.name}</div>)}
