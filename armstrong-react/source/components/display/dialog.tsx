@@ -50,13 +50,15 @@ export const Dialog: React.FC<IDialogProps> = props => {
 
 type DialogLayerCloseReason = "x-clicked" | "background" | "user"
 
-//type DialogLayerCloseEvent = React.MouseEvent<HTMLElement> & { reason?: DialogLayerCloseReason }
-export interface IDialogLayerProps {
+export interface IDialogLayerPropsCore {
   title?: string
   layerClass?: string
   className?: string
   width?: number
   height?: number
+}
+
+export interface IDialogLayerProps extends IDialogLayerPropsCore {
   onClose: (e: DialogLayerCloseReason) => void
 }
 
@@ -119,7 +121,7 @@ export interface IUseDialogProps {
   onClose: () => void
 }
 
-export interface IUseDialogSettings extends IUsePortalSettings, Pick<IDialogLayerProps, Exclude<keyof IDialogLayerProps, "onClose">> {
+export interface IUseDialogSettings extends IUsePortalSettings, IDialogLayerPropsCore {
   beforeDialogClose?: (reason: DialogLayerCloseReason) => Promise<boolean>
 }
 

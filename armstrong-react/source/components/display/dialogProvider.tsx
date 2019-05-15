@@ -1,6 +1,6 @@
 import * as React from "react";
-import { Dialog } from './dialog';
 import * as _ from "underscore";
+import { Dialog, IDialogLayerPropsCore } from "./dialog";
 
 const DialogProviderContext = React.createContext<IDialogStackRef>(undefined)
 
@@ -26,9 +26,7 @@ export function useConfirmDialogProvider(component: React.FC<IDialogProviderProp
   return useDialogProvider(component, settings)
 }
 
-interface IDialogSettings {
-  title?: string
-  className?: string
+interface IDialogSettings extends IDialogLayerPropsCore {
   allowCloseOnBackgroundClick?: boolean
 }
 
@@ -76,7 +74,7 @@ function DialogStackRef(props: {}, ref: React.Ref<IDialogStackRef>) {
   return (
     <>
       {dialogContent.map((dc, idx) => (
-        <Dialog key={idx} className={dc.className} isOpen={true} onClose={dc.close} title={dc.title} closeOnBackgroundClick={!!dc.allowCloseOnBackgroundClick}>
+        <Dialog key={idx} layerClass={dc.layerClass} width={dc.width} height={dc.height} className={dc.className} isOpen={true} onClose={dc.close} title={dc.title} closeOnBackgroundClick={!!dc.allowCloseOnBackgroundClick}>
           {dc.body}
         </Dialog>
       ))}
