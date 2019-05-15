@@ -119,28 +119,30 @@ export interface IUseDialogProps {
   onClose: () => void
 }
 
-export interface IUseDialogSettings extends IUsePortalSettings {
+export interface IUseDialogSettings extends IUsePortalSettings, Exclude<IDialogLayerProps, "onClose"> {
   beforeDialogClose?: (reason: DialogLayerCloseReason) => Promise<boolean>
 }
 
 export function useDialog(DialogLayerComponent: React.FC<IUseDialogProps>, settings?: IUseDialogSettings) {
+  settings = settings || { onClose: undefined }
+  const { hostElement, initiallyOpen, beforeDialogClose, ...rest } = settings
   return usePortal(p => {
     const onClose = React.useCallback(async (reason: DialogLayerCloseReason) => {
-      if (settings && settings.beforeDialogClose) {
-        if (await settings.beforeDialogClose(reason)) {
+      if (beforeDialogClose) {
+        if (await beforeDialogClose(reason)) {
           p.onClose()
         }
         return
       }
       p.onClose()
-    }, [p.onClose, settings && settings.beforeDialogClose])
+    }, [p.onClose, beforeDialogClose])
     const onUserClose = React.useCallback(() => onClose("user"), [onClose])
     return (
-      <DialogLayer onClose={onClose}>
+      <DialogLayer {...rest} onClose={onClose}>
         <DialogLayerComponent onClose={onUserClose} />
       </DialogLayer>
     )
-  }, settings)
+  }, { hostElement, initiallyOpen })
 }
 
 export interface IUsePortalSettings {

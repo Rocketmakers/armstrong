@@ -27,7 +27,7 @@ export function createFormContext<TDataBinder>() {
       }
       return (
         <ParentFormContext>
-          {props.children({ bind: new FormBinder<TDataBinder>(), dataBinder: ctx && ctx.dataBinder })}
+          {props.children({ bind: new FormBinder<TDataBinder>(), dataBinder: ctx && ctx.dataBinder, notifyChange: ctx.notifyChange })}
         </ParentFormContext>
       )
     },
@@ -39,6 +39,7 @@ type IHookFormProps = Pick<IFormProps, Exclude<keyof IFormProps, "dataBinder" | 
 export interface IUseFormProps<T> {
   dataBinder: IDataBinder<T>
   bind: FormBinder<T>
+  notifyChange: () => void
 }
 
 export interface IUseForm<T> extends IUseFormProps<T> {
@@ -76,5 +77,5 @@ export function useForm<T>(initialData: T, withoutClone: boolean = false): IUseF
     return <Form {...p} dataBinder={dataBinder} onDataBinderChange={onDataBinderChange} />
   }, [dataBinder, onDataBinderChange])
 
-  return { dataBinder, bind, DataForm, context }
+  return { dataBinder, bind, DataForm, context, notifyChange: onDataBinderChange }
 }

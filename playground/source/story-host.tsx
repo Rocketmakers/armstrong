@@ -10,16 +10,7 @@ interface IComponentStory {
   comp: React.FunctionComponent<any>
 }
 const comps: IComponentStories[] = []
-/*
 
-.row {
-  display: flex;
-}
-
-.column {
-  flex: 50%;
-}
-*/
 export function StoryHost() {
   const [Comp, setComp] = React.useState<React.FunctionComponent<any>>(null)
   return (

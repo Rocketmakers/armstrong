@@ -7,19 +7,19 @@ const DialogProviderContext = React.createContext<IDialogStackRef>(undefined)
 export const DialogProvider: React.FC<{}> = p => {
   const ref = React.useRef<IDialogStackRef>()
   return (
-    <DialogProviderContext.Provider value={{ useDialogPromise: (c, s) => ref.current && ref.current.useDialogPromise(c, s) }}>
+    <DialogProviderContext.Provider value={{ useDialogPromise: (component, argument, settings) => ref.current && ref.current.useDialogPromise(component, argument, settings) }}>
       {p.children}
       <DialogStack ref={ref} />
     </DialogProviderContext.Provider>
   )
 }
 
-export function useDialogProvider<T>(component: React.FC<IDialogProviderProps<T>>, settings?: IDialogSettings) {
+export function useDialogProvider<TResult, TArg = void>(component: React.FC<IDialogProviderProps<TResult, TArg>>, settings?: IDialogSettings) {
   const ctx = React.useContext(DialogProviderContext)
   if (!ctx) {
     console.log("You are trying to use DialogProvider Context, but no DialogProvider was found in the component hierarchy");
   }
-  return React.useCallback(() => ctx.useDialogPromise(component, settings), [component, settings])
+  return React.useCallback((argument?: TArg) => ctx.useDialogPromise(component, argument, settings), [component, settings])
 }
 
 export function useConfirmDialogProvider(component: React.FC<IDialogProviderProps<boolean>>, settings?: IDialogSettings) {
@@ -37,13 +37,14 @@ interface IDialogContent extends IDialogSettings {
   close: () => void
 }
 
-export interface IDialogProviderProps<T> {
+export interface IDialogProviderProps<T, TArg = void> {
   close(): void
   choose(data: T): void
+  argument?: TArg
 }
 
 interface IDialogStackRef {
-  useDialogPromise<T>(component: React.FC<IDialogProviderProps<T>>, settings?: IDialogSettings): Promise<T>
+  useDialogPromise<TResult, TArg>(component: React.FC<IDialogProviderProps<TResult, TArg>>, argument: TArg, settings?: IDialogSettings): Promise<TResult>
 }
 
 function DialogStackRef(props: {}, ref: React.Ref<IDialogStackRef>) {
@@ -55,9 +56,9 @@ function DialogStackRef(props: {}, ref: React.Ref<IDialogStackRef>) {
   }, [dialogContent, setDialogContent])
 
   React.useImperativeHandle(ref, () => ({
-    useDialogPromise<T>(Body: React.FC<IDialogProviderProps<T>>, settings?: IDialogSettings) {
-      return new Promise<T>(async (resolve) => {
-        const choose = (d?: T) => {
+    useDialogPromise<TResult, TArg>(Body: React.FC<IDialogProviderProps<TResult, TArg>>, argument: TArg, settings?: IDialogSettings) {
+      return new Promise<TResult>(async (resolve) => {
+        const choose = (d?: TResult) => {
           closeDialog()
           resolve(d)
         }
@@ -67,7 +68,7 @@ function DialogStackRef(props: {}, ref: React.Ref<IDialogStackRef>) {
           resolve()
         }
 
-        setDialogContent([...dialogContent, { body: <Body close={close} choose={choose} />, close, ...(settings || {}) }])
+        setDialogContent([...dialogContent, { body: <Body argument={argument} close={close} choose={choose} />, close, ...(settings || {}) }])
       })
     }
   }), [dialogContent, closeDialog, setDialogContent])

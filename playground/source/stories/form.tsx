@@ -29,7 +29,8 @@ function PersonUseForm(props: { data: IPersonData }) {
 
   const ab = bind.createChildBinder(b => b.prop("address"))
   const jb = bind.createChildBinder("jobs")
-
+  const ab1 = bind.createChildBinder("address")
+  ab.text("line1")
   // useDidUpdateEffect(() => console.log("HEY"), [binder.getKeyValue("firstName")])
 
   return (

@@ -65,15 +65,16 @@ const PromiseDialog: React.FC<{}> = p => {
   return (
     <>
       <Button onClick={async () => {
-        console.log("OK", await open());
+        console.log("OK", await open({ name: "keith" }));
       }}>Open Dialog Promise</Button>
     </>
   )
 }
 
-const ConfirmDialog: React.FC<IDialogProviderProps<boolean>> = p => {
+const ConfirmDialog: React.FC<IDialogProviderProps<boolean, { name: string }>> = p => {
   return (
     <>
+      <h3>{p.argument.name}</h3>
       <Button onClick={() => p.choose(true)}>Ok</Button>
       <Button onClick={p.close}>Cancel</Button>
     </>
