@@ -384,23 +384,6 @@ export class FormBinder<TDataBinder> {
 }
 
 class KeyboardHelper {
-  private static getNumericRegEx(options?: INumericOptions) {
-    if (options) {
-      if (options.allowNegative) {
-        if (options.decimals) {
-          return /[\d\.\-]/;
-        }
-        return /[\d\-]/;
-      }
-
-      if (options.decimals) {
-        return /[\d\.]/;
-      }
-    }
-
-    return /\d/;
-  }
-
   static numericKeyPress(e: React.KeyboardEvent<{}>, options?: INumericOptions) {
     const element = e.currentTarget as HTMLInputElement;
     const value = element.value;

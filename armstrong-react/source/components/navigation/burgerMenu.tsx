@@ -96,7 +96,7 @@ const BurgerMenuRef: React.RefForwardingComponent<IBurgerMenu, IBurgerMenuProps>
             })}
           </ul>
         </nav>
-      </div>
+      </div>,
     );
   }, [mode, children, closeMenu, wrappingComponent])
 
@@ -105,7 +105,7 @@ const BurgerMenuRef: React.RefForwardingComponent<IBurgerMenu, IBurgerMenuProps>
       openMenu,
       closeMenu,
       toggleMenu,
-      isOpen: isOpen.current
+      isOpen: isOpen.current,
     }
   }, [openMenu, closeMenu, toggleMenu, isOpen])
 

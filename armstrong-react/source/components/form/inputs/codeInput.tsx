@@ -32,20 +32,20 @@ export const CodeInput: React.FC<ICodeInputProps> = props => {
   const storedKey = React.useRef<string>(null);
 
   const buildValue = React.useCallback(() => {
-    let value: string | number = "";
+    let code: string | number = "";
 
     let current = document.getElementById(`input_${uniq.current}_0`) as HTMLInputElement;
 
     lengthPerBox.forEach(() => {
-      value += current.value;
+      code += current.value;
       current = current.nextSibling as HTMLInputElement;
     });
 
     if (numeric) {
-      value = parseInt(value, 10);
+      code = parseInt(code, 10);
     }
     if (onChange) {
-      onChange(value);
+      onChange(code);
     }
   }, [uniq, lengthPerBox, onChange, numeric])
 
@@ -88,7 +88,7 @@ export const CodeInput: React.FC<ICodeInputProps> = props => {
     buildValue();
   }, [lengthPerBox, focusIndex, storedKey, buildValue])
 
-  const handlePaste = React.useCallback((e) => {
+  const handlePaste = React.useCallback(e => {
     const length = _.reduce(lengthPerBox, (memo, num) => memo + num, 0);
     let pasted: string = e.clipboardData.getData("text/plain").replace(/\s/g, "");
     pasted = pasted.substr(0, length);
@@ -106,7 +106,7 @@ export const CodeInput: React.FC<ICodeInputProps> = props => {
 
     let currentIndex = 0;
 
-    lengthPerBox.forEach((lpb) => {
+    lengthPerBox.forEach(lpb => {
       const chunk = pasted.substr(currentIndex, lpb);
       currentIndex += lpb;
       splitArray.push(chunk);

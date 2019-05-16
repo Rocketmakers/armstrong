@@ -205,8 +205,10 @@ export function Form(props: IFormProps) {
 
 Form.Bind = new FormBinder<any>();
 
+// tslint:disable-next-line: only-arrow-functions
 Form.jsonDataBinder = function <T>(data: T): IDataBinder<T> { return new JsonDataBinder(data) }
 
+// tslint:disable-next-line: only-arrow-functions
 Form.jsonDataBinderWithClone = function <T>(data: T): IDataBinder<T> { return new JsonDataBinder(FormDataClone.custom(data)) }
 
 export function ParentFormContext(props: { children: React.ReactNode }) {

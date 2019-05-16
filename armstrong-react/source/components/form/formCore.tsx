@@ -36,7 +36,7 @@ export interface IFormBinder<TComponentProps, TData> {
   setElementProperty(props: TComponentProps, dataBinder: IDataBinder<TData>, validationResults?: IFormValidationResult[]): void;
 
   /**
-   * Add the value changed event handler, calling the supplied `notifyChanged` function when a change event has occured
+   * Add the value changed event handler, calling the supplied `notifyChanged` function when a change event has occurred
    */
   handleValueChanged(props: TComponentProps, dataBinder: IDataBinder<TData>, notifyChanged: () => void): void;
 

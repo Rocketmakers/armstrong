@@ -8,7 +8,7 @@ export interface ITabControlProps extends React.HTMLAttributes<HTMLDivElement> {
   /** (number) The index of the tab selected. Use this if you want a stateless component */
   forceSelectedIndex?: number;
   /** (TabItem[]) The tab items. Controls the header and the content */
-  children?: React.ReactElement<ITabItemProps> | React.ReactElement<ITabItemProps>[];
+  children?: React.ReactElement<ITabItemProps> | Array<React.ReactElement<ITabItemProps>>;
   /** ((index: number) => void) Fires when the tab is changed by the user */
   onTabChanged?: (index: number) => void;
   /** ('left' | 'right') Wether to align the tabs to the right or left of the header. Defaults to left */

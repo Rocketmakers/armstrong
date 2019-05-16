@@ -66,13 +66,11 @@ export const DialogLayer: React.FC<IDialogLayerProps> = ({ title, children, clas
   const onCloseByBackground = React.useCallback((e: React.MouseEvent<HTMLElement>) => {
     const clickedElement = e.target as HTMLElement;
     if (clickedElement && clickedElement.classList && clickedElement.classList.contains("dialog-layer")) {
-      //e.reason = "background"
       onClose("background");
     }
   }, [onClose])
 
   const onCloseByX = React.useCallback((e: React.MouseEvent<HTMLElement>) => {
-    //e.reason = "x-clicked"
     onClose("x-clicked")
   }, [onClose])
 

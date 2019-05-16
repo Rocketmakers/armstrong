@@ -20,7 +20,7 @@ export interface IAutoCompleteOption {
 }
 
 export interface IAutoCompleteInputProps extends IFormInputProps<AutoCompleteInput> {
-  /** (string) CSS classname property */
+  /** (string) CSS className property */
   className?: string;
   /** (IAutoCompleteOption | IAutoCompleteOption[]) The current/returned value or values if multi select */
   value?: IAutoCompleteOption | IAutoCompleteOption[];
@@ -42,7 +42,7 @@ export interface IAutoCompleteInputProps extends IFormInputProps<AutoCompleteInp
   hasGoButton?: boolean;
   /** (React.ReactElement<any> | string) The content of the go button. Can be text or any element */
   goButtonContent?: React.ReactElement<any> | string;
-  /** ((IAutoCompleteOption | IAutoCompleteOption[]) => void) Fires when the selection is changed. Returns a single value or an array dependent on multiselect */
+  /** ((IAutoCompleteOption | IAutoCompleteOption[]) => void) Fires when the selection is changed. Returns a single value or an array dependent on multiSelect */
   onSelected?: (selectedOption: IAutoCompleteOption | IAutoCompleteOption[]) => void;
   /** (number) How many items to show before scrolling. Defaults to 3 */
   visibleItems?: number;

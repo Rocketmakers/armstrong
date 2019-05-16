@@ -3,9 +3,9 @@ import { ClassHelpers } from "../../utilities/classHelpers";
 import { Icons } from "./../../utilities/icons";
 
 export interface IIconProps extends React.HTMLAttributes<HTMLElement> {
-  /** (string) The icons 'classname' eg Icon.Icomoon.Rocket */
+  /** (string) The icons 'className' eg Icon.Icomoon.Rocket */
   icon: string;
-  /** (string) CSS classname property */
+  /** (string) CSS className property */
   className?: string;
 }
 

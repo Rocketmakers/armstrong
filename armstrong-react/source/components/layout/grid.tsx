@@ -10,7 +10,7 @@ function sizeErrorMessage(size: string, sizeValue: string, controlPath: string) 
 export interface IGridProps extends React.HTMLAttributes<HTMLDivElement> {
   /** (boolean) Wether to render borders around grid parts */
   debugMode?: boolean;
-  /** (string) CSS classname property */
+  /** (string) CSS className property */
   className?: string;
   /** (boolean) Wether the table should expand and divide to fill its container */
   fillContainer?: boolean;
@@ -41,7 +41,7 @@ Grid.defaultProps = {
 export interface IRowProps extends React.HTMLAttributes<HTMLDivElement> {
   /** (number | string) Sets a fixed height for the row, or 'auto' to grow to fit its content */
   height?: number | string;
-  /** (string) CSS classname property */
+  /** (string) CSS className property */
   className?: string;
   /** (string) An HTML tag to use for the root element instead of <div> */
   tagName?: string;
@@ -109,7 +109,7 @@ export interface IColProps extends React.HTMLAttributes<HTMLDivElement> {
   width?: number | string;
   /** (string) An HTML tag to use for the root element instead of <div> */
   tagName?: string;
-  /** (string) CSS classname property */
+  /** (string) CSS className property */
   className?: string;
 }
 
