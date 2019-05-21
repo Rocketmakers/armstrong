@@ -44,7 +44,7 @@
 
       &.selected {
         border: 1px solid $color-info;
-        padding-left: calc($spacing-small * 1.2);
+        padding-left: calc(#{$spacing-small} * 1.2);
       }
 
       &.in-selected-list {
@@ -66,10 +66,10 @@
     background-color: $gray-medium;
     color: $white;
     border-radius: 0;
-    padding: $spacing-xsmall / 2 $spacing-xsmall;
+    padding: calc(#{$spacing-xsmall} / 2) $spacing-xsmall;
     line-height: normal;
-    margin-right: $field-padding-horizontal/5;
-    margin-bottom: $field-padding-horizontal/5;
+    margin-right: calc(#{$field-padding-horizontal} / 5);
+    margin-bottom: calc(#{$field-padding-horizontal} / 5);
 
     i {
       font-size: 9pt;
@@ -88,7 +88,7 @@
       animation: spin 0.3s forwards infinite linear;
       position: absolute;
       right: $spacing-small;
-      top: $spacing-small*0.75;
+      top: calc(#{$spacing-small}*0.75);
       z-index: 2;
     }
 
