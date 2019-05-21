@@ -1,6 +1,6 @@
 {
   "name": "armstrong-react",
-  "version": "4.0.0-pre7",
+  "version": "4.0.0-pre8",
   "description": "Rocketmakers Armstrong library of React components",
   "main": "./dist/index.js",
   "style": "./dist/style.scss",
