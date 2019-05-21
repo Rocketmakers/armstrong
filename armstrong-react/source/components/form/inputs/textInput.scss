@@ -39,7 +39,7 @@ select:disabled {
     }
 
     input {
-      padding-left: $spacing-large * 0.9;
+      padding-left: calc(#{$spacing-large} * 0.9);
     }
   }
 
@@ -49,21 +49,21 @@ select:disabled {
     }
 
     input {
-      padding-right: $spacing-large * 0.9;
+      padding-right: calc(#{$spacing-large} * 0.9);
     }
   }
 
   &.has-text-overlay-right {
     input,
     textarea {
-      padding-right: $spacing-large * 0.9;
+      padding-right: calc(#{$spacing-large} * 0.9);
     }
   }
 
   &.has-text-overlay-left {
     input,
     textarea {
-      padding-left: $spacing-large * 0.9;
+      padding-left: calc(#{$spacing-large} * 0.9);
     }
   }
 }

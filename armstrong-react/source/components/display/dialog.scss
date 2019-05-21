@@ -41,7 +41,7 @@ $dialog-header-height: 50px;
 
   .dialog {
     position: relative;
-    max-height: calc(100% - #{$spacing-small * 2});
+    max-height: calc(100% - (#{$spacing-small} * 2));
     width: 400px;
     background-color: white;
     display: flex;

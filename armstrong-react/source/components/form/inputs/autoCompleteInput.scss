@@ -44,7 +44,7 @@
 
       &.selected {
         border: 1px solid $color-info;
-        padding-left: $spacing-small * 1.2;
+        padding-left: calc($spacing-small * 1.2);
       }
 
       &.in-selected-list {
