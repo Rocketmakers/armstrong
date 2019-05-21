@@ -17,6 +17,7 @@
     "moment": "^2.24.0",
     "react": "^16.8.3",
     "react-dom": "^16.8.3",
+    "react-hooks-testing-library": "^0.5.0",
     "ts-lib": "^0.0.5",
     "underscore": "^1.9.1"
   },

@@ -1,9 +1,9 @@
 import * as React from "react";
 import * as _ from "underscore";
 import { ClassHelpers } from "../../../utilities/classHelpers";
-import { DateHelpers } from "../../../utilities/dateHelpers";
 import { Formatting } from "../../../utilities/formatting";
 import { useDidUpdateEffect } from "../../../utilities/hooks";
+import { Times } from "../../../utilities/times";
 import { Col, Grid, Row } from "../../layout/grid";
 import { IFormInputProps } from "../form";
 import { DataValidationMessage } from "../formCore";
@@ -46,14 +46,14 @@ export const TimeInput: React.FC<ITimeInputProps> = props => {
 
   React.useEffect(() => {
     if (time) {
-      const newTime = DateHelpers.getTimeParts(time);
+      const newTime = Times.getTimeParts(time);
       setTimeState({ hours: newTime.hours, minutes: newTime.minutes });
     }
   }, [])
 
   useDidUpdateEffect(() => {
     if (time) {
-      const newTime = DateHelpers.getTimeParts(time);
+      const newTime = Times.getTimeParts(time);
       let needsUpdate;
       let { hours, minutes } = timeState
       if (newTime.hours !== hours) {

@@ -1,9 +1,8 @@
-import * as moment from "moment";
 import * as React from "react";
+import { Dates, DateType, DayOfWeek } from "../utilities/dates";
 
 const isoFormat = "YYYY-MM-DD";
 
-export type DayOfWeek = "Sun" | "Mon" | "Tue" | "Wed" | "Thu" | "Fri" | "Sat"
 export interface IUseCalendarSettings {
   /**
    * The initial date to display the calendar for.
@@ -39,9 +38,14 @@ export interface IUseCalendarSettings {
    * The day of week to start the calendar week.
    */
   beginOnDay?: DayOfWeek
+
+  /** Callback when date changes */
+  onDateChanged?: (date: string) => void
 }
 
 export interface IDay {
+  /** The Day Of Week */
+  dayOfWeek: DayOfWeek,
   /** The days date (in 'format' from settings ) */
   date: string
   /** The days number (1...31) */
@@ -64,6 +68,7 @@ export interface IWeek {
 }
 
 export interface IMonth {
+  daysOfWeek: DayOfWeek[]
   /** The year number */
   year: number
   /** The month number (0 - 11) */
@@ -80,9 +85,11 @@ export interface IUseCalendar {
   /** The displaying month */
   month: IMonth
   /** The selected date */
-  date: string
+  selectedDate: string
+  /** The selected date in display format */
+  selectedDateDisplay: string
   /** Is the selected date valid (not empty and within 'min' and 'max' range from settings) */
-  isDateValid: boolean
+  isSelectedDateValid: boolean
   /** Move to the next month */
   nextMonth: () => void
   /** Move to the previous month */
@@ -94,86 +101,16 @@ export interface IUseCalendar {
   /** Move to the a specified date (using the 'format' specified in settings) */
   gotoDate: (newDate: string) => void
   /** Move to and select the a specified date (using the 'format' specified in settings) */
-  setDate: (newDate: string) => void
+  selectDate: (newDate: string) => void
+  /** Clears the selected date  */
+  clearSelectedDate: () => void
 }
 
 interface ICalendarState {
   month: IMonth
-  seed: moment.Moment
-  previousSeed: moment.Moment
-  nextSeed: moment.Moment
-}
-
-namespace Dates {
-  export function startOfToday() {
-    return moment().startOf("day")
-  }
-
-  export function fallsWithinRange(mom: moment.Moment, minDate: moment.Moment, maxDate: moment.Moment) {
-    if (minDate && mom.isBefore(minDate, "day")) {
-      return false;
-    }
-    if (maxDate && mom.isAfter(maxDate, "day")) {
-      return false;
-    }
-    return true;
-  }
-
-  export function dateOrToday(date: string, formatString: string) {
-    const mom = moment(date, formatString, true);
-    if (!mom.isValid()) {
-      return moment();
-    }
-    return mom
-  }
-
-  export function dateOrEmpty(date: string, formatString: string) {
-    const mom = moment(date, formatString, true);
-    if (!mom.isValid()) {
-      return "";
-    }
-    return mom.format(formatString)
-  }
-
-  export function dateOrNull(date: string, formatString: string) {
-    const mom = moment(date, formatString, true);
-    if (!mom.isValid()) {
-      return;
-    }
-    return mom
-  }
-
-  export function startOfMonth(mom: moment.Moment) {
-    return mom.clone().startOf("month")
-  }
-
-  export function getMonth(mom: moment.Moment) {
-    return mom.month()
-  }
-
-  export function getDayNumber(mom: moment.Moment) {
-    return mom.date()
-  }
-
-  export function getYear(mom: moment.Moment) {
-    return mom.year()
-  }
-
-  export function format(mom: moment.Moment, formatString: string) {
-    return mom.format(formatString)
-  }
-
-  export function addMonth(mom: moment.Moment, increment: number) {
-    return mom.clone().add(increment, "month")
-  }
-
-  export function addDay(mom: moment.Moment, increment: number) {
-    return mom.clone().add(increment, "day")
-  }
-
-  export function isDayOfWeek(mom: moment.Moment, dayOfWeek: DayOfWeek) {
-    return mom.format("ddd") === dayOfWeek
-  }
+  seed: DateType
+  previousSeed: DateType
+  nextSeed: DateType
 }
 
 export function useCalendar(settings: IUseCalendarSettings): IUseCalendar {
@@ -184,7 +121,8 @@ export function useCalendar(settings: IUseCalendarSettings): IUseCalendar {
   const minDate = React.useMemo(() => Dates.dateOrNull(settings.minDate, format), [settings.minDate]);
   const maxDate = React.useMemo(() => Dates.dateOrNull(settings.maxDate, format), [settings.maxDate]);
   const [date, setCurrentDate] = React.useState(settings.selectedDate ? Dates.dateOrEmpty(settings.selectedDate, format) : "")
-  const isDateValid = React.useMemo(() => {
+
+  const isSelectedDateValid = React.useMemo(() => {
     const mom = Dates.dateOrNull(date, format)
     if (!mom) {
       return false
@@ -192,6 +130,15 @@ export function useCalendar(settings: IUseCalendarSettings): IUseCalendar {
 
     return Dates.fallsWithinRange(mom, minDate, maxDate)
   }, [date, minDate, maxDate, format]);
+
+  const selectedDateDisplay = React.useMemo(() => {
+    const mom = Dates.dateOrNull(date, format)
+    if (!mom) {
+      return ""
+    }
+
+    return Dates.format(mom, displayFormat)
+  }, [date, isSelectedDateValid]);
 
   const today = Dates.startOfToday().format(format)
 
@@ -248,12 +195,24 @@ export function useCalendar(settings: IUseCalendarSettings): IUseCalendar {
 
     setCurrentDate(newDate)
     setState(buildWeeks(mom, format, startDay, displayFormat, today, newDate, minDate, maxDate))
-  }, [format, startDay, displayFormat, today, minDate, maxDate])
+    if (settings.onDateChanged) {
+      settings.onDateChanged(newDate)
+    }
+  }, [format, startDay, displayFormat, today, minDate, maxDate, settings.onDateChanged, setCurrentDate])
 
-  return { month: state.month, nextMonth, nextYear, previousMonth, previousYear, date, setDate, gotoDate, isDateValid }
+  const clearSelectedDate = React.useCallback(() => {
+    const newDate = ""
+    setCurrentDate(newDate)
+    setState(buildWeeks(state.seed, format, startDay, displayFormat, today, newDate, minDate, maxDate))
+    if (settings.onDateChanged) {
+      settings.onDateChanged(newDate)
+    }
+  }, [settings.onDateChanged, setCurrentDate, state.seed, format, startDay, displayFormat, today, minDate, maxDate])
+
+  return { month: state.month, nextMonth, nextYear, previousMonth, previousYear, selectedDateDisplay, selectedDate: date, selectDate: setDate, gotoDate, isSelectedDateValid, clearSelectedDate }
 }
 
-function buildWeeks(seed: moment.Moment, format: string, startDay: DayOfWeek, displayFormat: string, today: string, selectedDate: string, minDate: moment.Moment, maxDate: moment.Moment): ICalendarState {
+function buildWeeks(seed: DateType, format: string, startDay: DayOfWeek, displayFormat: string, today: string, selectedDate: string, minDate: DateType, maxDate: DateType): ICalendarState {
   const start = Dates.startOfMonth(seed);
   const monthNum = Dates.getMonth(start)
   const monthShortName = Dates.format(start, "MMM")
@@ -269,7 +228,7 @@ function buildWeeks(seed: moment.Moment, format: string, startDay: DayOfWeek, di
     const week: IWeek = { days: [] };
     weeks.push(week);
     for (let dayNo = 0; dayNo < 7; dayNo++) {
-      const day: IDay = { date: Dates.format(start, format), display: Dates.format(start, displayFormat), dayNumber: Dates.getDayNumber(start) }
+      const day: IDay = { date: Dates.format(start, format), dayOfWeek: Dates.getDayOfWeek(start), display: Dates.format(start, displayFormat), dayNumber: Dates.getDayNumber(start) }
       if (day.date === today) {
         day.isToday = true
       }
@@ -290,6 +249,6 @@ function buildWeeks(seed: moment.Moment, format: string, startDay: DayOfWeek, di
       Dates.addDay(start, 1);
     }
   }
-  const month: IMonth = { weeks, number: monthNum, shortName: monthShortName, name: monthName, year }
+  const month: IMonth = { daysOfWeek: weeks[0].days.map(d => d.dayOfWeek), weeks, number: monthNum, shortName: monthShortName, name: monthName, year }
   return { month, seed, previousSeed, nextSeed };
 }

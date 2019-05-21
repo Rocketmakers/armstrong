@@ -6,8 +6,8 @@ import { IMonth, IUseCalendar, useCalendar } from "../hooks/useCalendar";
 function assertResult(result: IUseCalendar, expected: { month: number, year: number, date: string, dateInvalid?: boolean }) {
   assert.equal(result.month.number, expected.month)
   assert.equal(result.month.year, expected.year)
-  assert.equal(result.date, expected.date)
-  assert.equal(result.isDateValid, !expected.dateInvalid)
+  assert.equal(result.selectedDate, expected.date)
+  assert.equal(result.isSelectedDateValid, !expected.dateInvalid)
   assert.equal(result.month.weeks.length, 6)
   for (let week = 0; week < 6; week++) {
     assert.equal(result.month.weeks[week].days.length, 7)
@@ -69,7 +69,7 @@ describe("useCalendar", () => {
 
   it("Set Invalid Date", () => {
     const { result } = renderHook(() => useCalendar({}))
-    act(() => result.current.setDate("x"))
+    act(() => result.current.selectDate("x"))
     assertResult(result.current, { ...currentYearMonth(), ...noDateExpected })
   })
 
@@ -108,7 +108,7 @@ describe("useCalendar", () => {
 
   it("Alternative format Settings - Set Date", () => {
     const { result } = renderHook(() => useCalendar({ selectedDate: "31-03-19", format: "DD-MM-YY" }))
-    act(() => result.current.setDate("07-09-19"))
+    act(() => result.current.selectDate("07-09-19"))
     assertResult(result.current, { month: 8, year: 2019, date: "07-09-19" })
   })
 
@@ -131,13 +131,13 @@ describe("useCalendar", () => {
 
   it("Selected Date Settings out of Min Range - Set Date before min", () => {
     const { result } = renderHook(() => useCalendar({ selectedDate: "2019-03-31", minDate: "2019-04-01" }))
-    act(() => result.current.setDate("2019-03-01"))
+    act(() => result.current.selectDate("2019-03-01"))
     assertResult(result.current, { month: 2, year: 2019, date: "2019-03-31", dateInvalid: true })
   })
 
   it("Selected Date Settings out of Min Range - Set Date OK", () => {
     const { result } = renderHook(() => useCalendar({ selectedDate: "2019-03-31", minDate: "2019-04-01" }))
-    act(() => result.current.setDate("2019-04-01"))
+    act(() => result.current.selectDate("2019-04-01"))
     assertResult(result.current, { month: 3, year: 2019, date: "2019-04-01" })
   })
 
@@ -160,13 +160,13 @@ describe("useCalendar", () => {
 
   it("Selected Date Settings out of Max Range - Set Date After max", () => {
     const { result } = renderHook(() => useCalendar({ selectedDate: "2019-03-31", maxDate: "2019-03-30" }))
-    act(() => result.current.setDate("2019-04-01"))
+    act(() => result.current.selectDate("2019-04-01"))
     assertResult(result.current, { month: 2, year: 2019, date: "2019-03-31", dateInvalid: true })
   })
 
   it("Selected Date Settings out of Max Range - Set Date OK", () => {
     const { result } = renderHook(() => useCalendar({ selectedDate: "2019-01-31", maxDate: "2019-03-30" }))
-    act(() => result.current.setDate("2019-03-30"))
+    act(() => result.current.selectDate("2019-03-30"))
     assertResult(result.current, { month: 2, year: 2019, date: "2019-03-30" })
   })
 
@@ -195,7 +195,7 @@ describe("useCalendar", () => {
 
   it("Selected Date Settings - Set Date", () => {
     const { result } = renderHook(() => useCalendar({ selectedDate: "2019-03-31" }))
-    act(() => result.current.setDate("2019-09-07"))
+    act(() => result.current.selectDate("2019-09-07"))
     assertResult(result.current, { month: 8, year: 2019, date: "2019-09-07" })
   })
 
