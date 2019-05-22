@@ -1,6 +1,7 @@
 import { storiesOf } from "../story-host";
 import * as React from 'react'
 import { AutoCompleteSingleInput, useRemoteOptions, AutoCompleteMultiInput, IAutoCompleteOption, AutoComplete } from '../_symlink/components/form/inputs/autoComplete';
+import { AutoCompleteInput } from '../_symlink';
 
 function createOption(text: string, id: number) {
   return { id: id, name: text + "-" + id }
@@ -20,12 +21,17 @@ async function fetch(text: string): Promise<IAutoCompleteOption[]> {
 
 storiesOf("AutoComplete", AutoComplete)
   .add("Remote Options", () => {
-    const { options, filter, setFilter } = useRemoteOptions(fetch)
-    const [option, setOption] = React.useState<IAutoCompleteOption>(undefined)
-    return <AutoCompleteSingleInput options={options} value={option} onValueChange={setOption} filter={filter} onFilterChange={setFilter} />
+    const [option, setOption] = React.useState<IAutoCompleteOption | IAutoCompleteOption[]>(undefined)
+    const options = [{ id: 1, name: "name" }, { id: 2, name: "age" }, { id: 3, name: "height" }]
+    return <AutoCompleteInput options={options} value={option} onSelected={setOption} />
   })
-  .add("Remote Options - Multi", () => {
-    const { options, filter, setFilter } = useRemoteOptions(fetch)
-    const [option, setOption] = React.useState<IAutoCompleteOption[]>(undefined)
-    return <AutoCompleteMultiInput options={options} value={option} onValueChange={setOption} filter={filter} onFilterChange={setFilter} />
-  })
+  // .add("Remote Options", () => {
+  //   const { options, filter, setFilter } = useRemoteOptions(fetch)
+  //   const [option, setOption] = React.useState<IAutoCompleteOption>(undefined)
+  //   return <AutoCompleteSingleInput options={options} value={option} onValueChange={setOption} filter={filter} onFilterChange={setFilter} />
+  // })
+  // .add("Remote Options - Multi", () => {
+  //   const { options, filter, setFilter } = useRemoteOptions(fetch)
+  //   const [option, setOption] = React.useState<IAutoCompleteOption[]>(undefined)
+  //   return <AutoCompleteMultiInput options={options} value={option} onValueChange={setOption} filter={filter} onFilterChange={setFilter} />
+  // })

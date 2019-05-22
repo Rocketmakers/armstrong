@@ -15,7 +15,7 @@ export interface ITagInput {
 
 export interface ITagInputProps extends IFormInputHTMLProps {
   suggestions?: string[];
-  change?: (tags: string[]) => void;
+  onTagsChange?: (tags: string[]) => void;
   value?: string[];
 };
 
@@ -25,7 +25,7 @@ function makeComparison(value: string) {
 
 const TagInputRef: React.RefForwardingComponent<ITagInput, ITagInputProps> = (props, ref) => {
 
-  const { value, validationMode, className, change } = props
+  const { value, validationMode, className, onTagsChange } = props
 
   const [suggestionIndex, setSuggestionIndex] = React.useState(-1)
   const [tags, setTags] = React.useState<string[]>(value || [])
@@ -75,8 +75,8 @@ const TagInputRef: React.RefForwardingComponent<ITagInput, ITagInputProps> = (pr
   const notifyTagsChange = React.useCallback((newTags: string[]) => {
     setTags(newTags)
     setSuggestions([])
-    change(newTags)
-  }, [change])
+    onTagsChange(newTags)
+  }, [onTagsChange])
 
   const notifySuggestionsChange = React.useCallback((newSuggestions: string[] = []) => {
     setSuggestions(newSuggestions)

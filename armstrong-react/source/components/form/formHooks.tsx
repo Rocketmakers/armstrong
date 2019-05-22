@@ -34,7 +34,7 @@ export function createFormContext<TDataBinder>() {
   }
 }
 
-type IHookFormProps = Pick<IFormProps, Exclude<keyof IFormProps, "dataBinder" | "onDataBinderChange">>
+type IHookFormProps<T> = Pick<IFormProps, Exclude<keyof IFormProps, "dataBinder" | "onDataBinderChange" | "onDataChanged">> & { onDataChanged?: (data?: T) => void }
 
 export interface IUseFormProps<T> {
   dataBinder: IDataBinder<T>
@@ -43,7 +43,7 @@ export interface IUseFormProps<T> {
 }
 
 export interface IUseForm<T> extends IUseFormProps<T> {
-  DataForm: React.FunctionComponent<IHookFormProps>
+  DataForm: React.FunctionComponent<IHookFormProps<T>>
   context: UseFormContext<T>
 }
 
@@ -73,7 +73,7 @@ export function useForm<T>(initialData: T, withoutClone: boolean = false): IUseF
 
   const onDataBinderChange = React.useCallback(() => dispatch(0), [dispatch]);
 
-  const DataForm = React.useCallback<React.FunctionComponent<IHookFormProps>>(p => {
+  const DataForm = React.useCallback<React.FunctionComponent<IHookFormProps<T>>>(p => {
     return <Form {...p} dataBinder={dataBinder} onDataBinderChange={onDataBinderChange} />
   }, [dataBinder, onDataBinderChange])
 

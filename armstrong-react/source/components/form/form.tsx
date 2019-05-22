@@ -190,7 +190,7 @@ export function Form(props: IFormProps) {
   const context = React.useContext(FormContext)
   const hasParentForm = !!context
 
-  const className1 = ClassHelpers.classNames("form", hasParentForm && "form-nested", className);
+  const className1 = React.useMemo(() => ClassHelpers.classNames("form", hasParentForm && "form-nested", className), [hasParentForm, className]);
   return <FormContext.Provider value={{
     dataBinder,
     coreProps: props,
@@ -221,19 +221,6 @@ export function ParentFormContext(props: { children: React.ReactNode }) {
   }
 
   return context ? FormElementProcessor.processChildren(context.coreProps, children, context.notifyChange) : children;
-
-  // return (
-  //   <FormContext.Consumer>
-  //     {context => {
-  //       if (!context) {
-  //         // tslint:disable-next-line:no-console
-  //         console.error("A ParentFormBinder should be rendered within the context of a parent Form")
-  //       }
-
-  //       return context ? FormElementProcessor.processChildren(context.coreProps, children, context.notifyChange) : children;
-  //     }}
-  //   </FormContext.Consumer>
-  // )
 }
 
 class FormElementProcessor {

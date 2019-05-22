@@ -8,7 +8,7 @@ import { useForm } from '../formHooks';
 
 export interface ICodeInputProps extends IFormInputHTMLProps {
   lengthPerBox?: number[];
-  change?: (value: string | number) => void;
+  onCodeChange?: (value: string | number) => void;
   value?: string;
   placeholder?: string;
   type?: string;
@@ -23,37 +23,43 @@ function calcTabIndex(tabIndex: number | undefined, fieldIndex: number) {
   return tabIndex + fieldIndex;
 }
 
-//const formData = {}
+function getBindingName(index: number) {
+  return `code_${index}`
+}
+const formData = {}
 export const CodeInput: React.FC<ICodeInputProps> = props => {
 
-  const { change, validationMode, lengthPerBox, numeric, type, className, tabIndex, value, placeholder, readonly } = props;
+  const { DataForm, bind, dataBinder, notifyChange } = useForm(formData)
 
-  const inputs = React.useRef<HTMLInputElement[]>([])
+  const { onCodeChange, validationMode, lengthPerBox, numeric, type, className, tabIndex, value, placeholder, readonly } = props;
 
   const codeLength = React.useMemo(() => Utils.reduce(lengthPerBox, (memo, num) => memo + num, 0), [lengthPerBox])
 
   const [focusIndex, setFocusIndex] = React.useState<number>(null)
+  const [code, setCode] = React.useState<string>("")
 
   const storedKey = React.useRef<string>(null);
 
   const buildValue = React.useCallback(() => {
-    let code: string | number = "";
-    Utils.each(inputs.current, (i) => {
-      code += i.value.toUpperCase();
+    let codeCandidate: string | number = "";
+    Utils.each(lengthPerBox, (lpb, idx) => {
+      const val = dataBinder.getValue(getBindingName(idx))
+      codeCandidate += val ? val.toUpperCase() : "";
     });
-    if (code.length !== codeLength) {
+    if (codeCandidate.length !== codeLength) {
       return
     }
-    if (code === value) {
+    if (codeCandidate === code) {
       return
     }
+    setCode(codeCandidate)
     if (numeric) {
-      code = parseInt(code, 10);
+      codeCandidate = parseInt(codeCandidate, 10);
     }
-    if (change) {
-      change(code);
+    if (onCodeChange) {
+      onCodeChange(codeCandidate);
     }
-  }, [lengthPerBox, change, numeric, codeLength])
+  }, [lengthPerBox, onCodeChange, numeric, codeLength])
 
   const onKeyUpFocusNext = React.useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
     let movingBack = false;
@@ -72,8 +78,7 @@ export const CodeInput: React.FC<ICodeInputProps> = props => {
       }
     } else {
       el = current.nextSibling as HTMLInputElement;
-      if (
-        storedKey.current && el && !el.value) {
+      if (storedKey.current && el && !el.value) {
         el.value = storedKey.current;
 
         storedKey.current = null;
@@ -112,7 +117,8 @@ export const CodeInput: React.FC<ICodeInputProps> = props => {
       const chunk = pasted.substr(currentIndex, lpb);
       currentIndex += lpb;
       splitArray.push(chunk);
-      inputs.current[idx].value = chunk;
+      dataBinder.setValue(getBindingName(idx), chunk);
+      //inputs.current[idx].value = chunk;
     });
 
     buildValue();
@@ -124,7 +130,6 @@ export const CodeInput: React.FC<ICodeInputProps> = props => {
   }, [storedKey])
 
   const keyDown = React.useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
-    // console.log(e.key)
     const lpb = lengthPerBox[focusIndex];
     const selectionLength = window.getSelection().toString().length;
     if (selectionLength === lpb) {
@@ -150,10 +155,12 @@ export const CodeInput: React.FC<ICodeInputProps> = props => {
   React.useEffect(() => {
     if (value) {
       let currentIndex = 0;
-      Utils.each(lengthPerBox, (lpb, i) => {
-        inputs.current[i].value = value.substr(currentIndex, lpb);
+      Utils.each(lengthPerBox, (lpb, idx) => {
+        dataBinder.setValue(getBindingName(idx), value.substr(currentIndex, lpb));
+        //inputs.current[i].value = ;
         currentIndex += lpb;
       });
+      notifyChange()
     }
   }, [])
 
@@ -163,15 +170,12 @@ export const CodeInput: React.FC<ICodeInputProps> = props => {
       "show-validation": validationMode !== "none" && validationMessage,
     }), [className, validationMode, validationMessage]);
 
-  //const { DataForm, bind } = useForm(dateState)
-
   return (
     <div className={classes}>
-      <div>
+      <DataForm onDataChanged={buildValue} className={classes}>
         {
           lengthPerBox.map((lpb, i) => (
             <input
-              ref={r => inputs.current[i] = r}
               className="code-input-field"
               tabIndex={calcTabIndex(tabIndex, i)}
               key={i}
@@ -184,10 +188,10 @@ export const CodeInput: React.FC<ICodeInputProps> = props => {
               onKeyUp={onKeyUpFocusNext}
               onKeyDown={keyDown}
               onPaste={handlePaste}
-              onChange={buildValue}
+              {...bind.text(getBindingName(i) as any)}
             />
           ))}
-      </div>
+      </DataForm>
       <ValidationLabel message={validationMessage} mode={validationMode} />
     </div>
   );

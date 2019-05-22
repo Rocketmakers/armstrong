@@ -35,7 +35,7 @@ const RadioInputRef: React.RefForwardingComponent<IRadioInput, IRadioInputProps>
   React.useImperativeHandle(ref, refCallback, [refCallback])
 
   const validationMessage = DataValidationMessage.get(props)
-  const autoId = id || generateUniqueId(u => "radio_" + u);
+  const autoId = React.useMemo(() => id || generateUniqueId(u => "radio_" + u), [id]);
   const classes = React.useMemo(() => ClassHelpers.classNames(
     "armstrong-input",
     "radio",

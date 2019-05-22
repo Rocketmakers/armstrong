@@ -1,10 +1,10 @@
 import { storiesOf } from "../story-host";
-import { Form, useForm, TextInput, UseFormContext, createFormContext, IUseFormProps, TimeInput, SelectInput, CheckboxInput } from '../_symlink';
+import { Form, useForm, TextInput, UseFormContext, createFormContext, IUseFormProps, TimeInput, SelectInput, CheckboxInput, TagInput, CodeInput } from '../_symlink';
 import * as React from 'react'
 
 storiesOf("Form", Form)
   .add("useForm", () => {
-    const data = React.useMemo(() => ({ firstName: "keith", active: true, lastName: "walker", time: "11:15", type: null, address: { line1: "home" }, jobs: [{ org: "Rocketmakers", address: { line1: "here" } }, { org: "BBC", address: { line1: "there" } }] }), [])
+    const data = React.useMemo(() => ({ firstName: "keith", active: true, pinCode: "123456", lastName: "walker", tags: ["developer", "coder"], time: "11:15", type: null, address: { line1: "home" }, jobs: [{ org: "Rocketmakers", address: { line1: "here" } }, { org: "BBC", address: { line1: "there" } }] }), [])
     return <PersonUseForm data={data} />
   })
   .add("createFormContext", () => {
@@ -40,6 +40,8 @@ function PersonUseForm(props: { data: IPersonData }) {
       </div>
       <TextInput {...bind.text("lastName")} />
       <TimeInput {...bind.timeInput("time")} />
+      <TagInput {...bind.tagInput("tags")} />
+      <CodeInput {...bind.codeInput("pinCode")} />
       <SelectInput {...bind.select("type")} options={[{ id: "a", name: "A" }, { id: "b", name: "B" }]} />
       <CheckboxInput labelContent="Active" {...bind.checkbox("active")} />
       <TextInput {...bind.text(b => b.prop("jobs").index(0).prop("address").prop("line1"))} />
@@ -80,7 +82,7 @@ const PersonFormContext = createFormContext<IPersonData>()
 
 interface IAddressData { line1: string }
 interface IJobData { org: string, address: IAddressData }
-interface IPersonData { firstName: string, lastName: string, time: string, active: boolean, type: string, address: IAddressData, jobs: IJobData[], jobsOfJobs?: IJobData[][] }
+interface IPersonData { firstName: string, lastName: string, pinCode: string, tags: string[], time: string, active: boolean, type: string, address: IAddressData, jobs: IJobData[], jobsOfJobs?: IJobData[][] }
 
 function PersonForm() {
 
@@ -90,6 +92,8 @@ function PersonForm() {
     active: false,
     time: "10:00",
     type: null,
+    pinCode: "123456",
+    tags: ["developer", "coder"],
     address: {
       line1: "home"
     },

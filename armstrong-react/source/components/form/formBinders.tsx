@@ -163,7 +163,7 @@ export class TagInputFormBinder implements IFormBinder<ITagInputProps, any> {
   }
 
   handleValueChanged(props: ITagInputProps, dataBinder: IDataBinder<any>, notifyChanged: () => void): void {
-    props.change = (tags: string[]) => {
+    props.onTagsChange = (tags: string[]) => {
       dataBinder.setValue(this.dataPath, tags);
       notifyChanged()
     };
@@ -178,7 +178,7 @@ export class CodeInputFormBinder implements IFormBinder<ICodeInputProps, any> {
   }
   // handle the change property of the `SelectInput` - setting the dataBinder value and notifying on change
   handleValueChanged(props: ICodeInputProps, dataBinder: IDataBinder<any>, notifyChanged: () => void): void {
-    props.change = c => {
+    props.onCodeChange = c => {
       dataBinder.setValue(this.dataPath, c);
       notifyChanged();
     };

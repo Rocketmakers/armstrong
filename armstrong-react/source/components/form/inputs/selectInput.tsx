@@ -17,18 +17,18 @@ export interface ISelectInputOption {
 
 export interface ISelectInputProps extends IFormInputHTMLProps<React.SelectHTMLAttributes<HTMLSelectElement>> {
   options: ISelectInputOption[];
-  change?: (selected: ISelectInputOption) => void;
+  onOptionChange?: (selected: ISelectInputOption) => void;
   optionLabel?: string
   enableOptionLabel?: boolean
 }
 
 const SelectInputRef: React.RefForwardingComponent<ISelectInput, ISelectInputProps> = (props, ref) => {
-  const { options, change, onChange, optionLabel, validationMode, enableOptionLabel, className, ...attrs } = props
+  const { options, onOptionChange, onChange, optionLabel, validationMode, enableOptionLabel, className, ...attrs } = props
 
   const handleChange = React.useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
-    if (change) { change(options[e.target.selectedIndex - 1]); }
+    if (onOptionChange) { onOptionChange(options[e.target.selectedIndex - 1]); }
     if (onChange) { onChange(e); }
-  }, [change, onChange, options])
+  }, [onOptionChange, onChange, options])
 
   const select = React.useRef<HTMLSelectElement>(undefined)
 

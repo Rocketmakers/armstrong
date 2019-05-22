@@ -191,6 +191,9 @@ export class AutoCompleteInput extends React.Component<IAutoCompleteInputProps, 
     this.setState({ filteredOptions: this.props.options || [], selectedValue })
   }
   componentWillReceiveProps(newProps: IAutoCompleteInputProps) {
+    if (newProps.options !== this.props.options) {
+      this.setState({ filteredOptions: newProps.options })
+    }
     if (this.props.multiSelect) {
       const newMultiValue = newProps.value as IAutoCompleteOption[];
       const oldMultiValue = this.state.selectedValue as IAutoCompleteOption[];

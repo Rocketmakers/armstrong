@@ -16,7 +16,7 @@ storiesOf("TagInput", TagInput)
         <button onClick={() => setTime(["hello"])}>hello</button>
         <button onClick={() => setTime(["17", "05"])}>17, 05</button>
         <button onClick={() => setTime([])}>Empty</button>
-        <TagInputTest value={time} change={setTime} />
+        <TagInputTest value={time} onTagsChange={setTime} />
       </>
     )
   })
@@ -26,12 +26,12 @@ const TagInputTest: React.FC<ITagInputProps> = p => {
   const [tags, setTags] = React.useState<string[]>([])
   const onTimeChanged = React.useCallback((selected: string[]) => {
     setTags([...tags, JSON.stringify(selected)])
-    p.change && p.change(selected)
+    p.onTagsChange && p.onTagsChange(selected)
   }, [tags])
   return (
     <>
       {/* <input type="text" /> */}
-      <TagInput {...p} change={onTimeChanged} />
+      <TagInput {...p} onTagsChange={onTimeChanged} />
       <ul>
         {tags.map((d, i) => <li key={i}>{d}</li>)}
       </ul>

@@ -15,12 +15,12 @@ const CodeInputTest: React.FC<ICodeInputProps> = p => {
   const [tags, setTags] = React.useState<string[]>([])
   const onTimeChanged = React.useCallback((selected: string | number) => {
     setTags([...tags, JSON.stringify(selected)])
-    p.change && p.change(selected)
+    p.onCodeChange && p.onCodeChange(selected)
   }, [tags])
   return (
     <>
       {/* <input type="text" /> */}
-      <CodeInput {...p} change={onTimeChanged} />
+      <CodeInput {...p} onCodeChange={onTimeChanged} />
       <ul>
         {tags.map((d, i) => <li key={i}>{d}</li>)}
       </ul>
