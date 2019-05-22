@@ -1,13 +1,14 @@
 import * as React from "react";
-import * as _ from "underscore";
 import { ClassHelpers } from "../../../index";
 import { IFormInputHTMLProps } from "../form";
 import { DataValidationMessage } from "../formCore";
 import { ValidationLabel } from "../validationWrapper";
+import { Utils } from '../../../utilities/utils';
+import { useForm } from '../formHooks';
 
-export interface ICodeInputProps extends IFormInputHTMLProps<React.SelectHTMLAttributes<HTMLInputElement>> {
-  lengthPerBox: number[];
-  onChange?: (value: any) => void;
+export interface ICodeInputProps extends IFormInputHTMLProps {
+  lengthPerBox?: number[];
+  change?: (value: string | number) => void;
   value?: string;
   placeholder?: string;
   type?: string;
@@ -22,34 +23,39 @@ function calcTabIndex(tabIndex: number | undefined, fieldIndex: number) {
   return tabIndex + fieldIndex;
 }
 
+//const formData = {}
 export const CodeInput: React.FC<ICodeInputProps> = props => {
 
-  const { onChange, validationMode, lengthPerBox, numeric, type, className, tabIndex, value, placeholder, readonly } = props;
+  const { change, validationMode, lengthPerBox, numeric, type, className, tabIndex, value, placeholder, readonly } = props;
+
+  const inputs = React.useRef<HTMLInputElement[]>([])
+
+  const codeLength = React.useMemo(() => Utils.reduce(lengthPerBox, (memo, num) => memo + num, 0), [lengthPerBox])
 
   const [focusIndex, setFocusIndex] = React.useState<number>(null)
 
-  const uniq = React.useRef(Math.random());
   const storedKey = React.useRef<string>(null);
 
   const buildValue = React.useCallback(() => {
     let code: string | number = "";
-
-    let current = document.getElementById(`input_${uniq.current}_0`) as HTMLInputElement;
-
-    lengthPerBox.forEach(() => {
-      code += current.value;
-      current = current.nextSibling as HTMLInputElement;
+    Utils.each(inputs.current, (i) => {
+      code += i.value.toUpperCase();
     });
-
+    if (code.length !== codeLength) {
+      return
+    }
+    if (code === value) {
+      return
+    }
     if (numeric) {
       code = parseInt(code, 10);
     }
-    if (onChange) {
-      onChange(code);
+    if (change) {
+      change(code);
     }
-  }, [uniq, lengthPerBox, onChange, numeric])
+  }, [lengthPerBox, change, numeric, codeLength])
 
-  const focusNext = React.useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
+  const onKeyUpFocusNext = React.useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
     let movingBack = false;
     const current = e.target as HTMLInputElement;
     let el: HTMLInputElement;
@@ -66,7 +72,6 @@ export const CodeInput: React.FC<ICodeInputProps> = props => {
       }
     } else {
       el = current.nextSibling as HTMLInputElement;
-
       if (
         storedKey.current && el && !el.value) {
         el.value = storedKey.current;
@@ -81,17 +86,17 @@ export const CodeInput: React.FC<ICodeInputProps> = props => {
     if (el) {
       el.focus();
       if (el && el.value && !movingBack && !retFromStore) {
-        el.value = "";
+        el.select()
+        //el.value = "";
       }
     }
 
     buildValue();
   }, [lengthPerBox, focusIndex, storedKey, buildValue])
 
-  const handlePaste = React.useCallback(e => {
-    const length = _.reduce(lengthPerBox, (memo, num) => memo + num, 0);
+  const handlePaste = React.useCallback((e: React.ClipboardEvent<HTMLInputElement>) => {
     let pasted: string = e.clipboardData.getData("text/plain").replace(/\s/g, "");
-    pasted = pasted.substr(0, length);
+    pasted = pasted.substr(0, codeLength).toUpperCase();
 
     if (numeric) {
       const parsed = parseInt(pasted, 10);
@@ -101,21 +106,17 @@ export const CodeInput: React.FC<ICodeInputProps> = props => {
       }
     }
 
-    let current = e.target as HTMLInputElement;
     const splitArray = [];
-
     let currentIndex = 0;
-
-    lengthPerBox.forEach(lpb => {
+    Utils.each(lengthPerBox, (lpb, idx) => {
       const chunk = pasted.substr(currentIndex, lpb);
       currentIndex += lpb;
       splitArray.push(chunk);
-      current.value = chunk;
-      current = current.nextSibling as HTMLInputElement;
+      inputs.current[idx].value = chunk;
     });
 
     buildValue();
-  }, [lengthPerBox, buildValue, numeric])
+  }, [lengthPerBox, buildValue, numeric, codeLength])
 
   const handleFocus = React.useCallback((index: number) => () => {
     setFocusIndex(index)
@@ -149,12 +150,9 @@ export const CodeInput: React.FC<ICodeInputProps> = props => {
   React.useEffect(() => {
     if (value) {
       let currentIndex = 0;
-      lengthPerBox.forEach((lpb, i) => {
-        const input = document.getElementById(`input_${uniq.current}_${i}`) as HTMLInputElement;
-        const chunk =
-          value.substr(currentIndex, lpb);
+      Utils.each(lengthPerBox, (lpb, i) => {
+        inputs.current[i].value = value.substr(currentIndex, lpb);
         currentIndex += lpb;
-        input.value = chunk;
       });
     }
   }, [])
@@ -165,22 +163,25 @@ export const CodeInput: React.FC<ICodeInputProps> = props => {
       "show-validation": validationMode !== "none" && validationMessage,
     }), [className, validationMode, validationMessage]);
 
+  //const { DataForm, bind } = useForm(dateState)
+
   return (
     <div className={classes}>
       <div>
         {
           lengthPerBox.map((lpb, i) => (
-            <input id={`input_${uniq.current}_${i}`}
+            <input
+              ref={r => inputs.current[i] = r}
               className="code-input-field"
               tabIndex={calcTabIndex(tabIndex, i)}
-              key={`cb_${uniq.current}_${i}`}
+              key={i}
               type={type || "text"}
               placeholder={placeholder}
               maxLength={lpb}
               readOnly={readonly}
               onClick={handleClick}
               onFocus={handleFocus(i)}
-              onKeyUp={focusNext}
+              onKeyUp={onKeyUpFocusNext}
               onKeyDown={keyDown}
               onPaste={handlePaste}
               onChange={buildValue}

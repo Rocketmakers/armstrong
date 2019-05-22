@@ -1,6 +1,5 @@
 import * as moment from "moment";
-import * as _ from "underscore";
-import { Formatting } from "./formatting";
+import { Utils } from './utils';
 
 export type DateType = moment.Moment
 export type DayOfWeek = "Sun" | "Mon" | "Tue" | "Wed" | "Thu" | "Fri" | "Sat"
@@ -14,7 +13,7 @@ export interface IDateParts {
 export namespace Dates {
 
   function range1to(to: number) {
-    return _.range(1, to + 1).map(d => d)
+    return Utils.range(1, to + 1).map(d => d)
   }
 
   export function getDaysArrayByMonth(month: number, year: number, minDate: string, maxDate: string): number[] {
@@ -22,14 +21,14 @@ export namespace Dates {
     if (minDate) {
       const min = parseWireFormatDate(minDate)
       if (min.year() === year && min.month() === month) {
-        days = days.filter(d => d >= min.date())
+        days = Utils.filter(days, d => d >= min.date())
       }
     }
 
     if (maxDate) {
       const max = parseWireFormatDate(maxDate)
       if (max.year() === year && max.month() === month) {
-        days = days.filter(d => d <= max.date())
+        days = Utils.filter(days, d => d <= max.date())
       }
     }
 
@@ -37,11 +36,11 @@ export namespace Dates {
   }
 
   function dayInMonth(month: number, year: number): number[] {
-    if (Formatting.isNullOrUndefined(month)) {
+    if (Utils.isNullOrUndefined(month)) {
       return range1to(31)
     }
 
-    if (Formatting.isNullOrUndefined(year)) {
+    if (Utils.isNullOrUndefined(year)) {
       year = 2000
     }
 
@@ -57,6 +56,10 @@ export namespace Dates {
     return moment(date, "YYYY-MM-DD", true)
   }
 
+  export function datePartsChanged(newState: Partial<IDateParts>, dateState: Partial<IDateParts>) {
+    return newState.day !== dateState.day || newState.month !== dateState.month || newState.year !== dateState.year
+  }
+
   export function getDateParts(date: string, includeDate = false) {
     const d = parseWireFormatDate(date);
     const parts: IDateParts & { date?: string } = { day: d.date(), month: d.month(), year: d.year() };
@@ -67,7 +70,7 @@ export namespace Dates {
   }
 
   export function toDateFormat(s: Partial<IDateParts>) {
-    if (!Formatting.isNullOrUndefined(s.day) && !Formatting.isNullOrUndefined(s.month) && !Formatting.isNullOrUndefined(s.year)) {
+    if (!Utils.isNullOrUndefined(s.day) && !Utils.isNullOrUndefined(s.month) && !Utils.isNullOrUndefined(s.year)) {
       const mom = moment([s.year, s.month, s.day]);
       if (mom.isValid()) {
         return mom.format("YYYY-MM-DD")
@@ -78,7 +81,7 @@ export namespace Dates {
   export function getYearValues(minDate: string, maxDate: string, range = 110) {
     const start = minDate ? parseWireFormatDate(minDate).year() : moment().subtract(range, "years").year()
     const stop = maxDate ? parseWireFormatDate(maxDate).year() : moment().add(range, "years").year()
-    return _.range(start, stop + 1)
+    return Utils.range(start, stop + 1)
   }
 
   export function getMonthValuesInRange(year: number, minDate: string, maxDate: string) {
@@ -86,14 +89,14 @@ export namespace Dates {
     if (minDate) {
       const min = parseWireFormatDate(minDate)
       if (min.year() === year) {
-        months = months.filter(d => d.value >= min.month())
+        months = Utils.filter(months, d => d.value >= min.month())
       }
     }
 
     if (maxDate) {
       const max = parseWireFormatDate(maxDate)
       if (max.year() === year) {
-        months = months.filter(d => d.value <= max.month())
+        months = Utils.filter(months, d => d.value <= max.month())
       }
     }
 
@@ -101,7 +104,7 @@ export namespace Dates {
   }
 
   export function getMonthValues() {
-    return _.range(0, 12).map(i => {
+    return Utils.range(0, 12).map(i => {
       const month = moment().month(i)
       return { value: i, label: month.format("MMMM") }
     })

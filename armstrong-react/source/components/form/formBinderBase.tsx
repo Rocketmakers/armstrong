@@ -1,4 +1,3 @@
-import * as _ from "underscore";
 import { IDataBinder, IFormBinder } from "./formCore";
 import { IValueConverter } from "./formValueConverters";
 

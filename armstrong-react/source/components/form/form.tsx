@@ -1,10 +1,10 @@
 import * as React from "react";
-import * as _ from "underscore";
 import { ClassHelpers } from "../../utilities/classHelpers";
 import { FormBinder } from "./formBinders";
 import { DataValidationMessage, getFormBinderFromInjector, IChildDataBinder, IDataBinder, IFormBinderInjector, IFormValidationResult, updateFormBinderInjector } from "./formCore";
 import { IArrayProp, IObjectProp, PropType, toDataPath } from "./propertyPathBuilder";
 import { PropertyPathResolver } from "./propertyPathResolver";
+import { Utils } from '../../utilities/utils';
 
 /** The default Json Data Binder - NOTE, the original instance provided is MUTABLE */
 class JsonDataBinder<T> implements IDataBinder<T> {
@@ -19,7 +19,7 @@ class JsonDataBinder<T> implements IDataBinder<T> {
   getKeyValue<X>(dataName: (builder: PropType<T>) => IArrayProp<X>): X[]
   getKeyValue<TKey extends keyof T>(keyName: TKey): T[TKey];
   getKeyValue(keyName: any): any {
-    if (_.isString(keyName)) {
+    if (Utils.isString(keyName)) {
       return this.data[keyName];
     }
 
@@ -30,7 +30,7 @@ class JsonDataBinder<T> implements IDataBinder<T> {
   setKeyValue<X>(dataName: (builder: PropType<T>) => IArrayProp<X>, value: X[]): void
   setKeyValue<TKey extends keyof T>(keyName: TKey, value: T[TKey]): void;
   setKeyValue(keyName: any, value: any): void {
-    if (_.isString(keyName)) {
+    if (Utils.isString(keyName)) {
       this.data[keyName] = value;
       this.lastDataPathSet = keyName;
       return
@@ -77,10 +77,10 @@ export class FormDataClone {
   }
 
   static custom<T>(source: T) {
-    const clone = _.clone(source);
-    _.keys(clone).map(key => {
+    const clone = Utils.clone(source);
+    Utils.keys(clone).map(key => {
       const value = clone[key];
-      if (_.isObject(value)) {
+      if (Utils.isObject(value)) {
         clone[key] = FormDataClone.custom(value);
       }
     });
@@ -146,7 +146,7 @@ export interface IFormContext {
 }
 
 export function extractChildValidationResults(validationResults: IFormValidationResult[], dataPath: string) {
-  const vrs = validationResults && _.filter(validationResults, vr => vr.attribute.indexOf(dataPath + ".") === 0);
+  const vrs = validationResults && Utils.filter(validationResults, vr => vr.attribute.indexOf(dataPath + ".") === 0);
   if (!vrs) {
     return;
   }
@@ -244,7 +244,7 @@ class FormElementProcessor {
         return element
       }
 
-      const props: React.DOMAttributes<HTMLElement> = _.extend({}, element.props);
+      const props: React.DOMAttributes<HTMLElement> = { ...element.props };
 
       // TODO: Was this needed - its set below if a form binder exists!
       // if (formProps.validationMode && props["validationMode"]) {
@@ -258,7 +258,7 @@ class FormElementProcessor {
       if (formBinder) {
         updateFormBinderInjector(injector, null);
         if (validationResults && validationResults.length) {
-          const vrs: IFormValidationResult = _.find(validationResults, vr => vr.attribute === formBinder.dataPath);
+          const vrs: IFormValidationResult = Utils.find(validationResults, vr => vr.attribute === formBinder.dataPath);
           if (vrs) {
             DataValidationMessage.set(props, vrs.message);
           } else {

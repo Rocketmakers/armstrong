@@ -1,6 +1,5 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import * as _ from "underscore";
 import { Icon } from "./../display/icon";
 
 export interface IBurgerMenu {

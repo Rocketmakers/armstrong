@@ -1,6 +1,4 @@
 import * as React from "react";
-import * as _ from "underscore";
-import { Formatting } from "../../utilities/formatting";
 import { FormBinderBase } from "./formBinderBase";
 import { IDataBinder, IFormBinder, IFormBinderInjector, updateFormBinderInjector } from "./formCore";
 import { CheckboxValueConverter, DefaultValueConverter, IInputValueConverter, INumericOptions, IValueConverter, MultipleNumericValueConverter, NumericValueConverter } from "./formValueConverters";
@@ -11,13 +9,14 @@ import { IDateInputProps } from "./inputs/dateInput";
 import { ITagInputProps } from "./inputs/tagInput";
 import { ITimeInputProps } from "./inputs/timeInput";
 import { FormBinderKey, IArrayProp, IObjectProp, PropType, toDataPath } from "./propertyPathBuilder";
+import { Utils } from '../../utilities/utils';
 
 /** An input FormBinder that sets native 'value' and 'onChange: (e) => void' properties */
 export class InputFormBinder<TDataPropValue, TComponentPropValue> extends FormBinderBase<React.DOMAttributes<{}>, TDataPropValue, TComponentPropValue> {
   setElementProperty(props: React.DOMAttributes<any>, dataBinder: IDataBinder<any>) {
     super.setElementProperty(props, dataBinder);
     const v = props[this.propertySet];
-    if (Formatting.isNullOrUndefined(v)) {
+    if (Utils.isNullOrUndefined(v)) {
       props[this.propertySet] = this.getDefaultInputValue();
     }
   }
@@ -128,12 +127,12 @@ export class AutoCompleteFormBinder implements IFormBinder<IAutoCompleteInputPro
   constructor(public dataPath: string, private getItemFromId?: (id: string) => IAutoCompleteOption) { }
   setElementProperty(props: IAutoCompleteInputProps, dataBinder: IDataBinder<any>): void {
     const value = dataBinder.getValue(this.dataPath);
-    if (_.isArray(value)) {
+    if (Utils.isArray(value)) {
       if (this.getItemFromId) {
         props.value = value.map(v => this.getItemFromId(v));
         return;
       }
-      props.value = props.options ? props.options.filter(o => value.indexOf(o.id) > -1) : [];
+      props.value = props.options ? Utils.filter(props.options, o => value.indexOf(o.id) > -1) : [];
       return;
     }
     if (this.getItemFromId) {
@@ -141,12 +140,12 @@ export class AutoCompleteFormBinder implements IFormBinder<IAutoCompleteInputPro
       return;
     }
 
-    props.value = props.options && props.options.filter(o => value === o.id)[0];
+    props.value = props.options && Utils.filter(props.options, o => value === o.id)[0];
   }
 
   handleValueChanged(props: IAutoCompleteInputProps, dataBinder: IDataBinder<any>, notifyChanged: () => void): void {
     props.onSelected = c => {
-      if (_.isArray(c)) {
+      if (Utils.isArray(c)) {
         dataBinder.setValue(this.dataPath, c.map(cc => cc.id));
       } else {
         dataBinder.setValue(this.dataPath, c.id);
@@ -164,7 +163,7 @@ export class TagInputFormBinder implements IFormBinder<ITagInputProps, any> {
   }
 
   handleValueChanged(props: ITagInputProps, dataBinder: IDataBinder<any>, notifyChanged: () => void): void {
-    props.onChange = tags => {
+    props.change = (tags: string[]) => {
       dataBinder.setValue(this.dataPath, tags);
       notifyChanged()
     };
@@ -179,7 +178,7 @@ export class CodeInputFormBinder implements IFormBinder<ICodeInputProps, any> {
   }
   // handle the change property of the `SelectInput` - setting the dataBinder value and notifying on change
   handleValueChanged(props: ICodeInputProps, dataBinder: IDataBinder<any>, notifyChanged: () => void): void {
-    props.onChange = c => {
+    props.change = c => {
       dataBinder.setValue(this.dataPath, c);
       notifyChanged();
     };

@@ -1,11 +1,11 @@
 import * as React from "react";
-import * as _ from "underscore";
 import { ClassHelpers } from "../../../utilities/classHelpers";
 import { useDidUpdateEffect } from "../../../utilities/hooks";
 import { IFormInputHTMLProps } from "../form";
 import { DataValidationMessage } from "../formCore";
 import { ValidationLabel } from "../validationWrapper";
 import { Icon } from "./../../display/icon";
+import { Utils } from '../../../utilities/utils';
 
 export interface ITagInput {
   focus: () => void
@@ -13,9 +13,9 @@ export interface ITagInput {
   select: () => void
 }
 
-export type ITagInputProps = IFormInputHTMLProps<React.InputHTMLAttributes<HTMLInputElement>> & {
+export interface ITagInputProps extends IFormInputHTMLProps {
   suggestions?: string[];
-  onChange?: (tags: string[]) => void;
+  change?: (tags: string[]) => void;
   value?: string[];
 };
 
@@ -25,7 +25,7 @@ function makeComparison(value: string) {
 
 const TagInputRef: React.RefForwardingComponent<ITagInput, ITagInputProps> = (props, ref) => {
 
-  const { value, validationMode, className, onChange } = props
+  const { value, validationMode, className, change } = props
 
   const [suggestionIndex, setSuggestionIndex] = React.useState(-1)
   const [tags, setTags] = React.useState<string[]>(value || [])
@@ -50,13 +50,17 @@ const TagInputRef: React.RefForwardingComponent<ITagInput, ITagInputProps> = (pr
         }
       },
     }
-  }, [input])
+  }, [input.current])
 
   React.useImperativeHandle(ref, refCallback, [refCallback])
 
   useDidUpdateEffect(() => {
-    setTags(value || [])
-  }, value)
+    const newTags = value || []
+    if (Utils.isEqual(tags, newTags)) {
+      return
+    }
+    notifyTagsChange(newTags)
+  }, [value])
 
   const filterSuggestions = React.useCallback((newValue: string) => {
     newValue = makeComparison(newValue)
@@ -64,20 +68,33 @@ const TagInputRef: React.RefForwardingComponent<ITagInput, ITagInputProps> = (pr
       return []
     }
 
-    const filteredSuggestions = props.suggestions.filter(s => makeComparison(s).lastIndexOf(newValue, 0) === 0);
-    return filteredSuggestions.filter(s => tags.indexOf(s) === -1);
-  }, [props.suggestions])
+    const filteredSuggestions = Utils.filter(props.suggestions, s => makeComparison(s).lastIndexOf(newValue, 0) === 0);
+    return Utils.filter(filteredSuggestions, s => tags.indexOf(s) === -1);
+  }, [props.suggestions, tags])
 
   const notifyTagsChange = React.useCallback((newTags: string[]) => {
     setTags(newTags)
     setSuggestions([])
-    onChange(newTags)
-  }, [onChange])
+    change(newTags)
+  }, [change])
 
   const notifySuggestionsChange = React.useCallback((newSuggestions: string[] = []) => {
     setSuggestions(newSuggestions)
     setSuggestionIndex(-1)
   }, [])
+
+  const addTag = React.useCallback((tag: string) => {
+    notifyTagsChange([...tags, tag])
+    input.current.value = "";
+    input.current.focus();
+  }, [tags, notifyTagsChange, input])
+
+  const addTagCallback = React.useCallback((tag: string) => () => addTag(tag), [addTag])
+
+  const removeTag = React.useCallback((index: number) => () => {
+    notifyTagsChange(Utils.filter(tags, (__, idx) => idx !== index))
+    input.current.focus();
+  }, [tags, notifyTagsChange, input])
 
   const onKeyUp = React.useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
     const target = e.target;
@@ -108,14 +125,13 @@ const TagInputRef: React.RefForwardingComponent<ITagInput, ITagInputProps> = (pr
   }, [tags, filterSuggestions, notifySuggestionsChange])
 
   const onKeyDown = React.useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
-    const target = e.target;
     // tslint:disable-next-line:no-string-literal
-    const targetValue = target["value"];
+    const targetValue = e.target["value"];
 
     switch (e.keyCode) {
       case 8: // delete
         if (tags.length !== 0 && !targetValue) {
-          const newTags = _.clone(tags);
+          const newTags = [...tags];
           newTags.splice(-1, 1);
           notifyTagsChange(newTags)
         }
@@ -140,25 +156,14 @@ const TagInputRef: React.RefForwardingComponent<ITagInput, ITagInputProps> = (pr
         }
         break;
     }
-  }, [tags, suggestionIndex, suggestions, notifyTagsChange])
-
-  const addTag = React.useCallback((tag: string) => () => {
-    notifyTagsChange([...tags, tag])
-    input.current.value = "";
-    input.current.focus();
-  }, [tags, notifyTagsChange, input])
-
-  const removeTag = React.useCallback((index: number) => () => {
-    notifyTagsChange(tags.filter((__, idx) => idx !== index))
-    input.current.focus();
-  }, [tags, notifyTagsChange, input])
+  }, [tags, suggestionIndex, suggestions, notifyTagsChange, addTag])
 
   const renderSuggestions = React.useCallback((newSuggestions: string[]) => {
     if (!newSuggestions || !newSuggestions.length) {
       return null
     }
-    return <div className="suggestions">{newSuggestions.map((s, i) => <div key={s} className={ClassHelpers.classNames({ selected: i === suggestionIndex })} onClick={addTag(s)}>{s}</div>)}</div>
-  }, [])
+    return <div className="suggestions">{newSuggestions.map((s, i) => <div key={s} className={ClassHelpers.classNames({ selected: i === suggestionIndex })} onClick={addTagCallback(s)}>{s}</div>)}</div>
+  }, [addTag, suggestionIndex])
 
   const validationMessage = DataValidationMessage.get(props)
 

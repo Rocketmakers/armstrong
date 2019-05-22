@@ -1,5 +1,4 @@
 import * as React from "react";
-import * as _ from "underscore";
 import { ClassHelpers } from "../../../utilities/classHelpers";
 import { Dates } from "../../../utilities/dates";
 import { Formatting } from "../../../utilities/formatting";
@@ -67,12 +66,12 @@ export const DateInput: React.FC<IDateInputProps> = props => {
   }, [datePartOrder])
 
   useDidUpdateEffect(() => {
-    validateProps()
-    if (date) {
-      setDateState(Dates.getDateParts(date, true))
-    } else {
-      setDateState({ day: null, month: null, year: null, date: null })
+    const newState = date ? Dates.getDateParts(date, true) : { day: null, month: null, year: null, date: null }
+    if (!Dates.datePartsChanged(newState, dateState)) {
+      return
     }
+    setDateState(newState)
+    onChange(newState.date)
   }, [date])
 
   const hasDayPart = React.useMemo(() => {
@@ -102,15 +101,19 @@ export const DateInput: React.FC<IDateInputProps> = props => {
     newState.year = !hasYearPart ? 2000 : d.year
 
     newState.day = !hasDayPart ? 1 : d.day
-    const days = Dates.getDaysArrayByMonth(d.month, d.year, minDate, maxDate)
-    if (d.day && days.indexOf(newState.day) === -1) {
-      newState.day = days[0]
+    if (d.day) {
+      const days = Dates.getDaysArrayByMonth(d.month, d.year, minDate, maxDate)
+      if (days.indexOf(newState.day) === -1) {
+        delete newState.day
+      }
     }
-    newState.month = d.month
 
-    const months = Dates.getMonthValuesInRange(d.year, minDate, maxDate)
-    if (d.month && months.map(a => a.value).indexOf(newState.month) === -1) {
-      newState.month = months[0].value
+    newState.month = d.month
+    if (d.month) {
+      const months = Dates.getMonthValuesInRange(d.year, minDate, maxDate)
+      if (months.map(a => a.value).indexOf(newState.month) === -1) {
+        delete newState.month
+      }
     }
 
     newState.date = Dates.toDateFormat(newState)

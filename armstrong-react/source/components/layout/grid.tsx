@@ -1,5 +1,4 @@
 import * as React from "react";
-import * as _ from "underscore";
 import { ClassHelpers } from "../../utilities/classHelpers";
 import { HorizontalAlignment, LayoutHelpers, VerticalAlignment } from "../../utilities/layoutHelpers";
 
@@ -72,7 +71,7 @@ export const Row: React.FC<IRowProps> = props => {
   const styles = React.useMemo(() => {
     if (height) {
       if (typeof height === "number") {
-        return _.extend({ height: `${height}px` }, style);
+        return { height: `${height}px`, ...style };
       }
       if (height === "auto") {
         return style
@@ -81,7 +80,7 @@ export const Row: React.FC<IRowProps> = props => {
       const starIndex = height.indexOf("*");
       if (starIndex !== -1 && parseFloat(height)) {
         const spans = height.substr(0, starIndex);
-        return _.extend({ flex: `${spans}` }, style);
+        return { flex: `${spans}`, ...style };
       }
 
       // tslint:disable-next-line:no-console
@@ -141,10 +140,10 @@ export const Col: React.FC<IColProps> = props => {
     },
   ), [className, alignmentClasses, width]);
 
-  const styles = React.useMemo(() => {
+  const styles = React.useMemo<React.CSSProperties>(() => {
     if (width) {
       if (typeof width === "number") {
-        return _.extend({ maxwidth: `${width}px`, width: "100%" }, style);
+        return { maxWidth: `${width}px`, width: "100%", ...style };
       }
 
       if (width === "auto") {
@@ -154,14 +153,14 @@ export const Col: React.FC<IColProps> = props => {
       const starIndex = width.indexOf("*");
       if (starIndex !== -1 && parseFloat(width)) {
         const spans = width.substr(0, starIndex);
-        return _.extend({ flex: `${spans}` }, style);
+        return { flex: `${spans}`, ...style };
       }
       // tslint:disable-next-line:no-console
       console.error(sizeErrorMessage("width", width, "Grid > Row > Col"))
     }
 
     if (typeof width === "number") {
-      return _.extend({ maxWidth: `${width}px`, width: "100%" }, style);
+      return { maxWidth: `${width}px`, width: "100%", ...style };
     }
     return style
   }, [style, width])

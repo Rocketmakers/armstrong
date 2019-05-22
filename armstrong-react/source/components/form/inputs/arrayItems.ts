@@ -1,3 +1,5 @@
+import { Utils } from '../../../utilities/utils';
+
 function addValue<T>(values: T[], item: T) {
   if (!values) {
     return [item]
@@ -10,7 +12,7 @@ function removeValue<T>(values: T[], item: T) {
     return []
   }
 
-  return values.filter(i => i !== item)
+  return Utils.filter(values, i => i !== item)
 }
 
 export function arrayIncludesValue<T>(values: T[], item: T) {

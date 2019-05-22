@@ -1,5 +1,4 @@
-import * as _ from "underscore";
-import { Formatting } from "../../utilities/formatting";
+import { Utils } from '../../utilities/utils';
 
 /** The core value converter */
 export interface IValueConverter<TFrom, TTo> {
@@ -63,7 +62,7 @@ export class NumericValueConverter implements IInputValueConverter<number> {
   }
 
   convert(data: number) {
-    const v = (Formatting.isNullOrUndefined(data) || data === "" as any) ? null : data.toFixed(this.options && this.options.decimals);
+    const v = (Utils.isNullOrUndefined(data) || data === "" as any) ? null : data.toFixed(this.options && this.options.decimals);
     return v;
   }
 
@@ -87,10 +86,10 @@ export class NumericValueConverter implements IInputValueConverter<number> {
       }
 
       if (this.options) {
-        if (!Formatting.isNullOrUndefined(this.options.max)) {
+        if (!Utils.isNullOrUndefined(this.options.max)) {
           v = Math.min(v, this.options.max)
         }
-        if (!Formatting.isNullOrUndefined(this.options.min)) {
+        if (!Utils.isNullOrUndefined(this.options.min)) {
           v = Math.max(v, this.options.min)
         }
       }

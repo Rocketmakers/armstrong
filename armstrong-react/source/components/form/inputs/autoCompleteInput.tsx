@@ -1,6 +1,5 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import * as _ from "underscore";
 import { ClassHelpers } from "../../../utilities/classHelpers";
 import { DiacriticsStripper } from "../../../utilities/diacriticsStripper";
 import { IFormInputProps } from "../form";
@@ -9,6 +8,7 @@ import { ValidationLabel } from "../validationWrapper";
 import { Icon } from "./../../display/icon";
 import { Button } from "./../../interaction/button";
 import { Col, Grid, Row } from "./../../layout/grid";
+import { Utils } from '../../../utilities/utils';
 
 export interface IAutoCompleteOption {
   id: number | string;
@@ -120,7 +120,7 @@ export class AutoCompleteInput extends React.Component<IAutoCompleteInputProps, 
       if (query.length < this.props.minimumLength) {
         this.setState({ filteredOptions: this.props.options, query }, () => this.constrainIndex());
       } else {
-        this.setState({ filteredOptions: _.reject(this.props.options, o => this.match(o.name, q)), query }, () => this.constrainIndex());
+        this.setState({ filteredOptions: Utils.reject(this.props.options, o => this.match(o.name, q)), query }, () => this.constrainIndex());
       }
     }
   }
@@ -179,7 +179,7 @@ export class AutoCompleteInput extends React.Component<IAutoCompleteInputProps, 
     let selectedValue: any = this.props.multiSelect ? [] : null;
     if (this.props.value) {
       if (this.props.multiSelect) {
-        if (_.isArray(this.props.value)) {
+        if (Utils.isArray(this.props.value)) {
           selectedValue = this.props.value;
         } else {
           selectedValue = [this.props.value];
@@ -195,7 +195,7 @@ export class AutoCompleteInput extends React.Component<IAutoCompleteInputProps, 
       const newMultiValue = newProps.value as IAutoCompleteOption[];
       const oldMultiValue = this.state.selectedValue as IAutoCompleteOption[];
 
-      if (oldMultiValue.length === 0 || !_.isEqual(newMultiValue.map(v => v.id), oldMultiValue.map(v => v.id))) {
+      if (oldMultiValue.length === 0 || !Utils.isEqual(newMultiValue.map(v => v.id), oldMultiValue.map(v => v.id))) {
         this.setState({ selectedValue: newMultiValue || [] })
       }
     } else {
@@ -296,18 +296,15 @@ export class AutoCompleteInput extends React.Component<IAutoCompleteInputProps, 
     }
   }
 
-  private isArray<T>(itemOrArray: T | T[]): itemOrArray is T[] {
-    return _.isArray(itemOrArray)
-  }
   handleSelection(options: IAutoCompleteOption | IAutoCompleteOption[]) {
     if (this.props.multiSelect) {
       // Handle multiple selection
-      const items: IAutoCompleteOption[] = this.isArray(options) ? options : [options]
+      const items: IAutoCompleteOption[] = Utils.isArray(options) ? options : [options]
       let ddOptions = (this.state.selectedValue as IAutoCompleteOption[]);
-      items.forEach(option => {
-        if (ddOptions.length !== 0 && _.some(ddOptions, ddo => ddo.id === option.id)) {
+      Utils.each(items, option => {
+        if (ddOptions.length !== 0 && Utils.some(ddOptions, ddo => ddo.id === option.id)) {
           // Remove
-          ddOptions = _.reject(ddOptions, ddo => ddo.id === option.id);
+          ddOptions = Utils.reject(ddOptions, ddo => ddo.id === option.id);
         } else {
           // Add
           ddOptions.push(option)
@@ -430,7 +427,7 @@ export class AutoCompleteInput extends React.Component<IAutoCompleteInputProps, 
                   className={`autocomplete-select-list${this.state.showOnTop ? " on-top" : ""}`}
                   style={{ maxHeight: `${(this.props.visibleItems || 3) * this.itemHeight}px`, marginTop: `${this.state.topOffset}px` }}>
                   {this.state.filteredOptions && this.state.filteredOptions.map((o, i) =>
-                    <div data-index={i} key={`dd-item-${i}`} style={o.style} className={`dd-list-item${o.className ? ` ${o.className}` : ""}${i === this.state.selectedIndex ? " selected" : ""}${(this.props.multiSelect && _.some((this.state.selectedValue as IAutoCompleteOption[]), ddo => ddo.id === o.id)) ? " in-selected-list" : ""}`}
+                    <div data-index={i} key={`dd-item-${i}`} style={o.style} className={`dd-list-item${o.className ? ` ${o.className}` : ""}${i === this.state.selectedIndex ? " selected" : ""}${(this.props.multiSelect && Utils.some((this.state.selectedValue as IAutoCompleteOption[]), ddo => ddo.id === o.id)) ? " in-selected-list" : ""}`}
                       onClick={() => this.handleSelection(o)}>{o.prefixElement}{o.name}</div>)}
                   {this.state.filteredOptions.length === 0 && this.state.query && <div className="dd-list-item-no-select">{getNoResults(this.state.query, this.props.noResultsMessage)}</div>}
                 </div>
@@ -444,77 +441,6 @@ export class AutoCompleteInput extends React.Component<IAutoCompleteInputProps, 
   }
 }
 
-// export function ACI(props:{hasGoButton?: boolean, goButtonContent?: string, canClear?: boolean, options: IAutoCompleteOption[], noResultsMessage?: MessageComponent, placeholder?: string, multiSelect?: boolean, visibleItems?: number}) {
-//   return (
-//     <Grid
-//       title={validationMessage}
-//       onClick={e => this.focusInput(e)}
-//       className={classes}>
-//       <Row>
-//         <Col className="drop-down-controls">
-//           {(!state.open || props.multiSelect) &&
-//             <Grid className="autocomplete-value-display">
-//               <Row>
-//                 <Col>
-//                   {state.selectedValue &&
-//                     <div className="selected-value-wrapper">
-//                       {state.selectedValue && props.multiSelect ? (state.selectedValue as IAutoCompleteOption[]).map(ddo =>
-//                         <div key={`multi-select-item-${ddo.id}`} className={`multi-select-item multi-select-item-part${ddo.className ? ` ${ddo.className}` : ""}`} onClick={() => handleSelection(ddo)} >{ddo.name}<Icon className="multi-select-item-part" icon={Icon.Icomoon.cross} /></div>) : (state.selectedValue as IAutoCompleteOption).name}
-//                     </div>
-//                   }
-//                   {(props.multiSelect && (state.selectedValue as IAutoCompleteOption[]).length === 0) &&
-//                     <div className="placeholder">
-//                       &nbsp;
-//                     <div className="placeholder-value">{!state.open && (props.placeholder || "start typing to filter results...")}</div>
-//                     </div>
-//                   }
-//                   {!props.multiSelect && state.selectedValue === null &&
-//                     <div className="placeholder">
-//                       &nbsp;
-//                     <div className="placeholder-value">{props.placeholder || "start typing to filter results..."}</div>
-//                     </div>
-//                   }
-//                 </Col>
-//                 {!props.multiSelect && state.selectedValue && props.canClear &&
-//                   <Col width="auto" className="clear-selected p-right-xsmall" onClick={() => setState({ selectedValue: props.multiSelect ? [] : null, open: false, query: "", filteredOptions: props.options || [] })}>
-//                     <Icon icon={Icon.Icomoon.cross} />
-//                   </Col>
-//                 }
-//                 {props.multiSelect && (state.selectedValue as IAutoCompleteOption[]).length !== 0 && props.canClear &&
-//                   <Col width="auto" className="clear-selected p-right-xsmall" onClick={() => setState({ selectedValue: props.multiSelect ? [] : null, open: false, query: "", filteredOptions: props.options || [] })}>
-//                     <Icon icon={Icon.Icomoon.cross} />
-//                   </Col>
-//                 }
-//               </Row>
-//             </Grid>
-//           }
-//           {state.open &&
-//             <div className={ClassHelpers.classNames("autocomplete-select-list-wrapper", props.multiSelect ? "multi-select" : "")}>
-//               <input type="text"
-//                 {...DataValidationMessage.spread(validationMessage)}
-//                 style={{ marginTop: `${props.multiSelect && state.showOnTop && `${state.topOffset}px`}` }}
-//                 value={state.query}
-//                 onKeyUp={e => checkKey(e)}
-//                 onChange={e => checkToFilter(getEventTargetAs<HTMLInputElement>(e).value)}
-//                 placeholder={props.placeholder || "start typing to filter results..."} />
-//               {state.remoteSearching && <Icon className="spinner fg-info" icon={Icon.Icomoon.spinner2} />}
-//               <div data-id="autocomplete-select-list"
-//                 className={`autocomplete-select-list${state.showOnTop ? " on-top" : ""}`}
-//                 style={{ maxHeight: `${(props.visibleItems || 3) * itemHeight}px`, marginTop: `${state.topOffset}px` }}>
-//                 {state.filteredOptions && state.filteredOptions.map((o, i) =>
-//                   <div data-index={i} key={`dd-item-${i}`} style={o.style} className={`dd-list-item${o.className ? ` ${o.className}` : ""}${i === state.selectedIndex ? " selected" : ""}${(props.multiSelect && _.some((state.selectedValue as IAutoCompleteOption[]), ddo => ddo.id === o.id)) ? " in-selected-list" : ""}`}
-//                     onClick={() => handleSelection(o)}>{o.prefixElement}{o.name}</div>)}
-//                 {state.filteredOptions.length === 0 && state.query && <div className="dd-list-item-no-select">{getNoResults(state.query, props.noResultsMessage)}</div>}
-//               </div>
-//             </div>
-//           }
-//         </Col>
-//         {props.hasGoButton && !props.multiSelect && <Col width="auto"><Button className="bg-positive" onClick={() => buttonClick()}>{props.goButtonContent || "Go"}</Button></Col>}
-//       </Row>
-//       <ValidationLabel message={validationMessage} mode={this.props.validationMode} wrapper={p => <Row height="auto"><Col {...p} /></Row>} />
-//     </Grid>)
-// }
-
 type StringOrElement = string | JSX.Element
 type MessageComponent = StringOrElement | ((value: string) => StringOrElement)
 
@@ -522,7 +448,7 @@ function getNoResults(search: string, message: MessageComponent): string | JSX.E
   if (!message) {
     return "No results..."
   }
-  if (_.isFunction(message)) {
+  if (Utils.isFunction(message)) {
     return message(search)
   }
   return message;

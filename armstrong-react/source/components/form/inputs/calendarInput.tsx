@@ -1,5 +1,4 @@
 import * as React from "react";
-import * as _ from "underscore";
 import { isLocaleSet } from "../../../config/config"
 import { IDay, useCalendar } from "../../../hooks/useCalendar";
 import { ClassHelpers } from "../../../utilities/classHelpers";
@@ -9,6 +8,7 @@ import { Col, Grid, Row } from "../../layout/grid";
 import { IFormInputHTMLProps } from "../form";
 import { DataValidationMessage } from "../formCore";
 import { ValidationLabel } from "../validationWrapper";
+import { Utils } from '../../../utilities/utils';
 
 export interface ICalendarInputProps extends IFormInputHTMLProps<React.InputHTMLAttributes<HTMLInputElement>> {
   /** The current date */
@@ -156,7 +156,7 @@ export const CalendarInput: React.FC<ICalendarInputProps> = props => {
     },
   ), [className, icon, disabled, validationMode, validationMessage]);
 
-  const days = month.weeks.reduce((w, c) => {
+  const days = Utils.reduce(month.weeks, (w, c) => {
     w.push(...c.days)
     return w
   }, [] as IDay[])
