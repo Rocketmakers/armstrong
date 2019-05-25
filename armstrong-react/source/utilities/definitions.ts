@@ -7,6 +7,14 @@ export type DayOfWeek = "Mon" | "Tue" | "Wed" | "Thu" | "Fri" | "Sat" | "Sun"
 /** Specify a unit of time */
 export type UnitOfTime = "day" | "month" | "year" | "hour" | "minute" | "second"
 
+export interface ILocaleUtils {
+  /** Set the locale of the date provider */
+  setLocale(locale: string): void
+  /** Has the locale been set on the date provider */
+  isLocaleSet(): boolean
+}
+
+/** A date split into day, month and year */
 export interface IDateParts {
   /** The day number (0 - 31) */
   day: number
@@ -16,6 +24,7 @@ export interface IDateParts {
   year: number
 }
 
+/** A time split into hours and minutes */
 export interface ITimeParts {
   /** The hour number (0 - 23) */
   hours: number
@@ -25,7 +34,7 @@ export interface ITimeParts {
 
 export interface ITimeUtils {
   /** parse a time string ("HH:mm") to time parts */
-  getTimeParts(time: string): ITimeParts
+  getParts(time: string): ITimeParts
 }
 
 export interface IYearUtils {
@@ -56,10 +65,9 @@ export interface IDayUtils {
   inMonthYear(month: number, year: number, settings?: { minDate?: string, maxDate?: string, dateFormat?: string }): number[]
 }
 
-export interface IDateUtils {
+export interface IDateTimeUtils {
   /** Describes the basic formats */
-  formats: { wireDate: string }
-
+  readonly formats: { readonly wireDate: string }
   /** Date Time as of Now */
   now(): IDateTimeType
   /** Date Time at start of today */
@@ -105,38 +113,69 @@ export interface IDatePartUtils {
 }
 
 export interface IObjectUtils {
+  /** Get the keys of the object */
   keys(object: any): string[]
+  /** Is this object an array */
   isArray(object: any): object is any[]
+  /** Is this object a string */
   isString(object: any): object is string
+  /** Is this object a function */
   isFunction(object: any): object is Function
+  /** Is this object a boolean */
   isObject(object: any): boolean
+  /** Is this object equal to the other */
   isEqual(object: any, other: any)
+  /** Clone the object */
   clone<T>(object: T): T
+  /** Is this object null or undefined */
   isNullOrUndefined(value: any): value is undefined | null
+  /** Is this object undefined */
   isUndefined(value: any): value is undefined
+  /** Is this object null */
+  isNull(value: any): value is null
 }
 
 export interface IArrayUtils {
+  /** Get the first n items */
   first<T>(items: T[], n: number): T[]
+  /** Find an item */
   find<T>(items: T[], func: (t: T, index: number) => boolean): T
+  /** ForEach on the items */
   each<T>(items: T[], func: (t: T, index: number) => void): void
+  /** Do *ALL* items pass a test */
   every<T>(items: T[], func: (t: T, index: number) => boolean): boolean
+  /** Do *ANY* items pass a test */
   some<T>(items: T[], func: (t: T, index: number) => boolean): boolean
+  /** Array Reduction */
   reduce<T, M>(items: T[], func: (m: M, t: T, index: number) => M, memo: M): M
+  /** Filter by rejecting items */
   reject<T>(items: T[], func: (t: T) => boolean): T[]
+  /** Filter items */
   filter<T>(items: T[], func: (t: T, index: number) => boolean): T[]
+  /** Generate a numeric array (start inclusive, stop exclusive) */
   range(start: number, stop: number, step?: number): number[]
 }
 
 export interface IUtils {
+  /** object utilities */
   object: IObjectUtils
+  /** array utilities */
   array: IArrayUtils
 }
 
-export interface IDateHelperUtils {
+export interface IDateUtils {
+  /** time utilities */
+  time: ITimeUtils
+  /** year utilities */
   year: IYearUtils
+  /** month utilities */
   month: IMonthUtils
+  /** day utilities */
   day: IDayUtils
+  /** date part utilities */
   datePart: IDatePartUtils
-  date: IDateUtils
+  /** date utilities */
+  date: IDateTimeUtils
+  /** locale utilities */
+  locale: ILocaleUtils
 }

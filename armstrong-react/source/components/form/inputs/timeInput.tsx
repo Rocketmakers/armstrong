@@ -1,8 +1,8 @@
 import * as React from "react";
 import { useDidUpdateEffect } from "../../../hooks/useDidUpdateEffect";
 import { ClassHelpers } from "../../../utilities/classHelpers";
+import { dateUtils } from "../../../utilities/dateUtils";
 import { Formatting } from "../../../utilities/formatting";
-import { timeUtils } from "../../../utilities/times";
 import { utils } from "../../../utilities/utils";
 import { Col, Grid, Row } from "../../layout/grid";
 import { DataValidationMessage, DataValidationMode } from "../formCore";
@@ -47,7 +47,7 @@ export const TimeInput: React.FC<ITimeInputProps> = props => {
 
   React.useEffect(() => {
     if (time) {
-      const newTime = timeUtils.getTimeParts(time);
+      const newTime = dateUtils.time.getParts(time);
       setTimeState({ hours: newTime.hours, minutes: newTime.minutes });
     }
   }, [])
@@ -70,7 +70,7 @@ export const TimeInput: React.FC<ITimeInputProps> = props => {
 
   useDidUpdateEffect(() => {
     if (time) {
-      const newTime = timeUtils.getTimeParts(time);
+      const newTime = dateUtils.time.getParts(time);
       let needsUpdate: boolean;
       let { hours, minutes } = timeState
       if (newTime.hours !== hours) {

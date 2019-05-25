@@ -1,19 +1,24 @@
 import * as _ from "underscore";
-import { IDateHelperUtils, IDatePartUtils, IDateUtils, IDayUtils, IMonthUtils, IYearUtils } from "./definitions";
-import { MomentDatePartUtils, MomentDateUtils, MomentDayUtils, MomentMonthUtils, MomentYearUtils } from "./moment/dates";
+import { IDatePartUtils, IDateTimeUtils, IDateUtils, IDayUtils, ILocaleUtils, IMonthUtils, ITimeUtils, IYearUtils } from "./definitions";
+import { MomentDatePartUtils, MomentDateTimeUtils, MomentDayUtils, MomentLocaleUtils, MomentMonthUtils, MomentYearUtils } from "./moment/dates";
+import { MomentTimeUtils } from "./moment/times";
 
-class DateHelperUtils implements IDateHelperUtils {
+class DateUtils implements IDateUtils {
   constructor(
     public year: IYearUtils,
     public month: IMonthUtils,
     public day: IDayUtils,
     public datePart: IDatePartUtils,
-    public date: IDateUtils) { }
+    public date: IDateTimeUtils,
+    public locale: ILocaleUtils,
+    public time: ITimeUtils) { }
 }
 
-export const dateUtils: IDateHelperUtils = new DateHelperUtils(
+export const dateUtils: IDateUtils = new DateUtils(
   new MomentYearUtils(),
   new MomentMonthUtils(),
   new MomentDayUtils(),
   new MomentDatePartUtils(),
-  new MomentDateUtils())
+  new MomentDateTimeUtils(),
+  new MomentLocaleUtils(),
+  new MomentTimeUtils())

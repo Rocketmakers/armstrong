@@ -37,4 +37,8 @@ export class UnderscoreObjectUtils implements IObjectUtils {
   isUndefined(value: any): value is undefined {
     return _.isUndefined(value)
   }
+
+  isNull(value: any): value is null {
+    return _.isNull(value)
+  }
 }

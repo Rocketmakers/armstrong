@@ -1,16 +1,7 @@
-import * as moment from "moment";
-
-let localeSet = false;
+import { dateUtils } from "../utilities/dateUtils";
 
 export const setLocale = (locale: string) => {
-  if (localeSet) {
-    const previousLocal = moment.locale();
-    // tslint:disable-next-line:no-console
-    console.warn(`Armstrong locale has already been set to ${previousLocal}, you probably only want to set it once!`);
-  }
-
-  moment.locale(locale);
-  localeSet = true;
+  dateUtils.locale.setLocale(locale)
 }
 
-export const isLocaleSet = () => localeSet;
+export const isLocaleSet = () => dateUtils.locale.isLocaleSet();
