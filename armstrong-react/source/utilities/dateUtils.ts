@@ -1,4 +1,3 @@
-import * as _ from "underscore";
 import { IDatePartUtils, IDateTimeUtils, IDateUtils, IDayUtils, ILocaleUtils, IMonthUtils, ITimeUtils, IYearUtils } from "./definitions";
 import { MomentDatePartUtils, MomentDateTimeUtils, MomentDayUtils, MomentLocaleUtils, MomentMonthUtils, MomentYearUtils } from "./moment/dates";
 import { MomentTimeUtils } from "./moment/times";

@@ -1,4 +1,3 @@
-import * as _ from "underscore";
 import { IArrayUtils, IObjectUtils, IUtils } from "./definitions";
 import { UnderscoreArrayUtils } from "./underscore/arrayUtils";
 import { UnderscoreObjectUtils } from "./underscore/objectUtils";
