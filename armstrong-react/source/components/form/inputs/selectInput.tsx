@@ -1,7 +1,6 @@
 import * as React from "react";
 import { ClassHelpers } from "../../../utilities/classHelpers";
-import { IFormInputHTMLProps } from "../form";
-import { DataValidationMessage } from "../formCore";
+import { DataValidationMessage, DataValidationMode } from "../formCore";
 import { ValidationLabel } from "../validationWrapper";
 import { buildOptions } from "./options";
 
@@ -15,7 +14,7 @@ export interface ISelectInputOption {
   name: string;
 }
 
-export interface ISelectInputProps extends IFormInputHTMLProps<React.SelectHTMLAttributes<HTMLSelectElement>> {
+export interface ISelectInputProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
   options: ISelectInputOption[];
   onOptionChange?: (selected: ISelectInputOption) => void;
   optionLabel?: string
@@ -23,7 +22,7 @@ export interface ISelectInputProps extends IFormInputHTMLProps<React.SelectHTMLA
 }
 
 const SelectInputRef: React.RefForwardingComponent<ISelectInput, ISelectInputProps> = (props, ref) => {
-  const { options, onOptionChange, onChange, optionLabel, validationMode, enableOptionLabel, className, ...attrs } = props
+  const { options, onOptionChange, onChange, optionLabel, enableOptionLabel, className, ...attrs } = props
 
   const handleChange = React.useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
     if (onOptionChange) { onOptionChange(options[e.target.selectedIndex - 1]); }
@@ -50,6 +49,8 @@ const SelectInputRef: React.RefForwardingComponent<ISelectInput, ISelectInputPro
   React.useImperativeHandle(ref, refCallback, [refCallback])
 
   const validationMessage = DataValidationMessage.get(props)
+  const validationMode = DataValidationMode.get(props)
+
   const classes = ClassHelpers.classNames(
     "armstrong-input",
     "select-input",
@@ -73,5 +74,4 @@ export const SelectInput = React.forwardRef(SelectInputRef)
 
 SelectInput.defaultProps = {
   optionLabel: "[Select]",
-  validationMode: "none",
 }

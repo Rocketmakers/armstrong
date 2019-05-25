@@ -1,7 +1,6 @@
 import { storiesOf } from "../story-host";
 import * as React from 'react'
-import { AutoCompleteSingleInput, useRemoteOptions, AutoCompleteMultiInput, IAutoCompleteOption, AutoComplete } from '../_symlink/components/form/inputs/autoComplete';
-import { AutoCompleteInput } from '../_symlink';
+import { AutoCompleteInput, useRemoteOptions, IAutoCompleteOption, useOptions, AutoCompleteMultiInput, AutoCompleteSingleInput } from '../_symlink';
 
 function createOption(text: string, id: number) {
   return { id: id, name: text + "-" + id }
@@ -19,19 +18,58 @@ async function fetch(text: string): Promise<IAutoCompleteOption[]> {
   ]
 }
 
-storiesOf("AutoComplete", AutoComplete)
-  .add("Remote Options", () => {
-    const [option, setOption] = React.useState<IAutoCompleteOption | IAutoCompleteOption[]>(undefined)
-    const options = [{ id: 1, name: "name" }, { id: 2, name: "age" }, { id: 3, name: "height" }]
-    return <AutoCompleteInput options={options} value={option} onSelected={setOption} />
+// storiesOf("AutoCompleteInput", AutoCompleteInput)
+//   .add("Options", () => {
+//     // const { options, filter, setFilter } = useRemoteOptions(fetch)
+//     const [value, onValueChange] = React.useState<IAutoCompleteOption | IAutoCompleteOption[]>(undefined)
+//     return (
+//       <>
+//         {`Value: ${JSON.stringify(value)}`}
+//         <AutoCompleteInput options={[{ id: 1, name: "1" }, { id: 2, name: "2" }, { id: 3, name: "3" }]} value={value} onSelected={onValueChange} />
+//       </>
+//     )
+//   })
+
+storiesOf("AutoCompleteSingleInput", AutoCompleteSingleInput)
+  .add("Options", () => {
+    const { options, filter, setFilter } = useOptions([{ id: 1, name: "1" }, { id: 2, name: "2" }, { id: 3, name: "3" }])
+    const [value, onValueChange] = React.useState<IAutoCompleteOption>(undefined)
+    return (
+      <>
+        {`Value: ${JSON.stringify(value)}`}
+        <AutoCompleteSingleInput value={value} onValueChange={onValueChange} options={options} filter={filter} onFilterChange={setFilter} />
+      </>
+    )
   })
-  // .add("Remote Options", () => {
-  //   const { options, filter, setFilter } = useRemoteOptions(fetch)
-  //   const [option, setOption] = React.useState<IAutoCompleteOption>(undefined)
-  //   return <AutoCompleteSingleInput options={options} value={option} onValueChange={setOption} filter={filter} onFilterChange={setFilter} />
-  // })
-  // .add("Remote Options - Multi", () => {
-  //   const { options, filter, setFilter } = useRemoteOptions(fetch)
-  //   const [option, setOption] = React.useState<IAutoCompleteOption[]>(undefined)
-  //   return <AutoCompleteMultiInput options={options} value={option} onValueChange={setOption} filter={filter} onFilterChange={setFilter} />
-  // })
+  .add("Remote Options", () => {
+    const { options, filter, setFilter } = useRemoteOptions(fetch)
+    const [value, onValueChange] = React.useState<IAutoCompleteOption>(undefined)
+    return (
+      <>
+        {`Value: ${JSON.stringify(value)}`}
+        <AutoCompleteSingleInput options={options} value={value} onValueChange={onValueChange} filter={filter} onFilterChange={setFilter} />
+      </>
+    )
+  })
+
+storiesOf("AutoCompleteMultiInput", AutoCompleteMultiInput)
+  .add("Options", () => {
+    const { options, filter, setFilter } = useOptions([{ id: 1, name: "1" }, { id: 2, name: "2" }, { id: 3, name: "3" }])
+    const [value, onValueChange] = React.useState<IAutoCompleteOption[]>([])
+    return (
+      <>
+        <AutoCompleteMultiInput options={options} value={value} onValueChange={onValueChange} filter={filter} onFilterChange={setFilter} />
+        {JSON.stringify(value)}
+      </>
+    )
+  })
+  .add("Remote Options", () => {
+    const { options, filter, setFilter } = useRemoteOptions(fetch)
+    const [value, onValueChange] = React.useState<IAutoCompleteOption[]>([])
+    return (
+      <>
+        <AutoCompleteMultiInput options={options} value={value} onValueChange={onValueChange} filter={filter} onFilterChange={setFilter} />
+        {JSON.stringify(value)}
+      </>
+    )
+  })

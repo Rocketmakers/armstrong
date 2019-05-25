@@ -3,7 +3,7 @@ import { TimeInput, ITimeInputProps } from '../_symlink';
 import * as React from 'react'
 
 storiesOf("TimeInput", TimeInput)
-  .add("Simple", () => {
+  .add("Basic", () => {
     return <TimeInputTest />
   })
   .add("Minute Step 5", () => {

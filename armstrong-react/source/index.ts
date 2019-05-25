@@ -20,7 +20,10 @@ export { CalendarInput, ICalendarInputProps } from "./components/form/inputs/cal
 export { TagInput, ITagInputProps } from "./components/form/inputs/tagInput";
 export { CodeInput, ICodeInputProps } from "./components/form/inputs/codeInput";
 export { ITextInputProps, TextInput, ITextInput } from "./components/form/inputs/textInput";
-export { IAutoCompleteInputProps, AutoCompleteInput, IAutoCompleteOption } from "./components/form/inputs/autoCompleteInput";
+export { IAutoCompleteSelectProps, AutoCompleteInput } from "./components/form/inputs/autoCompleteInput";
+export { AutoCompleteMultiInput } from "./components/form/inputs/autoCompleteMultiInput";
+export { AutoCompleteSingleInput } from "./components/form/inputs/autoCompleteSingleInput";
+export { IAutoCompleteOption, IAutoCompleteProps, useOptions, useRemoteOptions } from "./components/form/inputs/autoCompleteOptionHooks";
 export { IDataBinder, IFormBinder, IFormValidationResult } from "./components/form/formCore";
 export { FormBinderBase } from "./components/form/formBinderBase";
 export { FormBinder, InputFormBinder } from "./components/form/formBinders";

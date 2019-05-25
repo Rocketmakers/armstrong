@@ -1,4 +1,4 @@
-import { Utils } from '../../utilities/utils';
+import { utils } from "../../utilities/utils";
 
 /** The core value converter */
 export interface IValueConverter<TFrom, TTo> {
@@ -62,7 +62,7 @@ export class NumericValueConverter implements IInputValueConverter<number> {
   }
 
   convert(data: number) {
-    const v = (Utils.isNullOrUndefined(data) || data === "" as any) ? null : data.toFixed(this.options && this.options.decimals);
+    const v = (utils.object.isNullOrUndefined(data) || data === "" as any) ? null : data.toFixed(this.options && this.options.decimals);
     return v;
   }
 
@@ -86,10 +86,10 @@ export class NumericValueConverter implements IInputValueConverter<number> {
       }
 
       if (this.options) {
-        if (!Utils.isNullOrUndefined(this.options.max)) {
+        if (!utils.object.isNullOrUndefined(this.options.max)) {
           v = Math.min(v, this.options.max)
         }
-        if (!Utils.isNullOrUndefined(this.options.min)) {
+        if (!utils.object.isNullOrUndefined(this.options.min)) {
           v = Math.max(v, this.options.min)
         }
       }

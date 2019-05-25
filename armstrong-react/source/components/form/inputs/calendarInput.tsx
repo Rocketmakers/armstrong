@@ -1,16 +1,15 @@
 import * as React from "react";
 import { isLocaleSet } from "../../../config/config"
 import { IDay, useCalendar } from "../../../hooks/useCalendar";
+import { useDidUpdateEffect } from "../../../hooks/useDidUpdateEffect";
 import { ClassHelpers } from "../../../utilities/classHelpers";
-import { useDidUpdateEffect } from "../../../utilities/hooks";
+import { utils } from "../../../utilities/utils";
 import { Icon } from "../../display/icon";
 import { Col, Grid, Row } from "../../layout/grid";
-import { IFormInputHTMLProps } from "../form";
-import { DataValidationMessage } from "../formCore";
+import { DataValidationMessage, DataValidationMode } from "../formCore";
 import { ValidationLabel } from "../validationWrapper";
-import { Utils } from '../../../utilities/utils';
 
-export interface ICalendarInputProps extends IFormInputHTMLProps<React.InputHTMLAttributes<HTMLInputElement>> {
+export interface ICalendarInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   /** The current date */
   date?: string;
   /** The 'wire' format of the date */
@@ -35,7 +34,7 @@ export interface ICalendarInputProps extends IFormInputHTMLProps<React.InputHTML
 
 export const CalendarInput: React.FC<ICalendarInputProps> = props => {
 
-  const { icon, placeholder, alwaysShowCalendar, disableClear, className, disabled, validationMode, min, max, date } = props
+  const { icon, placeholder, alwaysShowCalendar, disableClear, className, disabled, min, max, date } = props
 
   const mouseWheelDispose = React.useRef<() => void>(undefined);
 
@@ -132,6 +131,7 @@ export const CalendarInput: React.FC<ICalendarInputProps> = props => {
   }, [calcTop, shouldShowOnTop])
 
   const validationMessage = DataValidationMessage.get(props)
+  const validationMode = DataValidationMode.get(props)
 
   const weekdays = React.useMemo(() => month.daysOfWeek.map(n => <div className="date-picker-week-day" key={`day_name_${n}`}>{n}</div>), [month.daysOfWeek])
   const currentDisplayDate = month.shortName + " - " + month.year;
@@ -156,7 +156,7 @@ export const CalendarInput: React.FC<ICalendarInputProps> = props => {
     },
   ), [className, icon, disabled, validationMode, validationMessage]);
 
-  const days = Utils.reduce(month.weeks, (w, c) => {
+  const days = utils.array.reduce(month.weeks, (w, c) => {
     w.push(...c.days)
     return w
   }, [] as IDay[])
@@ -200,7 +200,6 @@ export const CalendarInput: React.FC<ICalendarInputProps> = props => {
 
 CalendarInput.defaultProps = {
   displayFormat: "L",
-  validationMode: "none",
 }
 
 interface ICalendarDayProps extends React.Props<typeof CalendarDay> {

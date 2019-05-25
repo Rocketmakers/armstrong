@@ -1,19 +1,19 @@
 import * as React from "react";
 import { ClassHelpers } from "../../../utilities/classHelpers";
-import { generateUniqueId, IFormInputHTMLProps } from "../form";
-import { DataValidationMessage } from "../formCore";
+import { generateUniqueId } from "../form";
+import { DataValidationMessage, DataValidationMode } from "../formCore";
 
 export interface IRadioInput {
   focus: () => void
   blur: () => void
 }
 
-export interface IRadioInputProps extends IFormInputHTMLProps<React.InputHTMLAttributes<HTMLInputElement>> {
-  labelContent: string | React.ReactElement<any>;
+export interface IRadioInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+  labelContent: React.ReactNode;
 }
 
 const RadioInputRef: React.RefForwardingComponent<IRadioInput, IRadioInputProps> = (props, ref) => {
-  const { labelContent, validationMode, id, ...attrs } = props
+  const { labelContent, id, ...attrs } = props
 
   const input = React.useRef<HTMLInputElement>(undefined)
 
@@ -35,6 +35,8 @@ const RadioInputRef: React.RefForwardingComponent<IRadioInput, IRadioInputProps>
   React.useImperativeHandle(ref, refCallback, [refCallback])
 
   const validationMessage = DataValidationMessage.get(props)
+  const validationMode = DataValidationMode.get(props)
+
   const autoId = React.useMemo(() => id || generateUniqueId(u => "radio_" + u), [id]);
   const classes = React.useMemo(() => ClassHelpers.classNames(
     "armstrong-input",
@@ -47,7 +49,7 @@ const RadioInputRef: React.RefForwardingComponent<IRadioInput, IRadioInputProps>
 
   return (
     <div className={classes} title={validationMessage}>
-      <input id={autoId} {...attrs} ref={input} type="radio" {...DataValidationMessage.spread(validationMessage)} />
+      <input id={autoId} {...attrs} ref={input} {...DataValidationMessage.spread(validationMessage)} />
       <label htmlFor={autoId} />
       <label className="radio-label" htmlFor={autoId}>{labelContent}</label>
     </div>
@@ -55,7 +57,3 @@ const RadioInputRef: React.RefForwardingComponent<IRadioInput, IRadioInputProps>
 }
 
 export const RadioInput = React.forwardRef(RadioInputRef)
-
-RadioInput.defaultProps = {
-  validationMode: "none",
-}

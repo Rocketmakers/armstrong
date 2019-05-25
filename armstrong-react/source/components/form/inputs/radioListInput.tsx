@@ -4,16 +4,22 @@ import { generateUniqueId } from "../form";
 import { DataValidationMessage, DataValidationMode } from "../formCore";
 import { ValidationLabel } from "../validationWrapper";
 
-export interface ICheckboxInput {
+export interface IRadioListInput {
   focus: () => void
   blur: () => void
 }
 
-export interface ICheckboxInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+export interface IRadioListInputOption {
   labelContent: React.ReactNode;
+  value: string
 }
 
-const CheckboxInputRef: React.RefForwardingComponent<ICheckboxInput, ICheckboxInputProps> = (props, ref) => {
+export interface IRadioListInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+  options: IRadioListInputOption[]
+}
+
+const RadioListInputRef: React.RefForwardingComponent<IRadioListInput, IRadioListInputProps> = (props, ref) => {
+  const { options, id, value, ...attrs } = props
 
   const input = React.useRef<HTMLInputElement>(undefined)
 
@@ -37,27 +43,32 @@ const CheckboxInputRef: React.RefForwardingComponent<ICheckboxInput, ICheckboxIn
   const validationMessage = DataValidationMessage.get(props)
   const validationMode = DataValidationMode.get(props)
 
-  const { labelContent, id, ...attrs } = props
-
-  const autoId = React.useMemo(() => id || generateUniqueId(u => "checkbox_" + u), [id]);
-
   const classes = React.useMemo(() => ClassHelpers.classNames(
     "armstrong-input",
-    "checkbox",
+    "radio-list",
     props.className,
     {
       "show-validation": (validationMode !== "none" && validationMessage),
     },
   ), [props.className, validationMode, validationMessage]);
 
+  const autoId = React.useMemo(() => id || generateUniqueId(u => "radio_" + u), [id]);
   return (
     <div className={classes} title={validationMessage}>
-      <input {...attrs} ref={input} id={autoId} type="checkbox" />
-      <label htmlFor={autoId} />
-      <label className="checkbox-label" htmlFor={autoId}>{labelContent}</label>
+      {options && options.map((o, i) => <RadioOption autoId={`${autoId}_${i}`} key={o.value} input={i === 0 ? input : undefined} checked={value === o.value} value={o.value} labelContent={o.labelContent} {...attrs} />)}
       <ValidationLabel message={validationMessage} mode={validationMode} />
+    </div>
+  );
+}
+
+const RadioOption: React.FC<React.InputHTMLAttributes<HTMLInputElement> & { autoId: string, labelContent: React.ReactNode, input: React.MutableRefObject<HTMLInputElement> }> = p => {
+  const { input, labelContent, autoId, ...attrs } = p
+  return (
+    <div className="radio-option">
+      <input {...attrs} id={autoId} ref={input} />
+      <label htmlFor={autoId} />
+      <label className="radio-label" htmlFor={autoId}>{labelContent}</label>
     </div>
   )
 }
-
-export const CheckboxInput = React.forwardRef(CheckboxInputRef)
+export const RadioListInput = React.forwardRef(RadioListInputRef)

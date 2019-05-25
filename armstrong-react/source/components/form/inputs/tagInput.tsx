@@ -1,11 +1,10 @@
 import * as React from "react";
+import { useDidUpdateEffect } from "../../../hooks/useDidUpdateEffect";
 import { ClassHelpers } from "../../../utilities/classHelpers";
-import { useDidUpdateEffect } from "../../../utilities/hooks";
-import { IFormInputHTMLProps } from "../form";
-import { DataValidationMessage } from "../formCore";
+import { utils } from "../../../utilities/utils";
+import { DataValidationMessage, DataValidationMode } from "../formCore";
 import { ValidationLabel } from "../validationWrapper";
 import { Icon } from "./../../display/icon";
-import { Utils } from '../../../utilities/utils';
 
 export interface ITagInput {
   focus: () => void
@@ -13,7 +12,7 @@ export interface ITagInput {
   select: () => void
 }
 
-export interface ITagInputProps extends IFormInputHTMLProps {
+export interface ITagInputProps extends React.HTMLAttributes<HTMLElement> {
   suggestions?: string[];
   onTagsChange?: (tags: string[]) => void;
   value?: string[];
@@ -25,7 +24,7 @@ function makeComparison(value: string) {
 
 const TagInputRef: React.RefForwardingComponent<ITagInput, ITagInputProps> = (props, ref) => {
 
-  const { value, validationMode, className, onTagsChange } = props
+  const { value, className, onTagsChange } = props
 
   const [suggestionIndex, setSuggestionIndex] = React.useState(-1)
   const [tags, setTags] = React.useState<string[]>(value || [])
@@ -56,7 +55,7 @@ const TagInputRef: React.RefForwardingComponent<ITagInput, ITagInputProps> = (pr
 
   useDidUpdateEffect(() => {
     const newTags = value || []
-    if (Utils.isEqual(tags, newTags)) {
+    if (utils.object.isEqual(tags, newTags)) {
       return
     }
     notifyTagsChange(newTags)
@@ -68,8 +67,8 @@ const TagInputRef: React.RefForwardingComponent<ITagInput, ITagInputProps> = (pr
       return []
     }
 
-    const filteredSuggestions = Utils.filter(props.suggestions, s => makeComparison(s).lastIndexOf(newValue, 0) === 0);
-    return Utils.filter(filteredSuggestions, s => tags.indexOf(s) === -1);
+    const filteredSuggestions = utils.array.filter(props.suggestions, s => makeComparison(s).lastIndexOf(newValue, 0) === 0);
+    return utils.array.filter(filteredSuggestions, s => tags.indexOf(s) === -1);
   }, [props.suggestions, tags])
 
   const notifyTagsChange = React.useCallback((newTags: string[]) => {
@@ -92,7 +91,7 @@ const TagInputRef: React.RefForwardingComponent<ITagInput, ITagInputProps> = (pr
   const addTagCallback = React.useCallback((tag: string) => () => addTag(tag), [addTag])
 
   const removeTag = React.useCallback((index: number) => () => {
-    notifyTagsChange(Utils.filter(tags, (__, idx) => idx !== index))
+    notifyTagsChange(utils.array.filter(tags, (__, idx) => idx !== index))
     input.current.focus();
   }, [tags, notifyTagsChange, input])
 
@@ -166,6 +165,7 @@ const TagInputRef: React.RefForwardingComponent<ITagInput, ITagInputProps> = (pr
   }, [addTag, suggestionIndex])
 
   const validationMessage = DataValidationMessage.get(props)
+  const validationMode = DataValidationMode.get(props)
 
   const classes = React.useMemo(() => {
     return ClassHelpers.classNames(

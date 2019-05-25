@@ -1,17 +1,16 @@
 import * as React from "react";
+import { useDidUpdateEffect } from "../../../hooks/useDidUpdateEffect";
 import { ClassHelpers } from "../../../utilities/classHelpers";
 import { Formatting } from "../../../utilities/formatting";
-import { useDidUpdateEffect } from "../../../utilities/hooks";
-import { Times } from "../../../utilities/times";
+import { timeUtils } from "../../../utilities/times";
+import { utils } from "../../../utilities/utils";
 import { Col, Grid, Row } from "../../layout/grid";
-import { IFormInputProps } from "../form";
-import { DataValidationMessage } from "../formCore";
+import { DataValidationMessage, DataValidationMode } from "../formCore";
 import { useForm } from "../formHooks";
 import { ValidationLabel } from "../validationWrapper";
 import { buildOptions } from "./options";
-import { Utils } from '../../../utilities/utils';
 
-export interface ITimeInputProps extends IFormInputProps<typeof TimeInput> {
+export interface ITimeInputProps extends React.Props<typeof TimeInput> {
   /** (string) CSS className property */
   className?: string;
   /** (number) The tab index of the first select */
@@ -37,10 +36,10 @@ export interface ITimerInputState {
   minutes?: number;
 }
 
-const hoursRange = Utils.range(0, 24);
+const hoursRange = utils.array.range(0, 24);
 
 export const TimeInput: React.FC<ITimeInputProps> = props => {
-  const { className, disabled, hourLabel, minuteLabel, minuteStep, onChange, tabIndex, time, validationMode, zeroMinutesOnHourSelected } = props
+  const { className, disabled, hourLabel, minuteLabel, minuteStep, onChange, tabIndex, time, zeroMinutesOnHourSelected } = props
 
   const [timeState, setTimeState] = React.useState<ITimerInputState>({})
 
@@ -48,18 +47,18 @@ export const TimeInput: React.FC<ITimeInputProps> = props => {
 
   React.useEffect(() => {
     if (time) {
-      const newTime = Times.getTimeParts(time);
+      const newTime = timeUtils.getTimeParts(time);
       setTimeState({ hours: newTime.hours, minutes: newTime.minutes });
     }
   }, [])
 
   const handleDataChanged = React.useCallback((d: ITimerInputState) => {
     setTimeState(d)
-    if (!onChange || Utils.isNullOrUndefined(d.hours)) {
+    if (!onChange || utils.object.isNullOrUndefined(d.hours)) {
       return;
     }
 
-    if (Utils.isNullOrUndefined(d.minutes)) {
+    if (utils.object.isNullOrUndefined(d.minutes)) {
       if (zeroMinutesOnHourSelected) {
         setTimeState({ hours: timeState.hours, minutes: 0 })
         onChange(formatTime(d.hours, 0));
@@ -71,7 +70,7 @@ export const TimeInput: React.FC<ITimeInputProps> = props => {
 
   useDidUpdateEffect(() => {
     if (time) {
-      const newTime = Times.getTimeParts(time);
+      const newTime = timeUtils.getTimeParts(time);
       let needsUpdate: boolean;
       let { hours, minutes } = timeState
       if (newTime.hours !== hours) {
@@ -93,9 +92,11 @@ export const TimeInput: React.FC<ITimeInputProps> = props => {
   }, [time])
 
   const validationMessage = DataValidationMessage.get(props)
+  const validationMode = DataValidationMode.get(props)
+
   const hourOptions = React.useMemo(() => buildOptions(hourLabel, hoursRange, v => v, v => Formatting.twoDigitNumber(v)), [hourLabel]);
   const minuteOptions = React.useMemo(() => {
-    const minutesRange = Utils.range(0, 60, minuteStep || 1);
+    const minutesRange = utils.array.range(0, 60, minuteStep || 1);
     return buildOptions(minuteLabel, minutesRange, v => v, v => Formatting.twoDigitNumber(v))
   }, [minuteLabel, minuteStep]);
 
@@ -136,5 +137,4 @@ TimeInput.defaultProps = {
   time: "",
   hourLabel: "HH",
   minuteLabel: "MM",
-  validationMode: "none",
 }

@@ -3,7 +3,7 @@ import { CodeInput, ICodeInputProps } from '../_symlink';
 import * as React from 'react'
 
 storiesOf("CodeInput", CodeInput)
-  .add("Simple", () => {
+  .add("Basic", () => {
     return <CodeInputTest />
   })
   .add("Seeded", () => {

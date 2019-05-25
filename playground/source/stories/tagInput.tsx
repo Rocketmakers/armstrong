@@ -3,7 +3,7 @@ import { TagInput, ITagInputProps } from '../_symlink';
 import * as React from 'react'
 
 storiesOf("TagInput", TagInput)
-  .add("Simple", () => {
+  .add("Basic", () => {
     return <TagInputTest />
   })
   .add("Suggestions", () => {

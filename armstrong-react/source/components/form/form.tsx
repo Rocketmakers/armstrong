@@ -1,10 +1,10 @@
 import * as React from "react";
 import { ClassHelpers } from "../../utilities/classHelpers";
+import { utils } from "../../utilities/utils";
 import { FormBinder } from "./formBinders";
-import { DataValidationMessage, getFormBinderFromInjector, IChildDataBinder, IDataBinder, IFormBinderInjector, IFormValidationResult, updateFormBinderInjector } from "./formCore";
+import { DataValidationMessage, DataValidationMode, getFormBinderFromInjector, IChildDataBinder, IDataBinder, IFormBinderInjector, IFormValidationResult, updateFormBinderInjector, ValidationModes } from "./formCore";
 import { IArrayProp, IObjectProp, PropType, toDataPath } from "./propertyPathBuilder";
 import { PropertyPathResolver } from "./propertyPathResolver";
-import { Utils } from '../../utilities/utils';
 
 /** The default Json Data Binder - NOTE, the original instance provided is MUTABLE */
 class JsonDataBinder<T> implements IDataBinder<T> {
@@ -19,7 +19,7 @@ class JsonDataBinder<T> implements IDataBinder<T> {
   getKeyValue<X>(dataName: (builder: PropType<T>) => IArrayProp<X>): X[]
   getKeyValue<TKey extends keyof T>(keyName: TKey): T[TKey];
   getKeyValue(keyName: any): any {
-    if (Utils.isString(keyName)) {
+    if (utils.object.isString(keyName)) {
       return this.data[keyName];
     }
 
@@ -30,7 +30,7 @@ class JsonDataBinder<T> implements IDataBinder<T> {
   setKeyValue<X>(dataName: (builder: PropType<T>) => IArrayProp<X>, value: X[]): void
   setKeyValue<TKey extends keyof T>(keyName: TKey, value: T[TKey]): void;
   setKeyValue(keyName: any, value: any): void {
-    if (Utils.isString(keyName)) {
+    if (utils.object.isString(keyName)) {
       this.data[keyName] = value;
       this.lastDataPathSet = keyName;
       return
@@ -77,10 +77,10 @@ export class FormDataClone {
   }
 
   static custom<T>(source: T) {
-    const clone = Utils.clone(source);
-    Utils.keys(clone).map(key => {
+    const clone = utils.object.clone(source);
+    utils.object.keys(clone).map(key => {
       const value = clone[key];
-      if (Utils.isObject(value)) {
+      if (utils.object.isObject(value)) {
         clone[key] = FormDataClone.custom(value);
       }
     });
@@ -94,23 +94,11 @@ export function generateUniqueId(formatter?: (unique: string) => string) {
   return formatter ? formatter(u) : u;
 }
 
-export type ValidationModes = "none" | "icon" | "below" | "both";
-
-// tslint:disable-next-line:interface-name
-export interface ValidationProps {
-  /** (string) How to display validation messages */
-  validationMode?: ValidationModes;
-}
-
-export type IFormInputProps<T> = React.Props<T> & ValidationProps;
-
-export type IFormInputHTMLProps<E = React.HTMLAttributes<HTMLElement>> = E & ValidationProps;
-
 export interface IFormCoreProps {
   /** The forms data binder instance, this contains the data that is used by bound form elements */
   dataBinder: IDataBinder<any>;
 
-  /** An optional array of validation results - bound controls whose dataBinder dataPath matches an attribute will be annotated with a 'data-validation-message' property */
+  /** An optional array of validation results - bound controls whose dataBinder dataPath matches an attribute will be annotated with a 'data-validation-message' and 'data-validation-mode' property */
   validationResults?: IFormValidationResult[];
 
   /** (string) How to display validation messages. 'icon' (default) shows a small exclamation symbol in the right of the field, 'below' shows the message below the field, while 'both' is a combination, and none hides all validation UI */
@@ -146,7 +134,7 @@ export interface IFormContext {
 }
 
 export function extractChildValidationResults(validationResults: IFormValidationResult[], dataPath: string) {
-  const vrs = validationResults && Utils.filter(validationResults, vr => vr.attribute.indexOf(dataPath + ".") === 0);
+  const vrs = validationResults && utils.array.filter(validationResults, vr => vr.attribute.indexOf(dataPath + ".") === 0);
   if (!vrs) {
     return;
   }
@@ -232,12 +220,6 @@ class FormElementProcessor {
       }
 
       const props: React.DOMAttributes<HTMLElement> = { ...element.props };
-
-      // TODO: Was this needed - its set below if a form binder exists!
-      // if (formProps.validationMode && props["validationMode"]) {
-      //   props["validationMode"] = formProps.validationMode;
-      // }
-
       let children = element.props.children;
 
       const injector = props as IFormBinderInjector<any>;
@@ -245,9 +227,13 @@ class FormElementProcessor {
       if (formBinder) {
         updateFormBinderInjector(injector, null);
         if (validationResults && validationResults.length) {
-          const vrs: IFormValidationResult = Utils.find(validationResults, vr => vr.attribute === formBinder.dataPath);
-          if (vrs) {
-            DataValidationMessage.set(props, vrs.message);
+          if (formProps.validationMode && formProps.validationMode !== "none") {
+            DataValidationMode.set(props, formProps.validationMode)
+          }
+
+          const validationResult: IFormValidationResult = utils.array.find(validationResults, vr => vr.attribute === formBinder.dataPath);
+          if (validationResult) {
+            DataValidationMessage.set(props, validationResult.message);
           } else {
             // use for child form
             const childValidators = extractChildValidationResults(validationResults, formBinder.dataPath);
@@ -255,12 +241,6 @@ class FormElementProcessor {
               // tslint:disable-next-line:no-string-literal
               props["validationResults"] = childValidators;
             }
-          }
-
-          // tslint:disable-next-line:no-string-literal
-          if (formProps.validationMode && props["validationMode"]) {
-            // tslint:disable-next-line:no-string-literal
-            props["validationMode"] = formProps.validationMode;
           }
         }
 

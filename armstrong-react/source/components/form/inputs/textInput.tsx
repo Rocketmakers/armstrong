@@ -1,7 +1,6 @@
 import * as React from "react";
 import { ClassHelpers } from "../../../utilities/classHelpers";
-import { IFormInputHTMLProps } from "../form";
-import { DataValidationMessage } from "../formCore";
+import { DataValidationMessage, DataValidationMode } from "../formCore";
 import { ValidationLabel } from "../validationWrapper";
 import { Icon } from "./../../display/icon";
 
@@ -11,11 +10,11 @@ export interface ITextInput {
   select: () => void
 }
 
-export type ITextInputProps = IFormInputHTMLProps<React.InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement> | React.TextareaHTMLAttributes<HTMLInputElement | HTMLTextAreaElement>> & {
+export type ITextInputProps = (React.InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement> | React.TextareaHTMLAttributes<HTMLInputElement | HTMLTextAreaElement>) & {
   multiLine?: boolean;
   readonly?: boolean;
-  rightOverlayText?: string | React.ReactElement<any>;
-  leftOverlayText?: string | React.ReactElement<any>;
+  rightOverlayText?: React.ReactNode;
+  leftOverlayText?: React.ReactNode;
   type?: string;
   leftIcon?: string;
   rightIcon?: string;
@@ -23,7 +22,7 @@ export type ITextInputProps = IFormInputHTMLProps<React.InputHTMLAttributes<HTML
 }
 
 const TextInputRef: React.RefForwardingComponent<ITextInput, ITextInputProps> = (props, ref) => {
-  const { className, componentDidMount, readonly, rightOverlayText, leftOverlayText, type, leftIcon, rightIcon, multiLine, validationMode, placeholder, children, ...attrs } = props
+  const { className, componentDidMount, readonly, rightOverlayText, leftOverlayText, type, leftIcon, rightIcon, multiLine, placeholder, children, ...attrs } = props
 
   const input = React.useRef<HTMLInputElement | HTMLTextAreaElement>(undefined);
   const refCallback = React.useCallback<() => ITextInput>(() => {
@@ -55,6 +54,7 @@ const TextInputRef: React.RefForwardingComponent<ITextInput, ITextInputProps> = 
   }, [componentDidMount, refCallback])
 
   const validationMessage = DataValidationMessage.get(props)
+  const validationMode = DataValidationMode.get(props)
 
   const classes = React.useMemo(() => ClassHelpers.classNames(
     "armstrong-input",
@@ -85,7 +85,3 @@ const TextInputRef: React.RefForwardingComponent<ITextInput, ITextInputProps> = 
 }
 
 export const TextInput = React.forwardRef(TextInputRef)
-
-TextInput.defaultProps = {
-  validationMode: "none",
-}

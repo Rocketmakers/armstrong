@@ -1,22 +1,24 @@
 import * as React from "react";
+import { KeyCodes } from "../../utilities/keyCodes";
+import { utils } from "../../utilities/utils";
 import { FormBinderBase } from "./formBinderBase";
 import { IDataBinder, IFormBinder, IFormBinderInjector, updateFormBinderInjector } from "./formCore";
 import { CheckboxValueConverter, DefaultValueConverter, IInputValueConverter, INumericOptions, IValueConverter, MultipleNumericValueConverter, NumericValueConverter } from "./formValueConverters";
-import { IAutoCompleteInputProps, IAutoCompleteOption } from "./inputs/autoCompleteInput";
+import { IAutoCompleteInputProps } from "./inputs/autoCompleteInput_old";
+import { IAutoCompleteOption, IAutoCompleteProps } from "./inputs/autoCompleteOptionHooks";
 import { ICalendarInputProps } from "./inputs/calendarInput";
 import { ICodeInputProps } from "./inputs/codeInput";
 import { IDateInputProps } from "./inputs/dateInput";
 import { ITagInputProps } from "./inputs/tagInput";
 import { ITimeInputProps } from "./inputs/timeInput";
 import { FormBinderKey, IArrayProp, IObjectProp, PropType, toDataPath } from "./propertyPathBuilder";
-import { Utils } from '../../utilities/utils';
 
 /** An input FormBinder that sets native 'value' and 'onChange: (e) => void' properties */
 export class InputFormBinder<TDataPropValue, TComponentPropValue> extends FormBinderBase<React.DOMAttributes<{}>, TDataPropValue, TComponentPropValue> {
   setElementProperty(props: React.DOMAttributes<any>, dataBinder: IDataBinder<any>) {
     super.setElementProperty(props, dataBinder);
     const v = props[this.propertySet];
-    if (Utils.isNullOrUndefined(v)) {
+    if (utils.object.isNullOrUndefined(v)) {
       props[this.propertySet] = this.getDefaultInputValue();
     }
   }
@@ -82,6 +84,14 @@ export class RadioFormBinder<TDataPropValue, TComponentPropValue> extends InputF
   }
 }
 
+export class RadioListFormBinder<TDataPropValue, TComponentPropValue> extends InputFormBinder<TDataPropValue, TComponentPropValue> {
+  setElementProperty(props: React.DOMAttributes<any>, dataBinder: IDataBinder<any>) {
+    // tslint:disable-next-line:no-string-literal
+    props["name"] = this.dataPath;
+    props[this.propertySet] = this.convert(dataBinder.getValue(this.dataPath));
+  }
+}
+
 export class DateInputFormBinder extends FormBinderBase<IDateInputProps, string, string> {
   constructor(dataPath: string) {
     super(dataPath, "date");
@@ -123,16 +133,56 @@ export class CalendarInputFormBinder extends FormBinderBase<ICalendarInputProps,
   }
 }
 
-export class AutoCompleteFormBinder implements IFormBinder<IAutoCompleteInputProps, any> {
+export class AutoCompleteMultiFormBinder implements IFormBinder<IAutoCompleteProps<IAutoCompleteOption[]>, any> {
+  constructor(public dataPath: string, private getItemFromId?: (id: string) => IAutoCompleteOption) { }
+  setElementProperty(props: IAutoCompleteProps<IAutoCompleteOption[]>, dataBinder: IDataBinder<any>): void {
+    const value = dataBinder.getValue(this.dataPath);
+    if (this.getItemFromId) {
+      props.value = value.map(v => this.getItemFromId(v));
+      return;
+    }
+    props.value = props.options ? utils.array.filter(props.options, o => value.indexOf(o.id) > -1) : [];
+    return;
+  }
+
+  handleValueChanged(props: IAutoCompleteProps<IAutoCompleteOption[]>, dataBinder: IDataBinder<any>, notifyChanged: () => void): void {
+    props.onValueChange = c => {
+      dataBinder.setValue(this.dataPath, c.map(cc => cc.id));
+      notifyChanged();
+    };
+  }
+}
+
+export class AutoCompleteSingleFormBinder implements IFormBinder<IAutoCompleteProps<IAutoCompleteOption>, any> {
+  constructor(public dataPath: string, private getItemFromId?: (id: string) => IAutoCompleteOption) { }
+  setElementProperty(props: IAutoCompleteProps<IAutoCompleteOption>, dataBinder: IDataBinder<any>): void {
+    const value = dataBinder.getValue(this.dataPath);
+    if (this.getItemFromId) {
+      props.value = this.getItemFromId(value);
+      return;
+    }
+
+    props.value = props.options && utils.array.filter(props.options, o => value === o.id)[0];
+  }
+
+  handleValueChanged(props: IAutoCompleteProps<IAutoCompleteOption>, dataBinder: IDataBinder<any>, notifyChanged: () => void): void {
+    props.onValueChange = c => {
+      dataBinder.setValue(this.dataPath, c.id);
+      notifyChanged();
+    };
+  }
+}
+
+export class AutoCompleteLegacyFormBinder implements IFormBinder<IAutoCompleteInputProps, any> {
   constructor(public dataPath: string, private getItemFromId?: (id: string) => IAutoCompleteOption) { }
   setElementProperty(props: IAutoCompleteInputProps, dataBinder: IDataBinder<any>): void {
     const value = dataBinder.getValue(this.dataPath);
-    if (Utils.isArray(value)) {
+    if (utils.object.isArray(value)) {
       if (this.getItemFromId) {
         props.value = value.map(v => this.getItemFromId(v));
         return;
       }
-      props.value = props.options ? Utils.filter(props.options, o => value.indexOf(o.id) > -1) : [];
+      props.value = props.options ? utils.array.filter(props.options, o => value.indexOf(o.id) > -1) : [];
       return;
     }
     if (this.getItemFromId) {
@@ -140,12 +190,12 @@ export class AutoCompleteFormBinder implements IFormBinder<IAutoCompleteInputPro
       return;
     }
 
-    props.value = props.options && Utils.filter(props.options, o => value === o.id)[0];
+    props.value = props.options && utils.array.filter(props.options, o => value === o.id)[0];
   }
 
   handleValueChanged(props: IAutoCompleteInputProps, dataBinder: IDataBinder<any>, notifyChanged: () => void): void {
     props.onSelected = c => {
-      if (Utils.isArray(c)) {
+      if (utils.object.isArray(c)) {
         dataBinder.setValue(this.dataPath, c.map(cc => cc.id));
       } else {
         dataBinder.setValue(this.dataPath, c.id);
@@ -241,8 +291,16 @@ export class FormBinder<TDataBinder> {
     return this.defaultInputFormBinder(dataName, "email", valueConverter);
   }
 
-  autoCompleteInput(dataName: FormBinderKey<TDataBinder>, getItemFromId?: (id: string) => IAutoCompleteOption) {
-    return this.custom(new AutoCompleteFormBinder(toDataPath(dataName, this.parentPath), getItemFromId));
+  autoCompleteInputLegacy(dataName: FormBinderKey<TDataBinder>, getItemFromId?: (id: string) => IAutoCompleteOption) {
+    return this.custom(new AutoCompleteLegacyFormBinder(toDataPath(dataName, this.parentPath), getItemFromId));
+  }
+
+  autoCompleteSingleInput(dataName: FormBinderKey<TDataBinder>, getItemFromId?: (id: string) => IAutoCompleteOption) {
+    return this.custom(new AutoCompleteSingleFormBinder(toDataPath(dataName, this.parentPath), getItemFromId));
+  }
+
+  autoCompleteMultiInput(dataName: FormBinderKey<TDataBinder>, getItemFromId?: (id: string) => IAutoCompleteOption) {
+    return this.custom(new AutoCompleteMultiFormBinder(toDataPath(dataName, this.parentPath), getItemFromId));
   }
 
   /** bind a 'value' string array property to a TagInput (e.g. ["cool", "guys", "only"]) */
@@ -380,6 +438,25 @@ export class FormBinder<TDataBinder> {
   radioNumeric(dataName: FormBinderKey<TDataBinder>, value: number) {
     return this.radioCustom(dataName, value.toString(), NumericValueConverter.instance);
   }
+
+  /** bind a TDataPropValue property to a 'radio' input */
+  radioListCustom<TDataPropValue>(dataName: FormBinderKey<TDataBinder>, valueConverter: IInputValueConverter<TDataPropValue>) {
+    const adaptorInjector = this.custom(new RadioListFormBinder(toDataPath(dataName, this.parentPath), "value", valueConverter));
+    // tslint:disable-next-line:no-string-literal
+    adaptorInjector["type"] = "radio";
+
+    return adaptorInjector;
+  }
+
+  /** bind a string property to a 'radio' input */
+  radioList(dataName: FormBinderKey<TDataBinder>) {
+    return this.radioListCustom(dataName, DefaultValueConverter.instance);
+  }
+
+  /** bind a number property to a 'radio' input */
+  radioListNumeric(dataName: FormBinderKey<TDataBinder>) {
+    return this.radioListCustom(dataName, NumericValueConverter.instance);
+  }
 }
 
 class KeyboardHelper {
@@ -387,11 +464,11 @@ class KeyboardHelper {
     const element = e.currentTarget as HTMLInputElement;
     const value = element.value;
 
-    if (e.keyCode === 189 && value.indexOf("-") !== -1) {
+    if (e.keyCode === KeyCodes.dash && value.indexOf("-") !== -1) {
       e.preventDefault();
       return;
     }
-    if (e.keyCode === 190 && value.indexOf(".") !== -1) {
+    if (e.keyCode === KeyCodes.period && value.indexOf(".") !== -1) {
       e.preventDefault();
       return;
     }

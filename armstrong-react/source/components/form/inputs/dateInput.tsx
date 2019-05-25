@@ -1,18 +1,17 @@
 import * as React from "react";
+import { useDidUpdateEffect } from "../../../hooks/useDidUpdateEffect";
 import { ClassHelpers } from "../../../utilities/classHelpers";
-import { Dates } from "../../../utilities/dates";
+import { dateUtils } from "../../../utilities/dateUtils";
 import { Formatting } from "../../../utilities/formatting";
-import { useDidUpdateEffect } from "../../../utilities/hooks";
 import { Col, Grid, Row } from "../../layout/grid";
-import { IFormInputProps } from "../form";
-import { DataValidationMessage } from "../formCore";
+import { DataValidationMessage, DataValidationMode } from "../formCore";
 import { useForm } from "../formHooks";
 import { ValidationLabel } from "../validationWrapper";
 import { buildOptions } from "./options";
 
 export type DateParts = "day" | "month" | "year"
 
-export interface IDateInputProps extends IFormInputProps<typeof DateInput> {
+export interface IDateInputProps extends React.Props<typeof DateInput> {
   /** (string) CSS className property */
   className?: string;
   /** (number) The tab index of the first select */
@@ -47,14 +46,14 @@ export interface IDateInputState {
 }
 
 export const DateInput: React.FC<IDateInputProps> = props => {
-  const { dayLabel, monthLabel, yearLabel, yearsFromNow, className, validationMode, disabled, datePartOrder, tabIndex, date, minDate, maxDate, onChange } = props
+  const { dayLabel, monthLabel, yearLabel, yearsFromNow, className, disabled, datePartOrder, tabIndex, date, minDate, maxDate, onChange } = props
 
   const [dateState, setDateState] = React.useState<IDateInputState>({ day: null, month: null, year: null, date: null })
 
   React.useEffect(() => {
     validateProps()
     if (date) {
-      setDateState(Dates.getDateParts(date));
+      setDateState(dateUtils.datePart.parse(date));
     }
   }, [])
 
@@ -66,8 +65,8 @@ export const DateInput: React.FC<IDateInputProps> = props => {
   }, [datePartOrder])
 
   useDidUpdateEffect(() => {
-    const newState = date ? Dates.getDateParts(date, true) : { day: null, month: null, year: null, date: null }
-    if (!Dates.datePartsChanged(newState, dateState)) {
+    const newState = date ? dateUtils.datePart.parse(date, { includeDate: true }) : { day: null, month: null, year: null, date: null }
+    if (!dateUtils.datePart.haveChanged(newState, dateState)) {
       return
     }
     setDateState(newState)
@@ -83,17 +82,18 @@ export const DateInput: React.FC<IDateInputProps> = props => {
   }, [datePartOrder])
 
   const validationMessage = DataValidationMessage.get(props)
+  const validationMode = DataValidationMode.get(props)
 
   const dayArray = React.useMemo(() => {
-    return Dates.getDaysArrayByMonth(dateState.month, dateState.year, minDate, maxDate)
+    return dateUtils.day.inMonthYear(dateState.month, dateState.year, { minDate, maxDate })
   }, [dateState.month, dateState.year, minDate, maxDate]);
 
   const monthArray = React.useMemo(() => {
-    return Dates.getMonthValuesInRange(dateState.year, minDate, maxDate)
+    return dateUtils.month.getMonthsInYear(dateState.year, { minDate, maxDate })
   }, [dateState.year, minDate, maxDate]);
 
   const yearArray = React.useMemo(() => {
-    return Dates.getYearValues(minDate, maxDate, yearsFromNow)
+    return dateUtils.year.generate({ minDate, maxDate, range: yearsFromNow })
   }, [minDate, maxDate, yearsFromNow]);
 
   const handleDataChanged = React.useCallback((d: IDateInputState) => {
@@ -102,7 +102,7 @@ export const DateInput: React.FC<IDateInputProps> = props => {
 
     newState.day = !hasDayPart ? 1 : d.day
     if (d.day) {
-      const days = Dates.getDaysArrayByMonth(d.month, d.year, minDate, maxDate)
+      const days = dateUtils.day.inMonthYear(d.month, d.year, { minDate, maxDate })
       if (days.indexOf(newState.day) === -1) {
         delete newState.day
       }
@@ -110,13 +110,13 @@ export const DateInput: React.FC<IDateInputProps> = props => {
 
     newState.month = d.month
     if (d.month) {
-      const months = Dates.getMonthValuesInRange(d.year, minDate, maxDate)
-      if (months.map(a => a.value).indexOf(newState.month) === -1) {
+      const monthsInYear = dateUtils.month.getMonthsInYear(d.year, { minDate, maxDate })
+      if (monthsInYear.map(a => a.number).indexOf(newState.month) === -1) {
         delete newState.month
       }
     }
 
-    newState.date = Dates.toDateFormat(newState)
+    newState.date = dateUtils.datePart.format(newState)
     setDateState(newState)
     if (onChange && newState.date) {
       onChange(newState.date);
@@ -127,7 +127,7 @@ export const DateInput: React.FC<IDateInputProps> = props => {
   const options = React.useMemo(() => {
     return {
       day: buildOptions(dayLabel, dayArray, v => v, v => Formatting.twoDigitNumber(v)),
-      month: buildOptions(monthLabel, monthArray, v => v.value, v => v.label),
+      month: buildOptions(monthLabel, monthArray, v => v.number, v => v.name),
       year: buildOptions(yearLabel, yearArray, v => v, v => v.toString()),
     }
   }, [dayLabel, monthLabel, yearLabel, dayArray, monthArray, yearArray])
@@ -172,5 +172,4 @@ DateInput.defaultProps = {
   monthLabel: "Month",
   dayLabel: "Day",
   datePartOrder: ["day", "month", "year"],
-  validationMode: "none",
 }

@@ -3,7 +3,7 @@ import { Grid, Row, Col } from '../_symlink';
 import * as React from 'react'
 
 storiesOf("Grid", Grid)
-  .add("Simple", () => {
+  .add("Basic", () => {
     return (
       <Grid>
         <Row>

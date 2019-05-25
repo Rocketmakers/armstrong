@@ -1,6 +1,8 @@
 import * as React from "react";
 import { IArrayProp, IObjectProp, PropType } from "./propertyPathBuilder";
 
+export type ValidationModes = "none" | "icon" | "below" | "both";
+
 export namespace DataValidationMessage {
   const attributeName = "data-validation-message"
   export function spread(message: string): { ["data-validation-message"]: string } {
@@ -11,6 +13,21 @@ export namespace DataValidationMessage {
   }
   export function get(props): string {
     return props[attributeName]
+  }
+}
+
+export namespace DataValidationMode {
+  const attributeName = "data-validation-mode"
+  export function spread(mode: ValidationModes): { ["data-validation-mode"]: ValidationModes } {
+    return { [attributeName]: mode }
+  }
+
+  export function set(props, mode: ValidationModes) {
+    props[attributeName] = mode
+  }
+
+  export function get(props): ValidationModes {
+    return props[attributeName] || "none"
   }
 }
 

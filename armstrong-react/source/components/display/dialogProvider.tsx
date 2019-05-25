@@ -1,6 +1,6 @@
 import * as React from "react";
+import { utils } from "../../utilities/utils";
 import { Dialog, IDialogLayerPropsCore } from "./dialog";
-import { Utils } from '../../utilities/utils';
 
 const DialogProviderContext = React.createContext<IDialogStackRef>(undefined)
 
@@ -50,7 +50,7 @@ function DialogStackRef(props: {}, ref: React.Ref<IDialogStackRef>) {
   const [dialogContent, setDialogContent] = React.useState<IDialogContent[]>([])
 
   const closeDialog = React.useCallback(() => {
-    setDialogContent([...Utils.first(dialogContent, dialogContent.length - 1)])
+    setDialogContent([...utils.array.first(dialogContent, dialogContent.length - 1)])
   }, [dialogContent, setDialogContent])
 
   React.useImperativeHandle(ref, () => ({

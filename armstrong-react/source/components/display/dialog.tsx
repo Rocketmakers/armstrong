@@ -1,5 +1,4 @@
 import * as React from "react";
-import { useCallback } from "react";
 import * as ReactDOM from "react-dom";
 import { Icon } from "./icon";
 
@@ -25,7 +24,7 @@ export interface IDialogProps extends React.HTMLAttributes<HTMLElement> {
 }
 
 export const Dialog: React.FC<IDialogProps> = props => {
-  const onClose = useCallback((reason: DialogLayerCloseReason) => {
+  const onClose = React.useCallback((reason: DialogLayerCloseReason) => {
     if (reason === "background") {
       if (props.closeOnBackgroundClick !== false) {
         props.onClose();

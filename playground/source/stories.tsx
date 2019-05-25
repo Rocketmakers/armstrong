@@ -1,3 +1,4 @@
+import "./stories/paging"
 import "./stories/button"
 import "./stories/image"
 import "./stories/calendarInput"

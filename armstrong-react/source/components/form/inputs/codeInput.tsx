@@ -1,12 +1,12 @@
 import * as React from "react";
 import { ClassHelpers } from "../../../index";
-import { IFormInputHTMLProps } from "../form";
-import { DataValidationMessage } from "../formCore";
+import { KeyCodes } from "../../../utilities/keyCodes";
+import { utils } from "../../../utilities/utils";
+import { DataValidationMessage, DataValidationMode } from "../formCore";
+import { useForm } from "../formHooks";
 import { ValidationLabel } from "../validationWrapper";
-import { Utils } from '../../../utilities/utils';
-import { useForm } from '../formHooks';
 
-export interface ICodeInputProps extends IFormInputHTMLProps {
+export interface ICodeInputProps extends React.HTMLAttributes<HTMLElement> {
   lengthPerBox?: number[];
   onCodeChange?: (value: string | number) => void;
   value?: string;
@@ -31,9 +31,9 @@ export const CodeInput: React.FC<ICodeInputProps> = props => {
 
   const { DataForm, bind, dataBinder, notifyChange } = useForm(formData)
 
-  const { onCodeChange, validationMode, lengthPerBox, numeric, type, className, tabIndex, value, placeholder, readonly } = props;
+  const { onCodeChange, lengthPerBox, numeric, type, className, tabIndex, value, placeholder, readonly } = props;
 
-  const codeLength = React.useMemo(() => Utils.reduce(lengthPerBox, (memo, num) => memo + num, 0), [lengthPerBox])
+  const codeLength = React.useMemo(() => utils.array.reduce(lengthPerBox, (memo, num) => memo + num, 0), [lengthPerBox])
 
   const [focusIndex, setFocusIndex] = React.useState<number>(null)
   const [code, setCode] = React.useState<string>("")
@@ -42,7 +42,7 @@ export const CodeInput: React.FC<ICodeInputProps> = props => {
 
   const buildValue = React.useCallback(() => {
     let codeCandidate: string | number = "";
-    Utils.each(lengthPerBox, (lpb, idx) => {
+    utils.array.each(lengthPerBox, (lpb, idx) => {
       const val = dataBinder.getValue(getBindingName(idx))
       codeCandidate += val ? val.toUpperCase() : "";
     });
@@ -69,7 +69,7 @@ export const CodeInput: React.FC<ICodeInputProps> = props => {
     const lpb = lengthPerBox[focusIndex];
     let retFromStore = false;
     currentVal = currentVal.slice(0, lpb);
-    if (e.keyCode === 8) {
+    if (e.keyCode === KeyCodes.backspace) {
       movingBack = true;
       if (currentVal.length === 0) {
         el = current.previousSibling as HTMLInputElement;
@@ -92,7 +92,7 @@ export const CodeInput: React.FC<ICodeInputProps> = props => {
       el.focus();
       if (el && el.value && !movingBack && !retFromStore) {
         el.select()
-        //el.value = "";
+        // el.value = "";
       }
     }
 
@@ -113,12 +113,12 @@ export const CodeInput: React.FC<ICodeInputProps> = props => {
 
     const splitArray = [];
     let currentIndex = 0;
-    Utils.each(lengthPerBox, (lpb, idx) => {
+    utils.array.each(lengthPerBox, (lpb, idx) => {
       const chunk = pasted.substr(currentIndex, lpb);
       currentIndex += lpb;
       splitArray.push(chunk);
       dataBinder.setValue(getBindingName(idx), chunk);
-      //inputs.current[idx].value = chunk;
+      // inputs.current[idx].value = chunk;
     });
 
     buildValue();
@@ -137,10 +137,10 @@ export const CodeInput: React.FC<ICodeInputProps> = props => {
     }
 
     if (e.currentTarget.value.length === lpb) {
-      if (e.keyCode >= 48 && e.keyCode <= 57) {
+      if (e.keyCode >= KeyCodes.key_0 && e.keyCode <= KeyCodes.key_9) {
         storedKey.current = e.key;
       }
-      if (e.keyCode >= 65 && e.keyCode <= 90) {
+      if (e.keyCode >= KeyCodes.key_a && e.keyCode <= KeyCodes.key_z) {
         storedKey.current = e.key;
       }
     }
@@ -155,9 +155,9 @@ export const CodeInput: React.FC<ICodeInputProps> = props => {
   React.useEffect(() => {
     if (value) {
       let currentIndex = 0;
-      Utils.each(lengthPerBox, (lpb, idx) => {
+      utils.array.each(lengthPerBox, (lpb, idx) => {
         dataBinder.setValue(getBindingName(idx), value.substr(currentIndex, lpb));
-        //inputs.current[i].value = ;
+        // inputs.current[i].value = ;
         currentIndex += lpb;
       });
       notifyChange()
@@ -165,6 +165,8 @@ export const CodeInput: React.FC<ICodeInputProps> = props => {
   }, [])
 
   const validationMessage = DataValidationMessage.get(props);
+  const validationMode = DataValidationMode.get(props)
+
   const classes = React.useMemo(() => ClassHelpers.classNames("armstrong-input", "code-input",
     className, {
       "show-validation": validationMode !== "none" && validationMessage,
@@ -199,5 +201,4 @@ export const CodeInput: React.FC<ICodeInputProps> = props => {
 
 CodeInput.defaultProps = {
   lengthPerBox: [2, 2, 2],
-  validationMode: "none",
 }

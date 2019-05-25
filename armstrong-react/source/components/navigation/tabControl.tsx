@@ -1,7 +1,7 @@
 import * as React from "react";
 import { ClassHelpers } from "../../utilities/classHelpers";
+import { utils } from "../../utilities/utils";
 import { Icon } from "./../display/icon";
-import { Utils } from '../../utilities/utils';
 
 export interface ITabControlProps extends React.HTMLAttributes<HTMLDivElement> {
   /** (number) The index of the tab selected when the control renders. Defaults to 0 */
@@ -61,7 +61,7 @@ export const TabControl = (props: ITabControlProps) => {
     },
   ), [className, tabAlignment])
 
-  const filteredChildren = Utils.filter(React.Children.toArray(children), c => !!c)
+  const filteredChildren = utils.array.filter(React.Children.toArray(children), c => !!c)
   const selectedIndex = getSelectedIndex();
   return (
     <div {...attrs} className={classes}>
@@ -79,13 +79,11 @@ export const TabControl = (props: ITabControlProps) => {
 }
 
 export interface ITabItemProps extends React.HTMLAttributes<HTMLDivElement> {
-  /** (string | JSX.Element) The content to use in the tab items header */
-  title: any;
   /** (string (Icomoon)) An optional icon to show to the left of the title in the tab header */
   icon?: string;
 }
 
 export const TabItem: React.FC<ITabItemProps> = props => {
-  const { className, title, children, ...attrs } = props
+  const { className, children, ...attrs } = props
   return <div {...attrs} className={`tab-content${className ? ` ${className}` : ""}`}>{children}</div>
 }

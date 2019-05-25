@@ -1,10 +1,10 @@
 import * as React from "react";
-import { Utils } from '../../../utilities/utils';
+import { utils } from "../../../utilities/utils";
 
 export function buildOptions<T>(label: string, items: T[], valueFactory: (t: T) => string | number, labelFactory: (t: T) => string, enableOptionLabel: boolean = false) {
   const options = [<option key={`blank`} value="" disabled={!enableOptionLabel}>{label}</option>];
   if (items) {
-    Utils.each(items, (d, idx) => {
+    utils.array.each(items, (d, idx) => {
       options.push(<option key={idx} value={valueFactory(d)}>{labelFactory(d)}</option>);
     })
   }

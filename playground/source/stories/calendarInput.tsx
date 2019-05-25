@@ -3,7 +3,7 @@ import { CalendarInput, ICalendarInputProps, DateInput, IDateInputProps } from '
 import * as React from 'react'
 
 storiesOf("CalendarInput", CalendarInput)
-  .add("Simple", () => {
+  .add("Basic", () => {
     return <CalendarInputTest />
   })
   .add("Always Show", () => {

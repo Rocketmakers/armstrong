@@ -19,8 +19,16 @@ export interface IGridProps extends React.HTMLAttributes<HTMLDivElement> {
   children?: React.ReactElement<IRowProps> | Array<React.ReactElement<IRowProps>>;
 }
 
-export const Grid: React.FC<IGridProps> = props => {
+export const GridRef: React.RefForwardingComponent<{}, IGridProps> = (props, ref) => {
   const { className, debugMode, fillContainer, tagName, ...attrs } = props;
+
+  const grid = React.useRef<HTMLElement>(undefined);
+  const refCallback = React.useCallback<() => {}>(() => {
+    return grid.current
+  }, [grid])
+
+  React.useImperativeHandle(ref, refCallback, [refCallback])
+
   const classes = React.useMemo(() => ClassHelpers.classNames(
     className,
     "grid",
@@ -30,11 +38,13 @@ export const Grid: React.FC<IGridProps> = props => {
     },
   ), [className, fillContainer, debugMode]);
 
-  return React.createElement(tagName, { ...attrs, className: classes })
+  return React.createElement(tagName, { ...attrs, ref: grid, className: classes })
 }
 
+export const Grid = React.forwardRef(GridRef)
+
 Grid.defaultProps = {
-  tagName: "div",
+  tagName: "div" as any,
 }
 
 export interface IRowProps extends React.HTMLAttributes<HTMLDivElement> {

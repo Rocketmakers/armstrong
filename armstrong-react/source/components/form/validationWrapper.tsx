@@ -1,9 +1,9 @@
 import * as React from "react";
 import { HTMLAttributes } from "react";
 import { ClassHelpers } from "../../utilities/classHelpers";
-import { ValidationModes, ValidationProps } from "./form";
+import { ValidationModes } from "./formCore";
 
-export const ValidationWrapper: React.FC<{ message: string } & HTMLAttributes<HTMLDivElement> & ValidationProps> = props => {
+export const ValidationWrapper: React.FC<{ message: string } & HTMLAttributes<HTMLDivElement> & { validationMode?: ValidationModes }> = props => {
   const { message, validationMode, className, children, ...attrs } = props
   return (
     <div {...attrs} className={ClassHelpers.classNames(className, { "show-validation": (validationMode !== "none" && !!message) })} title={message}>
@@ -13,7 +13,7 @@ export const ValidationWrapper: React.FC<{ message: string } & HTMLAttributes<HT
   );
 }
 
-export const ValidationLabel: React.FC<{ message: string, mode: ValidationModes, wrapper?: React.StatelessComponent<any> }> = props => {
+export const ValidationLabel: React.FC<{ message: string, mode: ValidationModes, wrapper?: React.StatelessComponent<{}> }> = props => {
   const { message, mode, wrapper: Wrapper } = props
   if (!message || mode === "none") {
     return null;
@@ -22,9 +22,12 @@ export const ValidationLabel: React.FC<{ message: string, mode: ValidationModes,
   const validationLabel = (
     <label className={ClassHelpers.classNames("validation-message", `validation-message-${mode}`)} title={message}>
       {(mode === "both" || mode === "below") && message}
-    </label>)
+    </label>
+  )
+
   if (Wrapper) {
     return <Wrapper>{validationLabel}</Wrapper>
   }
+
   return validationLabel;
 }

@@ -3,24 +3,24 @@ import { Button, IButtonRef, Icon } from '../_symlink';
 import * as React from 'react'
 
 storiesOf("Button", Button)
-  .add("Rounded", () => {
-    return <Button onClick={() => alert("click")} rounded>click</Button>
+  .props("Rounded", () => {
+    return { onClick: () => alert("click"), rounded: true, children: "click" }
   })
-  .add("Left Icon", () => {
-    return <Button onClick={() => alert("click")} leftIcon={Icon.Icomoon.happy} >click</Button>
+  .props("Pending", () => {
+    return { onClick: () => alert("click"), pending: true, children: "click" }
   })
-  .add("Right Icon", () => {
-    return <Button onClick={() => alert("click")} rightIcon={Icon.Icomoon.sad} >click</Button>
+  .props("Left Icon", () => {
+    return { onClick: () => alert("click"), leftIcon: Icon.Icomoon.happy, children: "click" }
   })
-  .add("Pending", () => {
-    return <Button onClick={() => alert("click")} pending={true} >click</Button>
+  .props("Right Icon", () => {
+    return { onClick: () => alert("click"), rightIcon: Icon.Icomoon.sad, children: "click" }
   })
   .add("Focus/Blur", () => {
     const buttonRef = React.useRef<IButtonRef>()
     return (
       <div>
-        <div onClick={() => buttonRef.current.focus()}>Focus button</div>
-        <div onClick={() => buttonRef.current.blur()}>Blur button</div>
+        <button onClick={() => buttonRef.current.focus()}>Focus button</button>
+        <button onClick={() => buttonRef.current.blur()}>Blur button</button>
         <Button ref={buttonRef} onClick={() => alert("click")}>click</Button>
       </div>
     )
