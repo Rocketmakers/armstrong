@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useDidUpdateEffect } from "../../../hooks/useDidUpdateEffect";
+import { calendarUtils } from "../../../utilities/calendarUtils";
 import { ClassHelpers } from "../../../utilities/classHelpers";
-import { dateUtils } from "../../../utilities/dateUtils";
 import { Formatting } from "../../../utilities/formatting";
 import { Col, Grid, Row } from "../../layout/grid";
 import { DataValidationMessage, DataValidationMode } from "../formCore";
@@ -53,7 +53,7 @@ export const DateInput: React.FC<IDateInputProps> = props => {
   React.useEffect(() => {
     validateProps()
     if (date) {
-      setDateState(dateUtils.datePart.parse(date));
+      setDateState(calendarUtils.datePart.parse(date));
     }
   }, [])
 
@@ -65,8 +65,8 @@ export const DateInput: React.FC<IDateInputProps> = props => {
   }, [datePartOrder])
 
   useDidUpdateEffect(() => {
-    const newState = date ? dateUtils.datePart.parse(date, { includeDate: true }) : { day: null, month: null, year: null, date: null }
-    if (!dateUtils.datePart.haveChanged(newState, dateState)) {
+    const newState = date ? calendarUtils.datePart.parse(date, { includeDate: true }) : { day: null, month: null, year: null, date: null }
+    if (calendarUtils.datePart.equals(newState, dateState)) {
       return
     }
     setDateState(newState)
@@ -85,15 +85,15 @@ export const DateInput: React.FC<IDateInputProps> = props => {
   const validationMode = DataValidationMode.get(props)
 
   const dayArray = React.useMemo(() => {
-    return dateUtils.day.inMonthYear(dateState.month, dateState.year, { minDate, maxDate })
+    return calendarUtils.day.getMonthYear(dateState.month, dateState.year, { minDate, maxDate })
   }, [dateState.month, dateState.year, minDate, maxDate]);
 
   const monthArray = React.useMemo(() => {
-    return dateUtils.month.getMonthsInYear(dateState.year, { minDate, maxDate })
+    return calendarUtils.month.getMonthsInYear(dateState.year, minDate, maxDate)
   }, [dateState.year, minDate, maxDate]);
 
   const yearArray = React.useMemo(() => {
-    return dateUtils.year.generate({ minDate, maxDate, range: yearsFromNow })
+    return calendarUtils.year.generate({ minDate, maxDate, range: yearsFromNow })
   }, [minDate, maxDate, yearsFromNow]);
 
   const handleDataChanged = React.useCallback((d: IDateInputState) => {
@@ -102,7 +102,7 @@ export const DateInput: React.FC<IDateInputProps> = props => {
 
     newState.day = !hasDayPart ? 1 : d.day
     if (d.day) {
-      const days = dateUtils.day.inMonthYear(d.month, d.year, { minDate, maxDate })
+      const days = calendarUtils.day.getMonthYear(d.month, d.year, { minDate, maxDate })
       if (days.indexOf(newState.day) === -1) {
         delete newState.day
       }
@@ -110,13 +110,13 @@ export const DateInput: React.FC<IDateInputProps> = props => {
 
     newState.month = d.month
     if (d.month) {
-      const monthsInYear = dateUtils.month.getMonthsInYear(d.year, { minDate, maxDate })
+      const monthsInYear = calendarUtils.month.getMonthsInYear(d.year, minDate, maxDate)
       if (monthsInYear.map(a => a.number).indexOf(newState.month) === -1) {
         delete newState.month
       }
     }
 
-    newState.date = dateUtils.datePart.format(newState)
+    newState.date = calendarUtils.datePart.format(newState)
     setDateState(newState)
     if (onChange && newState.date) {
       onChange(newState.date);

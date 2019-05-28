@@ -1,16 +1,16 @@
 import * as moment from "moment";
-import { DayOfWeek, IDateParts, IDatePartUtils, IDateTimeType, IDateTimeUtils, IDayUtils, ILocaleUtils, IMonthUtils, IMonthValue, IYearUtils, UnitOfTime } from "../definitions";
+import { DayOfWeek, IDateParts, IDatePartUtils, IDateType, IDateUtils, IDayUtils, ILocaleUtils, IMonthUtils, IMonthValue, IYearUtils, UnitOfDate } from "../definitions";
 import { utils } from "../utils";
 
-function createDateType(native: moment.Moment): IDateTimeType {
-  return native as IDateTimeType
+function createDateType(native: moment.Moment): IDateType {
+  return native as IDateType
 }
 
-function getNativeDate(dateType: IDateTimeType): moment.Moment {
+function getNativeDate(dateType: IDateType): moment.Moment {
   return dateType as moment.Moment
 }
 
-function getNativeDateClone(dateType: IDateTimeType): moment.Moment {
+function getNativeDateClone(dateType: IDateType): moment.Moment {
   return (dateType as moment.Moment).clone()
 }
 
@@ -40,29 +40,44 @@ export class MomentYearUtils implements IYearUtils {
     const range = settings && settings.range || 110
     const format = settings && settings.dateFormat || DateFormats.DateWireFormat
     const currentYear = moment().year()
-    const start = settings && settings.minDate ? getNativeDate(MomentDateTimeUtils.parse(settings.minDate, format)).year() : currentYear - range
-    const stop = settings && settings.maxDate ? getNativeDate(MomentDateTimeUtils.parse(settings.maxDate, format)).year() : currentYear + range
+    const start = settings && settings.minDate ? getNativeDate(MomentDateUtils.parse(settings.minDate, format)).year() : currentYear - range
+    const stop = settings && settings.maxDate ? getNativeDate(MomentDateUtils.parse(settings.maxDate, format)).year() : currentYear + range
     return utils.array.range(start, stop + 1)
   }
 }
 
+function monthYearCompare(month: number, year: number) {
+  return (year * 100) + month
+}
 export class MomentDayUtils implements IDayUtils {
-  inMonthYear(month: number, year: number, settings?: { minDate?: string, maxDate?: string, dateFormat?: string }): number[] {
+  getMonthYear(month: number, year: number, settings?: { minDate?: string, maxDate?: string, dateFormat?: string }): number[] {
     const format = settings && settings.dateFormat || DateFormats.DateWireFormat
     let days = MomentDayUtils.dayInMonth(month, year)
     if (settings && settings.minDate) {
-      const min = MomentDateTimeUtils.parse(settings.minDate, format)
-      const mom = getNativeDate(min)
-      if (mom.year() === year && mom.month() === month) {
-        days = utils.array.filter(days, d => d >= mom.date())
+      const min = MomentDateUtils.parse(settings.minDate, format)
+      if (min.isValid()) {
+        const mom = getNativeDate(min)
+        const minValue = monthYearCompare(mom.month(), mom.year())
+        const value = monthYearCompare(month, year)
+        if (value < minValue) {
+          days = []
+        } else if (minValue === value) {
+          days = utils.array.filter(days, d => d >= mom.date())
+        }
       }
     }
 
     if (settings && settings.maxDate) {
-      const max = MomentDateTimeUtils.parse(settings.maxDate, format)
-      const mom = getNativeDate(max)
-      if (mom.year() === year && mom.month() === month) {
-        days = utils.array.filter(days, d => d <= mom.date())
+      const max = MomentDateUtils.parse(settings.maxDate, format)
+      if (max.isValid()) {
+        const mom = getNativeDate(max)
+        const maxValue = monthYearCompare(mom.month(), mom.year())
+        const value = monthYearCompare(month, year)
+        if (value > maxValue) {
+          days = []
+        } else if (maxValue === value) {
+          days = utils.array.filter(days, d => d <= mom.date())
+        }
       }
     }
 
@@ -78,11 +93,7 @@ export class MomentDayUtils implements IDayUtils {
       return MomentDayUtils.range1to(31)
     }
 
-    if (utils.object.isNullOrUndefined(year)) {
-      year = 2000
-    }
-
-    const activeMoment = moment([year, month, 1])
+    const activeMoment = moment([utils.object.isNullOrUndefined(year) ? 2000 : year, month, 1])
     if (!activeMoment.isValid()) {
       return MomentDayUtils.range1to(31)
     }
@@ -92,13 +103,16 @@ export class MomentDayUtils implements IDayUtils {
 }
 
 export class MomentDatePartUtils implements IDatePartUtils {
-  haveChanged(newState: Partial<IDateParts>, dateState: Partial<IDateParts>) {
-    return newState.day !== dateState.day || newState.month !== dateState.month || newState.year !== dateState.year
+  equals(original: Partial<IDateParts>, newValue: Partial<IDateParts>) {
+    return original.day === newValue.day && original.month === newValue.month && original.year === newValue.year
   }
 
   parse(date: string, settings?: { includeDate?: boolean, dateFormat?: string }) {
     const dateFormat = settings && settings.dateFormat || DateFormats.DateWireFormat
-    const d = MomentDateTimeUtils.parse(date, dateFormat);
+    const d = MomentDateUtils.parse(date, dateFormat);
+    if (!d.isValid()) {
+      return
+    }
     const mom = getNativeDate(d)
     const parts: IDateParts & { date?: string } = { day: mom.date(), month: mom.month(), year: mom.year() };
     if (settings && settings.includeDate) {
@@ -109,9 +123,9 @@ export class MomentDatePartUtils implements IDatePartUtils {
 
   format(dateParts: Partial<IDateParts>, dateFormat?: string) {
     if (!utils.object.isNullOrUndefined(dateParts.day) && !utils.object.isNullOrUndefined(dateParts.month) && !utils.object.isNullOrUndefined(dateParts.year)) {
-      const dateType = moment([dateParts.year, dateParts.month, dateParts.day]);
-      if (dateType.isValid()) {
-        return dateType.format(dateFormat || DateFormats.DateWireFormat)
+      const mom = moment([dateParts.year, dateParts.month, dateParts.day]);
+      if (mom.isValid()) {
+        return mom.format(dateFormat || DateFormats.DateWireFormat)
       }
     }
   }
@@ -119,19 +133,19 @@ export class MomentDatePartUtils implements IDatePartUtils {
 
 export class MomentMonthUtils implements IMonthUtils {
 
-  getMonthsInYear(year: number, settings?: { minDate?: string, maxDate?: string, dateFormat?: string }) {
-    const format = settings && settings.dateFormat || DateFormats.DateWireFormat
+  getMonthsInYear(year: number, minDate: string, maxDate: string, dateFormat?: string) {
+    const format = dateFormat || DateFormats.DateWireFormat
     let monthValues = this.getMonthValues()
-    if (settings && settings.minDate) {
-      const min = MomentDateTimeUtils.parse(settings.minDate, format)
+    if (minDate) {
+      const min = MomentDateUtils.parse(minDate, format)
       const mom = getNativeDate(min)
       if (mom.year() === year) {
         monthValues = utils.array.filter(monthValues, d => d.number >= mom.month())
       }
     }
 
-    if (settings && settings.maxDate) {
-      const max = MomentDateTimeUtils.parse(settings.maxDate, format)
+    if (maxDate) {
+      const max = MomentDateUtils.parse(maxDate, format)
       const mom = getNativeDate(max)
       if (mom.year() === year) {
         monthValues = utils.array.filter(monthValues, d => d.number <= mom.month())
@@ -141,7 +155,11 @@ export class MomentMonthUtils implements IMonthUtils {
     return monthValues
   }
 
-  getMonthValue(dateType: IDateTimeType): IMonthValue {
+  getMonthValue(dateType: IDateType): IMonthValue {
+    if (!dateType || !dateType.isValid()) {
+      return
+    }
+
     return MomentMonthUtils.getMonthValueNative(getNativeDate(dateType))
   }
 
@@ -157,49 +175,45 @@ export class MomentMonthUtils implements IMonthUtils {
 
 }
 
-export class MomentDateTimeUtils implements IDateTimeUtils {
+export class MomentDateUtils implements IDateUtils {
   formats = {
     wireDate: DateFormats.DateWireFormat,
-  }
-
-  now() {
-    return createDateType(moment())
   }
 
   today() {
     return createDateType(moment().startOf("day"))
   }
 
-  startOf(dateType: IDateTimeType, unitOfTime: UnitOfTime) {
+  startOf(dateType: IDateType, unitOfTime: UnitOfDate) {
     return createDateType(getNativeDateClone(dateType).startOf(unitOfTime))
   }
 
-  isBefore(dateType: IDateTimeType, minDate: IDateTimeType, unitOfTime: UnitOfTime = "day") {
+  isBefore(dateType: IDateType, minDate: IDateType, unitOfTime: UnitOfDate = "day") {
     const mom = getNativeDate(dateType)
     return mom.isBefore(getNativeDate(minDate), unitOfTime)
   }
 
-  isAfter(dateType: IDateTimeType, maxDate: IDateTimeType, unitOfTime: UnitOfTime = "day") {
+  isAfter(dateType: IDateType, maxDate: IDateType, unitOfTime: UnitOfDate = "day") {
     const mom = getNativeDate(dateType)
     return mom.isAfter(getNativeDate(maxDate), unitOfTime)
   }
 
-  fallsWithinRange(dateType: IDateTimeType, minDate: IDateTimeType, maxDate: IDateTimeType) {
+  fallsWithinRange(dateType: IDateType, minDate: IDateType, maxDate: IDateType) {
     const mom = getNativeDate(dateType)
-    if (minDate && mom.isBefore(getNativeDate(minDate), "day")) {
+    if (minDate && minDate.isValid() && mom.isBefore(getNativeDate(minDate), "day")) {
       return false;
     }
-    if (maxDate && mom.isAfter(getNativeDate(maxDate), "day")) {
+    if (maxDate && maxDate.isValid() && mom.isAfter(getNativeDate(maxDate), "day")) {
       return false;
     }
     return true;
   }
 
-  parse(date: string, dateFormat: string): IDateTimeType {
-    return MomentDateTimeUtils.parse(date, dateFormat)
+  parse(date: string, dateFormat: string): IDateType {
+    return MomentDateUtils.parse(date, dateFormat)
   }
 
-  static parse(date: string, dateFormat: string): IDateTimeType {
+  static parse(date: string, dateFormat: string): IDateType {
     return createDateType(moment(date, dateFormat, true))
   }
 
@@ -211,7 +225,7 @@ export class MomentDateTimeUtils implements IDateTimeUtils {
     return createDateType(dateType)
   }
 
-  parseOrUndefined(date: string, formatString: string): IDateTimeType | undefined {
+  parseOrUndefined(date: string, formatString: string): IDateType | undefined {
     const dateType = moment(date, formatString, true);
     if (!dateType.isValid()) {
       return;
@@ -219,7 +233,11 @@ export class MomentDateTimeUtils implements IDateTimeUtils {
     return createDateType(dateType)
   }
 
-  get(dateType: IDateTimeType, unitOfTime: UnitOfTime) {
+  get(dateType: IDateType, unitOfTime: UnitOfDate) {
+    if (!dateType.isValid()) {
+      return
+    }
+
     const mom = getNativeDate(dateType)
     switch (unitOfTime) {
       case "year":
@@ -228,20 +246,16 @@ export class MomentDateTimeUtils implements IDateTimeUtils {
         return mom.month()
       case "day":
         return mom.date()
-      case "hour":
-        return mom.hour()
-      case "minute":
-        return mom.minute()
-      case "second":
-        return mom.second()
-
       default:
         const n: never = unitOfTime
         break;
     }
   }
 
-  format(dateType: IDateTimeType, formatString: string) {
+  format(dateType: IDateType, formatString: string) {
+    if (!dateType.isValid()) {
+      return ""
+    }
     return getNativeDate(dateType).format(formatString)
   }
 
@@ -253,19 +267,22 @@ export class MomentDateTimeUtils implements IDateTimeUtils {
     return mom.format(formatString)
   }
 
-  add(dateType: IDateTimeType, increment: number, unitOfTime: UnitOfTime) {
+  add(dateType: IDateType, increment: number, unitOfTime: UnitOfDate) {
     return createDateType(getNativeDateClone(dateType).add(increment, unitOfTime))
   }
 
-  subtract(dateType: IDateTimeType, increment: number, unitOfTime: UnitOfTime) {
+  subtract(dateType: IDateType, increment: number, unitOfTime: UnitOfDate) {
     return createDateType(getNativeDateClone(dateType).subtract(increment, unitOfTime))
   }
 
-  getDayOfWeek(dateType: IDateTimeType) {
+  getDayOfWeek(dateType: IDateType) {
+    if (!dateType.isValid()) {
+      return
+    }
     return this.format(dateType, "ddd") as DayOfWeek
   }
 
-  isDayOfWeek(dateType: IDateTimeType, dayOfWeek: DayOfWeek) {
+  isDayOfWeek(dateType: IDateType, dayOfWeek: DayOfWeek) {
     return this.getDayOfWeek(dateType) === dayOfWeek
   }
 }

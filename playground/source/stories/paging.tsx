@@ -1,9 +1,6 @@
 import { storiesOfHook } from "../story-host";
 import * as React from 'react'
-import { useInfinitePaging } from '../_symlink/hooks/useInfinitePaging';
-import { usePaging } from '../_symlink/hooks/usePaging';
-import { utils } from '../_symlink/utilities/utils';
-import { Repeater } from '../_symlink/components/layout/repeater';
+import { useInfinitePaging, usePaging, utils, Repeater } from '../_symlink';
 
 function wait(ms: number) {
   return new Promise(res => {
@@ -67,7 +64,7 @@ storiesOfHook("usePaging")
           {items.map(i => <li key={i}>{i}</li>)}
         </ul>
         <hr />
-        {totalPages && <Repeater count={totalPages} render={p => <button disabled={p.position === currentPage} onClick={() => gotoPage(p.position)}>{p.position}</button>} />}
+        {totalPages && <Repeater count={totalPages} render={p => <button disabled={p.index === currentPage} onClick={() => gotoPage(p.index)}>{p.index}</button>} />}
         <div>{`Records: ${totalRecords}  Pages: ${totalPages}`}</div>
         <div>{!hasData && isFetching ? "LOADING" : ""}</div>
         <div>{hasData && isFetching ? "LOADING MORE" : ""}</div>

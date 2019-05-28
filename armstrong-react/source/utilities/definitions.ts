@@ -1,11 +1,11 @@
 /** An Opaque Date Time type */
-export interface IDateTimeType { isValid(): boolean, toISOString(): string }
+export interface IDateType { isValid(): boolean }
 
 /** The Day Of Week */
 export type DayOfWeek = "Mon" | "Tue" | "Wed" | "Thu" | "Fri" | "Sat" | "Sun"
 
-/** Specify a unit of time */
-export type UnitOfTime = "day" | "month" | "year" | "hour" | "minute" | "second"
+/** Specify a unit of date */
+export type UnitOfDate = "day" | "month" | "year"
 
 export interface ILocaleUtils {
   /** Set the locale of the date provider */
@@ -53,59 +53,57 @@ export interface IMonthValue {
 
 export interface IMonthUtils {
   /** Get months in year, optionally limit the months according to min/max dates */
-  getMonthsInYear(year: number, settings?: { minDate?: string, maxDate?: string, dateFormat?: string }): IMonthValue[]
+  getMonthsInYear(year: number, minDate: string, maxDate: string, dateFormat?: string): IMonthValue[]
   /** Get months in year */
   getMonthValues(): IMonthValue[]
   /** Get month value for date type */
-  getMonthValue(dateType: IDateTimeType): IMonthValue
+  getMonthValue(dateType: IDateType): IMonthValue
 }
 
 export interface IDayUtils {
   /** Get the days within the month and year, optionally limit to min/max date */
-  inMonthYear(month: number, year: number, settings?: { minDate?: string, maxDate?: string, dateFormat?: string }): number[]
+  getMonthYear(month: number, year: number, settings?: { minDate?: string, maxDate?: string, dateFormat?: string }): number[]
 }
 
-export interface IDateTimeUtils {
+export interface IDateUtils {
   /** Describes the basic formats */
   readonly formats: { readonly wireDate: string }
-  /** Date Time as of Now */
-  now(): IDateTimeType
-  /** Date Time at start of today */
-  today(): IDateTimeType
+  /** Date at start of today */
+  today(): IDateType
   /** Date Time at start of unit */
-  startOf(dateType: IDateTimeType, unitOfTime: UnitOfTime): IDateTimeType
+  startOf(dateType: IDateType, unitOfTime: UnitOfDate): IDateType
   /** Is dateType before minDate (using unit - default day) */
-  isBefore(dateType: IDateTimeType, minDate: IDateTimeType, unitOfTime?: UnitOfTime): boolean
+  isBefore(dateType: IDateType, minDate: IDateType, unitOfTime?: UnitOfDate): boolean
   /** Is dateType before minDate (using unit - default day) */
-  isAfter(dateType: IDateTimeType, minDate: IDateTimeType, unitOfTime?: UnitOfTime): boolean
+  isAfter(dateType: IDateType, minDate: IDateType, unitOfTime?: UnitOfDate): boolean
   /** Is dateType within range */
-  fallsWithinRange(dateType: IDateTimeType, minDate: IDateTimeType, maxDate: IDateTimeType): boolean
+  fallsWithinRange(dateType: IDateType, minDate: IDateType, maxDate: IDateType): boolean
   /** Parse the date string into the provided format */
-  parse(date: string, dateFormat: string): IDateTimeType
+  parse(date: string, dateFormat: string): IDateType
   /** Parse the date string into the provided format - If invalid return today */
-  parseOrToday(date: string, formatString: string): IDateTimeType
+  parseOrToday(date: string, formatString: string): IDateType
   /** Parse the date string into the provided format - If invalid return undefined */
-  parseOrUndefined(date: string, formatString: string): IDateTimeType | undefined
+  parseOrUndefined(date: string, formatString: string): IDateType | undefined
   /** Get a unit of date/time */
-  get(dateType: IDateTimeType, unitOfTime: UnitOfTime): number
+  get(dateType: IDateType, unitOfTime: UnitOfDate): number
   /** Format the dateType into a string */
-  format(dateType: IDateTimeType, formatString: string): string
+  format(dateType: IDateType, formatString: string): string
   /** Format the date string into a string, or empty string if date invalid */
   formatOrEmpty(date: string, formatString: string): string
   /** Add a unit of time to the date */
-  add(dateType: IDateTimeType, increment: number, unitOfTime: UnitOfTime): IDateTimeType
+  add(dateType: IDateType, increment: number, unitOfTime: UnitOfDate): IDateType
   /** Subtract a unit of time to the date */
-  subtract(dateType: IDateTimeType, increment: number, unitOfTime: UnitOfTime): IDateTimeType
+  subtract(dateType: IDateType, increment: number, unitOfTime: UnitOfDate): IDateType
 
   /** Get the day of week of the dateType */
-  getDayOfWeek(dateType: IDateTimeType): DayOfWeek
+  getDayOfWeek(dateType: IDateType): DayOfWeek
   /** Is the dateType a dayOfWeek */
-  isDayOfWeek(dateType: IDateTimeType, dayOfWeek: DayOfWeek): boolean
+  isDayOfWeek(dateType: IDateType, dayOfWeek: DayOfWeek): boolean
 }
 
 export interface IDatePartUtils {
   /** Have the date parts changed */
-  haveChanged(newState: Partial<IDateParts>, dateState: Partial<IDateParts>): boolean
+  equals(original: Partial<IDateParts>, newValue: Partial<IDateParts>): boolean
   /** Parse the date to date parts */
   parse(date: string, settings?: { includeDate?: boolean, dateFormat?: string }): IDateParts & { date?: string }
   /** Format the date parts into the specified format */
@@ -154,6 +152,8 @@ export interface IArrayUtils {
   filter<T>(items: T[], func: (t: T, index: number) => boolean): T[]
   /** Generate a numeric array (start inclusive, stop exclusive) */
   range(start: number, stop: number, step?: number): number[]
+  /** Get a page of data from the items (pageNumber starts at 1) */
+  getPage<T>(items: T[], pageNumber: number, pageSize: number)
 }
 
 export interface IUtils {
@@ -163,7 +163,7 @@ export interface IUtils {
   array: IArrayUtils
 }
 
-export interface IDateUtils {
+export interface ICalendarUtils {
   /** time utilities */
   time: ITimeUtils
   /** year utilities */
@@ -175,7 +175,7 @@ export interface IDateUtils {
   /** date part utilities */
   datePart: IDatePartUtils
   /** date utilities */
-  date: IDateTimeUtils
+  date: IDateUtils
   /** locale utilities */
   locale: ILocaleUtils
 }

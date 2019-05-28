@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useDidUpdateEffect } from "../../../hooks/useDidUpdateEffect";
+import { calendarUtils } from "../../../utilities/calendarUtils";
 import { ClassHelpers } from "../../../utilities/classHelpers";
-import { dateUtils } from "../../../utilities/dateUtils";
 import { Formatting } from "../../../utilities/formatting";
 import { utils } from "../../../utilities/utils";
 import { Col, Grid, Row } from "../../layout/grid";
@@ -47,7 +47,7 @@ export const TimeInput: React.FC<ITimeInputProps> = props => {
 
   React.useEffect(() => {
     if (time) {
-      const newTime = dateUtils.time.getParts(time);
+      const newTime = calendarUtils.time.getParts(time);
       setTimeState({ hours: newTime.hours, minutes: newTime.minutes });
     }
   }, [])
@@ -70,7 +70,7 @@ export const TimeInput: React.FC<ITimeInputProps> = props => {
 
   useDidUpdateEffect(() => {
     if (time) {
-      const newTime = dateUtils.time.getParts(time);
+      const newTime = calendarUtils.time.getParts(time);
       let needsUpdate: boolean;
       let { hours, minutes } = timeState
       if (newTime.hours !== hours) {

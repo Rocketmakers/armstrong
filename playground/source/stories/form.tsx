@@ -1,7 +1,6 @@
 import { storiesOf } from "../story-host";
-import { Form, useForm, TextInput, UseFormContext, createFormContext, IUseFormProps, TimeInput, SelectInput, CheckboxInput, TagInput, CodeInput, IFormValidationResult, CalendarInput, DateInput, RadioInput } from '../_symlink';
+import { Form, useForm, TextInput, UseFormContext, createFormContext, IUseFormProps, TimeInput, RadioListInput, IRadioListInputOption, SelectInput, CheckboxInput, TagInput, CodeInput, IFormValidationResult, CalendarInput, DateInput, RadioInput } from '../_symlink';
 import * as React from 'react'
-import { RadioListInput, IRadioListInputOption } from '../_symlink/components/form/inputs/radioListInput';
 
 storiesOf("Form", Form)
   .add("useForm", () => {
