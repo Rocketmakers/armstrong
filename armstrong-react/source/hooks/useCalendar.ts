@@ -219,7 +219,7 @@ function buildWeeks(seed: IDateType, format: string, startDay: DayOfWeek, displa
     const week: IWeek = { days: [] };
     weeks.push(week);
     for (let dayNo = 0; dayNo < 7; dayNo++) {
-      const day: IDay = { date: calendarUtils.date.format(start, format), dayOfWeek: calendarUtils.date.getDayOfWeek(start), display: calendarUtils.date.format(start, displayFormat), dayNumber: calendarUtils.date.get(start, "year") }
+      const day: IDay = { date: calendarUtils.date.format(start, format), dayOfWeek: calendarUtils.date.getDayOfWeek(start), display: calendarUtils.date.format(start, displayFormat), dayNumber: calendarUtils.date.get(start, "day") }
       if (day.date === today) {
         day.isToday = true
       }

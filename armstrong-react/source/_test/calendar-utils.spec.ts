@@ -1,6 +1,7 @@
 import assert = require("assert");
 import * as moment from "moment";
 import { calendarUtils } from "../utilities/calendarUtils";
+import { utils } from "../utilities/utils";
 
 describe("calendarUtils.year", () => {
   it("Range", () => {
@@ -349,5 +350,35 @@ describe("calendarUtils.time", () => {
   it("getParts - invalid time", () => {
     const parts = calendarUtils.time.getParts("xx")
     assert(parts === undefined, "Should have undefined value")
+  })
+
+  it("getHours", () => {
+    const parts = calendarUtils.time.getHours()
+    assert(parts.length === 24, "Should have 24 hours")
+    utils.array.range(0, 24).map((hour, i) => assert(parts[i] === hour, "Should have hour of " + hour))
+  })
+
+  it("getMinutes - step 1", () => {
+    const parts = calendarUtils.time.getMinutes()
+    assert(parts.length === 60, "Should have 60 minutes")
+    utils.array.range(0, 60).map((minute, i) => assert(parts[i] === minute, "Should have minute of " + minute))
+  })
+
+  it("getMinutes - step 5", () => {
+    const parts = calendarUtils.time.getMinutes(5)
+    assert(parts.length === 12, "Should have 12 minutes")
+    utils.array.range(0, 60, 5).map((minute, i) => assert(parts[i] === minute, "Should have minute of " + minute))
+  })
+
+  it("getMinutes - step 15", () => {
+    const parts = calendarUtils.time.getMinutes(15)
+    assert(parts.length === 4, "Should have 4 minutes")
+    utils.array.range(0, 60, 15).map((minute, i) => assert(parts[i] === minute, "Should have minute of " + minute))
+  })
+
+  it("getMinutes - step 30", () => {
+    const parts = calendarUtils.time.getMinutes(30)
+    assert(parts.length === 2, "Should have 2 minutes")
+    utils.array.range(0, 60, 30).map((minute, i) => assert(parts[i] === minute, "Should have minute of " + minute))
   })
 })

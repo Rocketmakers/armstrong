@@ -23,8 +23,12 @@ export interface ITimeInputProps extends React.Props<typeof TimeInput> {
   disabled?: boolean;
   /** (number) Indicates the minute intervals to display */
   minuteStep?: number;
+  /** (Func) Filter the available minutes */
+  minuteFilter?(minutes: number[]): number[];
   /** (string) The hour label - default to `HH` */
   hourLabel?: string;
+  /** (Func) Filter the available hours */
+  hourFilter?(hours: number[]): number[];
   /** (string) The minute label - default to `MM` */
   minuteLabel?: string;
   /** (boolean) If true, when you select any hour, the minutes will be automatically set to 0 */
@@ -36,10 +40,8 @@ export interface ITimerInputState {
   minutes?: number;
 }
 
-const hoursRange = utils.array.range(0, 24);
-
 export const TimeInput: React.FC<ITimeInputProps> = props => {
-  const { className, disabled, hourLabel, minuteLabel, minuteStep, onChange, tabIndex, time, zeroMinutesOnHourSelected } = props
+  const { className, disabled, hourLabel, minuteLabel, minuteFilter, hourFilter, minuteStep, onChange, tabIndex, time, zeroMinutesOnHourSelected } = props
 
   const [timeState, setTimeState] = React.useState<ITimerInputState>({})
 
@@ -94,11 +96,14 @@ export const TimeInput: React.FC<ITimeInputProps> = props => {
   const validationMessage = DataValidationMessage.get(props)
   const validationMode = DataValidationMode.get(props)
 
-  const hourOptions = React.useMemo(() => buildOptions(hourLabel, hoursRange, v => v, v => Formatting.twoDigitNumber(v)), [hourLabel]);
+  const hourOptions = React.useMemo(() => {
+    const hoursRange = calendarUtils.time.getHours();
+    return buildOptions(hourLabel, hourFilter ? hourFilter(hoursRange) : hoursRange, v => v, v => Formatting.twoDigitNumber(v))
+  }, [hourLabel, hourFilter]);
   const minuteOptions = React.useMemo(() => {
-    const minutesRange = utils.array.range(0, 60, minuteStep || 1);
-    return buildOptions(minuteLabel, minutesRange, v => v, v => Formatting.twoDigitNumber(v))
-  }, [minuteLabel, minuteStep]);
+    const minuteRange = calendarUtils.time.getMinutes(minuteStep || 1)
+    return buildOptions(minuteLabel, minuteFilter ? minuteFilter(minuteRange) : minuteRange, v => v, v => Formatting.twoDigitNumber(v))
+  }, [minuteLabel, minuteStep, minuteFilter]);
 
   const { DataForm, bind } = useForm(timeState)
   return (

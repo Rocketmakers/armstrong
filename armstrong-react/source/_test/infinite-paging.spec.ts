@@ -50,6 +50,5 @@ describe("useInfinitePaging", () => {
     assert(result.current.hasData, "Should indicate has data on loading more")
     assert(result.current.fetchError === undefined, "Should indicate no fetch error on loading more")
     assert(result.current.hasFinished, "Should indicate finished on loading more")
-
   })
 })

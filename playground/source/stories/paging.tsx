@@ -1,7 +1,10 @@
 import { storiesOfHook } from "../story-host";
 import * as React from 'react'
-import { useInfinitePaging, usePaging, utils, Repeater } from '../_symlink';
+import { useInfinitePaging, usePaging, utils, calendarUtils, Repeater } from '../_symlink';
 
+// const date = calendarUtils.date.parse("1920-11-12", calendarUtils.date.formats.wireDate)
+// date.isValid()
+// const formatted = calendarUtils.date.format(date, calendarUtils.date.formats.wireDate)
 function wait(ms: number) {
   return new Promise(res => {
     setTimeout(res, ms);

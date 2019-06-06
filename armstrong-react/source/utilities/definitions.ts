@@ -35,6 +35,10 @@ export interface ITimeParts {
 export interface ITimeUtils {
   /** parse a time string ("HH:mm") to time parts */
   getParts(time: string): ITimeParts
+  /** Get minute interval values (minuteStep defaults to 1) */
+  getMinutes(minuteStep?: number): number[]
+  /** Get hour interval values (0 to 23) */
+  getHours(): number[]
 }
 
 export interface IYearUtils {
@@ -84,7 +88,7 @@ export interface IDateUtils {
   parseOrToday(date: string, formatString: string): IDateType
   /** Parse the date string into the provided format - If invalid return undefined */
   parseOrUndefined(date: string, formatString: string): IDateType | undefined
-  /** Get a unit of date/time */
+  /** Get a unit of date */
   get(dateType: IDateType, unitOfTime: UnitOfDate): number
   /** Format the dateType into a string */
   format(dateType: IDateType, formatString: string): string
@@ -156,6 +160,7 @@ export interface IArrayUtils {
   getPage<T>(items: T[], pageNumber: number, pageSize: number)
 }
 
+/** import {utils} from "armstrong-react" */
 export interface IUtils {
   /** object utilities */
   object: IObjectUtils
@@ -163,6 +168,7 @@ export interface IUtils {
   array: IArrayUtils
 }
 
+/** import {calendarUtils} from "armstrong-react" */
 export interface ICalendarUtils {
   /** time utilities */
   time: ITimeUtils
