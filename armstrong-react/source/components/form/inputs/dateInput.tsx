@@ -37,6 +37,8 @@ export interface IDateInputProps extends IFormInputProps<DateInput> {
   dayLabel?: string;
   /** Control date part order (`day`, `month`, `year`) */
   datePartOrder?: DateParts[];
+  /** Autofocuses first input */
+  autoFocus?: boolean;
 }
 
 export interface IDateInputState {
@@ -128,7 +130,7 @@ export class DateInput extends React.Component<IDateInputProps, IDateInputState>
             {datePartOrder.map((key, idx) => {
               return (
                 <Col key={idx}>
-                  <select tabIndex={tabIndex} {...Form.Bind.selectNumeric(key)} disabled={disabled}>
+                  <select tabIndex={tabIndex} {...Form.Bind.selectNumeric(key)} disabled={disabled} autoFocus={this.props.autoFocus && idx === 0}>
                     {options[key]}
                   </select>
                 </Col>
