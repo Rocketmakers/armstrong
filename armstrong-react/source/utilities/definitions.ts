@@ -126,7 +126,7 @@ export interface IObjectUtils {
   /** Is this object a boolean */
   isObject(object: any): boolean
   /** Is this object equal to the other */
-  isEqual(object: any, other: any)
+  isEqual(object: any, other: any): boolean
   /** Clone the object */
   clone<T>(object: T): T
   /** Is this object null or undefined */

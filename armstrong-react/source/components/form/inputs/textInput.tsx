@@ -43,7 +43,7 @@ const TextInputRef: React.RefForwardingComponent<ITextInput, ITextInputProps> = 
         }
       },
     }
-  }, [input])
+  }, [])
 
   React.useImperativeHandle(ref, refCallback, [refCallback])
 
