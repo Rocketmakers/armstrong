@@ -53,20 +53,23 @@ class JsonDataBinder<T> implements IDataBinder<T> {
     return this.data;
   };
 
-  createChildBinder<X>(dataName: (builder: PropType<T>) => IObjectProp<X>): IChildDataBinder<X>
-  createChildBinder<X>(dataName: (builder: PropType<T>) => IArrayProp<X>): IChildDataBinder<X[]>
-  createChildBinder<TKey extends keyof T>(keyName: TKey): IChildDataBinder<T[TKey]>
-  createChildBinder(keyName: any): IChildDataBinder<any> {
-    return new JsonChildDataBinder(keyName, this)
+  createChildBinder<X>(dataName: (builder: PropType<T>, autoSync?: boolean) => IObjectProp<X>): IChildDataBinder<X>
+  createChildBinder<X>(dataName: (builder: PropType<T>, autoSync?: boolean) => IArrayProp<X>): IChildDataBinder<X[]>
+  createChildBinder<TKey extends keyof T>(keyName: TKey, autoSync?: boolean): IChildDataBinder<T[TKey]>
+  createChildBinder(keyName: any, autoSync?: boolean): IChildDataBinder<any> {
+    return new JsonChildDataBinder(keyName, this, autoSync)
   }
 }
 
 class JsonChildDataBinder<T> extends JsonDataBinder<T> implements IChildDataBinder<T> {
-  constructor(private parentKey: any, private parentDataBinder: IDataBinder<any>) {
-    super(FormDataClone.custom(parentDataBinder.getKeyValue(parentKey)))
+  constructor(private parentKey: any, private parentDataBinder: IDataBinder<any>, private autoSync?: boolean) {
+    super(autoSync ? parentDataBinder.getKeyValue(parentKey) : FormDataClone.custom(parentDataBinder.getKeyValue(parentKey)))
   }
 
   sync = () => {
+    if (this.autoSync) {
+      return
+    }
     this.parentDataBinder.setKeyValue(this.parentKey, FormDataClone.custom(this.toJson()))
   }
 }

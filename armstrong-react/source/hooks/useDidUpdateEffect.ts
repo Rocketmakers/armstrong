@@ -4,10 +4,10 @@ export function useDidUpdateEffect(fn: React.EffectCallback, deps?: React.Depend
   const didMountRef = React.useRef(false);
 
   React.useEffect(() => {
-    if (didMountRef.current) {
-      fn();
-    } else {
+    if (!didMountRef.current) {
       didMountRef.current = true;
+      return
     }
+    return fn();
   }, deps);
 }

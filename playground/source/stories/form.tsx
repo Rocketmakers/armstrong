@@ -128,6 +128,7 @@ function PersonForm() {
 
 function PersonFormFields(props: IUseFormProps<IPersonData>) {
   const { bind, dataBinder: binder } = props
+
   return (
     <>
       <TextInput placeholder="firstName" {...bind.text("firstName")} />
