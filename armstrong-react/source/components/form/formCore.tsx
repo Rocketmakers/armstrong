@@ -90,8 +90,8 @@ export interface IDataBinder<T> {
   /** Gets the inner data as the native object */
   toJson(): T;
 
-  createChildBinder<X>(dataName: (builder: PropType<T>, autoSync?: boolean) => IObjectProp<X>): IChildDataBinder<X>
-  createChildBinder<X>(dataName: (builder: PropType<T>, autoSync?: boolean) => IArrayProp<X>): IChildDataBinder<X[]>
+  createChildBinder<X>(dataName: (builder: PropType<T>) => IObjectProp<X>, autoSync?: boolean): IChildDataBinder<X>
+  createChildBinder<X>(dataName: (builder: PropType<T>) => IArrayProp<X>, autoSync?: boolean): IChildDataBinder<X[]>
   createChildBinder<TKey extends keyof T>(keyName: TKey, autoSync?: boolean): IChildDataBinder<T[TKey]>
 }
 
