@@ -74,7 +74,7 @@ function DialogStackRef(props: {}, ref: React.Ref<IDialogStackRef>) {
   return (
     <>
       {dialogContent.map((dc, idx) => (
-        <Dialog key={idx} layerClass={dc.layerClass} width={dc.width} height={dc.height} className={dc.className} isOpen={true} onClose={dc.close} title={dc.title} closeOnBackgroundClick={!!dc.allowCloseOnBackgroundClick}>
+        <Dialog key={idx} layerClass={dc.layerClass} width={dc.width} height={dc.height} className={dc.className} isOpen={true} onClose={dc.close} title={dc.title} closeOnBackgroundClick={!!dc.allowCloseOnBackgroundClick} headerTagName={dc.headerTagName}>
           {dc.body}
         </Dialog>
       ))}

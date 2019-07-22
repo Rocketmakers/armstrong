@@ -57,6 +57,15 @@ storiesOf("Dialog", Dialog)
       </DialogProvider>
     )
   })
+  .add("Hook Dialog With custom title tag", () => {
+    const { open, portal } = useDialog(HookDialog, { title: "It is me. The dialog", headerTagName: "h1" })
+    return (
+      <>
+        <Button onClick={() => open()}>Open Hook With H1 custom title tag</Button>
+        {portal}
+      </>
+    )
+  })
 
 
 const PromiseDialog: React.FC<{}> = p => {
