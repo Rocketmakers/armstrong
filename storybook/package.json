@@ -6,8 +6,7 @@
   "scripts": {
     "postinstall": "rm -r src/_symlink && node symlink.js && mv _symlink src/",
     "start": "start-storybook -p 6006",
-    "build-storybook": "build-storybook",
-    "postinstall": "node symlink.js"
+    "build-storybook": "build-storybook"
   },
   "keywords": [],
   "author": "",
