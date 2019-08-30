@@ -1,10 +1,7 @@
 import * as React from "react"
 
 import { storiesOf } from '@storybook/react';
-import { action } from '@storybook/addon-actions';
-import { withInfo } from "@storybook/addon-info";
-import { Button } from '../_symlink/components/interaction/button';
-import { Icon, Col, Grid, Row } from "../_symlink";
+import { Col, Grid, Row } from "../_symlink";
 
 import "../theme/theme.scss";
 
