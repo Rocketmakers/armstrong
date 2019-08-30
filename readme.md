@@ -3,8 +3,12 @@
 </p>
 
 # armstrong-react
-
 Armstrong React - [Rocketmakers](http://www.rocketmakers.com/) React component library.
+
+## 5.0 Breaking changes
+
+Coming soon!
+
 
 ## 2.0 Breaking changes
 Armstrong 2.0 is a performance related upgrade which cleans up a lot of things that I've been meaning to
@@ -26,15 +30,3 @@ After ``` @import "~armstrong-react/dist/core";```
 If you want to use an icon on any element, your component must import ```Icon``` and you then use ```Icon.icomoon.rocket``` for example rather than the previous ```Button.icomoon.rocket```.
 
 
-### Workbench
-
-It's now mega easy to work on armstrong. Literally clone the repo and run
-
-```
-yarn
-yarn start
-```
-
-And you're cookin! All armstrong and workbench files will be watched and recompiled on the fly.
-Because extract text plugin is now so fast, it is used by default, even in dev! This means you get
-rapid CSS injection when working with browsersync. If you don't know what this means, don't worry. It basically works out as everything being faster.

@@ -1,7 +1,7 @@
 import * as React from "react"
 
 import { storiesOf } from '@storybook/react';
-import { Col, Grid, Row } from "../_symlink";
+import { Grid, Row, Col } from "../_symlink";
 
 import "../theme/theme.scss";
 

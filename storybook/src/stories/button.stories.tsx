@@ -3,8 +3,7 @@ import * as React from "react"
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import centered from '@storybook/addon-centered/react';
-import { Button } from '../_symlink/components/interaction/button';
-import { Icon } from "../_symlink";
+import { Button, Icon } from "../_symlink";
 
 import "../theme/theme.scss";
 
