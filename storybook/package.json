@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
+    "build-storybook": "build-storybook",
+    "postinstall": "rm -r src/_symlink && node symlink.js && mv _symlink src"
   },
   "keywords": [],
   "author": "",
