@@ -1,7 +1,8 @@
 import { configure, addDecorator } from '@storybook/react';
 import { withInfo } from '@storybook/addon-info';
+import { centered } from '@storybook/addon-centered/react';
 
-addDecorator(withInfo({ inline: true }));
+addDecorator(withInfo({ inline: false }));
 
 const req = require.context("../src/stories", true, /\.stories\.ts(x)?$/);
 
