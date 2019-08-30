@@ -4,3 +4,4 @@ lib/
 out/
 *.log
 .vscode
+_symlink
