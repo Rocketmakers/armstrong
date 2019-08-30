@@ -6,15 +6,15 @@
   "style": "./dist/style.scss",
   "typings": "./dist/index.d.ts",
   "scripts": {
-    "test": "yarn build-ts && mocha --reporter spec",
+    "test": "npm run build-ts && mocha --reporter spec",
     "build-ts": "tsc --pretty -p source -d",
     "build-scss": "node sass_concat.js",
-    "build": "yarn run build-ts && yarn run build-scss",
+    "build": "npm run build-ts && npm run build-scss",
     "watch-scss": "node sass_copy.js",
     "watch-ts": "tsc -p source -d -w",
-    "watch": "parallelshell -v \"yarn run watch-ts\" \"yarn run watch-scss\"",
+    "watch": "parallelshell -v \"npm run watch-ts\" \"npm run watch-scss\"",
     "lint": "tslint -c tslint.json 'source/**/*.ts{,x}'",
-    "prepublish": "yarn build"
+    "prepublishOnly": "npm run build"
   },
   "repository": {
     "type": "git",
