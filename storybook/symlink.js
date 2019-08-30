@@ -2,7 +2,7 @@ var fs = require("fs")
 var path = require("path")
 
 const fromPath = path.resolve("../armstrong-react/source")
-const toPath = path.resolve("./_symlink")
+const toPath = path.resolve("./src/_symlink")
 
 try {
   console.log("Trying to unlink path")

@@ -7,7 +7,7 @@ import "../theme/theme.scss";
 
 storiesOf('Grid', module)
   .add('with 3 columns', () =>
-    <Grid debugMode={true}>
+    <Grid debugMode={true} fillContainer={true}>
       <Row>
         <Col>1</Col>
         <Col>2</Col>
