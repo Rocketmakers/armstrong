@@ -1,0 +1,27 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "target": "es5",
+    "module": "commonjs",
+    "isolatedModules": false,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "jsx": "react",
+    "declaration": false,
+    "noImplicitAny": false,
+    "removeComments": false,
+    "sourceMap": false,
+    "noLib": false,
+    "preserveConstEnums": false,
+    "suppressImplicitAnyIndexErrors": true,
+    "outDir": "../dist",
+    "importHelpers": false,
+    "noEmit": false,
+    "noEmitHelpers": false,
+    "moduleResolution": "node",
+    "lib": [
+      "es2015",
+      "dom"
+    ]
+  }
+}

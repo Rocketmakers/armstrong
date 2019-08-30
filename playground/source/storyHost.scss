@@ -1,0 +1,46 @@
+header{
+  box-sizing: border-box;
+  background: #245630;
+  color: white;
+  height: 100px;
+  padding: 20px;
+  img{
+    height: 100%;
+  }
+}
+
+main{
+  display: flex;
+  height: calc(100vh - 100px);
+  background: #F6F6F6;
+  .sidebar{
+    flex: none;
+    width: 300px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    overflow: auto;
+
+    .story{
+      .story-name{
+        padding: 20px;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        background: white;
+      }
+      ul{
+        margin: 0;
+        padding: 0;
+        border-top: 1px solid rgba(255,255,255, 1);
+        list-style: none;
+        li{
+          margin: 0;
+          padding: 10px 20px;
+        }
+      }
+    }
+  }
+  .content{
+    flex: 1;
+    padding: 20px;
+    position: relative;
+    overflow-y: auto;
+  }
+}

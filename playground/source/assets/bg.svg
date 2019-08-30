@@ -1,0 +1,18 @@
+<svg width="517" height="179" viewBox="0 0 517 179" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:figma="http://www.figma.com/figma/ns">
+<title>Rectangle</title>
+<desc>Created using Figma</desc>
+<g id="Canvas" transform="translate(315 129)" figma:type="canvas">
+<g id="Rectangle" style="mix-blend-mode:normal;" figma:type="rounded-rectangle">
+<mask id="mask0_outline_ins">
+<use xlink:href="#path0_fill" fill="white" transform="translate(-315 -129)"/>
+</mask>
+<g mask="url(#mask0_outline_ins)">
+<use xlink:href="#path1_stroke_2x" transform="translate(-315 -129)" fill="#999999" style="mix-blend-mode:normal;"/>
+</g>
+</g>
+</g>
+<defs>
+<path id="path0_fill" d="M 0 0L 517 0L 517 179L 0 179L 0 0Z"/>
+<path id="path1_stroke_2x" d="M 0 0L 0 -2L -2 -2L -2 0L 0 0ZM 517 0L 519 0L 519 -2L 517 -2L 517 0ZM 517 179L 517 181L 519 181L 519 179L 517 179ZM 0 179L -2 179L -2 181L 0 181L 0 179ZM 0 2L 517 2L 517 -2L 0 -2L 0 2ZM 515 0L 515 179L 519 179L 519 0L 515 0ZM 517 177L 0 177L 0 181L 517 181L 517 177ZM 2 179L 2 0L -2 0L -2 179L 2 179Z"/>
+</defs>
+</svg>

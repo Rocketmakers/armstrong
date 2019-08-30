@@ -1,0 +1,33 @@
+module.exports = ({ config }) => {
+  config.module.rules.push({
+    test: /\.(ts|tsx)$/,
+    use: [
+      {
+        loader: require.resolve('ts-loader'),
+      },
+      // Optional
+      {
+        loader: require.resolve('react-docgen-typescript-loader'),
+        options: {
+          propFilter: prop => {
+            if (prop.parent) {
+              return !prop.parent.fileName.includes('node_modules')
+            }
+            return true
+          }
+        }
+      },
+    ],
+  });
+  config.resolve.extensions.push('.ts', '.tsx');
+
+  config.module.rules.push({
+    test: /\.scss$/,
+    use: [
+      'style-loader',
+      'css-loader',
+      'sass-loader'
+    ]
+  })
+  return config;
+};

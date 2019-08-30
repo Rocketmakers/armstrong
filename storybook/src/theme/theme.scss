@@ -1,0 +1,49 @@
+@import "shared/fonts";
+@import "shared/icomoon";
+//@import "fonts";
+@import "../_symlink/imports";
+@import "../_symlink/core";
+@import "../_symlink/form";
+@import "../_symlink/navigation";
+@import "../_symlink/animation";
+
+body,
+main,
+html,
+#host {
+  height: 100%;
+  font-size: 16px;
+}
+
+.header {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 2;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+
+  + div {
+    padding-top: 60px;
+  }
+}
+
+.bg-gray-semi {
+  background-color: transparentize($color: $gray-dark, $amount: 0.2);
+}
+
+.tab-control {
+  .tab-item-header {
+    background-color: red;
+    margin-right: 10px;
+    &.selected {
+      background-color: green;
+    }
+  }
+}
+
+.animatable {
+  display: inline-block;
+  background: $brand-primary;
+  padding: 20px;
+  color: white;
+}
