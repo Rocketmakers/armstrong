@@ -12,6 +12,6 @@ end
 system_req 'nodenv update-version-defs'
 system_req 'nodenv install || :'
 Dir.chdir "armstrong-react" do
-  system_req 'yarn'
-  system_req 'yarn run build'
+  system_req 'npm i'
+  system_req 'npm run build'
 end
