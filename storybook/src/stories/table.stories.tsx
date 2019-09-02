@@ -1,7 +1,6 @@
 import * as React from "react";
-
 import { storiesOf } from "@storybook/react";
-import { Table, usePaging, utils, useDataTable } from "../_symlink";
+import { Table, useDataTable } from "../_symlink";
 
 import "../theme/theme.scss";
 
@@ -32,7 +31,7 @@ storiesOf("Table", module).add("headers", () => (
 ));
 
 const DataTableWithHooksPagination = () => {
-  const { data, onChangeItemsPerPage } = useDataTable<IFauxData>({
+  const { data, setPage, setItemsPerPage } = useDataTable<IFauxData>({
     data: fauxTableData,
     itemsPerPage: 5,
   });
@@ -41,19 +40,26 @@ const DataTableWithHooksPagination = () => {
     <Table
       data={data}
       headers={fauxTableHeaders}
-      onChangeItemPerPage={onChangeItemsPerPage}
-      subTitle="My Sortable Data Table"
+      onChangeItemPerPage={setItemsPerPage}
+      onChangePage={setPage}
+      subTitle="My Paginated Data Table"
       title="My Table"
     />
   );
 };
 
-storiesOf("Table", module).add("items per page", () => (
+storiesOf("Table", module).add("paginated", () => (
   <DataTableWithHooksPagination />
 ));
 
 const DataTableWithHooksSortableColumns = () => {
-  const { data, sortDataBy, onChangeItemsPerPage } = useDataTable<IFauxData>({
+  const {
+    data,
+    sortDataBy,
+    setPage,
+    setItemsPerPage,
+    totalPages,
+  } = useDataTable<IFauxData>({
     data: fauxTableData,
     itemsPerPage: 5,
   });
@@ -63,7 +69,9 @@ const DataTableWithHooksSortableColumns = () => {
       data={data}
       headers={fauxTableHeaders}
       sortBy={sortDataBy}
-      onChangeItemPerPage={onChangeItemsPerPage}
+      numberOfPages={totalPages}
+      onChangeItemPerPage={setItemsPerPage}
+      onChangePage={setPage}
       subTitle="My Sortable Data Table"
       title="My Table"
     />

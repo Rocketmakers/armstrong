@@ -12,7 +12,7 @@ export const TableItem: React.FunctionComponent<ITableItem> = ({
   return (
     <tr>
       {Object.keys(data).map(col => {
-        return <td>{data[col]}</td>;
+        return <td key={data[col]}>{data[col]}</td>;
       })}
     </tr>
   );

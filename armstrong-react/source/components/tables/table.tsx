@@ -1,5 +1,6 @@
 import * as React from "react";
 import * as _ from "underscore";
+import { Repeater } from "../layout/repeater";
 import { TableHeading, TSortDirection } from "./tableHeader";
 import { TableItem } from "./tableItem";
 import { TableItemDropdown } from "./tableItemDropdown";
@@ -10,7 +11,10 @@ export interface ITableProps {
   headers?: string[]; // this overides the data column name
   onChangeItemPerPage?: (items: number) => void;
   hideHeaders?: boolean;
+  numberOfPages?: number;
+  onChangePage?: (pageNo: number) => void;
   sortBy?: (colName: string, direction: TSortDirection) => void;
+
   subTitle?: string;
   title?: string;
 }
@@ -20,6 +24,8 @@ export const Table: React.FunctionComponent<ITableProps> = ({
   headers,
   onChangeItemPerPage,
   hideHeaders,
+  numberOfPages,
+  onChangePage,
   sortBy,
   subTitle,
   title,
@@ -53,7 +59,14 @@ export const Table: React.FunctionComponent<ITableProps> = ({
           })}
         </tbody>
       </table>
-
+      {onChangePage && numberOfPages && (
+        <Repeater
+          count={numberOfPages}
+          render={r => (
+            <button onClick={() => onChangePage(r.index)}>{r.index}</button>
+          )}
+        />
+      )}
       <TableItemDropdown
         values={[5, 10, 20, 0]}
         onSelect={onChangeItemPerPage}
