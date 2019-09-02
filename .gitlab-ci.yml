@@ -16,10 +16,10 @@ storybook:
   stage: storybook
   tags:
     - linux
-  script:
-    - cd storybook
-    - npm i
-    - npm run build
+  script: "./build-storybook.sh"
+  artifacts:
+    paths:
+      - public
 
 deploy:
   stage: deploy
