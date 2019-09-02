@@ -14,6 +14,8 @@ build:
 
 storybook:
   stage: storybook
+  tags:
+    - linux
   script:
     - cd storybook
     - npm i
