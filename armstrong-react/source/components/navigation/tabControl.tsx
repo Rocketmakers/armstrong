@@ -4,15 +4,15 @@ import { utils } from "../../utilities/utils";
 import { Icon } from "./../display/icon";
 
 export interface ITabControlProps extends React.HTMLAttributes<HTMLDivElement> {
-  /** (number) The index of the tab selected when the control renders. Defaults to 0 */
+  /** The index of the tab selected when the control renders. Defaults to 0 */
   defaultSelectedIndex?: number;
-  /** (number) The index of the tab selected. Use this if you want a stateless component */
+  /** The index of the tab selected. Use this if you want a stateless component */
   forceSelectedIndex?: number;
-  /** (TabItem[]) The tab items. Controls the header and the content */
+  /** The tab items. Controls the header and the content */
   children?: React.ReactElement<ITabItemProps> | Array<React.ReactElement<ITabItemProps>>;
-  /** ((index: number) => void) Fires when the tab is changed by the user */
+  /** Fires when the tab is changed by the user */
   onTabChanged?: (index: number) => void;
-  /** ('left' | 'right') Wether to align the tabs to the right or left of the header. Defaults to left */
+  /** Wether to align the tabs to the right or left of the header. Defaults to left */
   tabAlignment?: "left" | "right";
 }
 

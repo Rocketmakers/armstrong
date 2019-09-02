@@ -5,7 +5,6 @@ module.exports = ({ config }) => {
       {
         loader: require.resolve('ts-loader'),
       },
-      // Optional
       {
         loader: require.resolve('react-docgen-typescript-loader'),
         options: {
@@ -16,7 +15,7 @@ module.exports = ({ config }) => {
             return true
           }
         }
-      },
+      }
     ],
   });
   config.resolve.extensions.push('.ts', '.tsx');
