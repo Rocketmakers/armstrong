@@ -1,7 +1,10 @@
+variables:
+  DOCKER_DRIVER: overlay2
+
 stages:
   - build
   - deploy
-  - storybook
+  - pages
 
 build:
   stage: build
@@ -12,10 +15,11 @@ build:
     paths:
       - "armstrong-react/dist"
 
-storybook:
-  stage: storybook
+pages:
+  image: node:10.15.3-alpine
+  stage: pages
   tags:
-    - linux
+    - docker
   script: "./build-storybook.sh"
   artifacts:
     paths:
