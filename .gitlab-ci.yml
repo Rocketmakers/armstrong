@@ -12,6 +12,13 @@ build:
     paths:
       - "armstrong-react/dist"
 
+storybook:
+  stage: storybook
+  script:
+    - cd storybook
+    - npm i
+    - npm run build
+
 deploy:
   stage: deploy
   script: "./deploy.sh"
