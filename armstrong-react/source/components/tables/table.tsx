@@ -6,6 +6,8 @@ import { TableItem } from "./tableItem";
 import { TableItemDropdown } from "./tableItemDropdown";
 import { TableTitle } from "./tableTitle";
 
+import "./styles.scss";
+
 export interface ITableProps {
   data: any;
   headers?: string[]; // this overides the data column name
@@ -41,11 +43,11 @@ export const Table: React.FunctionComponent<ITableProps> = ({
   }, []);
 
   return (
-    <div>
+    <div className="table-container">
       <TableTitle title={title} subTitle={subTitle} />
-      <table>
+      <table className="table">
         {!hideHeaders ? (
-          <thead>
+          <thead className="table-header">
             <tr>
               {tableHeaders.map(header => (
                 <TableHeading key={header} name={header} sortBy={sortBy} />
@@ -53,24 +55,31 @@ export const Table: React.FunctionComponent<ITableProps> = ({
             </tr>
           </thead>
         ) : null}
-        <tbody>
+        <tbody className="table-body">
           {data.map((rows, idx: number) => {
             return <TableItem key={idx} data={rows} />;
           })}
         </tbody>
       </table>
+
       {onChangePage && numberOfPages && (
-        <Repeater
-          count={numberOfPages}
-          render={r => (
-            <button onClick={() => onChangePage(r.index)}>{r.index}</button>
-          )}
-        />
+        <div className="table-pagination">
+          <div style={{ flex: 1 }}></div>
+          <div className="pagination">
+            <Repeater
+              count={numberOfPages}
+              render={r => (
+                <button onClick={() => onChangePage(r.index)}>{r.index}</button>
+              )}
+            />
+          </div>
+
+          <TableItemDropdown
+            values={[5, 10, 20, 0]}
+            onSelect={onChangeItemPerPage}
+          />
+        </div>
       )}
-      <TableItemDropdown
-        values={[5, 10, 20, 0]}
-        onSelect={onChangeItemPerPage}
-      />
     </div>
   );
 };

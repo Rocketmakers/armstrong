@@ -82,15 +82,18 @@ export function useDataTable<T>(settings: IUseDataTableSettings<T>) {
 
   const setItemsPerPage = React.useCallback(
     (itemsPerPage: number) => {
+      const sItemsPerPage =
+        itemsPerPage !== 0 ? itemsPerPage : settings.data.length;
       const { totalPages } = calculatePagination(
         settings.data.length,
-        itemsPerPage,
+        sItemsPerPage,
         state.currentPage,
       );
+
       setState(oldState => ({
         ...oldState,
-        data: settings.data.slice(0, itemsPerPage),
-        itemsPerPage,
+        data: settings.data.slice(0, sItemsPerPage),
+        itemsPerPage: sItemsPerPage,
         totalPages,
         currentPage: 1,
       }));
@@ -113,8 +116,6 @@ export function useDataTable<T>(settings: IUseDataTableSettings<T>) {
     },
     [state],
   );
-
-  const filterDataBy = React.useCallback((query: string) => {}, [settings]);
 
   return {
     currentPage: state.currentPage,

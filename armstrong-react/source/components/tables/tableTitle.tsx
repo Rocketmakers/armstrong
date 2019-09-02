@@ -1,5 +1,6 @@
 import * as React from "react";
 
+import "./styles.scss";
 export interface ITableTitleProps {
   title?: string;
   subTitle?: string;
@@ -10,9 +11,9 @@ export const TableTitle: React.FunctionComponent<ITableTitleProps> = ({
   title,
 }) => {
   return (
-    <div>
-      {title && <h3>{title}</h3>}
-      {subTitle && <h5>{subTitle}</h5>}
+    <div className="table-titles">
+      {title && <div className="title">{title}</div>}
+      {subTitle && <div className="sub-title">{subTitle}</div>}
     </div>
   );
 };
