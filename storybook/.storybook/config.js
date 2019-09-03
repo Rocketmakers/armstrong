@@ -5,13 +5,14 @@ import { Wrapper } from "../src/components/wrapper"
 
 import React from "react"
 
-addDecorator(withInfo({ inline: true }));
+addDecorator(withInfo({ inline: true, source: false }));
 addDecorator((Story) => <Wrapper><Story /></Wrapper>)
 
 addParameters({
   options: {
     theme: themes.light,
-  },
+    panelPosition: 'right'
+  }
 });
 
 const req = require.context("../src/stories", true, /\.stories\.ts(x)?$/);

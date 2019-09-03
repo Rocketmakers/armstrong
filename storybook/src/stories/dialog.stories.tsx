@@ -4,7 +4,6 @@ import { storiesOf } from '@storybook/react';
 import { Grid, Row, Col, Dialog, TextInput, Button, useDialog } from "../_symlink";
 
 import "../theme/theme.scss";
-import { bind } from "q";
 
 const data = { name: "keith" }
 
@@ -22,7 +21,7 @@ storiesOf('Dialog', module)
     )
   })
   .add('Hook dialog [BROKEN]', () => {
-    const { open, portal } = useDialog(() => <div>Oh shit, waddup?!</div>, { hostElement: "body" })
+    const { open, portal } = useDialog(SampleDialogContent, { hostElement: "body" })
     return (
       <>
         <Button onClick={() => open()}>Open Hook</Button>
