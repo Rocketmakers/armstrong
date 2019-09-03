@@ -39,8 +39,10 @@
   }
 }
 .table-pagination {
+  padding: 10px;
   display: flex;
   flex: 1;
+  flex-direction: column;
   align-items: center;
   .pagination {
     justify-self: center;
@@ -49,12 +51,14 @@
   .table-item-dropdown {
     display: flex;
     flex: 1;
+    min-width: 100px;
     flex-direction: row;
     align-items: center;
     justify-content: flex-end;
     select {
       margin-left: 8px;
-      flex: 0.1;
+      flex: 1;
+      min-width: 100px;
       padding: 8px;
       border: none;
     }

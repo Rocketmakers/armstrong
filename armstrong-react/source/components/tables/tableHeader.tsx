@@ -3,15 +3,17 @@ import { Icon } from "../display/icon";
 
 export type TSortDirection = "asc" | "desc";
 
-export interface ITableHeading {
-  name: string;
-  sortBy?: (header: string, direction: TSortDirection) => void;
+export interface ITableHeading<T> {
+  name: keyof T;
+  cell: (name: keyof T) => React.ReactNode;
+  sortBy?: (header: keyof T, direction: TSortDirection) => void;
 }
 
-export const TableHeading: React.FunctionComponent<ITableHeading> = ({
+export function TableHeading<T>({
   name,
+  cell,
   sortBy,
-}) => {
+}: React.PropsWithChildren<ITableHeading<T>>) {
   const [sortByState, setSortByState] = React.useState<TSortDirection>("asc");
 
   const handleSortBy = () => {
@@ -21,7 +23,7 @@ export const TableHeading: React.FunctionComponent<ITableHeading> = ({
 
   return (
     <th onClick={handleSortBy}>
-      {name}
+      {cell ? cell(name) : name}
       {sortBy && (
         <Icon
           icon={
@@ -33,4 +35,4 @@ export const TableHeading: React.FunctionComponent<ITableHeading> = ({
       )}
     </th>
   );
-};
+}

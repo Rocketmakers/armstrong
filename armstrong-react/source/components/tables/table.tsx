@@ -8,22 +8,35 @@ import { TableTitle } from "./tableTitle";
 
 import "./styles.scss";
 
-export interface ITableProps {
-  data: any;
-  headers?: string[]; // this overides the data column name
+export interface ITableProps<T> {
+  /** (React.ReactNode) Specify the formatting of the individual column */
+  columnFormatter?: { [P in keyof T]?: (value: T[P]) => React.ReactNode };
+  /** (T[]) The data to display */
+  data?: T[];
+  /** (React.ReactNode) Specify the formatting of the header column */
+  headerFormatter: {
+    [P in keyof T]?: (name: keyof T) => React.ReactNode;
+  };
+  /** ((items:number) => void) Event to fire when user changes the max number of items per page*/
   onChangeItemPerPage?: (items: number) => void;
+  /** (boolean) Setting this will either display or hide the headers */
   hideHeaders?: boolean;
+  /** (number) The number of pages of data */
   numberOfPages?: number;
-  onChangePage?: (pageNo: number) => void;
-  sortBy?: (colName: string, direction: TSortDirection) => void;
-
+  /** ((pageNumber:number) => void) Event to fire when user changes the page number */
+  onChangePage?: (pageNumber: number) => void;
+  /** ((key:keyof T, direction: TSortDirection) => void) Event to fire when user sorts the columns */
+  sortBy?: (key: keyof T, direction: TSortDirection) => void;
+  /** (string) The sub or secondary title of the table */
   subTitle?: string;
+  /** (string) The title of the table */
   title?: string;
 }
 
-export const Table: React.FunctionComponent<ITableProps> = ({
+export function Table<T = any>({
   data,
-  headers,
+  columnFormatter,
+  headerFormatter,
   onChangeItemPerPage,
   hideHeaders,
   numberOfPages,
@@ -31,17 +44,11 @@ export const Table: React.FunctionComponent<ITableProps> = ({
   sortBy,
   subTitle,
   title,
-}) => {
-  const [tableHeaders, setTableHeaders] = React.useState<string[]>([]);
-
-  React.useEffect(() => {
-    if (headers) {
-      setTableHeaders(headers);
-    } else {
-      setTableHeaders(Object.keys(data[0]).map(header => header));
-    }
-  }, []);
-
+}: React.PropsWithChildren<ITableProps<T>>) {
+  const columnKeys = React.useMemo(
+    () => Object.keys(headerFormatter) as Array<keyof T>,
+    [headerFormatter],
+  );
   return (
     <div className="table-container">
       <TableTitle title={title} subTitle={subTitle} />
@@ -49,22 +56,35 @@ export const Table: React.FunctionComponent<ITableProps> = ({
         {!hideHeaders ? (
           <thead className="table-header">
             <tr>
-              {tableHeaders.map(header => (
-                <TableHeading key={header} name={header} sortBy={sortBy} />
-              ))}
+              {headerFormatter &&
+                columnKeys.map((header, i) => (
+                  <TableHeading<T>
+                    key={i}
+                    name={header}
+                    cell={headerFormatter[header]}
+                    sortBy={sortBy}
+                  />
+                ))}
             </tr>
           </thead>
         ) : null}
         <tbody className="table-body">
           {data.map((rows, idx: number) => {
-            return <TableItem key={idx} data={rows} />;
+            return (
+              <TableItem
+                key={idx}
+                data={rows}
+                columnKeys={columnKeys}
+                columnFormatter={columnFormatter}
+              />
+            );
           })}
         </tbody>
       </table>
 
       {onChangePage && numberOfPages && (
         <div className="table-pagination">
-          <div style={{ flex: 1 }}></div>
+          <div style={{ flex: 0.5 }}></div>
           <div className="pagination">
             <Repeater
               count={numberOfPages}
@@ -82,4 +102,4 @@ export const Table: React.FunctionComponent<ITableProps> = ({
       )}
     </div>
   );
-};
+}
