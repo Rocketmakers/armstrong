@@ -5,8 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "start-storybook -p 6006",
-    "build": "build-storybook -o ../public --quiet",
-    "postinstall": "node symlink.js"
+    "build": "build-storybook -o ../public --quiet"
   },
   "keywords": [],
   "author": "",
@@ -17,6 +16,9 @@
     "react-dom": "^16.9.0",
     "react-hooks-testing-library": "^0.6.0",
     "underscore": "^1.9.1"
+  },
+  "config": {
+    "unsafe-perm": true
   },
   "devDependencies": {
     "@babel/core": "^7.5.5",
