@@ -1,11 +1,22 @@
+import { configure, addDecorator, addParameters } from "@storybook/react";
+import { withInfo } from "@storybook/addon-info";
+import { themes } from "@storybook/theming";
+import { Wrapper } from "../src/components/wrapper";
+
 import React from "react";
 
-import { configure, addDecorator } from "@storybook/react";
-import { withInfo } from "@storybook/addon-info";
-import { centered } from "@storybook/addon-centered/react";
+addDecorator(withInfo({ inline: true }));
+addDecorator(Story => (
+  <Wrapper>
+    <Story />
+  </Wrapper>
+));
 
-addDecorator(withInfo({ inline: false }));
-addDecorator(Story => <Story />);
+addParameters({
+  options: {
+    theme: themes.light,
+  },
+});
 
 const req = require.context("../src/stories", true, /\.stories\.ts(x)?$/);
 

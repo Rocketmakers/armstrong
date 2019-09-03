@@ -3,25 +3,25 @@ import * as ReactDOM from "react-dom";
 import { Icon } from "./icon";
 
 export interface IDialogProps extends React.HTMLAttributes<HTMLElement> {
-  /** (string) The title of the dialog */
+  /** The title of the dialog */
   title?: string;
-  /** (React.ReactHTML) The element to use to wrap the title of the dialog */
+  /** The element to use to wrap the title of the dialog */
   headerTagName?: keyof React.ReactHTML;
-  /** (string) default: '#host' - The selector of the element you'd like to inject the dialog into */
+  /** default: '#host' - The selector of the element you'd like to inject the dialog into */
   bodySelector?: string;
-  /** (string) An additional class for the dialog layer, normally used for forcing higher z-index values  */
+  /** An additional class for the dialog layer, normally used for forcing higher z-index values  */
   layerClass?: string;
-  /** (boolean) Setting this to true or false will open or close the dialog */
+  /** Setting this to true or false will open or close the dialog */
   isOpen: boolean;
-  /** (number) The width of the dialog */
+  /** The width of the dialog */
   width?: number
-  /** (number) The height of the dialog */
+  /** The height of the dialog */
   height?: number
-  /** (()=> void) Event to fire when the dialog is closed */
+  /** Event to fire when the dialog is closed */
   onClose: () => void;
-  /** (()=> void) Event to fire when the x button is clicked. Use this to confirm (double dialogs) */
+  /** Event to fire when the x button is clicked. Use this to confirm (double dialogs) */
   onXClicked?: () => void;
-  /** (boolean) Controls wether the dialog closes when the background overlay is clicked */
+  /**  Controls wether the dialog closes when the background overlay is clicked */
   closeOnBackgroundClick?: boolean;
 }
 
@@ -105,7 +105,7 @@ export const DialogPresenter: React.FC<IDialogPresenterProps> = ({ title, header
       }
       {title &&
         <div className="dialog-header">
-          {headerTagName && React.createElement(headerTagName, { children:  title }) }
+          {headerTagName && React.createElement(headerTagName, { children: title })}
           {!headerTagName && title}
           <div className="dialog-close-button" onClick={onClose}>
             <Icon icon={Icon.Icomoon.cross2} />

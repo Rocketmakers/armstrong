@@ -14,6 +14,7 @@ export interface IUseDataTableResult<T> {
 interface IUseDataTableState<T> {
   currentPage: number;
   data: T[];
+  error: any;
   itemsPerPage: number;
   sortParameters: { sortColumn: string; sortDirection: TSortDirection };
   totalItems: number;
@@ -30,6 +31,7 @@ export interface IUseDataTableSettings<T> {
 const initialState = <T>(): IUseDataTableState<T> => ({
   currentPage: undefined,
   data: [],
+  error: undefined,
   itemsPerPage: undefined,
   sortParameters: { sortColumn: "id", sortDirection: "desc" },
   totalItems: undefined,
@@ -42,10 +44,10 @@ export function useDataTable<T>(settings: IUseDataTableSettings<T>) {
   );
   const [storedData, setStoredData] = React.useState<T[]>([]);
 
-  const [isFetching, setIsFetching] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(false);
 
   const fetcher = React.useCallback(() => {
-    setIsFetching(true);
+    setIsLoading(true);
     settings
       .fetch()
       .then(v => {
@@ -68,11 +70,11 @@ export function useDataTable<T>(settings: IUseDataTableSettings<T>) {
           totalItems: items.length,
           itemsPerPage,
         }));
-        setIsFetching(false);
+        setIsLoading(false);
       })
       .catch(error => {
-        // setState({ ...state, error });
-        setIsFetching(false);
+        setState({ ...state, error });
+        setIsLoading(false);
       });
   }, [state]);
 
@@ -215,6 +217,7 @@ export function useDataTable<T>(settings: IUseDataTableSettings<T>) {
   return {
     currentPage: state.currentPage,
     data: state.data,
+    isLoading,
     setItemsPerPage,
     setPage,
     sortDataBy,

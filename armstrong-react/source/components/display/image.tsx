@@ -1,9 +1,11 @@
 import * as React from "react";
 import { ClassHelpers } from "../../utilities/classHelpers";
 
-export interface IImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
-  /** (boolean) Should the image be circular? */
+export interface IImageProps extends React.ImgHTMLAttributes<HTMLPictureElement> {
+  /** Should the image be circular? */
   rounded?: boolean;
+  /** WEBP source */
+  webpSrc?: string;
 }
 
 export function useRandomUserImageSrc(sampleUserSeed?: string) {
@@ -30,9 +32,12 @@ export function useDummyImageSrc(width: number, height: number) {
 }
 
 export function Image(props: IImageProps) {
-  const { className, rounded, ...attrs } = props
+  const { className, rounded, src, webpSrc, ...attrs } = props
   const classes = ClassHelpers.classNames(className, { rounded });
   return (
-    <img {...attrs} className={classes} />
+    <picture>
+      {webpSrc && <source srcSet={webpSrc} type="image/webp"></source>}
+      <img {...attrs} className={classes} src={src} />
+    </picture>
   )
 }

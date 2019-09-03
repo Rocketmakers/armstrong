@@ -2,17 +2,16 @@ import * as React from "react"
 
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
-import centered from '@storybook/addon-centered/react';
-import { Button } from '../_symlink/components/interaction/button';
-import { Icon } from "../_symlink";
+import { Button, Icon } from "../_symlink";
+
 
 import "../theme/theme.scss";
 
 storiesOf('Button', module)
-
-  .addDecorator(centered)
-  .add('with text', () => <Button onClick={action('clicked')}>Hello Button</Button>)
-  .add('with icon', () => (
+  .addParameters({ options: { showPanel: true } })
+  .add('Standard', () => <Button onClick={action('clicked')}>Hello Button</Button>)
+  .add('Themed with shadow', () => <Button className="bg-warning shadow" onClick={action('clicked')}>Hello Button</Button>)
+  .add('Left icon', () => (
     <Button leftIcon={Icon.Icomoon.rocket} onClick={action('clicked')}>
       Launch rocket
       </Button>

@@ -13,6 +13,12 @@ interface ITodos {
   completed: boolean;
 }
 
+function wait(ms: number) {
+  return new Promise(res => {
+    setTimeout(res, ms);
+  });
+}
+
 async function fetchData() {
   const res = await fetch(fauxDataUrl);
   return res.json();
@@ -20,7 +26,6 @@ async function fetchData() {
 
 async function loadData(): Promise<IUseDataTableResult<ITodos>> {
   const res = await fetch(fauxDataUrl);
-
   return {
     data: ((await res.json()) as unknown) as ITodos[],
   };
@@ -147,13 +152,19 @@ storiesOf("Table", module)
   .add(
     "paginated",
     () => {
-      const { data, setPage, setItemsPerPage, totalPages } = useDataTable<
-        ITodos
-      >({
+      const {
+        data,
+        isLoading,
+        setPage,
+        setItemsPerPage,
+        totalPages,
+      } = useDataTable<ITodos>({
         fetch: loadData,
         itemsPerPage: 5,
       });
-      return (
+      return isLoading ? (
+        <div>Loading</div>
+      ) : (
         <Table<ITodos>
           headerFormatter={{
             id: TableHeaderCell,
@@ -178,6 +189,7 @@ storiesOf("Table", module)
   .add("sortable columns", () => {
     const {
       data,
+      isLoading,
       sortDataBy,
       setPage,
       setItemsPerPage,
@@ -186,7 +198,9 @@ storiesOf("Table", module)
       fetch: loadData,
       itemsPerPage: 5,
     });
-    return (
+    return isLoading ? (
+      <div>Loading</div>
+    ) : (
       <Table<ITodos>
         headerFormatter={{
           id: TableHeaderCell,
