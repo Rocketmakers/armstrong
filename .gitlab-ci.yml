@@ -25,7 +25,9 @@ pages:
   tags:
     - docker
   script:
-    - "cd storybook"
+    - "cd armstrong-react"
+    - "npm i"
+    - "cd ../storybook"
     - "npm i"
     - "node ./symlink.js"
     - "npm run build"
