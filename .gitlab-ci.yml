@@ -7,10 +7,11 @@ stages:
   - pages
 
 build:
+  image: node:10.15.3-alpine
   stage: build
   script: "./build.sh"
   tags:
-    - linux
+    - docker
   artifacts:
     paths:
       - "armstrong-react/dist"
