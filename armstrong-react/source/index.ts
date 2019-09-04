@@ -45,6 +45,7 @@ export { ClassHelpers } from "./utilities/classHelpers"
 export { Icons } from "./utilities/icons"
 // Navigation
 export { BurgerMenu, IBurgerMenuProps, BurgerMenuItem, IBurgerMenuItemProps, IBurgerMenu } from "./components/navigation/burgerMenu"
+export { INewBurgerMenu, INewBurgerMenuProps, NewBurgerMenu } from "./components/navigation/newBurgerMenu"
 export { TabControl, TabItem, ITabItemProps, ITabControlProps } from "./components/navigation/tabControl"
 import * as ArmstrongConfig from "./config/config"
 export { ValidationLabel, ValidationWrapper } from "./components/form/validationWrapper"

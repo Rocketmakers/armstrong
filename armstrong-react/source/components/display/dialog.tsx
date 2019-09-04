@@ -134,12 +134,12 @@ export function useDialog(DialogLayerComponent: React.FC<IUseDialogProps>, setti
     const onClose = React.useCallback(async (reason: DialogLayerCloseReason) => {
       if (beforeDialogClose) {
         if (await beforeDialogClose(reason)) {
-          p.onClose()
+          p.removeFromDOM()
         }
         return
       }
-      p.onClose()
-    }, [p.onClose, beforeDialogClose])
+      p.removeFromDOM()
+    }, [p.removeFromDOM, beforeDialogClose])
     const onUserClose = React.useCallback(() => onClose("user"), [onClose])
     return (
       <DialogLayer {...rest} onClose={onClose}>
@@ -161,9 +161,13 @@ interface IPortalState {
 
 const defaultState: IPortalState = { open: false, portal: null }
 
-export function usePortal(PortalComponent: React.FC<IUseDialogProps>, settings?: IUsePortalSettings) {
+export interface IUsePortalProps {
+  removeFromDOM: () => void
+}
+
+export function usePortal(PortalComponent: React.FC<IUsePortalProps>, settings?: IUsePortalSettings) {
   const portal = React.useMemo(() => {
-    return ReactDOM.createPortal(<PortalComponent onClose={() => setState(defaultState)} />, document.querySelector(settings && settings.hostElement || "#host"))
+    return ReactDOM.createPortal(<PortalComponent removeFromDOM={() => setState(defaultState)} />, document.querySelector(settings && settings.hostElement || "#host"))
   }, [PortalComponent, settings && settings.hostElement])
 
   const open = React.useCallback(() => {
