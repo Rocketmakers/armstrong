@@ -7,10 +7,14 @@ stages:
   - pages
 
 build:
+  image: node:10.15.3-alpine
   stage: build
-  script: "./build.sh"
   tags:
-    - linux
+    - docker
+  script:
+    - "cd armstrong-react"
+    - "npm i"
+    - "npm run build"
   artifacts:
     paths:
       - "armstrong-react/dist"
@@ -20,28 +24,24 @@ pages:
   stage: pages
   tags:
     - docker
-  script: "./build-storybook.sh"
+  script:
+    - "cd armstrong-react"
+    - "npm i"
+    - "cd ../storybook"
+    - "npm i"
+    - "node ./symlink.js"
+    - "npm run build"
   artifacts:
     paths:
       - public
 
 deploy:
+  image: node:10.15.3-alpine
   stage: deploy
-  script: "./deploy.sh"
   tags:
-    - linux
+    - docker
   only:
     - master
+  script: "npm publish"
   dependencies:
     - build
-# pages:
-#   stage: pages
-#   script:
-#   - "./build-docs.sh"
-#   - "cp -r docs/www public"
-#   tags:
-#     - linux
-#   when: manual
-#   artifacts:
-#     paths:
-#     - public

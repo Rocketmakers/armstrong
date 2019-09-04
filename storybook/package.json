@@ -5,25 +5,27 @@
   "main": "index.js",
   "scripts": {
     "start": "start-storybook -p 6006",
-    "build": "build-storybook -o ../public",
-    "postinstall": "node symlink.js"
+    "build": "build-storybook -o ../public --quiet"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@storybook/addon-centered": "^5.1.11",
     "moment": "^2.24.0",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
     "react-hooks-testing-library": "^0.6.0",
     "underscore": "^1.9.1"
   },
+  "config": {
+    "unsafe-perm": true
+  },
   "devDependencies": {
     "@babel/core": "^7.5.5",
     "@storybook/addon-actions": "^5.1.11",
     "@storybook/addon-info": "^5.1.11",
     "@storybook/addon-links": "^5.1.11",
+    "@storybook/addon-storysource": "^5.1.11",
     "@storybook/addon-viewport": "^5.1.11",
     "@storybook/addons": "^5.1.11",
     "@storybook/react": "^5.1.11",

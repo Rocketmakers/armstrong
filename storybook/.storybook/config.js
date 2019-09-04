@@ -5,7 +5,7 @@ import { Wrapper } from "../src/components/wrapper";
 
 import React from "react";
 
-addDecorator(withInfo({ inline: true }));
+addDecorator(withInfo({ inline: true, source: false }));
 addDecorator(Story => (
   <Wrapper>
     <Story />
@@ -15,6 +15,7 @@ addDecorator(Story => (
 addParameters({
   options: {
     theme: themes.light,
+    panelPosition: "right",
   },
 });
 

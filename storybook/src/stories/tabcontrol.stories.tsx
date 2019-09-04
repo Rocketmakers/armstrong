@@ -2,13 +2,11 @@ import * as React from "react"
 
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
-import centered from '@storybook/addon-centered/react';
 import { Button, Icon, TabControl, TabItem } from "../_symlink";
 
 import "../theme/theme.scss";
 
 storiesOf('Tab control', module)
-  .addParameters({ options: { showPanel: true } })
   .add('3 tabs with callback', () =>
     <TabControl onTabChanged={action("onTabChanged")}>
       {tabItems}

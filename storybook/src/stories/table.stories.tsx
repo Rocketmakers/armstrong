@@ -13,12 +13,6 @@ interface ITodos {
   completed: boolean;
 }
 
-function wait(ms: number) {
-  return new Promise(res => {
-    setTimeout(res, ms);
-  });
-}
-
 async function fetchData() {
   const res = await fetch(fauxDataUrl);
   return res.json();

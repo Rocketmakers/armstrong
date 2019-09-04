@@ -6,7 +6,6 @@ import { Grid, Row, Col } from "../_symlink";
 import "../theme/theme.scss";
 
 storiesOf('Grid', module)
-  .addParameters({ options: { showPanel: false } })
   .add('2 rows, 3 columns', () =>
     <Grid debugMode={true} fillContainer={true}>
       <Row>
