@@ -17,8 +17,10 @@ export function TableHeading<T>({
   const [sortByState, setSortByState] = React.useState<TSortDirection>("asc");
 
   const handleSortBy = () => {
-    sortBy(name, sortByState);
-    setSortByState(sortByState === "asc" ? "desc" : "asc");
+    if (sortBy) {
+      sortBy(name, sortByState);
+      setSortByState(sortByState === "asc" ? "desc" : "asc");
+    }
   };
 
   return (

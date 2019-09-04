@@ -30,7 +30,7 @@ function TableHeaderCell(name: string) {
 }
 
 function CompletedTableCell(value: boolean) {
-  return <span>{value ? "true" : "false"}</span>;
+  return <button>{value ? "true" : "false"}</button>;
 }
 
 storiesOf("Table", module)
