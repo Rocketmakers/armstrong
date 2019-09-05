@@ -46,85 +46,6 @@ export function useDataTable<T>(settings: IUseDataTableSettings<T>) {
 
   const [isLoading, setIsLoading] = React.useState(false);
 
-  const fetcher = React.useCallback(() => {
-    setIsLoading(true);
-    settings
-      .fetch()
-      .then(v => {
-        const noReturnedItems = !v.data || v.data.length === 0;
-        const items = (!noReturnedItems && v.data) || [];
-        const itemsPerPage =
-          (settings.itemsPerPage && settings.itemsPerPage) || 5;
-
-        setStoredData(items);
-
-        const { totalPages } = calculatePagination(
-          items.length,
-          itemsPerPage,
-          1,
-        );
-        setState(oldState => ({
-          ...oldState,
-          data: items.slice(0, itemsPerPage),
-          totalPages,
-          totalItems: items.length,
-          itemsPerPage,
-        }));
-        setIsLoading(false);
-      })
-      .catch(error => {
-        setState({ ...state, error });
-        setIsLoading(false);
-      });
-  }, [state]);
-
-  /**
-   * Calculate the pagination parameters
-   * @param totalItems : total length of the data array
-   * @param itemsPerPage : max number of items per page
-   * @param currentPage : current page number
-   */
-  // ---------------------------------------------------------
-  const calculatePagination = (
-    totalItems: number,
-    itemsPerPage: number,
-    currentPage: number,
-  ) => {
-    const startIndex: number = Math.ceil((currentPage - 1) * itemsPerPage);
-    const endIndex: number = startIndex + itemsPerPage;
-    const totalPages: number = Math.ceil(totalItems / itemsPerPage);
-
-    return {
-      totalPages,
-      startIndex,
-      endIndex,
-    };
-  };
-
-  /**
-   * Sort the Data dependent on the criteria
-   * @param key : which key to sort by
-   * @param direction : which direction
-   * @param currentPage : (optional) current page
-   */
-  // ---------------------------------------------------------
-  const sort = (
-    key: string,
-    direction: TSortDirection,
-    currentPage?: number,
-  ) => {
-    const { startIndex, endIndex } = calculatePagination(
-      storedData.length,
-      state.itemsPerPage,
-      (currentPage && currentPage) || state.currentPage,
-    );
-    return direction === "asc"
-      ? _.sortBy(storedData, key)
-          .reverse()
-          .slice(startIndex, endIndex)
-      : _.sortBy(storedData, key).slice(startIndex, endIndex);
-  };
-
   /**
    * On Mount Hook
    */
@@ -149,7 +70,106 @@ export function useDataTable<T>(settings: IUseDataTableSettings<T>) {
     } else if (settings.fetch) {
       fetcher();
     }
-  }, []);
+  }, [settings.data, settings.fetch]);
+
+  const fetcher = React.useCallback(() => {
+    const fetchData = async () => {
+      setIsLoading(true);
+      try {
+        const res = await settings.fetch();
+        const items = res.data || [];
+        const itemsPerPage =
+          (settings.itemsPerPage && settings.itemsPerPage) || 5;
+
+        if (items.length > 0) {
+          await setStoredData(items);
+          const { totalPages } = await calculatePagination(
+            items.length,
+            itemsPerPage,
+            1,
+          );
+
+          console.log(storedData);
+
+          setState((oldState: IUseDataTableState<T>) => ({
+            ...oldState,
+            data: sort(
+              items,
+              settings.initialSortBy,
+              state.sortParameters.sortDirection,
+            ),
+            sortParameters: {
+              sortColumn:
+                (settings.initialSortBy && settings.initialSortBy) || undefined,
+              sortDirection: "desc",
+            },
+            totalPages,
+            totalItems: storedData.length,
+            itemsPerPage: settings.itemsPerPage,
+            currentPage: 1,
+          }));
+        }
+        setIsLoading(false);
+      } catch (error) {
+        setState({ ...state, error });
+        setIsLoading(false);
+      }
+    };
+    fetchData();
+  }, [settings.initialSortBy]);
+
+  /**
+   * Calculate the pagination parameters
+   * @param totalItems : total length of the data array
+   * @param itemsPerPage : max number of items per page
+   * @param currentPage : current page number
+   */
+  // ---------------------------------------------------------
+  const calculatePagination = React.useCallback(
+    (totalItems: number, itemsPerPage: number, currentPage: number) => {
+      const startIndex: number = Math.ceil((currentPage - 1) * itemsPerPage);
+      const endIndex: number = startIndex + itemsPerPage;
+      const totalPages: number = Math.ceil(totalItems / itemsPerPage);
+
+      return {
+        totalPages,
+        startIndex,
+        endIndex,
+      };
+    },
+    [
+      state.itemsPerPage,
+      state.totalItems,
+      settings.itemsPerPage,
+      settings.data,
+      settings.fetch,
+    ],
+  );
+
+  /**
+   * Sort the Data dependent on the criteria
+   * @param key : which key to sort by
+   * @param direction : which direction
+   * @param currentPage : (optional) current page
+   */
+  // ---------------------------------------------------------
+  const sort = (
+    d: T[],
+    key: keyof T,
+    direction: TSortDirection,
+    currentPage?: number,
+  ) => {
+    const { startIndex, endIndex } = calculatePagination(
+      d.length,
+      state.itemsPerPage,
+      (currentPage && currentPage) || state.currentPage,
+    );
+    return direction === "asc"
+      ? _.sortBy(d, key.toString())
+          .reverse()
+          .slice(startIndex, endIndex)
+      : _.sortBy(d, key.toString()).slice(startIndex, endIndex);
+  };
 
   /**
    * Sort by Callback
@@ -161,11 +181,11 @@ export function useDataTable<T>(settings: IUseDataTableSettings<T>) {
     (key: keyof T, direction: TSortDirection) => {
       setState(oldState => ({
         ...oldState,
-        data: sort(key, direction),
+        data: sort(storedData, key, direction),
         sortParameters: { sortColumn: key, sortDirection: direction },
       }));
     },
-    [state],
+    [state, storedData],
   );
 
   /**
@@ -204,6 +224,7 @@ export function useDataTable<T>(settings: IUseDataTableSettings<T>) {
       setState(oldState => ({
         ...oldState,
         data: sort(
+          storedData,
           state.sortParameters.sortColumn,
           state.sortParameters.sortDirection,
           currentPage,

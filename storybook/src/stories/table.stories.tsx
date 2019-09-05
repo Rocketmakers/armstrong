@@ -81,7 +81,7 @@ storiesOf("Table", module)
       />
     );
   })
-  .add("basic", () => {
+  .add("options", () => {
     const [state, setState] = React.useState([]);
 
     React.useEffect(() => {
@@ -233,8 +233,9 @@ storiesOf("Table", module)
     const { data, isLoading, sortDataBy } = useDataTable<ITodos>({
       fetch: loadData,
       itemsPerPage: 10,
-      initialSortBy: "title",
+      initialSortBy: "id",
     });
+
     return isLoading ? (
       <div>Loading</div>
     ) : (
