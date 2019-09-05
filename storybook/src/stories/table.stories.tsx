@@ -33,6 +33,33 @@ function CompletedTableCell(value: boolean) {
   return <button>{value ? "true" : "false"}</button>;
 }
 
+export interface IExamplePaginationButton {
+  active: boolean;
+  index: number;
+  onClick: (i: number) => void;
+  direction?: "left" | "right";
+}
+
+const ExamplePaginationButton: React.FC<IExamplePaginationButton> = ({
+  active,
+  direction,
+  index,
+  onClick,
+}) => {
+  return (
+    <button
+      style={{
+        backgroundColor: "unset",
+        border: "unset",
+        color: active ? "#74b9ff" : "#e17055",
+      }}
+      onClick={() => onClick(index)}
+    >
+      {(direction && direction) || index}
+    </button>
+  );
+};
+
 storiesOf("Table", module)
   .add("basic", () => {
     const [state, setState] = React.useState([]);
@@ -57,6 +84,33 @@ storiesOf("Table", module)
           completed: CompletedTableCell,
         }}
         data={state}
+      />
+    );
+  })
+  .add("basic", () => {
+    const [state, setState] = React.useState([]);
+
+    React.useEffect(() => {
+      const getData = async () => {
+        const res = await fetchData();
+        setState(res);
+      };
+      getData();
+    }, []);
+
+    return (
+      <Table<ITodos>
+        headerFormatter={{
+          id: null,
+          completed: null,
+          title: null,
+          userId: null,
+        }}
+        columnFormatter={{
+          completed: CompletedTableCell,
+        }}
+        data={state}
+        showOptions
       />
     );
   })
@@ -173,6 +227,7 @@ storiesOf("Table", module)
           numberOfPages={totalPages}
           onChangeItemPerPage={setItemsPerPage}
           onChangePage={setPage}
+          paginationElement={ExamplePaginationButton}
           subTitle="My Paginated Data Table"
           title="My Table"
         />
@@ -210,6 +265,7 @@ storiesOf("Table", module)
         numberOfPages={totalPages}
         onChangeItemPerPage={setItemsPerPage}
         onChangePage={setPage}
+        paginationElement={ExamplePaginationButton}
         subTitle="My Sortable Data Table"
         title="My Table"
       />

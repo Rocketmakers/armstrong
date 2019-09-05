@@ -9,6 +9,30 @@
       font-size: 20px;
     }
   }
+
+  .table-options-container {
+    padding: 10px 0px;
+    .table-options {
+      flex: 1;
+      display: flex;
+      justify-content: flex-end;
+      i {
+        padding: 0px 8px;
+
+        &:last-of-type {
+          padding-right: 0px;
+        }
+
+        &:hover {
+          color: red;
+        }
+        &:active {
+          color: green;
+        }
+      }
+    }
+  }
+
   .table {
     border: 1px solid black;
     border-collapse: collapse;
