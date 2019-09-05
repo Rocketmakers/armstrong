@@ -230,16 +230,10 @@ storiesOf("Table", module)
     {},
   )
   .add("sortable columns", () => {
-    const {
-      data,
-      isLoading,
-      sortDataBy,
-      setPage,
-      setItemsPerPage,
-      totalPages,
-    } = useDataTable<ITodos>({
+    const { data, isLoading, sortDataBy } = useDataTable<ITodos>({
       fetch: loadData,
-      itemsPerPage: 5,
+      itemsPerPage: 10,
+      initialSortBy: "title",
     });
     return isLoading ? (
       <div>Loading</div>
@@ -256,9 +250,6 @@ storiesOf("Table", module)
         }}
         data={data}
         sortBy={sortDataBy}
-        numberOfPages={totalPages}
-        onChangeItemPerPage={setItemsPerPage}
-        onChangePage={setPage}
         paginationElement={ExamplePaginationButton}
         subTitle="My Sortable Data Table"
         title="My Table"

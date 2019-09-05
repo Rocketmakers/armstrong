@@ -16,7 +16,7 @@ interface IUseDataTableState<T> {
   data: T[];
   error: any;
   itemsPerPage: number;
-  sortParameters: { sortColumn: string; sortDirection: TSortDirection };
+  sortParameters: { sortColumn: keyof T; sortDirection: TSortDirection };
   totalItems: number;
   totalPages: number;
 }
@@ -33,7 +33,7 @@ const initialState = <T>(): IUseDataTableState<T> => ({
   data: [],
   error: undefined,
   itemsPerPage: undefined,
-  sortParameters: { sortColumn: "id", sortDirection: "desc" },
+  sortParameters: { sortColumn: undefined, sortDirection: "desc" },
   totalItems: undefined,
   totalPages: undefined,
 });
@@ -158,7 +158,7 @@ export function useDataTable<T>(settings: IUseDataTableSettings<T>) {
    */
   // ---------------------------------------------------------
   const sortDataBy = React.useCallback(
-    (key: string, direction: TSortDirection) => {
+    (key: keyof T, direction: TSortDirection) => {
       setState(oldState => ({
         ...oldState,
         data: sort(key, direction),
