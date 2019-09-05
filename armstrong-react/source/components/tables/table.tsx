@@ -1,13 +1,13 @@
 import * as React from "react";
 import * as _ from "underscore";
-import { Repeater } from "../layout/repeater";
-import "./styles.scss";
 import { TableHeading, TSortDirection } from "./tableHeader";
 import { TableItem } from "./tableItem";
 import { TableItemDropdown } from "./tableItemDropdown";
 import { TableOptions } from "./tableOptions";
-import { TablePagination } from "./tablePagingation";
+import { IPaginateButtonProps, TablePagination } from "./tablePagingation";
 import { TableTitle } from "./tableTitle";
+
+import "./styles.scss";
 
 export interface ITableProps<T> {
   /** (React.ReactNode) Specify the formatting of the individual column */
@@ -27,12 +27,7 @@ export interface ITableProps<T> {
   /** ((pageNumber:number) => void) Event to fire when user changes the page number */
   onChangePage?: (pageNumber: number) => void;
   /** (component) Pagination Element  */
-  paginationElement?: React.FC<{
-    active: boolean;
-    index: number;
-    onClick: (i: number) => void;
-    direction?: "left" | "right";
-  }>;
+  paginationElement?: React.FC<IPaginateButtonProps>;
   /** (boolean) Show the options bar */
   showOptions?: boolean;
   /** ((key:keyof T, direction: TSortDirection) => void) Event to fire when user sorts the columns */

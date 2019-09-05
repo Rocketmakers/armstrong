@@ -4,6 +4,7 @@ import { Table, useDataTable } from "../_symlink";
 import { IUseDataTableResult } from "../_symlink/hooks/useDataTable";
 
 import "../theme/theme.scss";
+import { IPaginateButtonProps } from "../_symlink/components/tables/tablePagingation";
 
 const fauxDataUrl = "https://jsonplaceholder.typicode.com/todos";
 interface ITodos {
@@ -33,14 +34,7 @@ function CompletedTableCell(value: boolean) {
   return <button>{value ? "true" : "false"}</button>;
 }
 
-export interface IExamplePaginationButton {
-  active: boolean;
-  index: number;
-  onClick: (i: number) => void;
-  direction?: "left" | "right";
-}
-
-const ExamplePaginationButton: React.FC<IExamplePaginationButton> = ({
+const ExamplePaginationButton: React.FC<IPaginateButtonProps> = ({
   active,
   direction,
   index,

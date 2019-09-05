@@ -6,10 +6,18 @@ import "./styles.scss";
 export const GO_LEFT_PAGE_INDEX = -1;
 export const GO_RIGHT_PAGE_INDEX = -2;
 
+export type TDirection = "left" | "right";
+
+export interface IPaginateButtonProps {
+  active: boolean;
+  index: number;
+  onClick: (i: number) => void;
+  direction?: TDirection;
+}
 interface ITablePagination {
   currentPage: number;
   pageNeighbours?: number;
-  render: React.FC<{ index: number; direction?: "left" | "right" }>;
+  render: React.FC<{ index: number; direction?: TDirection }>;
   totalPages: number;
 }
 
@@ -64,7 +72,7 @@ export const TablePagination: React.FunctionComponent<ITablePagination> = ({
 
   React.useEffect(() => {
     setPageNumbers(calculatePages(currentPage));
-  }, [currentPage]);
+  }, [currentPage, totalPages]);
 
   React.useEffect(() => {
     setPageNumbers(calculatePages(currentPage));
