@@ -1,0 +1,26 @@
+.tooltip-wrapper {
+  position: relative;
+  width: fit-content;
+
+  .tooltip {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 100%;
+    background: white;
+    border: 1px black solid;
+    padding: 5px;
+  }
+
+  .tooltip-children:hover {
+    +.tooltip {
+      display: block;
+    }
+  }
+
+  &[data-retain=true] {
+    .tooltip:hover {
+      display: block;
+    }
+  }
+}
