@@ -1,7 +1,8 @@
 
 $max-menu-width: 250px;
 
-.armstrong-burger-menu {
+.armstrong-simple-burger-menu,
+.armstrong-collapsable-burger-menu {
   height: 100%;
   display: inline-flex;
   flex-direction: column;
@@ -13,18 +14,20 @@ $max-menu-width: 250px;
   box-sizing: border-box;
   z-index: 9000;
   color: white;
+  white-space: nowrap;
+  overflow-x: hidden;
+}
 
+.armstrong-simple-burger-menu {
   &[data-position="left"] {
     left: 0;
 
-    &[data-collapse=false] {
-      &[data-open=false] {
-        transform: translateX(-100%);
-      }
+    &[data-open=false] {
+      transform: translateX(-100%);
+    }
 
-      &[data-open=true] {
-        transform: translateX(0);
-      }
+    &[data-open=true] {
+      transform: translateX(0);
     }
 
     .armstrong-burger-menu-button {
@@ -37,14 +40,12 @@ $max-menu-width: 250px;
   &[data-position="right"] {
     right: 0;
 
-    &[data-collapse=false] {
-      &[data-open=false] {
-        transform: translateX(100%);
-      }
+    &[data-open=false] {
+      transform: translateX(100%);
+    }
 
-      &[data-open=true] {
-        transform: translateX(0);
-      }
+    &[data-open=true] {
+      transform: translateX(0);
     }
 
     .armstrong-burger-menu-button {
@@ -53,13 +54,43 @@ $max-menu-width: 250px;
       }
     }
   }
+}
 
-  &[data-collapse=true] {
-    &[data-open=false] {
-      min-width: 0;
-      padding-left: $spacing-small;
-      padding-right: $spacing-small;
+.armstrong-collapsable-burger-menu {
+  overflow-x: hidden;
+
+  &[data-position="left"] {
+    left: 0;
+
+    &[data-burger=true] {
+      &[data-open=false] {
+        transform: translateX(-100%);
+      }
+
+      &[data-open=true] {
+        transform: translateX(0);
+      }
     }
+  }
+
+  &[data-position="right"] {
+    right: 0;
+
+    &[data-burger=true] {
+      &[data-open=false] {
+        transform: translateX(100%);
+      }
+
+      &[data-open=true] {
+        transform: translateX(0);
+      }
+    }
+  }
+
+  &[data-open=false] {
+    min-width: 0;
+    padding-left: $spacing-small;
+    padding-right: $spacing-small;
   }
 }
 
@@ -68,13 +99,13 @@ $max-menu-width: 250px;
   width: 40px;
   padding: 0;
   transition: transform 0.3s;
-  background-color: transparent;
+  // background-color: transparent;
   font-size: $font-size-medium;
 
   &.open {
     position: fixed;
     top: $spacing-small;
-    color: black;
+    // color: black;
 
     &[data-position="right"] {
       right: $spacing-small;
@@ -94,7 +125,6 @@ $max-menu-width: 250px;
 .armstrong-burger-menu-item {
   margin: $spacing-small 0;
   align-items: center;
-  overflow: hidden;
 
   i {
     margin-right: $spacing-small;
