@@ -8,6 +8,7 @@ import { IPaginateButtonProps, TablePagination } from "./tablePagingation";
 import { TableTitle } from "./tableTitle";
 
 import "./styles.scss";
+import { IDataTableOptions } from "../../hooks/useDataTable";
 
 export interface ITableProps<T> {
   /** (React.ReactNode) Specify the formatting of the individual column */
@@ -18,18 +19,18 @@ export interface ITableProps<T> {
   headerFormatter: {
     [P in keyof T]?: (name: keyof T) => React.ReactNode;
   };
-  /** ((items:number) => void) Event to fire when user changes the max number of items per page*/
-  onChangeItemPerPage?: (items: number) => void;
+  /** ((rows:number) => void) Event to fire when user changes the max number of items per page*/
+  onChangeRowsPerPage?: (rows: number) => void;
   /** (boolean) Setting this will either display or hide the headers */
   hideHeaders?: boolean;
   /** (number) The number of pages of data */
   numberOfPages?: number;
   /** ((pageNumber:number) => void) Event to fire when user changes the page number */
   onChangePage?: (pageNumber: number) => void;
+  /** (options:IDataTableOptions) Options for the data table */
+  options?: IDataTableOptions<T>;
   /** (component) Pagination Element  */
   paginationElement?: React.FC<IPaginateButtonProps>;
-  /** (boolean) Show the options bar */
-  showOptions?: boolean;
 
   initSortBy?: { sortColumn: keyof T; sortDirection: TSortDirection };
   /** ((key:keyof T, direction: TSortDirection) => void) Event to fire when user sorts the columns */
@@ -44,13 +45,13 @@ export function Table<T = any>({
   data,
   columnFormatter,
   headerFormatter,
-  onChangeItemPerPage,
+  onChangeRowsPerPage,
   hideHeaders,
   initSortBy,
   numberOfPages,
   onChangePage,
+  options,
   paginationElement: PaginationElement,
-  showOptions,
   sortBy,
   subTitle,
   title,
@@ -64,9 +65,9 @@ export function Table<T = any>({
   return (
     <div className="table-container">
       <TableTitle title={title} subTitle={subTitle} />
-      {showOptions && (
+      {options && (
         <div className="table-options-container">
-          <TableOptions />
+          <TableOptions {...options} />
         </div>
       )}
 
@@ -130,7 +131,7 @@ export function Table<T = any>({
 
           <TableItemDropdown
             values={[5, 10, 20, 0]}
-            onSelect={onChangeItemPerPage}
+            onSelect={onChangeRowsPerPage}
           />
         </div>
       )}

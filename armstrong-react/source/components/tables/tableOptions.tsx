@@ -1,18 +1,23 @@
 import * as React from "react";
 import { Icon } from "../display/icon";
+import { IDataTableOptionsBar } from "../../hooks/useDataTable";
 
 import "./styles.scss";
 
-export interface ITableOptions {}
-
-export const TableOptions: React.FunctionComponent<ITableOptions> = ({}) => {
+export function TableOptions<T>({
+  download,
+  filter,
+  onDownload,
+  onPrint,
+  print,
+  sort,
+}: IDataTableOptionsBar<T>) {
   return (
     <div className="table-options">
-      <Icon icon={Icon.Icomoon.search} />
-      <Icon icon={Icon.Icomoon.download} />
-      <Icon icon={Icon.Icomoon.printer} />
-      <Icon icon={Icon.Icomoon.list} />
-      <Icon icon={Icon.Icomoon.filter} />
+      {download && <Icon icon={Icon.Icomoon.download} onClick={onDownload} />}
+      {print && <Icon icon={Icon.Icomoon.printer} onClick={onPrint} />}
+      {sort && <Icon icon={Icon.Icomoon.list} />}
+      {filter && <Icon icon={Icon.Icomoon.filter} />}
     </div>
   );
-};
+}

@@ -104,7 +104,7 @@ storiesOf("Table", module)
           completed: CompletedTableCell,
         }}
         data={state}
-        showOptions
+        options={{ download: true, print: true }}
       />
     );
   })
@@ -198,11 +198,13 @@ storiesOf("Table", module)
         data,
         isLoading,
         setPage,
-        setItemsPerPage,
+        setRowsPerPage,
         totalPages,
       } = useDataTable<ITodos>({
         fetch: loadData,
-        itemsPerPage: 5,
+        options: {
+          rowsPerPage: 5,
+        },
       });
       return isLoading ? (
         <div>Loading</div>
@@ -219,7 +221,7 @@ storiesOf("Table", module)
           }}
           data={data}
           numberOfPages={totalPages}
-          onChangeItemPerPage={setItemsPerPage}
+          onChangeRowsPerPage={setRowsPerPage}
           onChangePage={setPage}
           paginationElement={ExamplePaginationButton}
           subTitle="My Paginated Data Table"
@@ -234,8 +236,12 @@ storiesOf("Table", module)
       ITodos
     >({
       fetch: loadData,
-      itemsPerPage: 10,
-      initialSortBy: "title",
+      options: {
+        rowsPerPage: 5,
+        sort: {
+          initialSortBy: "title",
+        },
+      },
     });
 
     return isLoading ? (

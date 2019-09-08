@@ -11,34 +11,54 @@ export interface IUseDataTableResult<T> {
   data: T[];
 }
 
+export interface IDataTableOptions<T> {
+  download?: boolean;
+  filter?: boolean;
+  paginate?: boolean;
+  print?: boolean;
+  rowsPerPage?: number;
+  sort?: {
+    initialSortBy?: keyof T;
+  };
+}
+
+export interface IDataTableOptionsBar<T> extends IDataTableOptions<T> {
+  onDownload?: () => void;
+  onPrint?: () => void;
+  onFilter?: () => void;
+}
+
 interface IUseDataTableState<T> {
   currentPage: number;
   data: T[];
   error: any;
-  itemsPerPage: number;
+  rowsPerPage: number;
   sortParameters: { sortColumn: keyof T; sortDirection: TSortDirection };
-  totalItems: number;
+  totalRows: number;
   totalPages: number;
 }
 
 export interface IUseDataTableSettings<T> {
   data?: T[];
   fetch?(): Promise<IUseDataTableResult<T>>;
-  initialSortBy?: keyof T;
-  itemsPerPage?: number;
+  options: IDataTableOptions<T>;
 }
 
 const initialState = <T>(): IUseDataTableState<T> => ({
   currentPage: 1,
   data: [],
   error: undefined,
-  itemsPerPage: undefined,
+  rowsPerPage: undefined,
   sortParameters: { sortColumn: undefined, sortDirection: "desc" },
-  totalItems: undefined,
+  totalRows: undefined,
   totalPages: undefined,
 });
 
-export function useDataTable<T>(settings: IUseDataTableSettings<T>) {
+export function useDataTable<T>({
+  data,
+  fetch,
+  options,
+}: IUseDataTableSettings<T>) {
   const [state, setState] = React.useState<IUseDataTableState<T>>(
     initialState(),
   );
@@ -47,41 +67,48 @@ export function useDataTable<T>(settings: IUseDataTableSettings<T>) {
   const [isLoading, setIsLoading] = React.useState(false);
 
   React.useMemo(() => {
-    const itemsPerPage = (settings.itemsPerPage && settings.itemsPerPage) || 5;
+    const rowsPerPage = (options.rowsPerPage && options.rowsPerPage) || 5;
     setState((oldState: IUseDataTableState<T>) => ({
       ...oldState,
-      itemsPerPage,
+      rowsPerPage,
       sortParameters: {
-        sortColumn: settings.initialSortBy,
+        sortColumn: (options.sort && options.sort.initialSortBy) || undefined,
         sortDirection: "asc",
       },
     }));
-  }, [settings.initialSortBy, settings.itemsPerPage]);
+  }, [
+    options.sort && options.sort.initialSortBy && options.sort.initialSortBy,
+    options.rowsPerPage,
+  ]);
 
   /**
    * On Mount Hook
    */
   // ---------------------------------------------------------
   React.useEffect(() => {
-    setStoredData(settings.data);
+    setStoredData(data);
     const { totalPages } = calculatePagination(
       storedData.length,
-      state.itemsPerPage,
+      state.rowsPerPage,
       1,
     );
 
     setState((oldState: IUseDataTableState<T>) => ({
       ...oldState,
-      data: storedData.slice(0, state.itemsPerPage),
-      itemsPerPage: state.itemsPerPage,
+      data: storedData.slice(0, state.rowsPerPage),
+      rowsPerPage: state.rowsPerPage,
       totalPages,
       currentPage: 1,
     }));
-  }, [settings.data]);
+  }, [data]);
 
+  /**
+   * On Mount Hook with fetch
+   */
+  // ---------------------------------------------------------
   React.useEffect(() => {
     const fetchData = async () => {
-      const res = await settings.fetch();
+      const res = await fetch();
       return res.data && res.data.length > 0 ? res.data : [];
     };
 
@@ -95,7 +122,7 @@ export function useDataTable<T>(settings: IUseDataTableSettings<T>) {
 
         const { totalPages } = await calculatePagination(
           newData.length,
-          state.itemsPerPage,
+          state.rowsPerPage,
           1,
         );
 
@@ -103,39 +130,52 @@ export function useDataTable<T>(settings: IUseDataTableSettings<T>) {
           ...oldState,
           sortParameters: {
             sortColumn:
-              (settings.initialSortBy && settings.initialSortBy) || undefined,
+              (options.sort && options.sort.initialSortBy) || undefined,
             sortDirection: "desc",
           },
           totalPages,
-          totalItems: newData.length,
+          totalRows: newData.length,
         }));
 
         setState((oldState: IUseDataTableState<T>) => ({
           ...oldState,
           data:
-            (settings.initialSortBy &&
-              sort(newData, settings.initialSortBy, "asc")) ||
-            newData.slice(0, state.itemsPerPage),
+            (options.sort &&
+              sort(newData, options.sort.initialSortBy, "asc")) ||
+            newData.slice(0, state.rowsPerPage),
         }));
       })
       .catch(error => {
         setState((oldState: IUseDataTableState<T>) => ({ ...oldState, error }));
         setIsLoading(false);
       });
-  }, [settings.fetch, settings.initialSortBy, state.itemsPerPage]);
+  }, [
+    fetch,
+    options.sort && options.sort.initialSortBy && options.sort.initialSortBy,
+    state.rowsPerPage,
+  ]);
+
+  /**
+   * Print the Table
+   */
+  // ---------------------------------------------------------
+  const printTable = React.useCallback(
+    (tableRef: React.Ref<HTMLTableElement>) => {},
+    [state.rowsPerPage, state.currentPage, state.sortParameters],
+  );
 
   /**
    * Calculate the pagination parameters
-   * @param totalItems : total length of the data array
-   * @param itemsPerPage : max number of items per page
+   * @param totalRows : total length of the data array
+   * @param rowsPerPage : max number of rows per page
    * @param currentPage : current page number
    */
   // ---------------------------------------------------------
   const calculatePagination = React.useCallback(
-    (totalItems: number, itemsPerPage: number, currentPage: number) => {
-      const startIndex: number = Math.ceil((currentPage - 1) * itemsPerPage);
-      const endIndex: number = startIndex + itemsPerPage;
-      const totalPages: number = Math.ceil(totalItems / itemsPerPage);
+    (totalRows: number, rowsPerPage: number, currentPage: number) => {
+      const startIndex: number = Math.ceil((currentPage - 1) * rowsPerPage);
+      const endIndex: number = startIndex + rowsPerPage;
+      const totalPages: number = Math.ceil(totalRows / rowsPerPage);
 
       return {
         totalPages,
@@ -143,13 +183,7 @@ export function useDataTable<T>(settings: IUseDataTableSettings<T>) {
         endIndex,
       };
     },
-    [
-      state.itemsPerPage,
-      state.totalItems,
-      settings.itemsPerPage,
-      settings.data,
-      settings.fetch,
-    ],
+    [state.rowsPerPage, state.totalRows, options.rowsPerPage, data, fetch],
   );
 
   /**
@@ -163,7 +197,7 @@ export function useDataTable<T>(settings: IUseDataTableSettings<T>) {
     (d: T[], key: keyof T, direction: TSortDirection, currentPage?: number) => {
       const { startIndex, endIndex } = calculatePagination(
         d.length,
-        state.itemsPerPage,
+        state.rowsPerPage,
         state.currentPage,
       );
       const da =
@@ -174,7 +208,7 @@ export function useDataTable<T>(settings: IUseDataTableSettings<T>) {
           : _.sortBy(d, key.toString()).slice(startIndex, endIndex);
       return da;
     },
-    [settings.initialSortBy, settings.itemsPerPage, state],
+    [options.sort, options.rowsPerPage, state],
   );
 
   /**
@@ -195,24 +229,24 @@ export function useDataTable<T>(settings: IUseDataTableSettings<T>) {
   );
 
   /**
-   * Set max items Callback
-   * @param itemsPerPage : max items per page
+   * Set max rows Callback
+   * @param rowsPerPage : max rows per page
    */
   // ---------------------------------------------------------
-  const setItemsPerPage = React.useCallback(
-    (itemsPerPage: number) => {
-      const sItemsPerPage =
-        itemsPerPage !== 0 ? itemsPerPage : storedData.length;
+  const setRowsPerPage = React.useCallback(
+    (newRowsPerPage: number) => {
+      const rowsPerPage =
+        newRowsPerPage !== 0 ? newRowsPerPage : storedData.length;
       const { totalPages } = calculatePagination(
         storedData.length,
-        sItemsPerPage,
+        rowsPerPage,
         state.currentPage,
       );
 
       setState((oldState: IUseDataTableState<T>) => ({
         ...oldState,
-        data: storedData.slice(0, sItemsPerPage),
-        itemsPerPage: sItemsPerPage,
+        data: storedData.slice(0, rowsPerPage),
+        rowsPerPage: options.rowsPerPage,
         totalPages,
         currentPage: 1,
       }));
@@ -229,7 +263,7 @@ export function useDataTable<T>(settings: IUseDataTableSettings<T>) {
     (currentPage: number) => {
       const { startIndex, endIndex } = calculatePagination(
         storedData.length,
-        state.itemsPerPage,
+        state.rowsPerPage,
         currentPage,
       );
 
@@ -248,18 +282,18 @@ export function useDataTable<T>(settings: IUseDataTableSettings<T>) {
         currentPage,
       }));
     },
-    [state, state.currentPage, state.itemsPerPage],
+    [state, state.currentPage, state.rowsPerPage],
   );
 
   return {
     currentPage: state.currentPage,
     data: state.data,
     isLoading,
-    setItemsPerPage,
+    setRowsPerPage,
     setPage,
     sortDataBy,
     sortParameters: state.sortParameters,
-    totalItems: state.totalItems,
+    totalRows: state.totalRows,
     totalPages: state.totalPages,
   };
 }
