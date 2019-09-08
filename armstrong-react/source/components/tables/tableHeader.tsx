@@ -7,14 +7,23 @@ export interface ITableHeading<T> {
   name: keyof T;
   cell: (name: keyof T) => React.ReactNode;
   sortBy?: (header: keyof T, direction: TSortDirection) => void;
+  initSort?: TSortDirection;
 }
 
 export function TableHeading<T>({
   name,
   cell,
   sortBy,
+  initSort,
 }: React.PropsWithChildren<ITableHeading<T>>) {
   const [sortByState, setSortByState] = React.useState<TSortDirection>("asc");
+
+  React.useEffect(() => {
+    if (initSort && sortBy) {
+      setSortByState(initSort);
+      console.log(initSort, name);
+    }
+  }, []);
 
   const handleSortBy = () => {
     if (sortBy) {

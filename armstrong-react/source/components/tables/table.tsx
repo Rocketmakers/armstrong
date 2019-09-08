@@ -30,6 +30,8 @@ export interface ITableProps<T> {
   paginationElement?: React.FC<IPaginateButtonProps>;
   /** (boolean) Show the options bar */
   showOptions?: boolean;
+
+  initSortBy?: { sortColumn: keyof T; sortDirection: TSortDirection };
   /** ((key:keyof T, direction: TSortDirection) => void) Event to fire when user sorts the columns */
   sortBy?: (key: keyof T, direction: TSortDirection) => void;
   /** (string) The sub or secondary title of the table */
@@ -44,6 +46,7 @@ export function Table<T = any>({
   headerFormatter,
   onChangeItemPerPage,
   hideHeaders,
+  initSortBy,
   numberOfPages,
   onChangePage,
   paginationElement: PaginationElement,
@@ -78,6 +81,11 @@ export function Table<T = any>({
                     name={header}
                     cell={headerFormatter[header]}
                     sortBy={sortBy}
+                    initSort={
+                      initSortBy && initSortBy.sortColumn === header
+                        ? initSortBy.sortDirection
+                        : null
+                    }
                   />
                 ))}
             </tr>
