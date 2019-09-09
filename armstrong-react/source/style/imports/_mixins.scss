@@ -24,3 +24,41 @@
   color: rgba(0, 0, 0, 0.3);
   background-color: $gray-very-light;
 }
+
+// Responsiveness
+
+@mixin media-query-max($screen-width: $screen-size-phone) {
+  @media screen and (max-width: $screen-width) {
+    @content;
+  }
+}
+
+@mixin media-query-min($screen-width: $screen-size-phone) {
+  @media screen and (min-width: $screen-width) {
+    @content;
+  }
+}
+
+@mixin screen-not-phone() {
+  @include media-query-min($screen-size-tablet) {
+    @content;
+  }
+}
+
+@mixin screen-tablet() {
+  @include media-query-max($screen-size-tablet) {
+    @content;
+  }
+}
+
+@mixin screen-phone() {
+  @include media-query-max($screen-size-phone) {
+    @content;
+  }
+}
+
+@mixin screen-phone-tiny() {
+  @include media-query-max($screen-size-phone * 0.8) {
+    @content;
+  }
+}

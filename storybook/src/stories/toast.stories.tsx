@@ -164,6 +164,7 @@ const CustomInner = () => {
               margin: '15px',
               padding: '10px'
             }}
+            key={i}
           >
             <h3>{toast.title}</h3>
             <p>{toast.message}</p>
@@ -196,11 +197,7 @@ storiesOf('Toasts', module).add('Custom toasts', () => (
 ));
 
 storiesOf('Toasts', module).add('Portaled toasts', () => (
-  <ToastProvider
-    location='top right'
-    dismissButton={<Icon icon={Icon.Icomoon.arrowRight3} />}
-    hostElement='body'
-  >
+  <ToastProvider location='top right' hostElement='body'>
     <p>These toasts are portaled into the body using the hostElement prop</p>
 
     <BasicInner />
@@ -226,8 +223,8 @@ const HistoryInner = () => {
       </Button>
 
       <div className='notifications'>
-        {toastsHistory.map(toast => (
-          <p>
+        {toastsHistory.map((toast, i) => (
+          <p key={i}>
             {toast.title} — {toast.timestamp}
           </p>
         ))}
@@ -249,5 +246,71 @@ storiesOf('Toasts', module).add('Toast history', () => (
     </p>
 
     <HistoryInner />
+  </ToastProvider>
+));
+
+const BigDemoInner = () => {
+  const { dispatch } = useToast();
+
+  const onClick = React.useCallback(() => {
+    dispatch(
+      {
+        title: 'Info',
+        type: 'info',
+        message: 'Toasty time - look at it go!',
+        autodismiss: 5000
+      },
+      {
+        title: 'Look',
+        type: 'info',
+        message: 'Hi there!',
+        autodismiss: 5000,
+        location: 'bottom right'
+      },
+      {
+        title: 'TOAST',
+        type: 'warning',
+        message: 'Toasty time - look at it go!',
+        autodismiss: 5000
+      },
+      {
+        title: 'TOAST',
+        type: 'warning',
+        message: 'Toasty time - look at it go!',
+        content: (
+          <img src='https://static.independent.co.uk/s3fs-public/thumbnails/image/2018/03/14/14/bread-waste.jpg?w968h681' />
+        ),
+        location: 'bottom left',
+        autodismiss: 10000
+      },
+      {
+        title: 'Look heres some more toast',
+        type: 'success',
+        message: 'Check out this cool video about my hero!',
+        content: (
+          <iframe
+            width='560'
+            height='315'
+            src='https://www.youtube.com/embed/P40sJOkxnac'
+            allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture'
+          />
+        ),
+        location: 'top left'
+      }
+    );
+  }, [dispatch]);
+
+  return (
+    <>
+      <Button onClick={onClick}>Dispatch a Toast Notification</Button>
+    </>
+  );
+};
+
+storiesOf('Toasts', module).add('Big demo', () => (
+  <ToastProvider location='top right' hostElement='body' saveHistory>
+    <p>Here's a demo with a bunch of stuff happening</p>
+
+    <BigDemoInner />
   </ToastProvider>
 ));

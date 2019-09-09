@@ -6,7 +6,7 @@ import * as ReactDOM from "react-dom";
 import * as _ from "underscore";
 import { ClassHelpers, Icon } from "../../";
 
-export type DispatchToast = (toast: IToastNotification) => void;
+export type DispatchToast = (...toast: IToastNotification[]) => void;
 export type DismissToast = (index: number) => void;
 export type ToastLocation =
   | "top left"
@@ -93,13 +93,48 @@ const ToastContext = React.createContext<IToastContext>(undefined);
 
 /** Provides all children with the ToastContext, allowing for use of the useToast hook, and also renders toast notifications */
 
+interface IAddToastAction {
+  type: "add";
+  toasts: IToastNotification[];
+}
+interface IDismissToastAction {
+  type: "dismiss";
+  index: number;
+}
+interface IDismissAllToastAction {
+  type: "dismiss-all";
+}
+type ToastActions =
+  | IAddToastAction
+  | IDismissToastAction
+  | IDismissAllToastAction;
+
+const toastReducer: React.Reducer<IToastNotification[], ToastActions> = (
+  state,
+  action,
+) => {
+  switch (action.type) {
+    case "add":
+      return [...state, ...action.toasts];
+
+    case "dismiss":
+      return [...state.filter((__, i) => i !== action.index)];
+
+    case "dismiss-all":
+      return [];
+
+    default:
+      return state;
+  }
+};
+
 export const ToastProvider: React.FC<IGlobalToastSettings> = ({
   children,
   renderInProvider,
   saveHistory,
   ...settings
 }) => {
-  const [toasts, setToasts] = React.useState<IToastNotification[]>([]);
+  const [toasts, dispatchAction] = React.useReducer(toastReducer, []);
   const [toastsHistory, setToastsHistory] = React.useState<
     IToastNotification[]
   >([]);
@@ -107,29 +142,31 @@ export const ToastProvider: React.FC<IGlobalToastSettings> = ({
   /** Dispatch a new toast notification */
 
   const dispatch = React.useCallback(
-    (newToast: IToastNotification) => {
-      setToasts([...toasts, newToast]);
+    (...newToasts: IToastNotification[]) => {
+      dispatchAction({ type: "add", toasts: newToasts });
+      // setToasts([...toasts, ...newToasts]);
       if (saveHistory) {
-        setToastsHistory([...toastsHistory, newToast]);
+        setToastsHistory([...toastsHistory, ...newToasts]);
       }
     },
-    [toasts],
+    [dispatchAction],
   );
 
   /** Dismiss a toast notification by index */
 
   const dismiss = React.useCallback(
     (index: number) => {
-      const newToasts = [...toasts];
-      newToasts.splice(index, 1);
-      setToasts(newToasts);
+      dispatchAction({ type: "dismiss", index });
     },
-    [toasts],
+    [dispatchAction],
   );
 
   /** Dismiss all toast notifications */
 
-  const dismissAll = React.useCallback(() => setToasts([]), []);
+  const dismissAll = React.useCallback(
+    () => dispatchAction({ type: "dismiss-all" }),
+    [dispatchAction],
+  );
 
   /** clear entire toast history */
 
@@ -213,8 +250,10 @@ export const useToast = (): IUseToastReturn => {
     clearToastHistory,
   } = context;
 
-  const dispatch = (toast: IToastNotification) =>
-    context.dispatch({ timestamp: +moment(), ...toast });
+  const dispatch = (...toasts: IToastNotification[]) =>
+    context.dispatch(
+      ...toasts.map(toast => ({ timestamp: +moment(), ...toast })),
+    );
 
   return {
     dispatch,
@@ -250,7 +289,7 @@ const ToastContainerInnerCorner: React.FC<IToastContainerInnerCornerProps> = ({
         {...toast}
         onDismiss={() => dismissToast(i)}
         settings={settings}
-        key={toast.timestamp + toast.title}
+        key={JSON.stringify(toast)}
       />
     ))}
   </div>
@@ -286,6 +325,7 @@ const ToastContainerInner: React.FC<IToastContainerProps> = ({
           location={key as ToastLocation}
           dismissToast={dismissToast}
           settings={settings}
+          key={key}
         />
       ))}
     </div>
