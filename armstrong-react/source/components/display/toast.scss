@@ -149,7 +149,7 @@ $max-width: 280px;
             .toast-notification-inner {
                 background-color: white;
                 box-shadow: 2px 2px 10px rgba(black, 0.3);
-                border-radius: 4px;
+                border-radius: $corner-radius-small;
                 padding: $spacing-small;
 
                 transition-property: opacity;
