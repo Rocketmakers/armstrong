@@ -49,7 +49,7 @@ import * as ArmstrongConfig from "./config/config"
 export { ValidationLabel, ValidationWrapper } from "./components/form/validationWrapper"
 export { ArmstrongConfig }
 // Toast
-export {useToast, ToastProvider} from "./components/display/toast";
+export { useToast, ToastProvider, IToastNotification, IGlobalToastSettings, DispatchToast, DismissToast, ToastLocation, ToastType, Toast } from "./components/display/toast";
 // Hooks
 export { useInfinitePaging, IInfinitePagingResult, IUseInfinitePagingSettings } from "./hooks/useInfinitePaging"
 export { usePaging, IPagingResult, IUsePagingSettings } from "./hooks/usePaging"

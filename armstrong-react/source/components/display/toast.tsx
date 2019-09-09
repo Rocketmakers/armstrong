@@ -1,6 +1,7 @@
 // TODO: Butter
 
 import * as React from "react";
+import * as ReactDOM from "react-dom";
 import { Icon } from "../../";
 
 export interface IToastNotification {
@@ -47,6 +48,9 @@ export interface IGlobalToastSettings {
 
   /** Render notifications in the provider component, disable if you want to manually render notifications if you don't want the default Armstrong notifications and want to consume the toasts context yourself - true by default */
   renderInProvider?: boolean;
+
+  /** Query selector for the element to portal the toast container into - if left undefined, will default to rendering where the Toast Provider is places in the tree without creating a portal */
+  hostElement?: string;
 }
 
 /// PROVIDER
@@ -164,7 +168,7 @@ interface IToastContainerProps {
 
 /** Renders the toasts in a list in a fixed element overlaying everything */
 
-const ToastContainer: React.FC<IToastContainerProps> = ({
+const ToastContainerInner: React.FC<IToastContainerProps> = ({
   settings,
   dismissToast,
   toasts,
@@ -183,6 +187,16 @@ const ToastContainer: React.FC<IToastContainerProps> = ({
   </div>
 );
 
+const ToastContainer: React.FC<IToastContainerProps> = props => {
+  if (props.settings.hostElement) {
+    return ReactDOM.createPortal(
+      <ToastContainerInner {...props} />,
+      document.querySelector(props.settings.hostElement),
+    );
+  }
+  return <ToastContainerInner {...props} />;
+};
+
 /// TOAST
 
 interface IToastProps extends IToastNotification {
@@ -190,9 +204,9 @@ interface IToastProps extends IToastNotification {
   onDismiss: () => void;
 }
 
-/** Renders a single dismissable toast */
+/** Renders a single dismissable toast — if you're happy with the default toast behaviour DONT USE THIS, the ToastProvider component will render all your toasts with animations and stuff like that. This is only if you're overriding that behaviour/layout but still want to use the Armstrong Toast component */
 
-const Toast: React.FC<IToastProps> = ({
+export const Toast: React.FC<IToastProps> = ({
   title,
   message: description,
   type,

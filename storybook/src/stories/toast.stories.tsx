@@ -19,13 +19,18 @@ const BasicInner = () => {
         })
       }
     >
-      DISPATCH A DUDE
+      Dispatch a Toast Notification
     </Button>
   );
 };
 
-storiesOf('Toast', module).add('Simple Toast', () => (
+storiesOf('Toasts', module).add('Simple Toast', () => (
   <ToastProvider>
+    <p>
+      Armstrong toasts, dispatched by the useToast hook, and handled by the
+      ToastProvider component by default.
+    </p>
+
     <BasicInner />
   </ToastProvider>
 ));
@@ -50,22 +55,29 @@ const ComplexInner = () => {
         })
       }
     >
-      DISPATCH A DUDE
+      Dispatch a Toast Notification
     </Button>
   );
 };
 
-storiesOf('Toast', module).add('Toast with content', () => (
+storiesOf('Toasts', module).add('Toast with custom JSX content', () => (
   <ToastProvider location='bottom left'>
+    <p>
+      Custom JSX content can be rendered on a per toast basis, passed into the
+      dispatch function returned by useToast
+    </p>
+
     <ComplexInner />
   </ToastProvider>
 ));
 
-storiesOf('Toast', module).add('Customised dismiss button', () => (
+storiesOf('Toasts', module).add('Customised dismiss button', () => (
   <ToastProvider
     location='top right'
     dismissButton={<Icon icon={Icon.Icomoon.arrowRight3} />}
   >
+    <p>The dismiss button has been changed to an arrow</p>
+
     <BasicInner />
   </ToastProvider>
 ));
@@ -84,10 +96,10 @@ const CustomInner = () => {
           })
         }
       >
-        DISPATCH A DUDE
+        Dispatch a Toast Notification
       </Button>
 
-      <Button onClick={dismissAll}>CLEAR ALL TOASTS</Button>
+      <Button onClick={dismissAll}>Clear all Toasts</Button>
 
       <div className='toasts'>
         {toasts.map((toast, i) => (
@@ -110,12 +122,29 @@ const CustomInner = () => {
   );
 };
 
-storiesOf('Toast', module).add('Custom toasts', () => (
+storiesOf('Toasts', module).add('Custom toasts', () => (
   <ToastProvider
     location='top right'
     dismissButton={<Icon icon={Icon.Icomoon.arrowRight3} />}
     renderInProvider={false}
   >
+    <p>
+      Default rendering has been disabled for these toasts and they are rendered
+      manually using the useToast hook.
+    </p>
+
     <CustomInner />
+  </ToastProvider>
+));
+
+storiesOf('Toasts', module).add('Portaled toasts', () => (
+  <ToastProvider
+    location='top right'
+    dismissButton={<Icon icon={Icon.Icomoon.arrowRight3} />}
+    hostElement='body'
+  >
+    <p>These toasts are portaled into the body using the hostElement prop</p>
+
+    <BasicInner />
   </ToastProvider>
 ));
