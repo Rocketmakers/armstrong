@@ -284,6 +284,24 @@ export const Toast: React.FC<IToastProps> = ({
     settings.dismissTime,
   ]);
 
+  /** shhh */
+
+  const actuallyToastStyles = React.useMemo<React.CSSProperties>(
+    () =>
+      (settings as any).butItsActuallyToast
+        ? {
+            backgroundImage:
+              (settings as any).butItsActuallyToast &&
+              "url(https://pngriver.com/wp-content/uploads/2018/04/Download-Toast-PNG-Photos.png)",
+            backgroundSize:
+              (settings as any).butItsActuallyToast && "100% 100%",
+            backgroundColor: "transparent",
+            boxShadow: "none",
+          }
+        : {},
+    [(settings as any).butItsActuallyToast],
+  );
+
   return (
     <div
       className="toast-notification"
@@ -304,6 +322,7 @@ export const Toast: React.FC<IToastProps> = ({
           transitionDuration: transitionStep,
           animationDelay: transitionStep,
           animationDuration: transitionStep,
+          ...actuallyToastStyles,
         }}
       >
         <div className="toast-notification-top">
