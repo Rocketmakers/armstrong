@@ -66,6 +66,9 @@ export interface IGlobalToastSettings {
 
   /** Timestamp format as a moment format string — only relevant if renderTimestamp is not set to undefined */
   timestampFormat?: string;
+
+  /** Whether to save all toast notifications to a history state that can be accessed from the hook - disabled by default (could be expanded to use localStorage at some point?) */
+  saveHistory?: boolean;
 }
 
 /// PROVIDER
@@ -75,6 +78,8 @@ interface IToastContext {
   dismiss: DismissToast;
   dismissAll: () => void;
   toasts: IToastNotification[];
+  toastsHistory: IToastNotification[];
+  clearToastHistory: () => void;
 }
 
 const ToastContext = React.createContext<IToastContext>(undefined);
@@ -84,15 +89,22 @@ const ToastContext = React.createContext<IToastContext>(undefined);
 export const ToastProvider: React.FC<IGlobalToastSettings> = ({
   children,
   renderInProvider,
+  saveHistory,
   ...settings
 }) => {
   const [toasts, setToasts] = React.useState<IToastNotification[]>([]);
+  const [toastsHistory, setToastsHistory] = React.useState<
+    IToastNotification[]
+  >([]);
 
   /** Dispatch a new toast notification */
 
   const dispatch = React.useCallback(
     (newToast: IToastNotification) => {
       setToasts([...toasts, newToast]);
+      if (saveHistory) {
+        setToastsHistory([...toastsHistory, newToast]);
+      }
     },
     [toasts],
   );
@@ -112,8 +124,21 @@ export const ToastProvider: React.FC<IGlobalToastSettings> = ({
 
   const dismissAll = React.useCallback(() => setToasts([]), []);
 
+  /** clear entire toast history */
+
+  const clearToastHistory = React.useCallback(() => setToastsHistory([]), []);
+
   return (
-    <ToastContext.Provider value={{ dispatch, dismiss, dismissAll, toasts }}>
+    <ToastContext.Provider
+      value={{
+        dispatch,
+        dismiss,
+        dismissAll,
+        toasts,
+        toastsHistory,
+        clearToastHistory,
+      }}
+    >
       {children}
 
       {renderInProvider && !!toasts.length && (
@@ -151,6 +176,12 @@ interface IUseToastReturn {
 
   /** all the current toast notifications - use if they are to be rendered elsewhere */
   toasts: IToastNotification[];
+
+  /** all previous toasts this session */
+  toastsHistory: IToastNotification[];
+
+  /** clears entire toast history */
+  clearToastHistory: () => void;
 }
 
 /** Use toast notifications — returns a method that dispatches a toast notification to the ToastContext, which renders it in the ToastProvider component, as well as methods to dismiss notifications */
@@ -167,12 +198,25 @@ export const useToast = (): IUseToastReturn => {
     return;
   }
 
-  const { dismiss, dismissAll, toasts } = context;
+  const {
+    dismiss,
+    dismissAll,
+    toasts,
+    toastsHistory,
+    clearToastHistory,
+  } = context;
 
   const dispatch = (toast: IToastNotification) =>
     context.dispatch({ timestamp: +moment(), ...toast });
 
-  return { dispatch, dismiss, dismissAll, toasts };
+  return {
+    dispatch,
+    dismiss,
+    dismissAll,
+    toasts,
+    toastsHistory,
+    clearToastHistory,
+  };
 };
 
 /// TOAST CONTAINER
@@ -182,8 +226,6 @@ interface IToastContainerProps {
   settings: IGlobalToastSettings;
   toasts: IToastNotification[];
 }
-
-/** Renders the toasts in a list in a fixed element overlaying everything */
 
 const ToastContainerInner: React.FC<IToastContainerProps> = ({
   settings,
@@ -203,6 +245,8 @@ const ToastContainerInner: React.FC<IToastContainerProps> = ({
     </div>
   </div>
 );
+
+/** Renders the toasts in a list in a fixed element overlaying everything */
 
 const ToastContainer: React.FC<IToastContainerProps> = props => {
   if (props.settings.hostElement) {
@@ -353,7 +397,7 @@ export const Toast: React.FC<IToastProps> = ({
           ...actuallyToastStyles,
         }}
       >
-        {allowManualDismiss && settings.renderTimestamp && title && (
+        {(allowManualDismiss || settings.renderTimestamp || title) && (
           <div className="toast-notification-top">
             <div>
               <h3>{title}</h3>

@@ -151,3 +151,48 @@ storiesOf('Toasts', module).add('Portaled toasts', () => (
     <BasicInner />
   </ToastProvider>
 ));
+
+const HistoryInner = () => {
+  const { dispatch, toastsHistory } = useToast();
+
+  return (
+    <>
+      <Button
+        onClick={() =>
+          dispatch({
+            title: 'TOAST',
+            type: 'error',
+            message: 'look at this one!',
+            autodismiss: 5000
+          })
+        }
+      >
+        Dispatch a Toast Notification
+      </Button>
+
+      <div className='notifications'>
+        {toastsHistory.map(toast => (
+          <p>
+            {toast.title} — {toast.timestamp}
+          </p>
+        ))}
+      </div>
+    </>
+  );
+};
+
+storiesOf('Toasts', module).add('Toast history', () => (
+  <ToastProvider
+    location='top right'
+    dismissButton={<Icon icon={Icon.Icomoon.arrowRight3} />}
+    hostElement='body'
+    saveHistory
+  >
+    <p>
+      These toasts are kept in a toast history state, and can be rendered
+      elsewhere - ie in a notification centre
+    </p>
+
+    <HistoryInner />
+  </ToastProvider>
+));
