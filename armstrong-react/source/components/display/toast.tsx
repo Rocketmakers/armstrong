@@ -3,7 +3,7 @@
 import * as moment from "moment";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import { Icon } from "../../";
+import { ClassHelpers, Icon } from "../../";
 
 export interface IToastNotification {
   title?: string;
@@ -31,6 +31,9 @@ export interface IToastNotification {
 
   /** unix timestamp of when the notification is dispatched, will default to current time but can be overriden  */
   timestamp?: number;
+
+  /** add an additionaly className to the toast notification, to allow for individual styling */
+  className?: string;
 }
 
 export type DispatchToast = (toast: IToastNotification) => void;
@@ -286,6 +289,7 @@ export const Toast: React.FC<IToastProps> = ({
   content,
   onDismiss,
   timestamp,
+  className,
   allowManualDismiss,
 }) => {
   const autoDismissTimeout = React.useRef(null);
@@ -376,7 +380,7 @@ export const Toast: React.FC<IToastProps> = ({
 
   return (
     <div
-      className="toast-notification"
+      className={ClassHelpers.classNames("toast-notification", className)}
       data-type={type}
       data-dismissing={dismissing}
       ref={ref}
