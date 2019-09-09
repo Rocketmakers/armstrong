@@ -353,21 +353,23 @@ export const Toast: React.FC<IToastProps> = ({
           ...actuallyToastStyles,
         }}
       >
-        <div className="toast-notification-top">
-          <div>
-            <h3>{title}</h3>
+        {allowManualDismiss && settings.renderTimestamp && title && (
+          <div className="toast-notification-top">
+            <div>
+              <h3>{title}</h3>
 
-            {settings.renderTimestamp === "below title" && (
-              <ToastDate timestamp={timestamp} settings={settings} />
+              {settings.renderTimestamp === "below title" && (
+                <ToastDate timestamp={timestamp} settings={settings} />
+              )}
+            </div>
+
+            {allowManualDismiss && (
+              <div className="toast-dismiss" onClick={dismiss}>
+                {settings.dismissButton}
+              </div>
             )}
           </div>
-
-          {allowManualDismiss && (
-            <div className="toast-dismiss" onClick={dismiss}>
-              {settings.dismissButton}
-            </div>
-          )}
-        </div>
+        )}
 
         <p>{description}</p>
 
