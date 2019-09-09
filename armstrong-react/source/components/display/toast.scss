@@ -40,13 +40,8 @@ $max-width: 280px;
 
     pointer-events: none;
 
-    display: flex;
-    align-items: stretch;
-
     &[data-location="top left"],
     &[data-location="bottom left"] {
-        justify-content: flex-start;
-
         .toasts {
             .toast-notification {
                 .toast-notification-inner {
@@ -59,8 +54,6 @@ $max-width: 280px;
 
     &[data-location="top right"],
     &[data-location="bottom right"] {
-        justify-content: flex-end;
-
         .toasts {
             .toast-notification {
                 .toast-notification-inner {
@@ -88,11 +81,50 @@ $max-width: 280px;
     }
 
     .toasts {
+        position: absolute;
         display: flex;
         flex-direction: column;
         width: 100%;
         max-width: $max-width;
         padding: $spacing-small / 2 $spacing-small;
+
+        &.toasts-top-left,
+        &.toasts-top-right {
+            top: 0;
+            flex-direction: column-reverse;
+            justify-content: flex-end;
+        }
+
+        &.toasts-bottom-left,
+        &.toasts-bottom-right {
+            bottom: 0;
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+
+        &.toasts-top-left,
+        &.toasts-bottom-left {
+            left: 0;
+
+            .toast-notification {
+                .toast-notification-inner {
+                    transform: translate3d(100vw, 0, 0);
+                    animation-name: animate-toast-inner-from-left;
+                }
+            }
+        }
+
+        &.toasts-top-right,
+        &.toasts-bottom-right {
+            right: 0;
+
+            .toast-notification {
+                .toast-notification-inner {
+                    transform: translate3d(100vw, 0, 0);
+                    animation-name: animate-toast-inner-from-right;
+                }
+            }
+        }
 
         .toast-notification {
             pointer-events: all;

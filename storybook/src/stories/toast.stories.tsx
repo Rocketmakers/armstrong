@@ -61,6 +61,20 @@ const BasicInner = () => {
       >
         Dispatch a success Notification
       </Button>
+
+      <Button
+        onClick={() =>
+          dispatch({
+            title: 'Top left',
+            message: "Look at me i'm in the top left...",
+            type: 'success',
+            autodismiss: 6000,
+            location: 'top left'
+          })
+        }
+      >
+        Dispatch a notification to the top left
+      </Button>
     </>
   );
 };
@@ -69,9 +83,7 @@ storiesOf('Toasts', module).add('Simple Toast', () => (
   <ToastProvider>
     <p>
       Armstrong toasts, dispatched by the useToast hook, and handled by the
-      ToastProvider component by default.
-
-      Different types of notification are 
+      ToastProvider component by default. Different types of notification are
     </p>
 
     <BasicInner />

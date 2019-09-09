@@ -3,7 +3,17 @@
 import * as moment from "moment";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
+import * as _ from "underscore";
 import { ClassHelpers, Icon } from "../../";
+
+export type DispatchToast = (toast: IToastNotification) => void;
+export type DismissToast = (index: number) => void;
+export type ToastLocation =
+  | "top left"
+  | "top right"
+  | "bottom left"
+  | "bottom right";
+export type ToastType = "info" | "success" | "warning" | "error";
 
 export interface IToastNotification {
   title?: string;
@@ -34,19 +44,13 @@ export interface IToastNotification {
 
   /** add an additionaly className to the toast notification, to allow for individual styling */
   className?: string;
+
+  /** Area of the screen for this toast to render in - defaults to global settings value set in provider, or to top right if that's not set. */
+  location?: ToastLocation;
 }
 
-export type DispatchToast = (toast: IToastNotification) => void;
-export type DismissToast = (index: number) => void;
-export type ToastLocation =
-  | "top left"
-  | "top right"
-  | "bottom left"
-  | "bottom right";
-export type ToastType = "info" | "success" | "warning" | "error";
-
 export interface IGlobalToastSettings {
-  /** Area of the screen for toasts to render in */
+  /** Area of the screen for toasts to render in - can be overidden individually */
   location?: ToastLocation;
 
   /** jsx to render as a dismiss button on each toast - an icomoon cross by default */
@@ -230,24 +234,63 @@ interface IToastContainerProps {
   toasts: IToastNotification[];
 }
 
+interface IToastContainerInnerCornerProps extends IToastContainerProps {
+  location: ToastLocation;
+}
+
+const ToastContainerInnerCorner: React.FC<IToastContainerInnerCornerProps> = ({
+  toasts,
+  dismissToast,
+  settings,
+  location,
+}) => (
+  <div className={`toasts toasts-${location.replace(/ /g, "-")}`}>
+    {toasts.map((toast, i) => (
+      <Toast
+        {...toast}
+        onDismiss={() => dismissToast(i)}
+        settings={settings}
+        key={toast.timestamp + toast.title}
+      />
+    ))}
+  </div>
+);
+
 const ToastContainerInner: React.FC<IToastContainerProps> = ({
   settings,
   dismissToast,
   toasts,
-}) => (
-  <div className="toast-container" data-location={settings.location}>
-    <div className="toasts">
-      {toasts.map((toast, i) => (
-        <Toast
-          {...toast}
-          onDismiss={() => dismissToast(i)}
+}) => {
+  const seperatedToasts = React.useMemo(() => {
+    const allToasts: {
+      [key in ToastLocation]: IToastNotification[];
+    } = {
+      "top left": [],
+      "top right": [],
+      "bottom left": [],
+      "bottom right": [],
+    };
+
+    toasts.forEach(toast => {
+      allToasts[toast.location || settings.location].push(toast);
+    });
+
+    return allToasts;
+  }, [toasts]);
+
+  return (
+    <div className="toast-container">
+      {Object.keys(seperatedToasts).map(key => (
+        <ToastContainerInnerCorner
+          toasts={seperatedToasts[key]}
+          location={key as ToastLocation}
+          dismissToast={dismissToast}
           settings={settings}
-          key={toast.timestamp + toast.title}
         />
       ))}
     </div>
-  </div>
-);
+  );
+};
 
 /** Renders the toasts in a list in a fixed element overlaying everything */
 
