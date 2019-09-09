@@ -9,18 +9,59 @@ const BasicInner = () => {
   const { dispatch } = useToast();
 
   return (
-    <Button
-      onClick={() =>
-        dispatch({
-          title: 'TOAST',
-          message: "I'm a toast",
-          type: 'info',
-          autodismiss: 6000
-        })
-      }
-    >
-      Dispatch a Toast Notification
-    </Button>
+    <>
+      <Button
+        onClick={() =>
+          dispatch({
+            title: 'Info',
+            message: "I'm a toast",
+            type: 'info',
+            autodismiss: 6000
+          })
+        }
+      >
+        Dispatch an info Notification
+      </Button>
+
+      <Button
+        onClick={() =>
+          dispatch({
+            title: 'Warning',
+            message: "I'm a warning",
+            type: 'warning',
+            autodismiss: 6000
+          })
+        }
+      >
+        Dispatch a warning Notification
+      </Button>
+
+      <Button
+        onClick={() =>
+          dispatch({
+            title: 'Error',
+            message: "I'm an error.... ruh roh",
+            type: 'error',
+            autodismiss: 6000
+          })
+        }
+      >
+        Dispatch an error Notification
+      </Button>
+
+      <Button
+        onClick={() =>
+          dispatch({
+            title: 'Success',
+            message: "I'm a success notification! Isn't that nice!",
+            type: 'success',
+            autodismiss: 6000
+          })
+        }
+      >
+        Dispatch a success Notification
+      </Button>
+    </>
   );
 };
 
@@ -29,6 +70,8 @@ storiesOf('Toasts', module).add('Simple Toast', () => (
     <p>
       Armstrong toasts, dispatched by the useToast hook, and handled by the
       ToastProvider component by default.
+
+      Different types of notification are 
     </p>
 
     <BasicInner />
