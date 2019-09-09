@@ -158,6 +158,7 @@ $max-width: 280px;
                 .toast-notification-top {
                     display: flex;
                     justify-content: space-between;
+                    margin-bottom: $spacing-small;
 
                     .toast-dismiss {
                         cursor: pointer;
@@ -171,6 +172,10 @@ $max-width: 280px;
                 p.toast-timestamp {
                     line-height: 0;
                     font-size: 0.8rem;
+                }
+
+                p {
+                    margin-bottom: 0;
                 }
             }
         }
