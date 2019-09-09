@@ -10,18 +10,27 @@ interface ISidebarContentProps {
 }
 
 export interface ISidebarProps {
+  /** Is the sidebar initally open */
   openByDefault?: boolean
+  /** Inner content of the sidebar */
   content: JSX.Element | React.FC<ISidebarContentProps>
-  sticky?: boolean
+  /** Callback which passes the state of the sidebar */
   onChange?: (state: "open" | "closed") => void
+  /** Position of the sidebar */
   position?: "left" | "right"
+  /** Icon for the open button */
   openButtonIcon: string
+  /** Icon for the close button */
   closeButtonIcon: string
+  /** How long the transition takes in ms */
   transitionTime?: number
-  children: React.ReactNode
+  /** Sidebar width when open */
   openWidth?: number
+  /** Sidebar width when closed */
   collaspedWidth?: number
+  /** A media query for when the sidebar should auto collapse */
   autoCollapseMediaQuery?: string
+  /** A media query for when the sidebar should turn into a burger menu (mobile) */
   turnToBurgerMediaQuery?: string
 }
 
@@ -33,7 +42,6 @@ const SidebarComponent: React.FC<ISidebarProps & { autoCollapse: boolean, autoBu
   content: Content,
   position,
   transitionTime,
-  sticky,
   children,
   openWidth,
   collaspedWidth,
@@ -75,27 +83,30 @@ const SidebarComponent: React.FC<ISidebarProps & { autoCollapse: boolean, autoBu
 
   }, [width, autoCollapse, autoBurger, collaspedWidth])
 
-  // console.log(autoBurger, autoCollapse)
   return (
     <>
       <nav className="armstrong-collapsable-burger-menu"
         data-open={open}
-        data-sticky={sticky}
         data-position={position}
         data-burger={autoBurger}
         style={{ transition: `${transitionTime}ms`, width }}
+        role="navigation"
       >
         <Button
           className="armstrong-burger-menu-button"
-          onClick={() => setOpen(!open)}>
-          {closeButtonIcon && <Icon icon={open ? closeButtonIcon : openButtonIcon} />}
+          onClick={() => setOpen(!open)}
+          aria-label={`${open ? `Close` : `Open`} the sidebar`}
+          >
+          {closeButtonIcon && <Icon aria-hidden={true} icon={open ? closeButtonIcon : openButtonIcon} />}
         </Button>
         <div className="armstrong-burger-content">{utils.object.isFunction(Content) ? <Content open={autoBurger ? true : open} /> : Content}</div>
       </nav>
       {autoBurger && <Button
         className="armstrong-burger-menu-button open"
-        onClick={() => setOpen(true)}>
-        {closeButtonIcon && <Icon icon={openButtonIcon} />}
+        onClick={() => setOpen(true)}
+        aria-label="Open the sidebar"
+        >
+        {closeButtonIcon && <Icon aria-hidden={true} icon={openButtonIcon} />}
       </Button>
       }
       {(autoBurger) && <div
@@ -103,6 +114,8 @@ const SidebarComponent: React.FC<ISidebarProps & { autoCollapse: boolean, autoBu
         onClick={() => setOpen(false)}
         style={{ transition: `${transitionTime}ms` }}
         data-transition={transitioning ? open ? "in" : "out" : open ? "open" : "closed"}
+        aria-label="Close the sidebar"
+        aria-hidden={!open}
       />}
       <div className="armstrong-site-content-wrapper" style={{ ...wrapperStyle, transition: `padding ${transitionTime}ms` }}>
         {children}
@@ -139,7 +152,6 @@ Sidebar.defaultProps = {
   openByDefault: true,
   position: "left",
   transitionTime: 300,
-  sticky: false,
   openWidth: 250,
   collaspedWidth: 80,
   autoCollapseMediaQuery: "(max-width: 900px)",

@@ -122,15 +122,6 @@ $max-menu-width: 250px;
   }
 }
 
-.armstrong-burger-menu-item {
-  margin: $spacing-small 0;
-  align-items: center;
-
-  i {
-    margin-right: $spacing-small;
-  }
-}
-
 .armstrong-burger-content {
   &[data-show=true] {
     display: block;

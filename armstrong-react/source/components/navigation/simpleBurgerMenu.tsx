@@ -4,15 +4,23 @@ import { Icon } from "../display/icon";
 import { Button } from "../interaction/button";
 
 export interface ISimpleBurgerMenuProps {
+  /** Inner content of the menu */
   content: JSX.Element
+  /** Does the menu come in over the top, or push the side */
   mode?: "push" | "slide"
+  /** Callback which passes the state of the menu */
   onChange?: (state: "open" | "closed") => void
+  /** Position of the menu */
   position?: "left" | "right"
+  /** Icon for the open button */
   openButtonIcon: string
+  /** Icon for the close button */
   closeButtonIcon: string
+  /** How long the transition takes in ms */
   transitionTime?: number
-  children: React.ReactNode
+  /** Hide the open button, so that you can put a custom button in */
   hideOpenButton?: boolean
+  /** Hide the close button, so that you can put a custom button in */
   hideCloseButton?: boolean
 }
 
@@ -64,11 +72,14 @@ const SimpleBurgerMenuComponent: React.FC<ISimpleBurgerMenuProps> = ({
         data-position={position}
         data-mode={mode}
         style={{ transition: `${transitionTime}ms` }}
+        role="navigation"
       >
         {!hideCloseButton && <Button
           className="armstrong-burger-menu-button close"
-          onClick={() => setOpen(false)}>
-          {closeButtonIcon && <Icon icon={closeButtonIcon} />}
+          onClick={() => setOpen(false)}
+          aria-label="Close the menu"
+        >
+          {closeButtonIcon && <Icon aria-hidden={true} icon={closeButtonIcon} />}
         </Button>
         }
         <div className="armstrong-burger-content">{Content}</div>
@@ -76,12 +87,15 @@ const SimpleBurgerMenuComponent: React.FC<ISimpleBurgerMenuProps> = ({
       {!hideOpenButton && <Button
         data-position={position}
         className="armstrong-burger-menu-button open"
-        onClick={() => setOpen(true)}>
-        {openButtonIcon && <Icon icon={openButtonIcon} />}
+        onClick={() => setOpen(true)}
+        aria-label="Open the menu">
+        {openButtonIcon && <Icon aria-hidden={true} icon={openButtonIcon} />}
       </Button>}
       {mode === "slide" && <div
         className="armstrong-menu-overlay"
         onClick={() => setOpen(false)}
+        aria-label="Close the menu"
+        aria-hidden={!open}
         style={{ transition: `${transitionTime}ms` }}
         data-transition={transitioning ? open ? "in" : "out" : open ? "open" : "closed"}
       />}

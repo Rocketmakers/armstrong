@@ -5,55 +5,47 @@ import { Sidebar, Icon, Button, useSidebar } from "../_symlink";
 import "../theme/theme.scss";
 
 storiesOf('Sidebar', module)
-  .add('Basic', () => <Sidebar
-    content={({ open }) => <div>
+  .add('Basic', () =>
+    <Sidebar
+      content={SidebarContent}
+      closeButtonIcon={Icon.Icomoon.arrowLeft3}
+      openButtonIcon={Icon.Icomoon.arrowRight3}
+    >
+      <div id="site-wrapper">BODY</div>
+    </Sidebar>)
+  .add('Basic with hook', () =>
+    <Sidebar
+      position={"left"}
+      content={SidebarContent}
+      closeButtonIcon={Icon.Icomoon.arrowLeft3}
+      openButtonIcon={Icon.Icomoon.arrowRight3}
+    >
+      <div id="site-wrapper"><MenuHandler /></div>
+    </Sidebar>)
+
+
+const SidebarContent: React.FC<{ open: boolean }> = ({ open }) => {
+
+  return (
+    <div>
       {open ?
         <>
-          <div className="armstrong-burger-menu-item"><Icon icon={Icon.Icomoon.sad} />LINK 1</div>
-          <div className="armstrong-burger-menu-item"><Icon icon={Icon.Icomoon.sad} />LINK 2</div>
-          <div className="armstrong-burger-menu-item"><Icon icon={Icon.Icomoon.sad} />LINK 3</div>
-          <div className="armstrong-burger-menu-item"><Icon icon={Icon.Icomoon.sad} />LINK 4</div>
+          <div style={{ margin: '30px 0' }} className="sidebar-item"><Icon style={{ marginRight: '20px' }} icon={Icon.Icomoon.crown} />LINK ONE</div>
+          <div style={{ margin: '30px 0' }} className="sidebar-item"><Icon style={{ marginRight: '20px' }} icon={Icon.Icomoon.wallet} />LINK TWO</div>
+          <div style={{ margin: '30px 0' }} className="sidebar-item"><Icon style={{ marginRight: '20px' }} icon={Icon.Icomoon.feed} />LINK THREE</div>
+          <div style={{ margin: '30px 0' }} className="sidebar-item"><Icon style={{ marginRight: '20px' }} icon={Icon.Icomoon.hourGlass} />LINK FOUR</div>
         </>
         :
         <>
-          <div className="armstrong-burger-menu-item"><Icon icon={Icon.Icomoon.sad} /></div>
-          <div className="armstrong-burger-menu-item"><Icon icon={Icon.Icomoon.sad} /></div>
-          <div className="armstrong-burger-menu-item"><Icon icon={Icon.Icomoon.sad} /></div>
-          <div className="armstrong-burger-menu-item"><Icon icon={Icon.Icomoon.sad} /></div>
+          <div style={{ display: "flex", justifyContent: "center", margin: '30px 0' }} className="sidebar-item"><Icon icon={Icon.Icomoon.crown} /></div>
+          <div style={{ display: "flex", justifyContent: "center", margin: '30px 0' }} className="sidebar-item"><Icon icon={Icon.Icomoon.wallet} /></div>
+          <div style={{ display: "flex", justifyContent: "center", margin: '30px 0' }} className="sidebar-item"><Icon icon={Icon.Icomoon.feed} /></div>
+          <div style={{ display: "flex", justifyContent: "center", margin: '30px 0' }} className="sidebar-item"><Icon icon={Icon.Icomoon.hourGlass} /></div>
         </>
       }
     </div>
-    }
-    closeButtonIcon={Icon.Icomoon.arrowLeft3}
-    openButtonIcon={Icon.Icomoon.arrowRight3}
-  >
-    <div id="site-wrapper">BODY</div>
-  </Sidebar>)
-  .add('Basic with hook', () => <Sidebar
-    position={"left"}
-    content={({ open }) => <div>
-      {open ?
-        <>
-          <div className="armstrong-burger-menu-item"><Icon icon={Icon.Icomoon.sad} />LINK 1</div>
-          <div className="armstrong-burger-menu-item"><Icon icon={Icon.Icomoon.sad} />LINK 2</div>
-          <div className="armstrong-burger-menu-item"><Icon icon={Icon.Icomoon.sad} />LINK 3</div>
-          <div className="armstrong-burger-menu-item"><Icon icon={Icon.Icomoon.sad} />LINK 4</div>
-        </>
-        :
-        <>
-          <div className="armstrong-burger-menu-item"><Icon icon={Icon.Icomoon.sad} /></div>
-          <div className="armstrong-burger-menu-item"><Icon icon={Icon.Icomoon.sad} /></div>
-          <div className="armstrong-burger-menu-item"><Icon icon={Icon.Icomoon.sad} /></div>
-          <div className="armstrong-burger-menu-item"><Icon icon={Icon.Icomoon.sad} /></div>
-        </>
-      }
-    </div>
-    }
-    closeButtonIcon={Icon.Icomoon.arrowLeft3}
-    openButtonIcon={Icon.Icomoon.arrowRight3}
-  >
-    <div id="site-wrapper"><MenuHandler /></div>
-  </Sidebar>)
+  )
+}
 
 const MenuHandler: React.FC<{}> = p => {
   const { open, setOpen } = useSidebar()
