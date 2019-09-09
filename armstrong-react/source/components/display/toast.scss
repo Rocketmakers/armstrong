@@ -94,8 +94,6 @@ $max-width: 280px;
         max-width: $max-width;
         padding: $spacing-small / 2 $spacing-small;
 
-        overflow-y: auto;
-
         .toast-notification {
             pointer-events: all;
 
@@ -164,6 +162,15 @@ $max-width: 280px;
                     .toast-dismiss {
                         cursor: pointer;
                     }
+
+                    h3 {
+                        line-height: 0.8rem;
+                    }
+                }
+
+                p.toast-timestamp {
+                    line-height: 0;
+                    font-size: 0.8rem;
                 }
             }
         }

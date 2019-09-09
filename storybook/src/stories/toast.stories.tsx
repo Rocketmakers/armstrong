@@ -45,7 +45,7 @@ const ComplexInner = () => {
           title: 'TOAST',
           type: 'warning',
           allowManualDismiss: false,
-          content: dismiss => (
+          content: ({ dismiss }) => (
             <>
               <p>Look at this here</p>
               <TextInput />
@@ -113,7 +113,10 @@ const CustomInner = () => {
             <h3>{toast.title}</h3>
             <p>{toast.message}</p>
             {typeof toast.content === 'function'
-              ? toast.content(() => dismiss(i))
+              ? toast.content({
+                  dismiss: () => dismiss(i),
+                  timestamp: toast.timestamp
+                })
               : toast.content}
           </div>
         ))}

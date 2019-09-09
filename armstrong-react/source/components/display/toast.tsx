@@ -1,5 +1,6 @@
 // TODO: Butter
 
+import * as moment from "moment";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 import { Icon } from "../../";
@@ -17,8 +18,16 @@ export interface IToastNotification {
   /** whether to allow the user to manually dismiss the toast with a close button rendered at the top right - defaults to true */
   allowManualDismiss?: boolean;
 
-  /** jsx to render inside the toast notification - can optionally pass down a function to dismiss the notification */
-  content?: ((dismiss: () => void) => JSX.Element) | JSX.Element;
+  /** jsx to render inside the toast notification - can optionally pass down a function to access the dismiss function and the timestamp */
+  content?:
+    | ((args: {
+        /** method to dismiss this notification */
+        dismiss?: () => void;
+
+        /** unix timestamp at which the notification was dispatched */
+        timestamp?: number;
+      }) => JSX.Element)
+    | JSX.Element;
 
   /** unix timestamp of when the notification is dispatched, will default to current time but can be overriden  */
   timestamp?: number;
@@ -51,6 +60,12 @@ export interface IGlobalToastSettings {
 
   /** Query selector for the element to portal the toast container into - if left undefined, will default to rendering where the Toast Provider is places in the tree without creating a portal */
   hostElement?: string;
+
+  /** Location to render the timestamp of a notification, set to undefined to not render timestamp at all — can alternatively be accessed in the content prop on a notification - below title by default */
+  renderTimestamp?: "below title" | "below content";
+
+  /** Timestamp format as a moment format string — only relevant if renderTimestamp is not set to undefined */
+  timestampFormat?: string;
 }
 
 /// PROVIDER
@@ -118,6 +133,8 @@ ToastProvider.defaultProps = {
   dismissTime: 500,
   disableAutodismissOnHover: true,
   renderInProvider: true,
+  renderTimestamp: "below title",
+  timestampFormat: "HH:mm",
 };
 
 /// TOAST HOOK
@@ -153,7 +170,7 @@ export const useToast = (): IUseToastReturn => {
   const { dismiss, dismissAll, toasts } = context;
 
   const dispatch = (toast: IToastNotification) =>
-    context.dispatch({ timestamp: new Date().getTime(), ...toast });
+    context.dispatch({ timestamp: +moment(), ...toast });
 
   return { dispatch, dismiss, dismissAll, toasts };
 };
@@ -206,6 +223,16 @@ interface IToastProps extends IToastNotification {
 
 /** Renders a single dismissable toast — if you're happy with the default toast behaviour DONT USE THIS, the ToastProvider component will render all your toasts with animations and stuff like that. This is only if you're overriding that behaviour/layout but still want to use the Armstrong Toast component */
 
+const ToastDate: React.FC<{
+  timestamp: number;
+  settings: IGlobalToastSettings;
+}> = ({ timestamp, settings }) =>
+  settings.renderTimestamp ? (
+    <p className="toast-timestamp">
+      {moment.unix(timestamp / 1000).format(settings.timestampFormat)}
+    </p>
+  ) : null;
+
 export const Toast: React.FC<IToastProps> = ({
   title,
   message: description,
@@ -214,6 +241,7 @@ export const Toast: React.FC<IToastProps> = ({
   autodismiss,
   content,
   onDismiss,
+  timestamp,
   allowManualDismiss,
 }) => {
   const autoDismissTimeout = React.useRef(null);
@@ -326,7 +354,13 @@ export const Toast: React.FC<IToastProps> = ({
         }}
       >
         <div className="toast-notification-top">
-          <h3>{title}</h3>
+          <div>
+            <h3>{title}</h3>
+
+            {settings.renderTimestamp === "below title" && (
+              <ToastDate timestamp={timestamp} settings={settings} />
+            )}
+          </div>
 
           {allowManualDismiss && (
             <div className="toast-dismiss" onClick={dismiss}>
@@ -337,7 +371,13 @@ export const Toast: React.FC<IToastProps> = ({
 
         <p>{description}</p>
 
-        {typeof content === "function" ? content(dismiss) : content}
+        {typeof content === "function"
+          ? content({ dismiss, timestamp })
+          : content}
+
+        {settings.renderTimestamp === "below content" && (
+          <ToastDate timestamp={timestamp} settings={settings} />
+        )}
       </div>
     </div>
   );
