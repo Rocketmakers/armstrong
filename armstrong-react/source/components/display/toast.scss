@@ -1,0 +1,171 @@
+$max-width: 280px;
+
+@keyframes animate-toast-outer {
+    from {
+        max-height: 0
+    }
+
+    to {
+        max-height: 300px;
+    }
+}
+
+@keyframes animate-toast-inner-from-left {
+    from {
+        transform: translate3d(-100%, 0, 0);
+    }
+
+    to {
+        transform: translate3d(0, 0, 0);
+    }
+}
+
+@keyframes animate-toast-inner-from-right {
+    from {
+        transform: translate3d(100%, 0, 0);
+    }
+
+    to {
+        transform: translate3d(0, 0, 0);
+    }
+}
+
+.toast-container {
+    position: fixed;
+    z-index: 99;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+
+    pointer-events: none;
+
+    display: flex;
+    align-items: stretch;
+
+    &[data-location="top left"],
+    &[data-location="bottom left"] {
+        justify-content: flex-start;
+
+        .toasts {
+            .toast-notification {
+                .toast-notification-inner {
+                    transform: translate3d(-100vw, 0, 0);
+                    animation-name: animate-toast-inner-from-left;
+                }
+            }
+        }
+    }
+
+    &[data-location="top right"],
+    &[data-location="bottom right"] {
+        justify-content: flex-end;
+
+        .toasts {
+            .toast-notification {
+                .toast-notification-inner {
+                    transform: translate3d(100vw, 0, 0);
+                    animation-name: animate-toast-inner-from-right;
+                }
+            }
+        }
+    }
+
+    &[data-location="top left"],
+    &[data-location="top right"] {
+        .toasts {
+            flex-direction: column-reverse;
+            justify-content: flex-end;
+        }
+    }
+    
+    &[data-location="bottom left"],
+    &[data-location="bottom right"] {
+        .toasts {
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+    }
+
+    .toasts {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        max-width: $max-width;
+        padding: $spacing-small / 2 $spacing-small;
+
+        overflow-y: auto;
+
+        .toast-notification {
+
+            pointer-events: all;
+
+            width: 100%;
+            max-height: 300px;
+
+            box-sizing: border-box;
+
+            margin: $spacing-small / 2 0;
+
+            transition-property: max-height;
+
+            color: white;
+
+            will-change: transform;
+
+            animation-name: animate-toast-outer;
+            // animation-fill-mode: forwards;
+
+            &[data-dismissing="true"] {
+                max-height: 0;
+
+                .toast-notification-inner {
+                    opacity: 0;
+                }
+            }
+
+            &[data-type="success"] {
+                .toast-notification-inner {
+                    background-color: $color-positive;
+                }
+            }
+
+            &[data-type="error"] {
+                .toast-notification-inner {
+                    background-color: $color-negative;
+                }
+            }
+
+            &[data-type="info"] {
+                .toast-notification-inner {
+                    background-color: $color-info;
+                }
+            }
+
+            &[data-type="warning"] {
+                .toast-notification-inner {
+                    background-color: $color-warning;
+                }
+            }
+
+            .toast-notification-inner {
+                background-color: white;
+                box-shadow: 2px 2px 10px rgba(black, 0.3);
+                border-radius: 4px;
+                padding: $spacing-small;
+
+                transition-property: opacity;
+                animation-fill-mode: forwards;
+
+                .toast-notification-top {
+                    display: flex;
+                    justify-content: space-between;
+
+                    .toast-dismiss {
+                        cursor: pointer;
+                    }
+                }
+            }
+        }
+    }
+}
