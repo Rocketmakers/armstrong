@@ -1,27 +1,27 @@
 import * as React from "react"
 import { storiesOf } from '@storybook/react';
-import { Icon, SimpleBurgerMenu, useSimpleBurgerMenu, Button } from "../_symlink";
+import { Icon, BurgerMenu, useBurgerMenu, Button } from "../_symlink";
 
 import "../theme/theme.scss";
 
 storiesOf('Burger menu', module)
-  .add('Simple', () => <SimpleBurgerMenu
+  .add('basic', () => <BurgerMenu
     position={"left"}
     content={<MenuContent />}
     closeButtonIcon={Icon.Icomoon.cross}
     openButtonIcon={Icon.Icomoon.menu3}
   >
     <div id="site-wrapper">BODY</div>
-  </SimpleBurgerMenu>)
-  .add('Simple with hook', () =>
-    <SimpleBurgerMenu
+  </BurgerMenu>)
+  .add('menu with hook', () =>
+    <BurgerMenu
       hideOpenButton={true}
       content={<MenuContent />}
       closeButtonIcon={Icon.Icomoon.cross}
       openButtonIcon={Icon.Icomoon.menu3}
     >
       <div id="site-wrapper"><Header /></div>
-    </SimpleBurgerMenu>)
+    </BurgerMenu>)
 
 
 const MenuContent: React.FC<{}> = () => {
@@ -38,7 +38,7 @@ const MenuContent: React.FC<{}> = () => {
 
 
 const Header: React.FC<{}> = p => {
-  const { open, setOpen } = useSimpleBurgerMenu()
+  const { open, setOpen } = useBurgerMenu()
   return (
     <>
       <Button onClick={() => setOpen(!open)}>{open ? "CLOSE" : "OPEN"} MENU</Button>

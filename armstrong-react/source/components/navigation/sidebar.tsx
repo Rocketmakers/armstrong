@@ -1,5 +1,6 @@
 
 import * as React from "react"
+import { useMedia } from "../../hooks/useMedia";
 import { delay } from "../../utilities/async";
 import { utils } from "../../utilities/utils";
 import { Icon } from "../display/icon";
@@ -35,7 +36,6 @@ export interface ISidebarProps {
 }
 
 const SidebarComponent: React.FC<ISidebarProps & { autoCollapse: boolean, autoBurger: boolean }> = ({
-  openByDefault,
   openButtonIcon,
   closeButtonIcon,
   onChange,
@@ -85,7 +85,7 @@ const SidebarComponent: React.FC<ISidebarProps & { autoCollapse: boolean, autoBu
 
   return (
     <>
-      <nav className="armstrong-collapsable-burger-menu"
+      <nav className="armstrong-sidebar"
         data-open={open}
         data-position={position}
         data-burger={autoBurger}
@@ -93,19 +93,19 @@ const SidebarComponent: React.FC<ISidebarProps & { autoCollapse: boolean, autoBu
         role="navigation"
       >
         <Button
-          className="armstrong-burger-menu-button"
+          className="armstrong-menu-button"
           onClick={() => setOpen(!open)}
           aria-label={`${open ? `Close` : `Open`} the sidebar`}
-          >
+        >
           {closeButtonIcon && <Icon aria-hidden={true} icon={open ? closeButtonIcon : openButtonIcon} />}
         </Button>
         <div className="armstrong-burger-content">{utils.object.isFunction(Content) ? <Content open={autoBurger ? true : open} /> : Content}</div>
       </nav>
       {autoBurger && <Button
-        className="armstrong-burger-menu-button open"
+        className="armstrong-menu-button open"
         onClick={() => setOpen(true)}
         aria-label="Open the sidebar"
-        >
+      >
         {closeButtonIcon && <Icon aria-hidden={true} icon={openButtonIcon} />}
       </Button>
       }
@@ -129,6 +129,7 @@ export interface ISidebarContext {
   setOpen: (open: boolean) => void
   transitioning: boolean
   setTransitioning: (transitioning: boolean) => void
+  toggle: () => void
 }
 
 const SidebarContext = React.createContext<ISidebarContext>(undefined)
@@ -141,8 +142,12 @@ export const Sidebar: React.FC<ISidebarProps> = props => {
   const [open, setOpen] = React.useState((autoCollapse || autoBurger) ? false : props.openByDefault)
   const [transitioning, setTransitioning] = React.useState(false)
 
+  const toggle = React.useCallback(() => {
+    setOpen(!open)
+  }, [open])
+
   return (
-    <SidebarContext.Provider value={{ open, setOpen, transitioning, setTransitioning }}>
+    <SidebarContext.Provider value={{ open, setOpen, transitioning, setTransitioning, toggle }}>
       <SidebarComponent {...props} autoBurger={autoBurger} autoCollapse={autoCollapse} />
     </SidebarContext.Provider>
   )
@@ -160,18 +165,4 @@ Sidebar.defaultProps = {
 
 export const useSidebar = () => {
   return React.useContext(SidebarContext)
-}
-
-function useMedia(query: string) {
-  const [matches, setMatches] = React.useState(window.matchMedia(query).matches);
-
-  React.useEffect(() => {
-    const media = window.matchMedia(query);
-    if (media.matches !== matches) { setMatches(media.matches) }
-    const listener = () => setMatches(media.matches);
-    media.addListener(listener);
-    return () => media.removeListener(listener);
-  }, [matches, query]);
-
-  return matches;
 }
