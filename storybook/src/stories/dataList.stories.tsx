@@ -40,9 +40,14 @@ storiesOf('Mobile Data List', module)
   })
   .add('Standard', () => {
     const [fetchingData, setFetchingData] = React.useState(false);
+
+    React.useEffect(() => {
+      getSomeData(setFetchingData)
+    }, [])
+
     return (
       <div style={{ height: "400px" }}>
-        <DataList refreshData={() => getSomeData(setFetchingData)} refreshing={fetchingData} postRefreshDelayMs={0}>
+        <DataList skipFirstFetch={true} refreshData={() => getSomeData(setFetchingData)} refreshing={fetchingData} postRefreshDelayMs={1000}>
           {items.map(item => <div style={dataItemStyle}>{item}</div>)}
         </DataList>
       </div>
