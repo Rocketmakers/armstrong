@@ -9,6 +9,7 @@ export { IIconProps, Icon } from "./components/display/icon";
 export { IImageProps, Image, useDummyImageSrc, useRandomUserImageSrc } from "./components/display/image";
 export { IDialogProps, Dialog, useDialog, IUseDialogProps, DialogLayer } from "./components/display/dialog";
 export { DialogProvider, IDialogProviderProps, useDialogProvider } from "./components/display/dialogProvider";
+export { IDataListProps, DataList } from "./components/display/dataList";
 
 // Form
 export { ICheckboxInputProps, CheckboxInput, ICheckboxInput } from "./components/form/inputs/checkboxInput";

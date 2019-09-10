@@ -1,0 +1,52 @@
+@keyframes spin{
+  0%{
+    transform: rotate(0deg)
+  }
+  100%{
+    transform: rotate(360deg)
+  }
+}
+
+.data-list-container{
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+  .data-list{
+    height: 100%;
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
+    &:not(.dragging){
+      transition: transform 0.1s linear;
+    }
+    &.hide-flow{
+      overflow: hidden;
+    }
+  }
+  .refresh-indicator{
+    position: absolute;
+    background: transparent;
+    top: 0;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    i{
+      display: inline-block;
+      margin-right: 5px;
+    }
+  }
+  &.refreshing{
+    .data-list{
+      overflow: hidden;
+    }
+    .refresh-indicator{
+      transition: height 0.1s linear;
+      overflow: hidden;
+      i{
+        animation: spin 0.3s infinite;
+      }
+    }
+  }
+}
+
+
