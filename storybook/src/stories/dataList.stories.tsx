@@ -33,6 +33,11 @@ const customRefreshStyle: React.CSSProperties = {
 }
 
 storiesOf('Mobile Data List', module)
+  .addParameters({
+    options: {
+      showAddonPanel: false
+    }
+  })
   .add('Standard', () => {
     const [fetchingData, setFetchingData] = React.useState(false);
     return (

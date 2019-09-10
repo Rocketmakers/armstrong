@@ -8,6 +8,11 @@ import "../theme/theme.scss";
 const data = { name: "keith" }
 
 storiesOf('Dialog', module)
+  .addParameters({
+    options: {
+      showAddonPanel: false
+    }
+  })
   .add('Classic dialog', () => {
     const [open, setOpen] = React.useState(false)
 

@@ -7,6 +7,11 @@ import { Button, Icon, TabControl, TabItem } from "../_symlink";
 import "../theme/theme.scss";
 
 storiesOf('Tab control', module)
+  .addParameters({
+    options: {
+      showAddonPanel: false
+    }
+  })
   .add('3 tabs with callback', () =>
     <TabControl onTabChanged={action("onTabChanged")}>
       {tabItems}

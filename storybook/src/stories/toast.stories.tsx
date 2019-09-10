@@ -79,17 +79,6 @@ const BasicInner = () => {
   );
 };
 
-storiesOf('Toasts', module).add('Simple Toast', () => (
-  <ToastProvider>
-    <p>
-      Armstrong toasts, dispatched by the useToast hook, and handled by the
-      ToastProvider component by default. Different types of notification are
-    </p>
-
-    <BasicInner />
-  </ToastProvider>
-));
-
 const ComplexInner = () => {
   const { dispatch } = useToast();
 
@@ -114,28 +103,6 @@ const ComplexInner = () => {
     </Button>
   );
 };
-
-storiesOf('Toasts', module).add('Toast with custom JSX content', () => (
-  <ToastProvider location='bottom left'>
-    <p>
-      Custom JSX content can be rendered on a per toast basis, passed into the
-      dispatch function returned by useToast
-    </p>
-
-    <ComplexInner />
-  </ToastProvider>
-));
-
-storiesOf('Toasts', module).add('Customised dismiss button', () => (
-  <ToastProvider
-    location='top right'
-    dismissButton={<Icon icon={Icon.Icomoon.arrowRight3} />}
-  >
-    <p>The dismiss button has been changed to an arrow</p>
-
-    <BasicInner />
-  </ToastProvider>
-));
 
 const CustomInner = () => {
   const { dispatch, toasts, dismiss, dismissAll } = useToast();
@@ -170,9 +137,9 @@ const CustomInner = () => {
             <p>{toast.message}</p>
             {typeof toast.content === 'function'
               ? toast.content({
-                  dismiss: () => dismiss(i),
-                  timestamp: toast.timestamp
-                })
+                dismiss: () => dismiss(i),
+                timestamp: toast.timestamp
+              })
               : toast.content}
           </div>
         ))}
@@ -180,29 +147,6 @@ const CustomInner = () => {
     </div>
   );
 };
-
-storiesOf('Toasts', module).add('Custom toasts', () => (
-  <ToastProvider
-    location='top right'
-    dismissButton={<Icon icon={Icon.Icomoon.arrowRight3} />}
-    renderInProvider={false}
-  >
-    <p>
-      Default rendering has been disabled for these toasts and they are rendered
-      manually using the useToast hook.
-    </p>
-
-    <CustomInner />
-  </ToastProvider>
-));
-
-storiesOf('Toasts', module).add('Portaled toasts', () => (
-  <ToastProvider location='top right' hostElement='body'>
-    <p>These toasts are portaled into the body using the hostElement prop</p>
-
-    <BasicInner />
-  </ToastProvider>
-));
 
 const HistoryInner = () => {
   const { dispatch, toastsHistory } = useToast();
@@ -232,22 +176,6 @@ const HistoryInner = () => {
     </>
   );
 };
-
-storiesOf('Toasts', module).add('Toast history', () => (
-  <ToastProvider
-    location='top right'
-    dismissButton={<Icon icon={Icon.Icomoon.arrowRight3} />}
-    hostElement='body'
-    saveHistory
-  >
-    <p>
-      These toasts are kept in a toast history state, and can be rendered
-      elsewhere - ie in a notification centre
-    </p>
-
-    <HistoryInner />
-  </ToastProvider>
-));
 
 const BigDemoInner = () => {
   const { dispatch } = useToast();
@@ -307,10 +235,80 @@ const BigDemoInner = () => {
   );
 };
 
-storiesOf('Toasts', module).add('Big demo', () => (
-  <ToastProvider location='top right' hostElement='body' saveHistory>
-    <p>Here's a demo with a bunch of stuff happening</p>
+storiesOf('Toasts', module)
+  .addParameters({
+    options: {
+      showAddonPanel: false
+    }
+  })
+  .add('Simple Toast', () => (
+    <ToastProvider>
+      <p>
+        Armstrong toasts, dispatched by the useToast hook, and handled by the
+        ToastProvider component by default. Different types of notification are
+    </p>
 
-    <BigDemoInner />
-  </ToastProvider>
-));
+      <BasicInner />
+    </ToastProvider>
+  ))
+  .add('Toast with custom JSX content', () => (
+    <ToastProvider location='bottom left'>
+      <p>
+        Custom JSX content can be rendered on a per toast basis, passed into the
+        dispatch function returned by useToast
+    </p>
+
+      <ComplexInner />
+    </ToastProvider>
+  ))
+  .add('Customised dismiss button', () => (
+    <ToastProvider
+      location='top right'
+      dismissButton={<Icon icon={Icon.Icomoon.arrowRight3} />}
+    >
+      <p>The dismiss button has been changed to an arrow</p>
+
+      <BasicInner />
+    </ToastProvider>
+  ))
+  .add('Custom toasts', () => (
+    <ToastProvider
+      location='top right'
+      dismissButton={<Icon icon={Icon.Icomoon.arrowRight3} />}
+      renderInProvider={false}
+    >
+      <p>
+        Default rendering has been disabled for these toasts and they are rendered
+        manually using the useToast hook.
+    </p>
+
+      <CustomInner />
+    </ToastProvider>
+  ))
+  .add('Portaled toasts', () => (
+    <ToastProvider location='top right' hostElement='body'>
+      <p>These toasts are portaled into the body using the hostElement prop</p>
+
+      <BasicInner />
+    </ToastProvider>
+  )).add('Toast history', () => (
+    <ToastProvider
+      location='top right'
+      dismissButton={<Icon icon={Icon.Icomoon.arrowRight3} />}
+      hostElement='body'
+      saveHistory
+    >
+      <p>
+        These toasts are kept in a toast history state, and can be rendered
+        elsewhere - ie in a notification centre
+    </p>
+
+      <HistoryInner />
+    </ToastProvider>
+  )).add('Big demo', () => (
+    <ToastProvider location='top right' hostElement='body' saveHistory>
+      <p>Here's a demo with a bunch of stuff happening</p>
+
+      <BigDemoInner />
+    </ToastProvider>
+  ));
