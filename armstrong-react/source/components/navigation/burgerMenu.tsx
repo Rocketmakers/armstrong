@@ -36,16 +36,16 @@ const BurgerMenuComponent: React.FC<IBurgerMenuProps> = ({
   hideOpenButton,
   hideCloseButton
 }) => {
-  const { open, setOpen, transitioning, setTransitioning } = React.useContext(BurgerMenuContext)
+  const { isOpen, setIsOpen, transitioning, setTransitioning } = React.useContext(BurgerMenuContext)
 
   const [menuWidth, setMenuWidth] = React.useState(0)
 
   const menuRef = React.useRef<HTMLDivElement>()
 
   React.useEffect(() => {
-    if (onChange) { onChange(open ? "open" : "closed") }
+    if (onChange) { onChange(isOpen ? "open" : "closed") }
 
-  }, [open])
+  }, [isOpen])
 
   React.useEffect(() => {
     if (menuRef.current) {
@@ -61,14 +61,14 @@ const BurgerMenuComponent: React.FC<IBurgerMenuProps> = ({
 
   React.useEffect(() => {
     transition()
-  }, [open, transitionTime])
+  }, [isOpen, transitionTime])
 
-  const slideTransform: React.CSSProperties = React.useMemo(() => (mode === "push" ? { transform: open ? `translateX(${position === "left" ? menuWidth : -menuWidth}px)` : `translateX(0)` } : {}), [menuWidth, open, mode])
+  const slideTransform: React.CSSProperties = React.useMemo(() => (mode === "push" ? { transform: open ? `translateX(${position === "left" ? menuWidth : -menuWidth}px)` : `translateX(0)` } : {}), [menuWidth, isOpen, mode])
   return (
     <>
       <nav className="armstrong-menu"
         ref={menuRef}
-        data-open={open}
+        data-open={isOpen}
         data-position={position}
         data-mode={mode}
         style={{ transition: `${transitionTime}ms` }}
@@ -76,7 +76,7 @@ const BurgerMenuComponent: React.FC<IBurgerMenuProps> = ({
       >
         {!hideCloseButton && <Button
           className="armstrong-menu-button close"
-          onClick={() => setOpen(false)}
+          onClick={() => setIsOpen(false)}
           aria-label="Close the menu"
         >
           {closeButtonIcon && <Icon aria-hidden={true} icon={closeButtonIcon} />}
@@ -87,17 +87,17 @@ const BurgerMenuComponent: React.FC<IBurgerMenuProps> = ({
       {!hideOpenButton && <Button
         data-position={position}
         className="armstrong-menu-button open"
-        onClick={() => setOpen(true)}
+        onClick={() => setIsOpen(true)}
         aria-label="Open the menu">
         {openButtonIcon && <Icon aria-hidden={true} icon={openButtonIcon} />}
       </Button>}
       {mode === "slide" && <div
         className="armstrong-menu-overlay"
-        onClick={() => setOpen(false)}
+        onClick={() => setIsOpen(false)}
         aria-label="Close the menu"
         aria-hidden={!open}
         style={{ transition: `${transitionTime}ms` }}
-        data-transition={transitioning ? open ? "in" : "out" : open ? "open" : "closed"}
+        data-transition={transitioning ? isOpen ? "in" : "out" : isOpen ? "open" : "closed"}
       />}
       <div className="armstrong-site-content-wrapper" style={{ ...slideTransform, transition: `transform ${transitionTime}ms` }}>
         {children}
@@ -113,25 +113,33 @@ BurgerMenuComponent.defaultProps = {
 }
 
 interface IBurgerMenuContext {
-  open: boolean
-  setOpen: (open: boolean) => void
+  isOpen: boolean
+  setIsOpen: (open: boolean) => void
   transitioning: boolean
   setTransitioning: (transitioning: boolean) => void
   toggle: () => void
+  open: () => void
+  close: () => void
 }
 
 export const BurgerMenuContext = React.createContext<IBurgerMenuContext>(undefined)
 
 export const BurgerMenu: React.FC<IBurgerMenuProps> = props => {
-  const [open, setOpen] = React.useState(false)
+  const [isOpen, setIsOpen] = React.useState(false)
   const [transitioning, setTransitioning] = React.useState(false)
 
   const toggle = React.useCallback(() => {
-    setOpen(!open)
-  }, [open])
+    setIsOpen(!isOpen)
+  }, [isOpen])
+  const open = React.useCallback(() => {
+    setIsOpen(true)
+  }, [])
+  const close = React.useCallback(() => {
+    setIsOpen(false)
+  }, [])
 
   return (
-    <BurgerMenuContext.Provider value={{ open, setOpen, transitioning, setTransitioning, toggle }}>
+    <BurgerMenuContext.Provider value={{ open, setIsOpen, transitioning, setTransitioning, toggle, isOpen, close }}>
       <BurgerMenuComponent {...props} />
     </BurgerMenuContext.Provider>
   )
@@ -139,5 +147,6 @@ export const BurgerMenu: React.FC<IBurgerMenuProps> = props => {
 
 export const useBurgerMenu = () => {
 
-  return React.useContext(BurgerMenuContext)
+  const { toggle, transitioning, open, close, isOpen } = React.useContext(BurgerMenuContext)
+  return { toggle, transitioning, open, close, isOpen }
 }

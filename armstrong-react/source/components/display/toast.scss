@@ -1,0 +1,195 @@
+$max-width: 280px;
+
+@keyframes animate-toast-outer {
+    from {
+        max-height: 0
+    }
+
+    to {
+        max-height: 300px;
+    }
+}
+
+@mixin animate-toast-inner-from($direction, $startTransform) {
+    @keyframes animate-toast-inner-from-#{$direction} {
+        from {
+            transform: $startTransform;
+        }
+
+        to {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+}
+
+@include animate-toast-inner-from(left, translate3d(-100%, 0, 0));
+@include animate-toast-inner-from(right, translate3d(100%, 0, 0));
+@include animate-toast-inner-from(top, translate3d(0, -100%, 0));
+@include animate-toast-inner-from(bottom, translate3d(0, 100%, 0));
+
+.toast-container {
+    position: fixed;
+    z-index: 99;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+
+    pointer-events: none;
+
+    .toasts {
+        position: absolute;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        max-width: $max-width;
+        padding: $spacing-small / 2 $spacing-small;
+
+        &[class*="top"] {
+            top: 0;
+            flex-direction: column-reverse;
+            justify-content: flex-end;
+        }
+
+        &[class*="bottom"] {
+            bottom: 0;
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+
+        &[class*="left"] {
+            left: 0;
+
+            .toast-notification {
+                .toast-notification-inner {
+                    transform: translate3d(100vw, 0, 0);
+                    animation-name: animate-toast-inner-from-left;
+                }
+            }
+        }
+
+        &[class*="right"] {
+            right: 0;
+
+            .toast-notification {
+                .toast-notification-inner {
+                    transform: translate3d(100vw, 0, 0);
+                    animation-name: animate-toast-inner-from-right;
+                }
+            }
+        }
+
+        .toast-notification {
+            pointer-events: all;
+
+            width: 100%;
+            max-height: 300px;
+
+            box-sizing: border-box;
+
+            margin: $spacing-small / 2 0;
+
+            transition-property: max-height;
+
+            color: white;
+
+            will-change: transform;
+
+            animation-name: animate-toast-outer;
+
+            user-select: none;
+
+            &[data-dismissing="true"] {
+                max-height: 0;
+                pointer-events: none;
+
+                .toast-notification-inner {
+                    opacity: 0;
+                }
+            }
+
+            &[data-type="success"] {
+                .toast-notification-inner {
+                    background-color: $color-positive;
+                }
+            }
+
+            &[data-type="error"] {
+                .toast-notification-inner {
+                    background-color: $color-negative;
+                }
+            }
+
+            &[data-type="info"] {
+                .toast-notification-inner {
+                    background-color: $color-info;
+                }
+            }
+
+            &[data-type="warning"] {
+                .toast-notification-inner {
+                    background-color: $color-warning;
+                }
+            }
+
+            .toast-notification-inner {
+                background-color: white;
+                box-shadow: 2px 2px 10px rgba(black, 0.3);
+                border-radius: $corner-radius-small;
+                padding: $spacing-small;
+
+                transition-property: opacity;
+                animation-fill-mode: forwards;
+
+                .toast-notification-top {
+                    display: flex;
+                    justify-content: space-between;
+                    margin-bottom: $spacing-small;
+
+                    .toast-dismiss {
+                        cursor: pointer;
+                    }
+                }
+
+                p.toast-timestamp {
+                    font-size: 0.8rem;
+                }
+
+                p {
+                    margin-bottom: 0;
+                }
+
+                img,
+                video,
+                iframe {
+                    width: 100%;
+                }
+            }
+        }
+    }
+}
+
+@include screen-phone {
+    .toast-container {
+        .toasts {
+            box-sizing: border-box;
+            max-width: 100%;
+
+            &[class*="top"] {
+                .toast-notification {
+                    .toast-notification-inner {
+                        animation-name: animate-toast-inner-from-top;
+                    }
+                }
+            }
+
+            &[class*="bottom"] {
+                .toast-notification {
+                    .toast-notification-inner {
+                        animation-name: animate-toast-inner-from-bottom;
+                    }
+                }
+            }
+        }
+    }
+}

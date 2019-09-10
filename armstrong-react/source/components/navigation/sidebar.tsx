@@ -48,7 +48,7 @@ const SidebarComponent: React.FC<ISidebarProps & { autoCollapse: boolean, autoBu
   autoCollapse,
   autoBurger
 }) => {
-  const { open, setOpen, setTransitioning, transitioning } = React.useContext(SidebarContext)
+  const { isOpen: open, setOpen, setTransitioning, transitioning } = React.useContext(SidebarContext)
 
   React.useEffect(() => {
     if (onChange) { onChange(open ? "open" : "closed") }
@@ -102,6 +102,7 @@ const SidebarComponent: React.FC<ISidebarProps & { autoCollapse: boolean, autoBu
         <div className="armstrong-burger-content">{utils.object.isFunction(Content) ? <Content open={autoBurger ? true : open} /> : Content}</div>
       </nav>
       {autoBurger && <Button
+        data-position={position}
         className="armstrong-menu-button open"
         onClick={() => setOpen(true)}
         aria-label="Open the sidebar"
@@ -125,10 +126,12 @@ const SidebarComponent: React.FC<ISidebarProps & { autoCollapse: boolean, autoBu
 }
 
 export interface ISidebarContext {
-  open: boolean
+  isOpen: boolean
   setOpen: (open: boolean) => void
   transitioning: boolean
   setTransitioning: (transitioning: boolean) => void
+  open: () => void
+  close: () => void
   toggle: () => void
 }
 
@@ -139,15 +142,21 @@ export const Sidebar: React.FC<ISidebarProps> = props => {
   const autoCollapse = useMedia(props.autoCollapseMediaQuery)
   const autoBurger = useMedia(props.turnToBurgerMediaQuery)
 
-  const [open, setOpen] = React.useState((autoCollapse || autoBurger) ? false : props.openByDefault)
+  const [isOpen, setIsOpen] = React.useState((autoCollapse || autoBurger) ? false : props.openByDefault)
   const [transitioning, setTransitioning] = React.useState(false)
 
   const toggle = React.useCallback(() => {
-    setOpen(!open)
-  }, [open])
+    setIsOpen(!isOpen)
+  }, [isOpen])
+  const open = React.useCallback(() => {
+    setIsOpen(true)
+  }, [])
+  const close = React.useCallback(() => {
+    setIsOpen(false)
+  }, [])
 
   return (
-    <SidebarContext.Provider value={{ open, setOpen, transitioning, setTransitioning, toggle }}>
+    <SidebarContext.Provider value={{ isOpen, setOpen: setIsOpen, transitioning, setTransitioning, toggle, open, close }}>
       <SidebarComponent {...props} autoBurger={autoBurger} autoCollapse={autoCollapse} />
     </SidebarContext.Provider>
   )
@@ -164,5 +173,6 @@ Sidebar.defaultProps = {
 }
 
 export const useSidebar = () => {
-  return React.useContext(SidebarContext)
+  const { toggle, transitioning, open, close, isOpen } = React.useContext(SidebarContext)
+  return { toggle, transitioning, open, close, isOpen }
 }
