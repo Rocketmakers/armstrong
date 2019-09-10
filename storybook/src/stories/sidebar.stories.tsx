@@ -18,6 +18,11 @@ const bodyStyle: React.CSSProperties = {
 };
 
 storiesOf('Sidebar', module)
+  .addParameters({
+    options: {
+      showAddonPanel: false
+    }
+  })
   .add('Basic', () =>
     <div style={containerStyle}>
       <Sidebar
