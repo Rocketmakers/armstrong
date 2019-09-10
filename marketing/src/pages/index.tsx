@@ -17,7 +17,7 @@ const Index: React.FC<{}> = () => {
             </p>
           </Col>
           <Col width="auto" horizontalAlignment="center">
-            <img src={require('../assets/shuttle.png')} />
+            <img src={require('../assets/shuttle.svg')} />
           </Col>
         </Row>
         <Row className="p-top-xlarge rs-small-1col">
