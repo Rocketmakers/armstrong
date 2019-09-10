@@ -59,3 +59,4 @@ export { useCalendar, IDay, IMonth, IUseCalendar, IUseCalendarSettings, IWeek } 
 export { useDidUpdateEffect } from "./hooks/useDidUpdateEffect"
 export { usePrevious } from "./hooks/usePrevious"
 export { useThrottle } from "./hooks/useThrottle"
+export { useMedia } from "./hooks/useMedia"
