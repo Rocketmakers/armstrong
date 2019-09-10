@@ -7,47 +7,19 @@
 @import "../_symlink/navigation";
 @import "../_symlink/animation";
 
-body,
-main,
-html,
-#host {
-  height: 100%;
-  font-size: 16px;
-}
-
-.header {
-  position: fixed;
-  top: 0;
-  width: 100%;
-  z-index: 2;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
-
-  + div {
-    padding-top: 60px;
+.intro-view{
+  padding: $spacing-xlarge;
+  h2,p{
+    font-family: 'Cabin', sans-serif;
+    line-height: 1.4em;
   }
-}
-
-.bg-gray-semi {
-  background-color: transparentize($color: $gray-dark, $amount: 0.2);
-}
-
-.tab-control {
-  .tab-item-header {
-    background-color: red;
-    margin-right: 10px;
-    &.selected {
-      background-color: green;
-    }
+  h2{
+    font-size: 32px;
+    font-weight: 600;
+    margin-bottom: $spacing-medium;
   }
-}
-
-.animatable {
-  display: inline-block;
-  background: $brand-primary;
-  padding: 20px;
-  color: white;
-}
-
-.btn{
-  margin: $spacing-xsmall;
+  p{
+    font-size: 24px;
+    font-weight: 400;
+  }
 }
