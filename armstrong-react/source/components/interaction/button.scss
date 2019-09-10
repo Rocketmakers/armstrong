@@ -18,6 +18,7 @@
   border: none;
   border-radius: $corner-radius-small;
   outline: none;
+  user-select: none;
 
   &:active:not(:disabled) {
     transform: translateY(2px);

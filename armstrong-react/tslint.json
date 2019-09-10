@@ -10,7 +10,9 @@
       "ban-single-arg-parens"
     ],
     "max-line-length": false,
+    "trailing-comma": false,
     "max-classes-per-file": false,
+    "align": false,
     "member-access": [
       true,
       "no-public"

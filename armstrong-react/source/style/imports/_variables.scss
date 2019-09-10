@@ -1,6 +1,8 @@
 //// FIXED WIDTH SITE WIDTH
 $fixed-site-width: 960px !default;
 
+$screen-size-phone: 738px;
+$screen-size-tablet: 930px;
 
 //// RESPONSIVE SIZES
 $responsive-large: 70rem !default;
@@ -18,8 +20,7 @@ $font-size-medium: 1.2rem !default;
 $font-size-large: 1.5rem !default;
 $font-size-xlarge: 2rem !default;
 
-$font-sizes:(
-  xxsmall $font-size-xxsmall,
+$font-sizes:(xxsmall $font-size-xxsmall,
   xsmall $font-size-xsmall,
   small $font-size-small,
   medium $font-size-medium,
@@ -36,15 +37,13 @@ $spacing-medium: 2rem !default;
 $spacing-large: 3rem !default;
 $spacing-xlarge: 4rem !default;
 
-$spacing-sizes: (
-  xxsmall $spacing-xxsmall,
+$spacing-sizes: (xxsmall $spacing-xxsmall,
   xsmall $spacing-xsmall,
   small $spacing-small,
   medium $spacing-medium,
   large $spacing-large,
   xlarge $spacing-xlarge,
-  none 0
-) !default;
+  none 0) !default;
 
 //// BUTTON & INPUT SPACINGS
 $field-padding-vertical: 15px !default;
@@ -69,20 +68,18 @@ $color-warning: #f78e52 !default;
 $color-negative: #df5a49 !default;
 $color-info: #3498d8 !default;
 
-$colors: (
-  'positive' $color-positive,
-  'warning' $color-warning,
-  'negative' $color-negative,
-  'info' $color-info,
-  'brand-primary' $brand-primary,
-  'brand-secondary' $brand-secondary,
-  'gray-very-dark' $gray-very-dark,
-  'gray-dark' $gray-dark,
-  'gray-medium' $gray-medium,
-  'gray-light' $gray-light,
-  'gray-very-light' $gray-very-light,
-  'white' $white
-) !default;
+$colors: ('positive'$color-positive,
+  'warning'$color-warning,
+  'negative'$color-negative,
+  'info'$color-info,
+  'brand-primary'$brand-primary,
+  'brand-secondary'$brand-secondary,
+  'gray-very-dark'$gray-very-dark,
+  'gray-dark'$gray-dark,
+  'gray-medium'$gray-medium,
+  'gray-light'$gray-light,
+  'gray-very-light'$gray-very-light,
+  'white'$white) !default;
 
 //// CORNERS
 $corner-radius-small: 5px !default;
@@ -91,7 +88,6 @@ $corner-radius-large: 15px !default;
 //// FORMS
 $form-field-height: 40px !default;
 $form-field-bottom-spacing: 10px !default;
-
 
 //// ANIMATION RELATED
 $animation-duration: 350ms !default;

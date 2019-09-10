@@ -8,6 +8,11 @@ import { Button, Icon } from "../_symlink";
 import "../theme/theme.scss";
 
 storiesOf('Button', module)
+  .addParameters({
+    options: {
+      showAddonPanel: true
+    }
+  })
   .add('Standard', () =>
     <Button onClick={action('clicked')}>Hello Button</Button>
   )

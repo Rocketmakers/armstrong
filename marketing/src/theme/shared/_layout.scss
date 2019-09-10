@@ -1,0 +1,24 @@
+*{
+  box-sizing: border-box;
+}
+
+html, body{
+  height: 100%;
+}
+
+main{
+  overflow-x: hidden;
+}
+
+#___gatsby {
+  height: 100%;
+  > div{
+    min-height: 100%;
+  }
+}
+
+.fixed-width{
+  max-width: $fixed-screen-size;
+  width: 100%;
+  margin: 0 auto;
+}

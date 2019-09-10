@@ -1,13 +1,18 @@
 import * as React from "react"
 
 import { storiesOf } from '@storybook/react';
-import { Grid, Row, Col, Dialog, TextInput, Button, useDialog } from "../_symlink";
+import { Grid, Row, Col, Dialog, TextInput, Button, useDialog, DateInput } from "../_symlink";
 
 import "../theme/theme.scss";
 
 const data = { name: "keith" }
 
 storiesOf('Dialog', module)
+  .addParameters({
+    options: {
+      showAddonPanel: true
+    }
+  })
   .add('Classic dialog', () => {
     const [open, setOpen] = React.useState(false)
 
@@ -15,12 +20,13 @@ storiesOf('Dialog', module)
       [
         <Dialog bodySelector="body" isOpen={open} onClose={() => setOpen(false)}>
           <SampleDialogContent />
+          <DateInput />
         </Dialog>,
         <Button onClick={() => setOpen(true)}>Open Classic</Button>
       ]
     )
   })
-  .add('Hook dialog [BROKEN]', () => {
+  .add('Hook dialog', () => {
     const { open, portal } = useDialog(SampleDialogContent, { hostElement: "body" })
     return (
       <>

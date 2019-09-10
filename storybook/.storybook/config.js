@@ -1,9 +1,10 @@
 import { configure, addDecorator, addParameters } from "@storybook/react";
 import { withInfo } from "@storybook/addon-info";
-import { themes } from "@storybook/theming";
+import { withA11y } from "@storybook/addon-a11y";
 import { Wrapper } from "../src/components/wrapper";
 
 import React from "react";
+import armstrongTheme from "./armstrongTheme";
 
 addDecorator(withInfo({ inline: true, source: false }));
 addDecorator(Story => (
@@ -12,16 +13,20 @@ addDecorator(Story => (
   </Wrapper>
 ));
 
+addDecorator(withA11y);
+
 addParameters({
   options: {
-    theme: themes.light,
+    theme: armstrongTheme,
     panelPosition: "right",
+    sortStoriesByKind: true,
   },
 });
 
 const req = require.context("../src/stories", true, /\.stories\.ts(x)?$/);
 
 function loadStories() {
+  require("./welcome");
   req
     .keys()
     .sort()
