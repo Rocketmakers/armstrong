@@ -18,7 +18,7 @@ main{
 }
 
 .fixed-width{
-  max-width: $screen-size-tablet;
+  max-width: $fixed-screen-size;
   width: 100%;
   margin: 0 auto;
 }

@@ -9,14 +9,14 @@ const Index: React.FC<{}> = () => {
         <Row className="rs-small-1col">
           <Col>
             <h2>
-              A minimal React, SASS and Typescript framework for rapid UI design and development.
+              A minimal <a href="https://reactjs.org">React</a>, <a href="https://sass-lang.com/">SASS</a> and <a href="https://www.typescriptlang.org/">Typescript</a> framework for rapid UI design and development.
             </h2>
-            <p className="p-bottom-large">
+            <p className="p-bottom-large f-size-large p-top-medium">
               Armstrong contains a library of essential components, a flexible system
               of variables designed to cope with the nature and pace of real-world projects.
             </p>
           </Col>
-          <Col width="auto" horizontalAlignment="center">
+          <Col horizontalAlignment="center">
             <img src={require('../assets/shuttle.svg')} />
           </Col>
         </Row>
