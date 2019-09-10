@@ -24,7 +24,7 @@ const Index: React.FC<{}> = () => {
           <Col className="p-bottom-large">
             <h3>Installation</h3>
             <p className="p-top-small p-bottom-medium">
-              Include Bootstrap’s source Sass and JavaScript files via npm, Composer or Meteor. Package managed installs don’t include documentation, but do include our build system and readme
+              Make sure your up to date with the latest and greatest version of Armstrong so you can make the most of all features available to you.
             </p>
             <Button>Get started</Button>
           </Col>
@@ -38,7 +38,7 @@ const Index: React.FC<{}> = () => {
           <Col className="p-bottom-large">
             <h3>Storybook</h3>
             <p className="p-top-small p-bottom-medium">
-              Include Bootstrap’s source Sass and JavaScript files via npm, Composer or Meteor. Package managed installs don’t include documentation, but do include our build system and readme
+            Armstrong uses variables and classes to produce consistent designs and maintainable sites. Checkout what we have below and apply them in your styling.
             </p>
             <a className="btn" target="_blank" href="https://rocketmakers.gitlab.io/armstrong/armstrong-react">See the storybook</a>
           </Col>
