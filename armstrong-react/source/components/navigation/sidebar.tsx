@@ -7,7 +7,7 @@ import { Icon } from "../display/icon";
 import { Button } from "../interaction/button";
 
 interface ISidebarContentProps {
-  open: boolean
+  isOpen: boolean
 }
 
 export interface ISidebarProps {
@@ -99,7 +99,7 @@ const SidebarComponent: React.FC<ISidebarProps & { autoCollapse: boolean, autoBu
         >
           {closeButtonIcon && <Icon aria-hidden={true} icon={open ? closeButtonIcon : openButtonIcon} />}
         </Button>
-        <div className="armstrong-burger-content">{utils.object.isFunction(Content) ? <Content open={autoBurger ? true : open} /> : Content}</div>
+        <div className="armstrong-burger-content">{utils.object.isFunction(Content) ? <Content isOpen={autoBurger ? true : open} /> : Content}</div>
       </nav>
       {autoBurger && <Button
         data-position={position}

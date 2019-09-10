@@ -55,11 +55,11 @@ const closedSideBarItemStyle: React.CSSProperties = {
   margin: '30px 0'
 }
 
-const SidebarContent: React.FC<{ open: boolean }> = ({ open }) => {
+const SidebarContent: React.FC<{ isOpen: boolean }> = ({ isOpen }) => {
 
   return (
     <div>
-      {open ?
+      {isOpen ?
         <>
           <div style={sideBarItemStyle} ><Icon style={sideBarItemIconStyle} icon={Icon.Icomoon.crown} />LINK ONE</div>
           <div style={sideBarItemStyle} ><Icon style={sideBarItemIconStyle} icon={Icon.Icomoon.wallet} />LINK TWO</div>
