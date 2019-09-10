@@ -8,7 +8,7 @@ import "../theme/theme.scss";
 storiesOf('Repeater', module)
   .addParameters({
     options: {
-      showAddonPanel: false
+      showAddonPanel: true
     }
   })
   .add('Standard', () => <Repeater count={10} render={item => <div>It is me, child {item.index}</div>} />)

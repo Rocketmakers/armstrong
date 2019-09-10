@@ -10,7 +10,7 @@ import "../theme/theme.scss";
 storiesOf('Button', module)
   .addParameters({
     options: {
-      showAddonPanel: false
+      showAddonPanel: true
     }
   })
   .add('Standard', () =>

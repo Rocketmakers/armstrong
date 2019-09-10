@@ -18,6 +18,11 @@ const bodyStyle: React.CSSProperties = {
 };
 
 storiesOf('Burger menu', module)
+  .addParameters({
+    options: {
+      showAddonPanel: true
+    }
+  })
   .add('Basic', () =>
     <div style={containerStyle}>
       <BurgerMenu

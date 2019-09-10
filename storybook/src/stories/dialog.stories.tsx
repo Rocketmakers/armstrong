@@ -10,7 +10,7 @@ const data = { name: "keith" }
 storiesOf('Dialog', module)
   .addParameters({
     options: {
-      showAddonPanel: false
+      showAddonPanel: true
     }
   })
   .add('Classic dialog', () => {

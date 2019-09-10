@@ -8,7 +8,7 @@ import "../theme/theme.scss";
 storiesOf('Icon', module)
   .addParameters({
     options: {
-      showAddonPanel: false
+      showAddonPanel: true
     }
   })
   .add('Rocket', () => <Icon icon={Icon.Icomoon.rocket} />)

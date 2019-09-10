@@ -35,7 +35,7 @@ const customRefreshStyle: React.CSSProperties = {
 storiesOf('Mobile Data List', module)
   .addParameters({
     options: {
-      showAddonPanel: false
+      showAddonPanel: true
     }
   })
   .add('Standard', () => {

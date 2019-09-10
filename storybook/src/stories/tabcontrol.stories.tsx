@@ -9,7 +9,7 @@ import "../theme/theme.scss";
 storiesOf('Tab control', module)
   .addParameters({
     options: {
-      showAddonPanel: false
+      showAddonPanel: true
     }
   })
   .add('3 tabs with callback', () =>

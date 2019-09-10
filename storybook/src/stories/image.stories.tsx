@@ -8,7 +8,7 @@ import "../theme/theme.scss";
 storiesOf('Image', module)
   .addParameters({
     options: {
-      showAddonPanel: false
+      showAddonPanel: true
     }
   })
   .add('WEBP source', () => <Image src={require('../assets/images/naut.jpg')} webpSrc={require('../assets/images/naut.webp')} />)

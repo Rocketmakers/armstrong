@@ -8,7 +8,7 @@ import "../theme/theme.scss";
 storiesOf('Grid', module)
   .addParameters({
     options: {
-      showAddonPanel: false
+      showAddonPanel: true
     }
   })
   .add('2 rows, 3 columns', () =>

@@ -20,7 +20,7 @@ const bodyStyle: React.CSSProperties = {
 storiesOf('Sidebar', module)
   .addParameters({
     options: {
-      showAddonPanel: false
+      showAddonPanel: true
     }
   })
   .add('Basic', () =>

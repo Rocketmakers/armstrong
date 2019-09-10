@@ -238,7 +238,7 @@ const BigDemoInner = () => {
 storiesOf('Toasts', module)
   .addParameters({
     options: {
-      showAddonPanel: false
+      showAddonPanel: true
     }
   })
   .add('Simple Toast', () => (
