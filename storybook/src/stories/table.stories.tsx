@@ -1,6 +1,6 @@
 import * as React from "react";
 import { storiesOf } from "@storybook/react";
-import { Table, useDataTable } from "../_symlink";
+import { Table, useDataTable, Icon } from "../_symlink";
 import { IUseDataTableResult } from "../_symlink/hooks/useDataTable";
 
 import "../theme/theme.scss";
@@ -20,9 +20,11 @@ async function fetchData() {
 }
 
 async function loadData(): Promise<IUseDataTableResult<ITodos>> {
-  const res = await fetch(fauxDataUrl);
+  const res = await fetch(fauxDataUrl, { method: "GET" });
+  const data = ((await res.json()) as unknown) as ITodos[];
+
   return {
-    data: ((await res.json()) as unknown) as ITodos[],
+    data,
   };
 }
 
@@ -31,6 +33,13 @@ function TableHeaderCell(name: string) {
 }
 
 function CompletedTableCell(value: boolean) {
+  return value ? (
+    <Icon icon={Icon.Icomoon.thumbsUp} />
+  ) : (
+    <Icon icon={Icon.Icomoon.thumbsDown} />
+  );
+}
+function CompletedTableCellButton(value: boolean) {
   return <button>{value ? "true" : "false"}</button>;
 }
 
@@ -82,15 +91,20 @@ storiesOf("Table", module)
     );
   })
   .add("options", () => {
-    const [state, setState] = React.useState([]);
-
-    React.useEffect(() => {
-      const getData = async () => {
-        const res = await fetchData();
-        setState(res);
-      };
-      getData();
-    }, []);
+    const {
+      data,
+      downloadTableAsCSV,
+      isLoading,
+      options,
+      printTable,
+    } = useDataTable<ITodos>({
+      fetch: loadData,
+      options: {
+        rowsPerPage: 10,
+        download: true,
+        print: true,
+      },
+    });
 
     return (
       <Table<ITodos>
@@ -103,8 +117,11 @@ storiesOf("Table", module)
         columnFormatter={{
           completed: CompletedTableCell,
         }}
-        data={state}
-        options={{ download: true, print: true }}
+        data={data}
+        options={options}
+        onDownload={downloadTableAsCSV}
+        onPrint={printTable}
+        // onDownload={() => downloadTableAsCSV(true)}
       />
     );
   })
@@ -183,7 +200,7 @@ storiesOf("Table", module)
           userId: TableHeaderCell,
         }}
         columnFormatter={{
-          completed: CompletedTableCell,
+          completed: CompletedTableCellButton,
         }}
         data={state}
         title="My Table"
@@ -197,6 +214,7 @@ storiesOf("Table", module)
       const {
         data,
         isLoading,
+        options,
         setPage,
         setRowsPerPage,
         totalPages,
@@ -204,6 +222,7 @@ storiesOf("Table", module)
         fetch: loadData,
         options: {
           rowsPerPage: 5,
+          paginate: true,
         },
       });
       return isLoading ? (
@@ -221,6 +240,7 @@ storiesOf("Table", module)
           }}
           data={data}
           numberOfPages={totalPages}
+          options={options}
           onChangeRowsPerPage={setRowsPerPage}
           onChangePage={setPage}
           paginationElement={ExamplePaginationButton}
@@ -232,14 +252,12 @@ storiesOf("Table", module)
     {},
   )
   .add("sortable columns", () => {
-    const { data, isLoading, sortDataBy, sortParameters } = useDataTable<
-      ITodos
-    >({
+    const { data, isLoading, options, sortDataBy } = useDataTable<ITodos>({
       fetch: loadData,
       options: {
         rowsPerPage: 5,
         sort: {
-          initialSortBy: "title",
+          initialSortBy: { key: "title", direction: "asc" },
         },
       },
     });
@@ -248,18 +266,18 @@ storiesOf("Table", module)
       <div>Loading</div>
     ) : (
       <Table<ITodos>
+        columnFormatter={{
+          completed: b => <p>{b ? "true" : "false"}</p>,
+        }}
+        data={data}
         headerFormatter={{
           id: TableHeaderCell,
           completed: TableHeaderCell,
           title: TableHeaderCell,
           userId: TableHeaderCell,
         }}
-        columnFormatter={{
-          completed: b => <p>{b ? "true" : "false"}</p>,
-        }}
-        data={data}
-        initSortBy={sortParameters}
-        sortBy={sortDataBy}
+        options={options}
+        onSortBy={sortDataBy}
         paginationElement={ExamplePaginationButton}
         subTitle="My Sortable Data Table"
         title="My Table"

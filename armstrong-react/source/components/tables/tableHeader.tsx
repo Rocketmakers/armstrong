@@ -21,7 +21,6 @@ export function TableHeading<T>({
   React.useEffect(() => {
     if (initSort && sortBy) {
       setSortByState(initSort);
-      console.log(initSort, name);
     }
   }, []);
 

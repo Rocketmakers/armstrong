@@ -7,8 +7,8 @@ import { TableOptions } from "./tableOptions";
 import { IPaginateButtonProps, TablePagination } from "./tablePagingation";
 import { TableTitle } from "./tableTitle";
 
-import "./styles.scss";
 import { IDataTableOptions } from "../../hooks/useDataTable";
+import "./styles.scss";
 
 export interface ITableProps<T> {
   /** (React.ReactNode) Specify the formatting of the individual column */
@@ -19,22 +19,22 @@ export interface ITableProps<T> {
   headerFormatter: {
     [P in keyof T]?: (name: keyof T) => React.ReactNode;
   };
-  /** ((rows:number) => void) Event to fire when user changes the max number of items per page*/
-  onChangeRowsPerPage?: (rows: number) => void;
-  /** (boolean) Setting this will either display or hide the headers */
-  hideHeaders?: boolean;
   /** (number) The number of pages of data */
   numberOfPages?: number;
+  /** ((rows:number) => void) Event to fire when user changes the max number of items per page */
+  onChangeRowsPerPage?: (rows: number) => void;
   /** ((pageNumber:number) => void) Event to fire when user changes the page number */
   onChangePage?: (pageNumber: number) => void;
+  /** () => void Event to fire when user downloads the table */
+  onDownload?: () => void;
+  /** () => void Event to fire when user prints the table */
+  onPrint?: (ref: HTMLTableElement) => void;
+  /** ((key:keyof T, direction: TSortDirection) => void) Event to fire when user sorts the columns */
+  onSortBy?: (key: keyof T, direction: TSortDirection) => void;
   /** (options:IDataTableOptions) Options for the data table */
   options?: IDataTableOptions<T>;
   /** (component) Pagination Element  */
   paginationElement?: React.FC<IPaginateButtonProps>;
-
-  initSortBy?: { sortColumn: keyof T; sortDirection: TSortDirection };
-  /** ((key:keyof T, direction: TSortDirection) => void) Event to fire when user sorts the columns */
-  sortBy?: (key: keyof T, direction: TSortDirection) => void;
   /** (string) The sub or secondary title of the table */
   subTitle?: string;
   /** (string) The title of the table */
@@ -45,17 +45,18 @@ export function Table<T = any>({
   data,
   columnFormatter,
   headerFormatter,
-  onChangeRowsPerPage,
-  hideHeaders,
-  initSortBy,
   numberOfPages,
+  onChangeRowsPerPage,
   onChangePage,
+  onDownload,
+  onPrint,
+  onSortBy,
   options,
   paginationElement: PaginationElement,
-  sortBy,
   subTitle,
   title,
 }: React.PropsWithChildren<ITableProps<T>>) {
+  const ref = React.useRef<HTMLTableElement>(null);
   const [currentPage, setCurrentPage] = React.useState<number>(1);
 
   const columnKeys = React.useMemo(
@@ -67,12 +68,16 @@ export function Table<T = any>({
       <TableTitle title={title} subTitle={subTitle} />
       {options && (
         <div className="table-options-container">
-          <TableOptions {...options} />
+          <TableOptions
+            {...options}
+            onDownload={onDownload}
+            onPrint={() => onPrint(ref.current)}
+          />
         </div>
       )}
 
-      <table className="table">
-        {!hideHeaders ? (
+      <table ref={ref} className="table">
+        {options && options.hideHeaders ? null : (
           <thead className="table-header">
             <tr>
               {headerFormatter &&
@@ -81,17 +86,20 @@ export function Table<T = any>({
                     key={i}
                     name={header}
                     cell={headerFormatter[header]}
-                    sortBy={sortBy}
+                    sortBy={(onSortBy && onSortBy) || null}
                     initSort={
-                      initSortBy && initSortBy.sortColumn === header
-                        ? initSortBy.sortDirection
+                      options &&
+                      options.sort &&
+                      options.sort.initialSortBy &&
+                      options.sort.initialSortBy.key === header
+                        ? options.sort.initialSortBy.direction
                         : null
                     }
                   />
                 ))}
             </tr>
           </thead>
-        ) : null}
+        )}
         <tbody className="table-body">
           {data.map((rows, idx: number) => {
             return (

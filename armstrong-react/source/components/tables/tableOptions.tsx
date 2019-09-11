@@ -1,6 +1,6 @@
 import * as React from "react";
-import { Icon } from "../display/icon";
 import { IDataTableOptionsBar } from "../../hooks/useDataTable";
+import { Icon } from "../display/icon";
 
 import "./styles.scss";
 
