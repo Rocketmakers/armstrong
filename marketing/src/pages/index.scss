@@ -1,5 +1,14 @@
 @import "../theme/shared/variables";
 
+.hero-text {
+  a {
+    color: $color-info;
+    &:hover {
+      text-decoration: underline;
+    } 
+  }
+}
+
 .flex-container {
   display: flex;
   align-items: center;

@@ -11,7 +11,7 @@ const Index: React.FC<{}> = () => {
     <Shell viewClass="home-view">
       <Grid>
         <Row className="rs-small-1col">
-          <Col>
+          <Col className="hero-text">
             <h2>
               A minimal <a href="https://reactjs.org" target="_blank">React</a>, <a href="https://sass-lang.com/" target="_blank">SASS</a> and <a href="https://www.typescriptlang.org/" target="_blank">Typescript</a> framework for rapid UI design and development.
             </h2>
@@ -37,7 +37,7 @@ const Index: React.FC<{}> = () => {
             </Col>
             <Col className="p-bottom-large">
               <div className="flex-container">
-                  <Icon icon={Icon.Icomoon.download} className="p-right-small f-size-large"/><h3>Compatability</h3>
+                  <Icon icon={Icon.Icomoon.stack3} className="p-right-small f-size-large"/><h3>Compatability</h3>
               </div>
               <p className="p-top-small p-bottom-medium">
                   Armstrong supports all modern browsers and was designed to respond to all device sizes.
@@ -49,7 +49,7 @@ const Index: React.FC<{}> = () => {
             </Col>
             <Col className="p-bottom-large">
               <div className="flex-container">
-                  <Icon icon={Icon.Icomoon.download} className="p-right-small f-size-large"/><h3>Storybook</h3>
+                  <Icon icon={Icon.Icomoon.book3} className="p-right-small f-size-large"/><h3>Storybook</h3>
               </div>
               <p className="p-top-small p-bottom-medium">
                 Include Bootstrap’s source Sass and JavaScript files via npm, Composer or Meteor. Package managed installs don’t include documentation, but do include our build system and readme
