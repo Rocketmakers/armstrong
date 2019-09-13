@@ -49,6 +49,10 @@ export const Dialog: React.FC<IDialogProps> = props => {
   return props.isOpen ? ReactDOM.createPortal(dialog, document.querySelector(props.bodySelector || "#host")) : null
 }
 
+Dialog.defaultProps = {
+  closeOnBackgroundClick: true,
+}
+
 type DialogLayerCloseReason = "x-clicked" | "background" | "user"
 
 export interface IDialogLayerPropsCore {
