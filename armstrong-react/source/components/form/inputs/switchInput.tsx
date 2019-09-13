@@ -1,13 +1,12 @@
-import * as React from "react";
-import "./orbitSwitch.scss";
+import * as React from 'react';
 
 interface IOrbitSwitchProps {
-  name: string;
-  checked: boolean;
-  onChange: (checked: boolean) => void;
+  name?: string;
+  checked?: boolean;
+  onChange?: (checked: boolean) => void;
 }
 
-export const SwitchO: React.FunctionComponent<IOrbitSwitchProps> = ({
+export const SwitchInput: React.FunctionComponent<IOrbitSwitchProps> = ({
   checked,
   onChange,
   name
@@ -17,8 +16,8 @@ export const SwitchO: React.FunctionComponent<IOrbitSwitchProps> = ({
   return (
     <input
       name={name}
-      type="checkbox"
-      className="armstrong-input switch-input"
+      type='checkbox'
+      className='armstrong-input switch-input'
       checked={checked}
       onChange={e => onChange(e.currentTarget.checked)}
       onClick={() => setClicked(true)}

@@ -1,12 +1,9 @@
-@import '../style/variables';
-@import '../style/mixins';
-
 $height: 30px;
 $width: 70px;
 
-$padding: $spacing-xxsmall;
+$padding: 5px;
 
-$hover-nudge: $spacing-xsmall;
+$hover-nudge: 5px;
 
 $inactive-colour: $gray-very-light;
 $hover-colour: $gray-light;
@@ -20,7 +17,7 @@ $checked-transform: $width - $dude-size - ($padding * 2);
     height: $height;
     border-radius: $height / 2;
 
-    transition: background-color $transition-quick;
+    transition: background-color 0.3s;
     cursor: pointer;
 
     background-color: $inactive-colour;
@@ -31,20 +28,23 @@ $checked-transform: $width - $dude-size - ($padding * 2);
     }
 
     &:checked {
-        background-color: var(--orbit-colour);
+        background-color: $color-positive;
     }
 
     &::after {
-        @include basic-pseudo;
-        @include circle($dude-size);
+        content: '';
+        display: block;
+        width: $dude-size;
+        height: $dude-size;
         position: absolute;
         left: $padding;
         top: $padding;
 
         background-color: white;
-        box-shadow: $shadow;
+        border-radius: 50%;
+        box-shadow: 0 0 12px rgba(black, 0.3);
 
-        transition: transform $transition-quick;
+        transition: transform 0.3s;
     }
 
     &:checked::after {

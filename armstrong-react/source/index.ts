@@ -52,6 +52,10 @@ export { ValidationLabel, ValidationWrapper } from "./components/form/validation
 export { ArmstrongConfig }
 // Toast
 export { useToast, ToastProvider, IToastNotification, IGlobalToastSettings, DispatchToast, DismissToast, ToastLocation, ToastType, Toast } from "./components/display/toast";
+// Spinner
+export { Spinner } from "./components/display/spinner"
+// Switch
+export { SwitchInput } from "./components/form/inputs/switchInput"
 // Hooks
 export { useInfinitePaging, IInfinitePagingResult, IUseInfinitePagingSettings } from "./hooks/useInfinitePaging"
 export { usePaging, IPagingResult, IUsePagingSettings } from "./hooks/usePaging"
