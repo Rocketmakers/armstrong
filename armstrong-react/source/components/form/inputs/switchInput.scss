@@ -1,0 +1,67 @@
+@import '../style/variables';
+@import '../style/mixins';
+
+$height: 30px;
+$width: 70px;
+
+$padding: $spacing-xxsmall;
+
+$hover-nudge: $spacing-xsmall;
+
+$inactive-colour: $gray-very-light;
+$hover-colour: $gray-light;
+
+$dude-size: $height - ($padding * 2);
+$checked-transform: $width - $dude-size - ($padding * 2);
+
+.armstrong-input.switch-input {
+    position: relative;
+    width: $width;
+    height: $height;
+    border-radius: $height / 2;
+
+    transition: background-color $transition-quick;
+    cursor: pointer;
+
+    background-color: $inactive-colour;
+    border: none;
+
+    &:focus {
+        border: none;
+    }
+
+    &:checked {
+        background-color: var(--orbit-colour);
+    }
+
+    &::after {
+        @include basic-pseudo;
+        @include circle($dude-size);
+        position: absolute;
+        left: $padding;
+        top: $padding;
+
+        background-color: white;
+        box-shadow: $shadow;
+
+        transition: transform $transition-quick;
+    }
+
+    &:checked::after {
+        transform: translateX($checked-transform)
+    }
+
+    &:hover[data-has-clicked="false"] {
+        &:not(:checked) {
+            background-color: $hover-colour;
+        }
+
+        &::after {
+            transform: translateX($hover-nudge);
+        }
+
+        &:checked::after {
+            transform: translateX($checked-transform - $hover-nudge);
+        }
+    }
+}
