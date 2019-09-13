@@ -19,9 +19,13 @@ export interface IDataListProps {
   refreshData: () => void;
   /** A custom react component to show while refreshing */
   refreshingComponent?: JSX.Element;
+  /** Skips showing refreshing UI for first fetch */
+  skipFirstFetch?: boolean;
 }
 
 export const DataList: React.FunctionComponent<IDataListProps> = props => {
+  const [firstFetchComplete, setFirstFetchComplete] = React.useState(false);
+
   const [dragStartY, setDragStartY] = React.useState(null);
   const [dragDeltaY, setDragDeltaY] = React.useState(0);
   const [scrollOffsetY, setscrollOffsetY] = React.useState(0);
@@ -79,6 +83,10 @@ export const DataList: React.FunctionComponent<IDataListProps> = props => {
 
   React.useEffect(() => {
     if (props.refreshing) {
+      if (!firstFetchComplete && props.skipFirstFetch) {
+        setFirstFetchComplete(true)
+        return;
+      }
       setrefreshStatus("refreshing");
     } else {
       window.setTimeout(() => {
@@ -142,5 +150,6 @@ DataList.defaultProps = {
   maxDistance: 100,
   refreshThreshold: 50,
   postRefreshDelayMs: 1000,
-  hideChildrenWhileRefreshing: false
+  hideChildrenWhileRefreshing: false,
+  skipFirstFetch: true
 };

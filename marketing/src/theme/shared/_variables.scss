@@ -1,0 +1,88 @@
+// //// SCREEN SIZES
+$fixed-screen-size: 1280px;
+$screen-size-phone: 738px;
+$screen-size-tablet: 1000px;
+
+// //// FONT SIZES
+// $font-size-root: 16px;
+
+$font-size-xxsmall: 9.6px;
+$font-size-xsmall: 12.8px; //spec
+$font-size-small: 16px; //spec
+$font-size-small-medium: 24px;
+$font-size-medium: 19.2px; //spec
+$font-size-large: 24px; //spec
+$font-size-xlarge: 32px;
+$font-size-xxlarge: 60px;
+
+$font-weight-light: 300;
+$font-weight-regular: 400;
+$font-weight-medium: 500;
+$font-weight-bold: 700;
+
+$font-sizes: (
+  xxsmall $font-size-xxsmall,
+  xsmall $font-size-xsmall,
+  small $font-size-small,
+  smallmedium $font-size-small-medium,
+  medium $font-size-medium,
+  large $font-size-large,
+  xlarge $font-size-xlarge,
+  xxlarge $font-size-xxlarge
+);
+
+//// SPACINGS
+// Note: If you're adding to this, make sure to update the value and the array
+$spacing-xxsmall: 2.5px;
+$spacing-xsmall: 5px;
+$spacing-small: 10px;
+$spacing-medium: 20px;
+$spacing-large: 40px;
+$spacing-xlarge: 60px;
+$spacing-xxlarge: 90px;
+
+$spacing-sizes: (
+  xxsmall $spacing-xxsmall,
+  xsmall $spacing-xsmall,
+  small $spacing-small,
+  medium $spacing-medium,
+  large $spacing-large,
+  xlarge $spacing-xlarge,
+  xxlarge $spacing-xxlarge,
+  none 0
+);
+
+//// COLORS
+$white: #ffffff;
+$black: #070600;
+
+$brand-primary: #FE445B;
+$brand-secondary: #2C3E50;
+
+$gray-base: #4f5c69;
+
+$gray-very-dark: darken($gray-base, 20%);
+$gray-dark: #043c4b;
+$gray-medium: $gray-base;
+$gray-light: #bed1d6;
+$gray-very-light: #ecf0f2;
+
+$color-positive: #1EAE90;
+$color-warning: #f78e52;
+$color-negative: #ff2e08;
+$color-info: #3498d8;
+
+$colors: (
+  "positive" $color-positive,
+  "warning" $color-warning,
+  "negative" $color-negative,
+  "info" $color-info,
+  "brand-primary" $brand-primary,
+  "brand-secondary" $brand-secondary,
+  "gray-very-dark" $gray-very-dark,
+  "gray-dark" $gray-dark,
+  "gray-medium" $gray-medium,
+  "gray-light" $gray-light,
+  "gray-very-light" $gray-very-light,
+  "white" $white
+);

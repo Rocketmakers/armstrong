@@ -1,0 +1,4 @@
+[build]
+  base    = "marketing"
+  command = "gatsby build"
+  publish = "marketing/public"

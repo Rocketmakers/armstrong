@@ -1,0 +1,41 @@
+@import "../theme/shared/variables";
+
+.hero-text {
+  a {
+    color: $color-info;
+    &:hover {
+      text-decoration: underline;
+    } 
+  }
+}
+
+.flex-container {
+  display: flex;
+  align-items: center;
+    Icon {
+      align-self: auto;
+    }
+    p {
+      align-self: auto;
+    }
+    img {
+      width: 40px;
+      height: 40px;
+      margin-right: $spacing-medium;
+      margin-bottom: $spacing-medium;
+    }
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-column-gap: $spacing-large;
+  grid-row-gap: 20px;
+}
+
+@media screen and (max-width: $screen-size-phone){
+  .grid-container {
+    grid-template-columns: 1fr;
+  }
+}
+

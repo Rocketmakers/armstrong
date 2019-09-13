@@ -1,0 +1,37 @@
+.armstrong-sidebar {
+  overflow-x: hidden;
+
+  &[data-position="left"] {
+    left: 0;
+
+    &[data-burger=true] {
+      &[data-open=false] {
+        transform: translateX(-100%);
+      }
+
+      &[data-open=true] {
+        transform: translateX(0);
+      }
+    }
+  }
+
+  &[data-position="right"] {
+    right: 0;
+
+    &[data-burger=true] {
+      &[data-open=false] {
+        transform: translateX(100%);
+      }
+
+      &[data-open=true] {
+        transform: translateX(0);
+      }
+    }
+  }
+
+  &[data-open=false] {
+    min-width: 0;
+    padding-left: $spacing-small;
+    padding-right: $spacing-small;
+  }
+}
