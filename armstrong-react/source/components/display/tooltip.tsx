@@ -1,4 +1,11 @@
 import * as React from "react";
+import _ = require('underscore');
+
+type Position = "left" | "right" | "top" | "bottom" | "fixed" | "hidden"
+
+type Positions = Position | Position[]
+
+type PositionPriority = [Position, Position, Position, Position, Position, Position]
 
 export interface ITooltipProps {
   /** (JSX.Element) The content to appear on hover.  Passing a string will apply it as an aria-label to children, if ariaLabel not passed */
@@ -11,34 +18,89 @@ export interface ITooltipProps {
   ariaHideTooltip?: boolean
   /** (boolean) Retain tooltip when tooltip is hovered, default false */
   retain?: boolean
+  /** (Position) Priority order, or just top priority, for tooltip location, default ["right", "left", "bottom", "top", "fixed", "hidden"] */
+  position?: Positions
 }
 
 export const Tooltip: React.FC<ITooltipProps> = props => {
-  const ariaLabel = React.useMemo(() => {
-    if (props.ariaLabel) {
-      return props.ariaLabel
-    } else if (typeof props.tooltip === "string") {
-      return props.tooltip
-    } else {
-      return
-    }
-  }, [props.ariaLabel])
+  const {tooltip, children, ariaLabel, ariaHideTooltip, retain, position} = props
+  const defaultPositions: PositionPriority = ["right", "left", "bottom", "top", "fixed", "hidden"]
+  const tooltipElement = React.useRef<HTMLDivElement>(null)
+  const [currentPosition, setCurrentPosition] = React.useState(0) // Index in position priority array currently being used
 
+  // Uses default postion priority array, if no position prop is passed
+  const positionPriority = React.useMemo(() => {
+    return position ? normalisePositionPriority(position) : defaultPositions
+  }, [position])
+
+  // Determines aria-label for children props.
+  const actualAriaLabel = React.useMemo(() => {
+    if (ariaLabel) {
+      return ariaLabel
+    } else if (typeof tooltip === "string") {
+      return tooltip
+    } else {
+      return ""
+    }
+  }, [ariaLabel])
+
+  // Determines if tooltip should be aria-hidden
   const ariaHidden = React.useMemo(() => {
-    if (props.ariaHideTooltip || props.ariaHideTooltip === false) {
-      return props.ariaHideTooltip
+    if (ariaHideTooltip || ariaHideTooltip === false) {
+      return ariaHideTooltip
     } else {
       return false
     }
-  }, [props.ariaHideTooltip])
+  }, [ariaHideTooltip])
+
+  // Used to triggers the useEffect after this one, when currentPositon is already 0
+  React.useEffect(() => {
+    if (currentPosition === -1) {
+      setCurrentPosition(0)
+    }
+  }, [currentPosition])
+
+  // If current tooltip position is not visible, moves on to next position
+  React.useEffect(() => {
+    if (tooltipElement.current && !isInViewport(tooltipElement.current) && currentPosition < 5) {
+      setCurrentPosition(currentPosition + 1)
+    }
+  }, [tooltipElement, currentPosition])
+
+  // Creates full position priority array, by taking user specified positions, & adding unspecified positions onto the end
+  function normalisePositionPriority(positions: Positions): PositionPriority {
+    const positionsArray: Position[] = typeof positions === "string" ? [positions] : positions
+    const uniquePositions: Position[] = _.uniq(positionsArray)
+    const unsetPositions: Position[] = _.difference(defaultPositions, uniquePositions)
+    return [...uniquePositions, ...unsetPositions] as PositionPriority
+  }
+
+  // Checks if an element is fully within the viewport
+  function isInViewport(element: Element): boolean {
+    const bounding = element.getBoundingClientRect()
+    const viewportWidth = document.documentElement.clientWidth || window.innerWidth
+    const viewportHeight = document.documentElement.clientHeight || window.innerHeight
+    return (
+      bounding.top >= 0 &&
+      bounding.left >= 0 &&
+      bounding.right <= viewportWidth &&
+      bounding.bottom <= viewportHeight
+    )
+  }
 
   return (
-    <div className="tooltip-wrapper" data-retain={!!props.retain}>
-      <div className="tooltip-children" aria-label={ ariaLabel }>
-        {props.children}
+    // currentPosition set to -1, as setting to 0 doesn't trigger useEffect when it's already 0
+    <div className="tooltip-wrapper" onMouseEnter={() => setCurrentPosition(-1)}>
+      <div className="tooltip-children" aria-label={actualAriaLabel}>
+        {children}
       </div>
-      <div className="tooltip" aria-hidden={ ariaHidden }>
-        {props.tooltip}
+      <div className="tooltip"
+        ref={tooltipElement}
+        aria-hidden={ariaHidden}
+        data-retain={!!retain}
+        data-position={positionPriority[currentPosition] ? positionPriority[currentPosition] : "hidden"}
+      >
+        {tooltip}
       </div>
     </div>
   )

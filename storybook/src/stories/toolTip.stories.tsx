@@ -21,3 +21,8 @@ storiesOf('Tooltip', module)
       <span>Hover here</span>
     </Tooltip>
   )
+  .add('Custom position', () =>
+  <Tooltip tooltip="It is me. The tooltip" position={["left", "top"]}>
+    <span>Hover here</span>
+  </Tooltip>
+  )
