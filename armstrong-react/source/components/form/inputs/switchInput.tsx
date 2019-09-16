@@ -32,18 +32,6 @@ export interface ISwitchInputProps
   activeColour?: string;
 }
 
-/** set a css variable on the element if the value is not falsey */
-
-const setCssVar = (
-  name: string,
-  value: string,
-  element: Pick<HTMLElement, "style">
-) => {
-  if (!!value) {
-    element.style.setProperty(name, value);
-  }
-};
-
 const SwitchInputRef: React.RefForwardingComponent<
   ISwitchInput,
   ISwitchInputProps
