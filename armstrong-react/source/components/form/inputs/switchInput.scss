@@ -3,13 +3,14 @@ $default-width: 50px;
 
 $default-padding: 2px;
 
-$hover-nudge: 5px;
+$default-hover-nudge-amount: 5px;
 
-$inactive-colour: $gray-light;
-$hover-colour: darken($gray-light, 5%);
+$default-inactive-colour: $gray-light;
+$default-hover-colour: darken($gray-light, 5%);
+$default-active-colour: $color-positive;
 
 
-@mixin resize-switch($switch-width, $switch-height, $switch-padding) {
+@mixin resize-switch($switch-width, $switch-height, $switch-padding, $switch-hover-nudge-amount) {
     $dude-size: calc(#{$switch-height} - #{$switch-padding} * 2);
     $checked-transform: calc(#{$switch-width} - #{$dude-size} - #{$switch-padding} * 2);
 
@@ -30,29 +31,44 @@ $hover-colour: darken($gray-light, 5%);
     }
 
     &:hover[data-hover-nudge-enabled="true"][data-has-clicked="false"] {
+        &::after {
+            transform: translateX($switch-hover-nudge-amount);
+        }
+
         &:checked::after {
-            transform: translateX(calc(#{$checked-transform} - #{$hover-nudge}));
+            transform: translateX(calc(#{$checked-transform} - #{$switch-hover-nudge-amount}));
         }
     }
 }
 
-.armstrong-input.switch-input input[type="checkbox"] {
+@mixin recolour-switch($switch-inactive-colour, $switch-hover-colour, $switch-active-colour) {
+
+    background-color: $switch-inactive-colour;
+
+    &:checked {
+        background-color: $switch-active-colour;
+    }
+
+    &:hover[data-has-clicked="false"] {
+        &:not(:checked) {
+            background-color: $switch-hover-colour;
+        }
+    }
+}
+
+.armstrong-input.switch-input > input {
     position: relative;
 
     transition: background-color 0.3s;
     cursor: pointer;
 
-    background-color: $inactive-colour;
     border: none;
 
-    @include resize-switch(var(--switch-width, $default-width), var(--switch-height, $default-height), var(--switch-padding, $default-padding));
+    @include resize-switch(var(--switch-width, #{$default-width}), var(--switch-height, #{$default-height}), var(--switch-padding, #{$default-padding}), var(--switch-hover-nudge-amount, #{$default-hover-nudge-amount}));
+    @include recolour-switch(var(--switch-inactive-colour, #{$default-inactive-colour}), var(--switch-hover-colour, #{$default-hover-colour}), var(--switch-active-colour, #{$default-active-colour}));
 
     &:focus {
         border: none;
-    }
-
-    &:checked {
-        background-color: $color-positive;
     }
 
     &::after {
@@ -67,13 +83,4 @@ $hover-colour: darken($gray-light, 5%);
         transition: transform 0.3s;
     }
 
-    &:hover[data-hover-nudge-enabled="true"][data-has-clicked="false"] {
-        &:not(:checked) {
-            background-color: $hover-colour;
-        }
-
-        &::after {
-            transform: translateX($hover-nudge);
-        }
-    }
 }

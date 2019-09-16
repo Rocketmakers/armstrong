@@ -1,5 +1,6 @@
 import * as React from "react";
 import { ClassHelpers, generateUniqueId, ValidationLabel } from "../../..";
+import { useCSSVariables } from "../../../../../storybook/src/_symlink/hooks/useCssVariables";
 import { DataValidationMessage, DataValidationMode } from "../formCore";
 
 export interface ISwitchInput {
@@ -10,7 +11,7 @@ export interface ISwitchInput {
 export interface ISwitchInputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
   /** if enabled, the switch will nudge across a bit when hovered to provide a visual cue */
-  hoverNudgeEffectEnabled?: boolean;
+  hoverNudgeAmount?: number;
 
   /** width of the switch track - 50 by default */
   width?: number;
@@ -20,31 +21,68 @@ export interface ISwitchInputProps
 
   /** padding of the switch track (if negative, the nubbin will be bigger than the track) - 2px by default */
   padding?: number;
+
+  /** colour of the switch track when inactive */
+  inactiveColour?: string;
+
+  /** colour of the switch track when hovering */
+  hoveringColour?: string;
+
+  /** colour of the switch track when active */
+  activeColour?: string;
 }
+
+/** set a css variable on the element if the value is not falsey */
+
+const setCssVar = (
+  name: string,
+  value: string,
+  element: Pick<HTMLElement, "style">
+) => {
+  if (!!value) {
+    element.style.setProperty(name, value);
+  }
+};
 
 const SwitchInputRef: React.RefForwardingComponent<
   ISwitchInput,
   ISwitchInputProps
 > = (props, ref) => {
   const {
-    hoverNudgeEffectEnabled,
+    hoverNudgeAmount,
     height,
     width,
     padding,
     className,
+    inactiveColour,
+    hoveringColour,
+    activeColour,
     id,
     ...attrs
   } = props;
 
-  const input = React.useRef<HTMLInputElement>(undefined);
-
-  React.useEffect(() => {
-    if (input.current) {
-      input.current.style.setProperty("--switch-height", `${height}px`);
-      input.current.style.setProperty("--switch-width", `${width}px`);
-      input.current.style.setProperty("--switch-padding", `${padding}px`);
+  const input = useCSSVariables([
+    { name: "--switch-height", value: `${height}px`, enabled: !!height },
+    { name: "--switch-width", value: `${width}px`, enabled: !!width },
+    { name: "--switch-padding", value: `${padding}px`, enabled: !!padding },
+    {
+      name: "--switch-hover-nudge-amount",
+      value: `${hoverNudgeAmount}px`,
+      enabled: !!hoverNudgeAmount
+    },
+    {
+      name: "--switch-inactive-colour",
+      value: inactiveColour
+    },
+    {
+      name: "--switch-hover-colour",
+      value: hoveringColour
+    },
+    {
+      name: "--switch-active-colour",
+      value: activeColour
     }
-  }, [input, height, width, padding]);
+  ]);
 
   const refCallback = React.useCallback(() => {
     return {
@@ -92,7 +130,7 @@ const SwitchInputRef: React.RefForwardingComponent<
         onClick={() => setClicked(true)}
         onMouseLeave={() => setClicked(false)}
         data-has-clicked={clicked}
-        data-hover-nudge-enabled={hoverNudgeEffectEnabled}
+        data-hover-nudge-enabled={!!hoverNudgeAmount}
       />{" "}
       <ValidationLabel message={validationMessage} mode={validationMode} />
     </div>
@@ -100,10 +138,3 @@ const SwitchInputRef: React.RefForwardingComponent<
 };
 
 export const SwitchInput = React.forwardRef(SwitchInputRef);
-
-SwitchInput.defaultProps = {
-  hoverNudgeEffectEnabled: true,
-  width: 50,
-  height: 25,
-  padding: 2
-};
