@@ -9,9 +9,24 @@ export {
 
 // Display
 export { IIconProps, Icon } from "./components/display/icon";
-export { IImageProps, Image, useDummyImageSrc, useRandomUserImageSrc } from "./components/display/image";
-export { IDialogProps, Dialog, useDialog, IUseDialogProps, DialogLayer } from "./components/display/dialog";
-export { DialogProvider, IDialogProviderProps, useDialogProvider } from "./components/display/dialogProvider";
+export {
+  IImageProps,
+  Image,
+  useDummyImageSrc,
+  useRandomUserImageSrc,
+} from "./components/display/image";
+export {
+  IDialogProps,
+  Dialog,
+  useDialog,
+  IUseDialogProps,
+  DialogLayer,
+} from "./components/display/dialog";
+export {
+  DialogProvider,
+  IDialogProviderProps,
+  useDialogProvider,
+} from "./components/display/dialogProvider";
 export { IDataListProps, DataList } from "./components/display/dataList";
 
 // Form
@@ -119,24 +134,65 @@ export { ClassHelpers } from "./utilities/classHelpers";
 // Icons
 export { Icons } from "./utilities/icons";
 // Navigation
-export { ISidebarProps, Sidebar, useSidebar } from "./components/navigation/sidebar"
-export { IBurgerMenuProps, BurgerMenu, useBurgerMenu } from "./components/navigation/burgerMenu"
-export { TabControl, TabItem, ITabItemProps, ITabControlProps } from "./components/navigation/tabControl"
-import * as ArmstrongConfig from "./config/config"
-export { ValidationLabel, ValidationWrapper } from "./components/form/validationWrapper"
-export { ArmstrongConfig }
+export {
+  ISidebarProps,
+  Sidebar,
+  useSidebar,
+} from "./components/navigation/sidebar";
+export {
+  IBurgerMenuProps,
+  BurgerMenu,
+  useBurgerMenu,
+} from "./components/navigation/burgerMenu";
+export {
+  TabControl,
+  TabItem,
+  ITabItemProps,
+  ITabControlProps,
+} from "./components/navigation/tabControl";
+import * as ArmstrongConfig from "./config/config";
+export {
+  ValidationLabel,
+  ValidationWrapper,
+} from "./components/form/validationWrapper";
+export { ArmstrongConfig };
 // Toast
-export { useToast, ToastProvider, IToastNotification, IGlobalToastSettings, DispatchToast, DismissToast, ToastLocation, ToastType, Toast } from "./components/display/toast";
+export {
+  useToast,
+  ToastProvider,
+  IToastNotification,
+  IGlobalToastSettings,
+  DispatchToast,
+  DismissToast,
+  ToastLocation,
+  ToastType,
+  Toast,
+} from "./components/display/toast";
 
 // Table
 export { Table, ITableProps } from "./components/tables";
 export { useDataTable } from "./hooks/useDataTable";
 
 // Hooks
-export { useInfinitePaging, IInfinitePagingResult, IUseInfinitePagingSettings } from "./hooks/useInfinitePaging"
-export { usePaging, IPagingResult, IUsePagingSettings } from "./hooks/usePaging"
-export { useCalendar, IDay, IMonth, IUseCalendar, IUseCalendarSettings, IWeek } from "./hooks/useCalendar"
-export { useDidUpdateEffect } from "./hooks/useDidUpdateEffect"
-export { usePrevious } from "./hooks/usePrevious"
-export { useThrottle } from "./hooks/useThrottle"
-export { useMedia } from "./hooks/useMedia"
+export {
+  useInfinitePaging,
+  IInfinitePagingResult,
+  IUseInfinitePagingSettings,
+} from "./hooks/useInfinitePaging";
+export {
+  usePaging,
+  IPagingResult,
+  IUsePagingSettings,
+} from "./hooks/usePaging";
+export {
+  useCalendar,
+  IDay,
+  IMonth,
+  IUseCalendar,
+  IUseCalendarSettings,
+  IWeek,
+} from "./hooks/useCalendar";
+export { useDidUpdateEffect } from "./hooks/useDidUpdateEffect";
+export { usePrevious } from "./hooks/usePrevious";
+export { useThrottle } from "./hooks/useThrottle";
+export { useMedia } from "./hooks/useMedia";

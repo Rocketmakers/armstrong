@@ -1,1 +1,2 @@
-export { ITableProps, Table } from "./table";
+export * from "./table";
+export * from "./tableTypes";

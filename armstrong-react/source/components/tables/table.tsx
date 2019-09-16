@@ -1,27 +1,26 @@
 import * as React from "react";
 import * as _ from "underscore";
-import { TableHeading, TSortDirection } from "./tableHeader";
+import { Button, ClassHelpers } from "../../";
+import { Dialog } from "../display/dialog";
+import { TableHeading } from "./tableHeader";
 import { TableItem } from "./tableItem";
 import { TableItemDropdown } from "./tableItemDropdown";
 import { TableOptions } from "./tableOptions";
 import { IPaginateButtonProps, TablePagination } from "./tablePagingation";
 import { TableTitle } from "./tableTitle";
-
 import {
   IDataTableOptions,
   IFilterParameters,
   TFilterAction,
-} from "../../hooks/useDataTable";
-import { Dialog } from "../display/dialog";
-
-import { Button, ClassHelpers } from "../../";
+  TSortDirection,
+} from "./tableTypes";
 
 export interface ITableProps<T> {
   /** (React.ReactNode) Specify the formatting of the individual column */
   columnFormatter?: { [P in keyof T]?: (value: T[P]) => React.ReactNode };
   /** (T[]) The data to display */
   data?: T[];
-  filterList?: IFilterParameters[];
+  filterList?: Array<IFilterParameters<T>>;
   /** (React.ReactNode) Specify the formatting of the header column */
   headerFormatter: {
     [P in keyof T]?: (name: keyof T) => React.ReactNode;
@@ -34,16 +33,16 @@ export interface ITableProps<T> {
   onChangePage?: (pageNumber: number) => void;
   /** () => void Event to fire when user downloads the table */
   onDownload?: () => void;
-  /** () => void Event to fire when user filters the data by a column */
-  onFilter?: (
-    action: TFilterAction,
-    column?: keyof T,
-    value?: React.ReactNode,
-  ) => void;
   /** () => void Event to fire when user prints the table */
   onPrint?: (ref: HTMLTableElement) => void;
   /** ((key:keyof T, direction: TSortDirection) => void) Event to fire when user sorts the columns */
   onSortBy?: (key: keyof T, direction: TSortDirection) => void;
+  /** () => void Event to fire when user filters the data by a column */
+  onUpdateFilter?: (
+    action: TFilterAction,
+    key?: any,
+    value?: React.ReactNode,
+  ) => void;
   /** (options:IDataTableOptions) Options for the data table */
   options?: IDataTableOptions<T>;
   /** (component) Pagination Element  */
@@ -63,9 +62,9 @@ export function Table<T = any>({
   onChangeRowsPerPage,
   onChangePage,
   onDownload,
-  onFilter,
   onPrint,
   onSortBy,
+  onUpdateFilter,
   options,
   paginationElement: PaginationElement,
   subTitle,
@@ -77,10 +76,10 @@ export function Table<T = any>({
     false,
   );
 
-  const columnKeys = React.useMemo(
-    () => Object.keys(headerFormatter) as Array<keyof T>,
-    [headerFormatter],
-  );
+  const columnKeys = React.useMemo(() => {
+    return Object.keys(headerFormatter) as Array<keyof T>;
+  }, [headerFormatter]);
+
   return (
     <div className={ClassHelpers.classNames("table-container")}>
       <TableTitle title={title} subTitle={subTitle} />
@@ -169,9 +168,9 @@ export function Table<T = any>({
       >
         {filterList && (
           <TableFilters
-            onAddFilter={() => null}
+            onUpdateFilter={onUpdateFilter}
             filterValues={filterList}
-            onClear={() => console.log("clear")}
+            onClear={() => onUpdateFilter("clear")}
           />
         )}
       </Dialog>
@@ -179,13 +178,23 @@ export function Table<T = any>({
   );
 }
 
-const TableFilters: React.FunctionComponent<{
-  filterValues: IFilterParameters[];
+export interface ITableFilters<T> {
+  filterValues: Array<IFilterParameters<T>>;
   onClear: () => void;
-  onAddFilter: (name: string, value: React.ReactNode) => void;
-}> = ({ filterValues, onClear }) => {
+  onUpdateFilter: (
+    action: TFilterAction,
+    key?: any,
+    value?: React.ReactNode,
+  ) => void;
+}
+
+function TableFilters<T>({
+  filterValues,
+  onClear,
+  onUpdateFilter,
+}: ITableFilters<T>) {
   return (
-    <>
+    <div>
       <div className={ClassHelpers.classNames("table-filters")}>
         <div className={ClassHelpers.classNames("title")}>Filters</div>
         <Button
@@ -200,7 +209,9 @@ const TableFilters: React.FunctionComponent<{
           <>
             <div>
               {f.name}
-              <select onChange={e => null}>
+              <select
+                onChange={e => onUpdateFilter("add", f.name, e.target.value)}
+              >
                 {f.values.map((ff, idx) => {
                   switch (typeof ff) {
                     case "boolean": {
@@ -219,6 +230,6 @@ const TableFilters: React.FunctionComponent<{
           </>
         );
       })}
-    </>
+    </div>
   );
-};
+}

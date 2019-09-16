@@ -1,10 +1,10 @@
 import * as React from "react";
 import { storiesOf } from "@storybook/react";
 import { Table, useDataTable, Icon } from "../_symlink";
-import { IUseDataTableResult } from "../_symlink/hooks/useDataTable";
 
 import "../theme/theme.scss";
 import { IPaginateButtonProps } from "../_symlink/components/tables/tablePagingation";
+import { IUseDataTableResult } from "../_symlink/components/tables/tableTypes";
 
 const fauxDataUrl = "https://jsonplaceholder.typicode.com/todos";
 interface ITodos {
@@ -100,41 +100,6 @@ storiesOf("Table", module)
       />
     );
   })
-  .add("options", () => {
-    const {
-      data,
-      downloadTableAsCSV,
-      isLoading,
-      options,
-      printTable,
-    } = useDataTable<ITodos>({
-      fetch: loadData,
-      options: {
-        rowsPerPage: 10,
-        download: true,
-        print: true,
-      },
-    });
-
-    return (
-      <Table<ITodos>
-        headerFormatter={{
-          id: null,
-          completed: null,
-          title: null,
-          userId: null,
-        }}
-        columnFormatter={{
-          completed: CompletedTableCell,
-        }}
-        data={data}
-        options={options}
-        onDownload={downloadTableAsCSV}
-        onPrint={printTable}
-        // onDownload={() => downloadTableAsCSV(true)}
-      />
-    );
-  })
   .add("titles", () => {
     const [state, setState] = React.useState([]);
 
@@ -162,6 +127,37 @@ storiesOf("Table", module)
       />
     );
   })
+  .add("options", () => {
+    const { data, downloadTableAsCSV, options, printTable } = useDataTable<
+      ITodos
+    >({
+      fetch: loadData,
+      options: {
+        rowsPerPage: 10,
+        download: true,
+        print: true,
+      },
+    });
+
+    return (
+      <Table<ITodos>
+        headerFormatter={{
+          id: null,
+          completed: null,
+          title: null,
+          userId: null,
+        }}
+        columnFormatter={{
+          completed: CompletedTableCell,
+        }}
+        data={data}
+        options={options}
+        onDownload={downloadTableAsCSV}
+        onPrint={printTable}
+      />
+    );
+  })
+
   .add("format headers", () => {
     const [state, setState] = React.useState([]);
 
@@ -295,11 +291,22 @@ storiesOf("Table", module)
     );
   })
   .add("filter ", () => {
-    const { data, filterList, isLoading, options } = useDataTable<ITodos>({
+    const {
+      data,
+      filterList,
+      isLoading,
+      options,
+      setPage,
+      setRowsPerPage,
+      totalPages,
+      updateFilter,
+    } = useDataTable<ITodos>({
       fetch: loadData,
       options: {
-        rowsPerPage: 10,
+        rowsPerPage: 5,
+        rowsPerPageArray: [5, 10, 20, 0],
         filter: { filterBy: ["userId", "completed"] },
+        paginate: true,
       },
     });
 
@@ -319,8 +326,12 @@ storiesOf("Table", module)
             title: TableHeaderCell,
             userId: TableHeaderCell,
           }}
+          numberOfPages={totalPages}
+          onUpdateFilter={updateFilter}
           options={options}
           paginationElement={ExamplePaginationButton}
+          onChangeRowsPerPage={setRowsPerPage}
+          onChangePage={setPage}
           subTitle="My Sortable Data Table"
           title="My Table"
         />

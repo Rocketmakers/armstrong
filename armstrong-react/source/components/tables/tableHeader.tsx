@@ -1,7 +1,6 @@
 import * as React from "react";
 import { Icon } from "../display/icon";
-
-export type TSortDirection = "asc" | "desc";
+import { TSortDirection } from "./tableTypes";
 
 export interface ITableHeading<T> {
   name: keyof T;
