@@ -1,7 +1,7 @@
 import * as React from "react";
 import { ClassHelpers, generateUniqueId, ValidationLabel } from "../../..";
-import { useCSSVariables } from "../../../../../storybook/src/_symlink/hooks/useCssVariables";
 import { DataValidationMessage, DataValidationMode } from "../formCore";
+import { useCSSVariables } from '../../../hooks/useCssVariables';
 
 export interface ISwitchInput {
   focus: () => void;
