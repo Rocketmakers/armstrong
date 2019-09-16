@@ -1,0 +1,22 @@
+
+.armstrong-graphic {
+
+    position: relative;
+    width: 70%;
+
+    .space {
+        width: 100%;
+    }
+    .capsule {
+        $capsulewidth: 45%;
+        position: absolute;
+        left: calc(50% - #{$capsulewidth}/2);
+        animation-name: spin;
+        animation-duration: 200000ms;
+        animation-iteration-count: infinite;
+        animation-timing-function: linear; 
+        width: $capsulewidth;
+        top: -5%;
+    }
+}
+
