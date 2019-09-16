@@ -1,6 +1,5 @@
 import * as React from "react";
-
-import "./styles.scss";
+import { ClassHelpers } from "../..";
 
 export interface ITableItem<T> {
   data: T;
@@ -16,7 +15,7 @@ export function TableItem<T>({
   onClick,
 }: React.PropsWithChildren<ITableItem<T>>) {
   return (
-    <tr className="table-row">
+    <tr className={ClassHelpers.classNames("table-row")}>
       {columnKeys.map((col, index) => {
         return (
           <td key={index}>

@@ -8,7 +8,7 @@ import { IPaginateButtonProps, TablePagination } from "./tablePagingation";
 import { TableTitle } from "./tableTitle";
 
 import { IDataTableOptions } from "../../hooks/useDataTable";
-import "./styles.scss";
+import { Button, ClassHelpers } from "../../";
 
 export interface ITableProps<T> {
   /** (React.ReactNode) Specify the formatting of the individual column */
@@ -64,10 +64,10 @@ export function Table<T = any>({
     [headerFormatter],
   );
   return (
-    <div className="table-container">
+    <div className={ClassHelpers.classNames("table-container")}>
       <TableTitle title={title} subTitle={subTitle} />
       {options && (
-        <div className="table-options-container">
+        <div className={ClassHelpers.classNames("table-options-container")}>
           <TableOptions
             {...options}
             onDownload={onDownload}
@@ -75,10 +75,9 @@ export function Table<T = any>({
           />
         </div>
       )}
-
-      <table ref={ref} className="table">
+      <table id={title} ref={ref} className={ClassHelpers.classNames("table")}>
         {options && options.hideHeaders ? null : (
-          <thead className="table-header">
+          <thead className={ClassHelpers.classNames("table-header")}>
             <tr>
               {headerFormatter &&
                 columnKeys.map((header, i) => (
@@ -100,7 +99,7 @@ export function Table<T = any>({
             </tr>
           </thead>
         )}
-        <tbody className="table-body">
+        <tbody className={ClassHelpers.classNames("table-body")}>
           {data.map((rows, idx: number) => {
             return (
               <TableItem
@@ -113,11 +112,10 @@ export function Table<T = any>({
           })}
         </tbody>
       </table>
-
       {onChangePage && numberOfPages && PaginationElement && (
-        <div className="table-pagination">
+        <div className={ClassHelpers.classNames("table-pagination")}>
           <div style={{ flex: 0.5 }}></div>
-          <div className="pagination">
+          <div className={ClassHelpers.classNames("pagination")}>
             <TablePagination
               currentPage={currentPage}
               totalPages={numberOfPages}

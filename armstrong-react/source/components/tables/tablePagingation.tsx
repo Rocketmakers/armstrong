@@ -1,7 +1,6 @@
 import * as React from "react";
+import * as _ from "underscore";
 import { utils } from "../../utilities/utils";
-
-import "./styles.scss";
 
 export const GO_LEFT_PAGE_INDEX = -1;
 export const GO_RIGHT_PAGE_INDEX = -2;
@@ -49,7 +48,7 @@ export const TablePagination: React.FunctionComponent<ITablePagination> = ({
             1,
             true,
           );
-          pages = [GO_LEFT_PAGE_INDEX, ...extraPages, ...pages];
+          pages = _.flatten([GO_LEFT_PAGE_INDEX, extraPages, pages]);
         } else if (!hasLeftNeighbour && hasRightNeighbour) {
           const extraPages = utils.array.range(
             endPage + 1,
@@ -57,13 +56,14 @@ export const TablePagination: React.FunctionComponent<ITablePagination> = ({
             1,
             true,
           );
-          pages = [...pages, ...extraPages, GO_RIGHT_PAGE_INDEX];
+          pages = _.flatten([pages, extraPages, GO_RIGHT_PAGE_INDEX]);
         } else if (hasLeftNeighbour && hasRightNeighbour) {
-          pages = [GO_LEFT_PAGE_INDEX, ...pages, GO_RIGHT_PAGE_INDEX];
+          pages = _.flatten([GO_LEFT_PAGE_INDEX, pages, GO_RIGHT_PAGE_INDEX]);
         } else {
-          pages = [GO_LEFT_PAGE_INDEX, ...pages, GO_RIGHT_PAGE_INDEX];
+          pages = _.flatten([GO_LEFT_PAGE_INDEX, pages, GO_RIGHT_PAGE_INDEX]);
         }
-        return [1, ...pages, totalPages];
+
+        return _.flatten([1, pages, totalPages]);
       }
       return utils.array.range(1, totalPages, 1, true);
     },

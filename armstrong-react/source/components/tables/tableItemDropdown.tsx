@@ -1,6 +1,5 @@
 import * as React from "react";
-
-import "./styles.scss";
+import { ClassHelpers } from "../..";
 
 export interface ITableItemDropdown {
   values: number[];
@@ -12,7 +11,7 @@ export const TableItemDropdown: React.FunctionComponent<ITableItemDropdown> = ({
   onSelect,
 }) => {
   return (
-    <div className="table-item-dropdown">
+    <div className={ClassHelpers.classNames("table-item-dropdown")}>
       <div>Rows per Page</div>
       <select onChange={e => onSelect(Number(e.target.value))}>
         {values.map(value => (
