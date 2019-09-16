@@ -2,6 +2,7 @@
     from {
         transform: rotate(0);
     }
+
     to {
         transform: rotate(360deg);
     }
@@ -11,14 +12,19 @@
     from {
         transform: rotate(0);
     }
+
     to {
         transform: rotate(-360deg);
     }
 }
 
-.spinner{
+.spinner {
     width: 100%;
     height: 100%;
+
+    flex-grow: 1;
+    align-self: stretch;
+    justify-self: stretch;
 
     display: flex;
     align-items: center;
@@ -26,11 +32,11 @@
 
     animation: spin 1s linear infinite;
 
-    .icon{
+    .icon {
         font-size: 2rem;
     }
 
-    &[data-reversed="true"]{
+    &[data-reversed="true"] {
         animation-name: spin-reverse;
     }
 }

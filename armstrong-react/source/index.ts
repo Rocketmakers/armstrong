@@ -13,6 +13,7 @@ export { IDataListProps, DataList } from "./components/display/dataList";
 
 // Form
 export { ICheckboxInputProps, CheckboxInput, ICheckboxInput } from "./components/form/inputs/checkboxInput";
+export { ISwitchInputProps, SwitchInput, ISwitchInput } from "./components/form/inputs/switchInput";
 export { IRadioInputProps, RadioInput, IRadioInput } from "./components/form/inputs/radioInput";
 export { IRadioListInputProps, RadioListInput, IRadioListInputOption, IRadioListInput } from "./components/form/inputs/radioListInput";
 export { ISelectInputProps, SelectInput, ISelectInputOption, ISelectInput } from "./components/form/inputs/selectInput";
@@ -31,18 +32,23 @@ export { FormBinderBase } from "./components/form/formBinderBase";
 export { FormBinder, InputFormBinder } from "./components/form/formBinders";
 export { IFormProps, Form, ParentFormContext, IFormContext, FormDataClone, generateUniqueId, extractChildValidationResults } from "./components/form/form";
 export { useForm, createFormContext, UseFormContext, IUseFormProps } from "./components/form/formHooks"
+
 // Interaction
 export { IButtonProps, Button, IButton as IButtonRef } from "./components/interaction/button"
+
 // Layout
 export { IGridProps, Grid, IRowProps, Row, IColProps, Col } from "./components/layout/grid"
 export { Repeater } from "./components/layout/repeater";
+
 // UI Helpers
 export { Color, Size, Side, HorizontalAlignment, VerticalAlignment, LayoutHelpers } from "./utilities/layoutHelpers"
 export { utils } from "./utilities/utils"
 export { calendarUtils } from "./utilities/calendarUtils"
 export { ClassHelpers } from "./utilities/classHelpers"
+
 // Icons
 export { Icons } from "./utilities/icons"
+
 // Navigation
 export { ISidebarProps, Sidebar, useSidebar } from "./components/navigation/sidebar"
 export { IBurgerMenuProps, BurgerMenu, useBurgerMenu } from "./components/navigation/burgerMenu"
@@ -50,12 +56,13 @@ export { TabControl, TabItem, ITabItemProps, ITabControlProps } from "./componen
 import * as ArmstrongConfig from "./config/config"
 export { ValidationLabel, ValidationWrapper } from "./components/form/validationWrapper"
 export { ArmstrongConfig }
+
 // Toast
 export { useToast, ToastProvider, IToastNotification, IGlobalToastSettings, DispatchToast, DismissToast, ToastLocation, ToastType, Toast } from "./components/display/toast";
+
 // Spinner
 export { Spinner } from "./components/display/spinner"
-// Switch
-export { SwitchInput } from "./components/form/inputs/switchInput"
+
 // Hooks
 export { useInfinitePaging, IInfinitePagingResult, IUseInfinitePagingSettings } from "./hooks/useInfinitePaging"
 export { usePaging, IPagingResult, IUsePagingSettings } from "./hooks/usePaging"
