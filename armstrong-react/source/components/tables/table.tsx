@@ -7,7 +7,13 @@ import { TableOptions } from "./tableOptions";
 import { IPaginateButtonProps, TablePagination } from "./tablePagingation";
 import { TableTitle } from "./tableTitle";
 
-import { IDataTableOptions } from "../../hooks/useDataTable";
+import {
+  IDataTableOptions,
+  IFilterParameters,
+  TFilterAction,
+} from "../../hooks/useDataTable";
+import { Dialog } from "../display/dialog";
+
 import { Button, ClassHelpers } from "../../";
 
 export interface ITableProps<T> {
@@ -15,6 +21,7 @@ export interface ITableProps<T> {
   columnFormatter?: { [P in keyof T]?: (value: T[P]) => React.ReactNode };
   /** (T[]) The data to display */
   data?: T[];
+  filterList?: IFilterParameters[];
   /** (React.ReactNode) Specify the formatting of the header column */
   headerFormatter: {
     [P in keyof T]?: (name: keyof T) => React.ReactNode;
@@ -27,6 +34,12 @@ export interface ITableProps<T> {
   onChangePage?: (pageNumber: number) => void;
   /** () => void Event to fire when user downloads the table */
   onDownload?: () => void;
+  /** () => void Event to fire when user filters the data by a column */
+  onFilter?: (
+    action: TFilterAction,
+    column?: keyof T,
+    value?: React.ReactNode,
+  ) => void;
   /** () => void Event to fire when user prints the table */
   onPrint?: (ref: HTMLTableElement) => void;
   /** ((key:keyof T, direction: TSortDirection) => void) Event to fire when user sorts the columns */
@@ -43,12 +56,14 @@ export interface ITableProps<T> {
 
 export function Table<T = any>({
   data,
+  filterList,
   columnFormatter,
   headerFormatter,
   numberOfPages,
   onChangeRowsPerPage,
   onChangePage,
   onDownload,
+  onFilter,
   onPrint,
   onSortBy,
   options,
@@ -58,6 +73,9 @@ export function Table<T = any>({
 }: React.PropsWithChildren<ITableProps<T>>) {
   const ref = React.useRef<HTMLTableElement>(null);
   const [currentPage, setCurrentPage] = React.useState<number>(1);
+  const [filterDialogState, setFilterDialogState] = React.useState<boolean>(
+    false,
+  );
 
   const columnKeys = React.useMemo(
     () => Object.keys(headerFormatter) as Array<keyof T>,
@@ -72,6 +90,9 @@ export function Table<T = any>({
             {...options}
             onDownload={onDownload}
             onPrint={() => onPrint(ref.current)}
+            onFilter={() => {
+              setFilterDialogState(true);
+            }}
           />
         </div>
       )}
@@ -141,6 +162,63 @@ export function Table<T = any>({
           />
         </div>
       )}
+      <Dialog
+        bodySelector="body"
+        isOpen={filterDialogState}
+        onClose={() => setFilterDialogState(false)}
+      >
+        {filterList && (
+          <TableFilters
+            onAddFilter={() => null}
+            filterValues={filterList}
+            onClear={() => console.log("clear")}
+          />
+        )}
+      </Dialog>
     </div>
   );
 }
+
+const TableFilters: React.FunctionComponent<{
+  filterValues: IFilterParameters[];
+  onClear: () => void;
+  onAddFilter: (name: string, value: React.ReactNode) => void;
+}> = ({ filterValues, onClear }) => {
+  return (
+    <>
+      <div className={ClassHelpers.classNames("table-filters")}>
+        <div className={ClassHelpers.classNames("title")}>Filters</div>
+        <Button
+          className={ClassHelpers.classNames("table-reset-filter-btn")}
+          onClick={onClear}
+        >
+          Clear
+        </Button>
+      </div>
+      {filterValues.map(f => {
+        return (
+          <>
+            <div>
+              {f.name}
+              <select onChange={e => null}>
+                {f.values.map((ff, idx) => {
+                  switch (typeof ff) {
+                    case "boolean": {
+                      const v = ff ? "true" : "false";
+                      return <option key={idx} label={v} value={v} />;
+                    }
+                    default: {
+                      const v = ff as string;
+                      return <option key={idx} label={v} value={v} />;
+                    }
+                  }
+                })}
+                }
+              </select>
+            </div>
+          </>
+        );
+      })}
+    </>
+  );
+};

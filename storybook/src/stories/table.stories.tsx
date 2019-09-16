@@ -28,8 +28,17 @@ async function loadData(): Promise<IUseDataTableResult<ITodos>> {
   };
 }
 
+function capitalizeFirstLetter(str: string): string {
+  const s = str.toLowerCase();
+  return s.charAt(0).toUpperCase() + s.slice(1);
+}
+
 function TableHeaderCell(name: string) {
-  return <span style={{ color: "gray", fontSize: 20 }}>{name}</span>;
+  return (
+    <span style={{ color: "gray", fontSize: 20 }}>
+      {capitalizeFirstLetter(name)}
+    </span>
+  );
 }
 
 function CompletedTableCell(value: boolean) {
@@ -54,7 +63,8 @@ const ExamplePaginationButton: React.FC<IPaginateButtonProps> = ({
       style={{
         backgroundColor: "unset",
         border: "unset",
-        color: active ? "#74b9ff" : "#e17055",
+        color: active ? "#3498d8" : "#4f5c69",
+        fontWeight: active ? 500 : 200,
       }}
       onClick={() => onClick(index)}
     >
@@ -282,5 +292,38 @@ storiesOf("Table", module)
         subTitle="My Sortable Data Table"
         title="My Table"
       />
+    );
+  })
+  .add("filter ", () => {
+    const { data, filterList, isLoading, options } = useDataTable<ITodos>({
+      fetch: loadData,
+      options: {
+        rowsPerPage: 10,
+        filter: { filterBy: ["userId", "completed"] },
+      },
+    });
+
+    return isLoading ? (
+      <div>Loading</div>
+    ) : (
+      <>
+        <Table<ITodos>
+          columnFormatter={{
+            completed: b => <p>{b ? "true" : "false"}</p>,
+          }}
+          data={data}
+          filterList={filterList}
+          headerFormatter={{
+            id: TableHeaderCell,
+            completed: TableHeaderCell,
+            title: TableHeaderCell,
+            userId: TableHeaderCell,
+          }}
+          options={options}
+          paginationElement={ExamplePaginationButton}
+          subTitle="My Sortable Data Table"
+          title="My Table"
+        />
+      </>
     );
   });

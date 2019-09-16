@@ -3,23 +3,27 @@ import * as React from "react";
 import * as _ from "underscore";
 import { TSortDirection } from "../components/tables/tableHeader";
 
-export interface IUseDataTableProps<T> {
-  data: T[];
-}
-
+export type TFilterAction = "add" | "remove" | "clear";
 export interface IUseDataTableResult<T> {
   data: T[];
 }
 
+export interface ISortParameters<T> {
+  key: keyof T;
+  direction: TSortDirection;
+}
+
 export interface IDataTableOptions<T> {
   download?: boolean;
-  filter?: boolean;
+  filter?: {
+    filterBy?: Array<keyof T>;
+  };
   hideHeaders?: boolean;
   paginate?: boolean;
   print?: boolean;
   rowsPerPage?: number;
   sort?: {
-    initialSortBy?: { key: keyof T; direction: TSortDirection };
+    initialSortBy?: ISortParameters<T>;
   };
 }
 
@@ -34,7 +38,7 @@ interface IUseDataTableState<T> {
   data: T[];
   error: any;
   rowsPerPage: number;
-  sortParameters: { key: keyof T; direction: TSortDirection };
+  sortParameters: ISortParameters<T>;
   totalRows: number;
   totalPages: number;
 }
@@ -55,18 +59,49 @@ const initialState = <T>(): IUseDataTableState<T> => ({
   totalPages: undefined,
 });
 
+interface IUseDataTable<T> {
+  currentPage: number;
+  data: T[];
+  downloadTableAsCSV: () => void;
+  filterList: IFilterParameters[];
+  isLoading: boolean;
+  options: IDataTableOptions<T>;
+  printTable: (ref: HTMLTableElement) => void;
+  setRowsPerPage: (newRowsPerPage: number) => void;
+  setPage: (currentPage: number) => void;
+  sortDataBy: (key: keyof T, direction: TSortDirection) => void;
+  sortParameters: ISortParameters<T>;
+  totalRows: number;
+  totalPages: number;
+  updateFilter: (
+    action: TFilterAction,
+    column?: keyof T,
+    value?: React.ReactNode,
+  ) => void;
+}
+
+export interface IFilterParameters {
+  name: string;
+  values: React.ReactNode[];
+}
+
 export function useDataTable<T>({
   data,
   fetch,
   options,
-}: IUseDataTableSettings<T>) {
+}: IUseDataTableSettings<T>): IUseDataTable<T> {
   const [state, setState] = React.useState<IUseDataTableState<T>>(
     initialState(),
   );
   const [storedData, setStoredData] = React.useState<T[]>([]);
-
   const [isLoading, setIsLoading] = React.useState(false);
 
+  const [filterList, setFilterList] = React.useState<IFilterParameters[]>([]);
+
+  /**
+   *
+   */
+  // ---------------------------------------------------------
   React.useMemo(() => {
     const rowsPerPage =
       (options && options.rowsPerPage && options.rowsPerPage) || 5;
@@ -76,6 +111,7 @@ export function useDataTable<T>({
         options.sort.initialSortBy &&
         options.sort.initialSortBy) ||
       null;
+
     setState((oldState: IUseDataTableState<T>) => ({
       ...oldState,
       rowsPerPage,
@@ -150,6 +186,40 @@ export function useDataTable<T>({
   }, [fetch]);
 
   /**
+   * Filter
+   */
+  // ---------------------------------------------------------
+  React.useEffect(() => {
+    if (storedData && storedData.length > 0 && options.filter) {
+      const arrayKeys = _.chain(storedData)
+        .map(_.keys)
+        .flatten()
+        .unique()
+        .value();
+
+      if (options.filter.filterBy.length > 0) {
+        const newFilterList = arrayKeys
+          .filter(f => options.filter.filterBy.includes(f as keyof T))
+          .map(m => {
+            return {
+              name: m,
+              values: _.uniq(storedData, m).map(s => s[m]),
+            };
+          });
+        setFilterList(newFilterList);
+      } else {
+        const newFilterList = arrayKeys.map(m => {
+          return {
+            name: m,
+            values: _.uniq(storedData, m).map(s => s[m]),
+          };
+        });
+        setFilterList(newFilterList);
+      }
+    }
+  }, [storedData]);
+
+  /**
    * Print the Table
    */
   // ---------------------------------------------------------
@@ -198,6 +268,51 @@ export function useDataTable<T>({
       }
     },
     [state.data],
+  );
+
+  /**
+   * Add filter parameter
+   */
+  // ---------------------------------------------------------
+  const updateFilter = React.useCallback(
+    (action: TFilterAction, column?: keyof T, value?: React.ReactNode) => {
+      switch (action) {
+        case "add":
+          {
+          }
+          break;
+        case "clear":
+          {
+            const { totalPages } = calculatePagination(
+              storedData.length,
+              state.rowsPerPage,
+              1,
+            );
+
+            const sortParameters =
+              (options.sort &&
+                options.sort.initialSortBy &&
+                options.sort.initialSortBy) ||
+              null;
+
+            setFilterList([]);
+
+            setState((oldState: IUseDataTableState<T>) => ({
+              ...oldState,
+              data:
+                (sortParameters &&
+                  sort(storedData, sortParameters.key, "asc")) ||
+                storedData.slice(0, state.rowsPerPage),
+            }));
+          }
+          break;
+        case "remove":
+          {
+          }
+          break;
+      }
+    },
+    [state.rowsPerPage, state.totalRows, options.rowsPerPage, data, fetch],
   );
 
   /**
@@ -326,6 +441,7 @@ export function useDataTable<T>({
     currentPage: state.currentPage,
     data: state.data,
     downloadTableAsCSV,
+    filterList,
     isLoading,
     options,
     printTable,
@@ -335,5 +451,6 @@ export function useDataTable<T>({
     sortParameters: state.sortParameters,
     totalRows: state.totalRows,
     totalPages: state.totalPages,
+    updateFilter,
   };
 }
