@@ -1,5 +1,6 @@
 import * as React from "react"
 import { delay } from "../../utilities/async";
+import { utils } from "../../utilities/utils";
 import { Icon } from "../display/icon";
 import { Button } from "../interaction/button";
 
@@ -13,15 +14,17 @@ export interface IBurgerMenuProps {
   /** Position of the menu */
   position?: "left" | "right"
   /** Icon for the open button */
-  openButtonIcon: string
+  openButtonIcon?: string
   /** Icon for the close button */
-  closeButtonIcon: string
+  closeButtonIcon?: string
   /** How long the transition takes in ms */
   transitionTime?: number
   /** Hide the open button, so that you can put a custom button in */
   hideOpenButton?: boolean
   /** Hide the close button, so that you can put a custom button in */
   hideCloseButton?: boolean
+  /** Auto closes the burger menu when navigating */
+  closeOnNavigate?: boolean
 }
 
 const BurgerMenuComponent: React.FC<IBurgerMenuProps> = ({
@@ -34,17 +37,34 @@ const BurgerMenuComponent: React.FC<IBurgerMenuProps> = ({
   transitionTime,
   children,
   hideOpenButton,
-  hideCloseButton
+  hideCloseButton,
+  closeOnNavigate
 }) => {
   const { isOpen, setIsOpen, transitioning, setTransitioning } = React.useContext(BurgerMenuContext)
 
   const [menuWidth, setMenuWidth] = React.useState(0)
 
   const menuRef = React.useRef<HTMLDivElement>()
+  const menuContentRef = React.useRef<HTMLDivElement>()
+
+  React.useEffect(() => {
+    if (menuContentRef.current && closeOnNavigate) {
+      menuContentRef.current.querySelectorAll("a").forEach(tag => tag.addEventListener("click", close))
+    }
+
+    return () => {
+      if (menuContentRef.current && closeOnNavigate) {
+        menuContentRef.current.querySelectorAll("a").forEach(tag => tag.removeEventListener("click", close))
+      }
+    }
+  }, [menuContentRef])
+
+  const close = React.useCallback(() => {
+    setIsOpen(false)
+  }, [])
 
   React.useEffect(() => {
     if (onChange) { onChange(isOpen ? "open" : "closed") }
-
   }, [isOpen])
 
   React.useEffect(() => {
@@ -63,7 +83,8 @@ const BurgerMenuComponent: React.FC<IBurgerMenuProps> = ({
     transition()
   }, [isOpen, transitionTime])
 
-  const slideTransform: React.CSSProperties = React.useMemo(() => (mode === "push" ? { transform: open ? `translateX(${position === "left" ? menuWidth : -menuWidth}px)` : `translateX(0)` } : {}), [menuWidth, isOpen, mode])
+  const slideTransform: React.CSSProperties = React.useMemo(() => (mode === "push" ? { transform: isOpen ? `translateX(${position === "left" ? menuWidth : -menuWidth}px)` : `translateX(0)` } : {}), [menuWidth, isOpen, mode])
+
   return (
     <>
       <nav className="armstrong-menu"
@@ -82,7 +103,7 @@ const BurgerMenuComponent: React.FC<IBurgerMenuProps> = ({
           {closeButtonIcon && <Icon aria-hidden={true} icon={closeButtonIcon} />}
         </Button>
         }
-        <div className="armstrong-burger-content">{Content}</div>
+        <div className="armstrong-burger-content" ref={menuContentRef}>{Content}</div>
       </nav>
       {!hideOpenButton && <Button
         data-position={position}
@@ -109,7 +130,10 @@ const BurgerMenuComponent: React.FC<IBurgerMenuProps> = ({
 BurgerMenuComponent.defaultProps = {
   position: "left",
   mode: "slide",
-  transitionTime: 300
+  transitionTime: 300,
+  closeButtonIcon: Icon.Icomoon.cross,
+  openButtonIcon: Icon.Icomoon.menu7,
+  closeOnNavigate: true
 }
 
 interface IBurgerMenuContext {
