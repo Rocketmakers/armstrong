@@ -35,9 +35,9 @@ storiesOf('Switch', module)
       <br />
       <br />
       <p>
-        Sizes an colours can be defined in props, but if you're into seperation
+        Sizes and colours can be defined in props, but if you're into seperation
         of concerns and would rather do it in scss, there's a couple mixins for
-        handling them.{' '}
+        handling them.
       </p>
       <br />
       <p>
@@ -48,5 +48,18 @@ storiesOf('Switch', module)
         @mixin recolour-switch($switch-inactive-colour, $switch-hover-colour,
         $switch-active-colour)
       </p>
+      <br />
+      <br />
+      <p>
+        If you're only using css, the following vanilla css variables can be
+        defined to style all switches
+      </p>
+      <p>--armstrong-switch-height</p>
+      <p>--armstrong-switch-width</p>
+      <p>--armstrong-switch-padding</p>
+      <p>--armstrong-switch-hover-nudge-amount</p>
+      <p>--armstrong-switch-inactive-colour</p>
+      <p>--armstrong-switch-hover-colour</p>
+      <p>--armstrong-switch-active-colour</p>
     </div>
   ));

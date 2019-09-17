@@ -7,6 +7,8 @@ interface ICSSVariable {
   priority?: string;
 }
 
+/** define a number of css variables on a dom element in a ref */
+
 export const useCSSVariables = (
   variables: ICSSVariable[],
 ) => {

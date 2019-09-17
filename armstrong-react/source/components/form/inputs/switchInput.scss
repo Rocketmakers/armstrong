@@ -59,13 +59,13 @@ $default-active-colour: $color-positive;
 .armstrong-input.switch-input > input {
     position: relative;
 
-    transition: background-color 0.3s;
+    transition: background-color 0.3s, opacity 0.3s;
     cursor: pointer;
 
     border: none;
 
-    @include resize-switch(var(--switch-width, #{$default-width}), var(--switch-height, #{$default-height}), var(--switch-padding, #{$default-padding}), var(--switch-hover-nudge-amount, #{$default-hover-nudge-amount}));
-    @include recolour-switch(var(--switch-inactive-colour, #{$default-inactive-colour}), var(--switch-hover-colour, #{$default-hover-colour}), var(--switch-active-colour, #{$default-active-colour}));
+    @include resize-switch(var(--armstrong-switch-width, #{$default-width}), var(--armstrong-switch-height, #{$default-height}), var(--armstrong-switch-padding, #{$default-padding}), var(--armstrong-switch-hover-nudge-amount, #{$default-hover-nudge-amount}));
+    @include recolour-switch(var(--armstrong-switch-inactive-colour, #{$default-inactive-colour}), var(--armstrong-switch-hover-colour, #{$default-hover-colour}), var(--armstrong-switch-active-colour, #{$default-active-colour}));
 
     &:focus {
         border: none;
@@ -83,4 +83,8 @@ $default-active-colour: $color-positive;
         transition: transform 0.3s;
     }
 
+    &[data-disabled="true"]{
+        opacity: 0.5;
+        pointer-events: none;
+    }
 }

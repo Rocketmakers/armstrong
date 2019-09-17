@@ -1,7 +1,7 @@
 import * as React from "react";
 import { ClassHelpers, generateUniqueId, ValidationLabel } from "../../..";
+import { useCSSVariables } from "../../../hooks/useCssVariables";
 import { DataValidationMessage, DataValidationMode } from "../formCore";
-import { useCSSVariables } from '../../../hooks/useCssVariables';
 
 export interface ISwitchInput {
   focus: () => void;
@@ -30,6 +30,9 @@ export interface ISwitchInputProps
 
   /** colour of the switch track when active */
   activeColour?: string;
+
+  /** grey out the switch and stop it from being interactible */
+  disabled?: boolean
 }
 
 const SwitchInputRef: React.RefForwardingComponent<
@@ -46,28 +49,29 @@ const SwitchInputRef: React.RefForwardingComponent<
     hoveringColour,
     activeColour,
     id,
+    disabled,
     ...attrs
   } = props;
 
   const input = useCSSVariables([
-    { name: "--switch-height", value: `${height}px`, enabled: !!height },
-    { name: "--switch-width", value: `${width}px`, enabled: !!width },
-    { name: "--switch-padding", value: `${padding}px`, enabled: !!padding },
+    { name: "--armstrong-switch-height", value: `${height}px`, enabled: !!height },
+    { name: "--armstrong-switch-width", value: `${width}px`, enabled: !!width },
+    { name: "--armstrong-switch-padding", value: `${padding}px`, enabled: !!padding },
     {
-      name: "--switch-hover-nudge-amount",
+      name: "--armstrong-switch-hover-nudge-amount",
       value: `${hoverNudgeAmount}px`,
       enabled: !!hoverNudgeAmount
     },
     {
-      name: "--switch-inactive-colour",
+      name: "--armstrong-switch-inactive-colour",
       value: inactiveColour
     },
     {
-      name: "--switch-hover-colour",
+      name: "--armstrong-switch-hover-colour",
       value: hoveringColour
     },
     {
-      name: "--switch-active-colour",
+      name: "--armstrong-switch-active-colour",
       value: activeColour
     }
   ]);
@@ -119,7 +123,8 @@ const SwitchInputRef: React.RefForwardingComponent<
         onMouseLeave={() => setClicked(false)}
         data-has-clicked={clicked}
         data-hover-nudge-enabled={!!hoverNudgeAmount}
-      />{" "}
+        data-disabled={disabled}
+      />
       <ValidationLabel message={validationMessage} mode={validationMode} />
     </div>
   );
