@@ -1,6 +1,7 @@
 import * as React from "react";
 
 export type TFilterAction = "add" | "remove" | "clear";
+export type TFilterType = "subtractive" | "additive";
 
 export interface IAddFilter {
   type: "add";
@@ -38,6 +39,7 @@ export interface IDataTableOptions<T> {
   download?: boolean;
   filter?: {
     filterBy?: Array<keyof T>;
+    filtering?: TFilterType;
   };
   hideHeaders?: boolean;
   paginate?: boolean;

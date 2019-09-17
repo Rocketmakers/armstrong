@@ -14,7 +14,7 @@ export const TableItemDropdown: React.FunctionComponent<ITableItemDropdown> = ({
     <div className={ClassHelpers.classNames("table-item-dropdown")}>
       <div>Rows per Page</div>
       <select onChange={e => onSelect(Number(e.target.value))}>
-        {values.map(value => (
+        {values.map((value: number) => (
           <option
             key={value}
             value={Number(value)}

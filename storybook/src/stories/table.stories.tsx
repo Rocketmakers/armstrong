@@ -291,7 +291,7 @@ storiesOf("Table", module)
       />
     );
   })
-  .add("Filterable Table (Hooks)", () => {
+  .add("Filterable Table (Subtractive) (Hooks)", () => {
     const {
       data,
       filters,
@@ -305,9 +305,8 @@ storiesOf("Table", module)
     } = useDataTable<ITodos>({
       fetch: loadData,
       options: {
-        rowsPerPage: 5,
-        rowsPerPageArray: [5, 10, 20, 0],
-        filter: { filterBy: ["userId", "completed"] },
+        rowsPerPage: 100,
+        filter: { filterBy: ["userId", "completed"], filtering: "subtractive" },
         paginate: true,
       },
     });
@@ -316,12 +315,12 @@ storiesOf("Table", module)
       <div>Loading</div>
     ) : (
       <>
-        {JSON.stringify(filters)}
         <Table<ITodos>
           columnFormatter={{
             completed: b => <p>{b ? "true" : "false"}</p>,
           }}
           data={data}
+          filters={filters}
           filterList={filterList}
           headerFormatter={{
             id: TableHeaderCell,
@@ -330,11 +329,60 @@ storiesOf("Table", module)
             userId: TableHeaderCell,
           }}
           numberOfPages={totalPages}
+          onChangePage={setPage}
+          onChangeRowsPerPage={setRowsPerPage}
           onUpdateFilter={updateFilter}
           options={options}
           paginationElement={ExamplePaginationButton}
-          onChangeRowsPerPage={setRowsPerPage}
+          subTitle="My Filterable Data Table"
+          title="My Table"
+        />
+      </>
+    );
+  })
+  .add("Filterable Table (Additive) (Hooks)", () => {
+    const {
+      data,
+      filters,
+      filterList,
+      isLoading,
+      options,
+      setPage,
+      setRowsPerPage,
+      totalPages,
+      updateFilter,
+    } = useDataTable<ITodos>({
+      fetch: loadData,
+      options: {
+        rowsPerPage: 100,
+        filter: { filterBy: ["userId"], filtering: "additive" },
+        paginate: true,
+      },
+    });
+
+    return isLoading ? (
+      <div>Loading</div>
+    ) : (
+      <>
+        <Table<ITodos>
+          columnFormatter={{
+            completed: b => <p>{b ? "true" : "false"}</p>,
+          }}
+          data={data}
+          filters={filters}
+          filterList={filterList}
+          headerFormatter={{
+            id: TableHeaderCell,
+            completed: TableHeaderCell,
+            title: TableHeaderCell,
+            userId: TableHeaderCell,
+          }}
+          numberOfPages={totalPages}
           onChangePage={setPage}
+          onChangeRowsPerPage={setRowsPerPage}
+          onUpdateFilter={updateFilter}
+          options={options}
+          paginationElement={ExamplePaginationButton}
           subTitle="My Filterable Data Table"
           title="My Table"
         />

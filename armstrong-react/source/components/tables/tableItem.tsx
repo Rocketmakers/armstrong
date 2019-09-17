@@ -16,7 +16,7 @@ export function TableItem<T>({
 }: React.PropsWithChildren<ITableItem<T>>) {
   return (
     <tr className={ClassHelpers.classNames("table-row")}>
-      {columnKeys.map((col, index) => {
+      {columnKeys.map((col: keyof T, index: number) => {
         return (
           <td key={index}>
             {columnFormatter && columnFormatter[col]

@@ -13,7 +13,11 @@
   }
 
   .table-options-container {
+    display: flex;
+    flex: 1;
+    align-items: center;
     padding: $spacing-small 0px;
+
     .table-options {
       flex: 1;
       display: flex;

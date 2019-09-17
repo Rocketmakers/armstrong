@@ -89,7 +89,7 @@ export const TablePagination: React.FunctionComponent<ITablePagination> = ({
   return (
     <div>
       <div>
-        {pageNumbers.map((page, index) => {
+        {pageNumbers.map((page: number, index: number) => {
           if (page === GO_LEFT_PAGE_INDEX) {
             return <Render key={page} index={goLeft()} direction="left" />;
           } else if (page === GO_RIGHT_PAGE_INDEX) {

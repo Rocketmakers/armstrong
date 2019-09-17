@@ -30,7 +30,7 @@ const filterReducer: React.Reducer<IFilter[], FilterActions> = (
     }
     case "remove":
       return state.filter(
-        (f: IFilter) => f.key === action.key && f.value && action.value,
+        (f: IFilter) => f.key !== action.key && f.value !== action.value,
       );
     case "clear":
       return [];
@@ -262,7 +262,10 @@ export function useDataTable<T>({
   );
 
   // ---------------------------------------------------------
-  // Filters
+  // *
+  // * Filters
+  // *
+  // ---------------------------------------------------------
 
   /**
    * Add filter parameter
@@ -282,13 +285,26 @@ export function useDataTable<T>({
     ],
   );
 
+  const additiveFilter = (item: T, tFilters) =>
+    tFilters.some(f => item[f.key].toString() === f.value);
+  const subtractiveFilter = (item: T, tFilters) =>
+    tFilters.every(f => item[f.key].toString() === f.value);
+
+  /**
+   * Update the filters
+   */
+  // ---------------------------------------------------------
   React.useEffect(() => {
     if (filters.length > 0) {
+      const filteredData = storedData.filter(item =>
+        options.filter.filtering === "additive"
+          ? additiveFilter(item, filters)
+          : subtractiveFilter(item, filters),
+      );
+
       setState((oldState: IUseDataTableState<T>) => ({
         ...oldState,
-        data: storedData.filter(item =>
-          filters.every(f => item[f.key].toString() === f.value),
-        ),
+        data: filteredData,
       }));
     } else {
       setState((oldState: IUseDataTableState<T>) => ({
