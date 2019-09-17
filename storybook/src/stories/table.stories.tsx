@@ -1,10 +1,11 @@
 import * as React from "react";
+
 import { storiesOf } from "@storybook/react";
 import { Table, useDataTable, Icon } from "../_symlink";
-
-import "../theme/theme.scss";
 import { IPaginateButtonProps } from "../_symlink/components/tables/tablePagingation";
 import { IUseDataTableResult } from "../_symlink/components/tables/tableTypes";
+
+import "../theme/theme.scss";
 
 const fauxDataUrl = "https://jsonplaceholder.typicode.com/todos";
 interface ITodos {
@@ -74,7 +75,7 @@ const ExamplePaginationButton: React.FC<IPaginateButtonProps> = ({
 };
 
 storiesOf("Table", module)
-  .add("basic", () => {
+  .add("Simple table", () => {
     const [state, setState] = React.useState([]);
 
     React.useEffect(() => {
@@ -100,7 +101,7 @@ storiesOf("Table", module)
       />
     );
   })
-  .add("titles", () => {
+  .add("Table with titles", () => {
     const [state, setState] = React.useState([]);
 
     React.useEffect(() => {
@@ -127,7 +128,7 @@ storiesOf("Table", module)
       />
     );
   })
-  .add("options", () => {
+  .add("Table with options", () => {
     const { data, downloadTableAsCSV, options, printTable } = useDataTable<
       ITodos
     >({
@@ -158,7 +159,7 @@ storiesOf("Table", module)
     );
   })
 
-  .add("format headers", () => {
+  .add("Table with formatted headers", () => {
     const [state, setState] = React.useState([]);
 
     React.useEffect(() => {
@@ -186,7 +187,7 @@ storiesOf("Table", module)
       />
     );
   })
-  .add("format column", () => {
+  .add("Table with formatted columns", () => {
     const [state, setState] = React.useState([]);
 
     React.useEffect(() => {
@@ -215,7 +216,7 @@ storiesOf("Table", module)
     );
   })
   .add(
-    "paginated",
+    "Table with pagination (Hooks)",
     () => {
       const {
         data,
@@ -257,7 +258,7 @@ storiesOf("Table", module)
     },
     {},
   )
-  .add("sortable columns", () => {
+  .add("Table with sortable columns (Hooks)", () => {
     const { data, isLoading, options, sortDataBy } = useDataTable<ITodos>({
       fetch: loadData,
       options: {
@@ -290,9 +291,10 @@ storiesOf("Table", module)
       />
     );
   })
-  .add("filter ", () => {
+  .add("Filterable Table (Hooks)", () => {
     const {
       data,
+      filters,
       filterList,
       isLoading,
       options,
@@ -314,6 +316,7 @@ storiesOf("Table", module)
       <div>Loading</div>
     ) : (
       <>
+        {JSON.stringify(filters)}
         <Table<ITodos>
           columnFormatter={{
             completed: b => <p>{b ? "true" : "false"}</p>,
@@ -332,7 +335,7 @@ storiesOf("Table", module)
           paginationElement={ExamplePaginationButton}
           onChangeRowsPerPage={setRowsPerPage}
           onChangePage={setPage}
-          subTitle="My Sortable Data Table"
+          subTitle="My Filterable Data Table"
           title="My Table"
         />
       </>

@@ -1,6 +1,28 @@
 import * as React from "react";
 
 export type TFilterAction = "add" | "remove" | "clear";
+
+export interface IAddFilter {
+  type: "add";
+  key: any;
+  value: React.ReactNode;
+}
+export interface IRemoveFilter {
+  type: "remove";
+  key: any;
+  value: React.ReactNode;
+}
+export interface IClearFilters {
+  type: "clear";
+}
+
+export type FilterActions = IAddFilter | IRemoveFilter | IClearFilters;
+
+export interface IFilter {
+  key: any;
+  value: React.ReactNode;
+}
+
 export type TSortDirection = "asc" | "desc";
 
 export interface IUseDataTableResult<T> {

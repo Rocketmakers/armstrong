@@ -22,6 +22,12 @@ export class UnderscoreArrayUtils implements IArrayUtils {
     return _.some(items, func);
   }
 
+  filterByArray<T, K>(items: T[], filterItems: any[], filterKey: keyof T): T[] {
+    return _.filter(items, (item: T, index: number) => {
+      return filterItems.indexOf(item[filterKey]) !== -1;
+    });
+  }
+
   reduce<T, M>(
     items: T[],
     func: (memo: M, item: T, index: number) => M,
