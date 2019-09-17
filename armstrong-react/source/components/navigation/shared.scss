@@ -12,7 +12,7 @@ $max-menu-width: 250px;
   top: 0;
   padding: $spacing-medium;
   box-sizing: border-box;
-  z-index: 9000;
+  z-index: 10;
   color: white;
   white-space: nowrap;
   overflow-x: hidden;
@@ -23,6 +23,7 @@ $max-menu-width: 250px;
   width: 40px;
   padding: 0;
   font-size: $font-size-medium;
+  z-index: 1;
 
   &.open {
     position: fixed;
@@ -62,6 +63,7 @@ $max-menu-width: 250px;
   background-color: rgba(0, 0, 0, 0.4);
   opacity: 0;
   pointer-events: none;
+  z-index: 9;
 
   &[data-transition="out"] {
     opacity: 0;
