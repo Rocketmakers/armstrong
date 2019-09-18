@@ -15,7 +15,7 @@ export function TableFilters<T>({
 }: React.PropsWithChildren<ITableFilters<T>>) {
   return (
     <div>
-      {filters.map((filter: IFilter) => {
+      {filters && filters.map((filter: IFilter) => {
         return (
           <Button
             leftIcon={Icon.Icomoon.cross}
