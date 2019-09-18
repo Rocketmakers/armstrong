@@ -171,6 +171,7 @@ export const AutoCompleteSingleInput: React.FunctionComponent<IAutoCompleteProps
       "has-go-button": hasGoButton,
       "disabled": disabled,
       "show-validation": (validationMode !== "none" && validationMessage),
+      "text-input-icon-left": props.leftIcon !== undefined
     },
   );
   return (
@@ -181,6 +182,7 @@ export const AutoCompleteSingleInput: React.FunctionComponent<IAutoCompleteProps
       className={classes}>
       <Row>
         <Col className="drop-down-controls">
+          {props.leftIcon && <Icon className="left-icon" icon={props.leftIcon} />}
           {!open &&
             <Grid className="autocomplete-value-display">
               <Row>

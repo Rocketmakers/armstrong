@@ -49,4 +49,5 @@ export interface IAutoCompleteProps<TValue> {
   placeholder?: string
   visibleItems?: number
   noResultsMessage?: string
+  leftIcon?: string;
 }
