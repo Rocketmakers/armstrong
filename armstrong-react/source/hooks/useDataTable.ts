@@ -189,20 +189,15 @@ export function useDataTable<T>({
       const keys: string[] = Object.keys(storedData[0]);
 
       if (options.filter.filterBy.length > 0) {
-        const {
-          filter: { filterBy },
-        } = options;
-        if (filterBy) {
-          const newFilterList = keys
-            .filter(f => filterBy.indexOf(f as keyof T) !== -1)
-            .map(m => {
-              return {
-                name: m as keyof T,
-                values: _.uniq(storedData, m).map(s => s[m]),
-              };
-            });
-          setFilterList(newFilterList);
-        }
+        const newFilterList = keys
+          .filter(f => options.filter.filterBy.includes(f as keyof T))
+          .map(m => {
+            return {
+              name: m as keyof T,
+              values: _.uniq(storedData, m).map(s => s[m]),
+            };
+          });
+        setFilterList(newFilterList);
       } else {
         const newFilterList = keys.map(m => {
           return {
