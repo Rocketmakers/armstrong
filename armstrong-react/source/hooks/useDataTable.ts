@@ -80,7 +80,7 @@ export function useDataTable<T>({
     initialState(),
   );
   const [storedData, setStoredData] = React.useState<T[]>([]);
-  const [isLoading, setIsLoading] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(true);
   const [filterList, setFilterList] = React.useState<
     Array<IFilterParameters<T>>
   >([]);
@@ -194,7 +194,7 @@ export function useDataTable<T>({
         } = options;
         if (filterBy) {
           const newFilterList = keys
-            .filter(f => filterBy.includes(f as keyof T))
+            .filter(f => filterBy.indexOf(f as keyof T) !== -1)
             .map(m => {
               return {
                 name: m as keyof T,
