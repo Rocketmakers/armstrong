@@ -483,6 +483,8 @@ export const Toast: React.FC<IToastProps> = ({
           animationDuration: transitionStep,
           ...actuallyToastStyles,
         }}
+        aria-live="assertive"
+        aria-role="alert"
       >
         {(allowManualDismiss || settings.renderTimestamp || title) && (
           <div className="toast-notification-top">
