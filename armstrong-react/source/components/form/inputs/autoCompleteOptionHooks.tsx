@@ -16,7 +16,7 @@ export function useOptions(allOptions: IAutoCompleteOption[]) {
   const [filter, onFilterChanged] = React.useState("")
   const setFilter = React.useCallback((query: string) => {
     onFilterChanged(query)
-    setOptions(utils.array.filter(allOptions, o => o.name.indexOf(query) > -1))
+    setOptions(utils.array.filter(allOptions, o => o.name.toLowerCase().indexOf(query.toLowerCase()) > -1))
   }, [allOptions])
   return { options, filter, setFilter }
 }
@@ -49,4 +49,5 @@ export interface IAutoCompleteProps<TValue> {
   placeholder?: string
   visibleItems?: number
   noResultsMessage?: string
+  leftIcon?: string;
 }
