@@ -67,7 +67,7 @@ export const TablePagination: React.FunctionComponent<ITablePagination> = ({
       }
       return utils.array.range(1, totalPages, 1, true);
     },
-    [currentPage],
+    [currentPage, totalPages],
   );
 
   React.useEffect(() => {

@@ -7,22 +7,44 @@ import { IUseDataTableResult } from "../_symlink/components/tables/tableTypes";
 
 import "../theme/theme.scss";
 
-const fauxDataUrl = "https://jsonplaceholder.typicode.com/todos";
+const todoDataUrl = "https://jsonplaceholder.typicode.com/todos";
+const photosDataUrl = "https://jsonplaceholder.typicode.com/albums/1/photos";
 interface ITodos {
   userId: number;
   id: number;
   title: string;
   completed: boolean;
 }
+interface IPhotos {
+  albumId: number;
+  id: number;
+  title: string;
+  thumbnailUrl: string;
+  url: string;
+}
 
-async function fetchData() {
-  const res = await fetch(fauxDataUrl);
+async function fetchTodoData() {
+  const res = await fetch(todoDataUrl);
   return res.json();
 }
 
-async function loadData(): Promise<IUseDataTableResult<ITodos>> {
-  const res = await fetch(fauxDataUrl, { method: "GET" });
+async function loadTodoData(): Promise<IUseDataTableResult<ITodos>> {
+  const res = await fetch(todoDataUrl, { method: "GET" });
   const data = ((await res.json()) as unknown) as ITodos[];
+
+  return {
+    data,
+  };
+}
+
+async function fetchPhotosData() {
+  const res = await fetch(photosDataUrl);
+  return res.json();
+}
+
+async function loadPhotosData(): Promise<IUseDataTableResult<IPhotos>> {
+  const res = await fetch(photosDataUrl, { method: "GET" });
+  const data = ((await res.json()) as unknown) as IPhotos[];
 
   return {
     data,
@@ -43,12 +65,17 @@ function TableHeaderCell(name: string) {
 }
 
 function CompletedTableCell(value: boolean) {
-  return value ? (
-    <Icon icon={Icon.Icomoon.thumbsUp} />
-  ) : (
-    <Icon icon={Icon.Icomoon.thumbsDown} />
+  return (
+    <div style={{ textAlign: "center" }}>
+      {value ? (
+        <Icon icon={Icon.Icomoon.thumbsUp} />
+      ) : (
+        <Icon icon={Icon.Icomoon.thumbsDown} />
+      )}
+    </div>
   );
 }
+
 function CompletedTableCellButton(value: boolean) {
   return <button>{value ? "true" : "false"}</button>;
 }
@@ -80,7 +107,7 @@ storiesOf("Table", module)
 
     React.useEffect(() => {
       const getData = async () => {
-        const res = await fetchData();
+        const res = await fetchTodoData();
         setState(res);
       };
       getData();
@@ -106,7 +133,7 @@ storiesOf("Table", module)
 
     React.useEffect(() => {
       const getData = async () => {
-        const res = await fetchData();
+        const res = await fetchTodoData();
         setState(res);
       };
       getData();
@@ -121,6 +148,7 @@ storiesOf("Table", module)
         }}
         columnFormatter={{
           completed: CompletedTableCell,
+          userId: value => <p style={{ textAlign: "center" }}>{value}</p>,
         }}
         data={state}
         title="My Table"
@@ -132,7 +160,7 @@ storiesOf("Table", module)
     const { data, downloadTableAsCSV, options, printTable } = useDataTable<
       ITodos
     >({
-      fetch: loadData,
+      fetch: loadTodoData,
       options: {
         rowsPerPage: 10,
         download: true,
@@ -150,11 +178,14 @@ storiesOf("Table", module)
         }}
         columnFormatter={{
           completed: CompletedTableCell,
+          userId: value => <p style={{ textAlign: "center" }}>{value}</p>,
         }}
         data={data}
         options={options}
         onDownload={downloadTableAsCSV}
         onPrint={printTable}
+        title="My Table"
+        subTitle="My Table with Options"
       />
     );
   })
@@ -164,7 +195,7 @@ storiesOf("Table", module)
 
     React.useEffect(() => {
       const getData = async () => {
-        const res = await fetchData();
+        const res = await fetchTodoData();
         setState(res);
       };
       getData();
@@ -192,7 +223,7 @@ storiesOf("Table", module)
 
     React.useEffect(() => {
       const getData = async () => {
-        const res = await fetchData();
+        const res = await fetchTodoData();
         setState(res);
       };
       getData();
@@ -226,7 +257,7 @@ storiesOf("Table", module)
         setRowsPerPage,
         totalPages,
       } = useDataTable<ITodos>({
-        fetch: loadData,
+        fetch: loadTodoData,
         options: {
           rowsPerPage: 5,
           paginate: true,
@@ -260,7 +291,7 @@ storiesOf("Table", module)
   )
   .add("Table with sortable columns (Hooks)", () => {
     const { data, isLoading, options, sortDataBy } = useDataTable<ITodos>({
-      fetch: loadData,
+      fetch: loadTodoData,
       options: {
         rowsPerPage: 5,
         sort: {
@@ -303,7 +334,7 @@ storiesOf("Table", module)
       totalPages,
       updateFilter,
     } = useDataTable<ITodos>({
-      fetch: loadData,
+      fetch: loadTodoData,
       options: {
         rowsPerPage: 100,
         filter: { filterBy: ["userId", "completed"], filtering: "subtractive" },
@@ -352,7 +383,7 @@ storiesOf("Table", module)
       totalPages,
       updateFilter,
     } = useDataTable<ITodos>({
-      fetch: loadData,
+      fetch: loadTodoData,
       options: {
         rowsPerPage: 100,
         filter: { filterBy: ["userId"], filtering: "additive" },
@@ -387,5 +418,62 @@ storiesOf("Table", module)
           title="My Table"
         />
       </>
+    );
+  })
+  .add("Multiple Tables (Hooks)", () => {
+    const {
+      data: todoData,
+      isLoading: isTodoLoading,
+      options: todoOptions,
+    } = useDataTable<ITodos>({
+      fetch: loadTodoData,
+      options: {
+        rowsPerPage: 20,
+      },
+    });
+
+    const {
+      data: photosData,
+      isLoading: isPhotosLoading,
+      options: photosOptions,
+    } = useDataTable<IPhotos>({
+      fetch: loadPhotosData,
+      options: {
+        rowsPerPage: 20,
+      },
+    });
+
+    return (
+      (isTodoLoading && isPhotosLoading && <div>Loading Tables</div>) || (
+        <div>
+          <Table<ITodos>
+            columnFormatter={{
+              completed: b => <p>{b ? "true" : "false"}</p>,
+            }}
+            data={todoData}
+            headerFormatter={{
+              id: TableHeaderCell,
+              completed: TableHeaderCell,
+              title: TableHeaderCell,
+              userId: TableHeaderCell,
+            }}
+            options={todoOptions}
+            title="Todos"
+          />
+          <Table<IPhotos>
+            columnFormatter={{ thumbnailUrl: value => <img src={value}></img> }}
+            data={photosData}
+            headerFormatter={{
+              id: null,
+              albumId: null,
+              thumbnailUrl: null,
+              title: null,
+              url: null,
+            }}
+            options={photosOptions}
+            title="Photos"
+          />
+        </div>
+      )
     );
   });

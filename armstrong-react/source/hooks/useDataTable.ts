@@ -261,13 +261,10 @@ export function useDataTable<T>({
     [state.data],
   );
 
-  // ---------------------------------------------------------
-  // *
-  // * Filters
-  // *
-  // ---------------------------------------------------------
-
   /**
+   * Filters
+   *
+   *
    * Add filter parameter
    */
   // ---------------------------------------------------------
@@ -285,6 +282,7 @@ export function useDataTable<T>({
     ],
   );
 
+  // Filter functions
   const additiveFilter = (item: T, tFilters) =>
     tFilters.some(f => item[f.key].toString() === f.value);
   const subtractiveFilter = (item: T, tFilters) =>
@@ -344,7 +342,7 @@ export function useDataTable<T>({
    */
   // ---------------------------------------------------------
   const sort = React.useCallback(
-    (d: T[], key: keyof T, direction: TSortDirection, currentPage?: number) => {
+    (d: T[], key: keyof T, direction: TSortDirection) => {
       const { startIndex, endIndex } = calculatePagination(
         d.length,
         state.rowsPerPage,
@@ -423,7 +421,6 @@ export function useDataTable<T>({
             storedData,
             state.sortParameters.key,
             state.sortParameters.direction,
-            currentPage,
           )
         : storedData.slice(startIndex, endIndex);
 
