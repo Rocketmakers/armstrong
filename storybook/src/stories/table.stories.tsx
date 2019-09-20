@@ -7,6 +7,69 @@ import { IUseDataTableResult } from "../_symlink/components/tables/tableTypes";
 
 import "../theme/theme.scss";
 
+const localTodos: ITodos[] = [
+  {
+    userId: 1,
+    id: 1,
+    title: "delectus aut autem",
+    completed: false,
+  },
+  {
+    userId: 1,
+    id: 2,
+    title: "quis ut nam facilis et officia qui",
+    completed: false,
+  },
+  {
+    userId: 1,
+    id: 3,
+    title: "fugiat veniam minus",
+    completed: false,
+  },
+  {
+    userId: 1,
+    id: 4,
+    title: "et porro tempora",
+    completed: true,
+  },
+  {
+    userId: 1,
+    id: 5,
+    title: "laboriosam mollitia et enim quasi adipisci quia provident illum",
+    completed: false,
+  },
+  {
+    userId: 1,
+    id: 6,
+    title: "qui ullam ratione quibusdam voluptatem quia omnis",
+    completed: false,
+  },
+  {
+    userId: 1,
+    id: 7,
+    title: "illo expedita consequatur quia in",
+    completed: false,
+  },
+  {
+    userId: 1,
+    id: 8,
+    title: "quo adipisci enim quam ut ab",
+    completed: true,
+  },
+  {
+    userId: 1,
+    id: 9,
+    title: "molestiae perspiciatis ipsa",
+    completed: false,
+  },
+  {
+    userId: 1,
+    id: 10,
+    title: "illo est ratione doloremque quia maiores aut",
+    completed: true,
+  },
+];
+
 const todoDataUrl = "https://jsonplaceholder.typicode.com/todos";
 const photosDataUrl = "https://jsonplaceholder.typicode.com/albums/1/photos";
 interface ITodos {
@@ -126,6 +189,39 @@ storiesOf("Table", module)
         }}
         data={state}
       />
+    );
+  })
+  .add("Simple table (Hooks)", () => {
+    const { data, options, setPage, setRowsPerPage, totalPages } = useDataTable<
+      ITodos
+    >({
+      data: localTodos,
+      options: {
+        rowsPerPage: 5,
+        paginate: true,
+      },
+    });
+
+    return (
+      <>
+        {JSON.stringify(data)}
+        <Table<ITodos>
+          headerFormatter={{
+            id: null,
+            completed: null,
+            title: null,
+            userId: null,
+          }}
+          columnFormatter={{
+            completed: CompletedTableCell,
+          }}
+          numberOfPages={totalPages}
+          onChangePage={setPage}
+          onChangeRowsPerPage={setRowsPerPage}
+          options={options}
+          data={data}
+        />
+      </>
     );
   })
   .add("Table with titles", () => {

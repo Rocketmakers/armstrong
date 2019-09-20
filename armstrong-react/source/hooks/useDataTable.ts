@@ -79,7 +79,9 @@ export function useDataTable<T>({
   const [state, setState] = React.useState<IUseDataTableState<T>>(
     initialState(),
   );
-  const [storedData, setStoredData] = React.useState<T[]>([]);
+
+  const storedData = React.useRef<T[]>([]);
+
   const [isLoading, setIsLoading] = React.useState(true);
   const [filterList, setFilterList] = React.useState<
     Array<IFilterParameters<T>>
@@ -113,16 +115,19 @@ export function useDataTable<T>({
    */
   // ---------------------------------------------------------
   React.useEffect(() => {
-    setStoredData(data);
+    storedData.current = data || [];
+
     const { totalPages } = calculatePagination(
-      storedData.length,
+      storedData.current.length,
       state.rowsPerPage,
       1,
     );
 
+    const newData = storedData.current.slice(0, state.rowsPerPage);
+
     setState((oldState: IUseDataTableState<T>) => ({
       ...oldState,
-      data: storedData.slice(0, state.rowsPerPage),
+      data: newData,
       rowsPerPage: state.rowsPerPage,
       totalPages,
       currentPage: 1,
@@ -134,44 +139,44 @@ export function useDataTable<T>({
    */
   // ---------------------------------------------------------
   React.useEffect(() => {
-    setIsLoading(true);
-    fetch()
-      .then(async vData => {
-        const newData = await vData;
+    if (fetch) {
+      setIsLoading(true);
+      fetch()
+        .then(newData => {
+          storedData.current = newData.data || [];
 
-        await setStoredData(newData.data);
+          const { totalPages } = calculatePagination(
+            storedData.current.length,
+            state.rowsPerPage,
+            1,
+          );
 
-        const { totalPages } = await calculatePagination(
-          newData.data.length,
-          state.rowsPerPage,
-          1,
-        );
+          const sortParameters =
+            (options.sort &&
+              options.sort.initialSortBy &&
+              options.sort.initialSortBy) ||
+            null;
 
-        const sortParameters =
-          (options.sort &&
-            options.sort.initialSortBy &&
-            options.sort.initialSortBy) ||
-          null;
-
-        await setState((oldState: IUseDataTableState<T>) => ({
-          ...oldState,
-          sortParameters,
-          totalPages,
-          totalRows: newData.data.length,
-        }));
-
-        setState((oldState: IUseDataTableState<T>) => ({
-          ...oldState,
-          data:
-            (sortParameters && sort(newData.data, sortParameters.key, "asc")) ||
-            newData.data.slice(0, state.rowsPerPage),
-        }));
-        setIsLoading(false);
-      })
-      .catch(error => {
-        setState((oldState: IUseDataTableState<T>) => ({ ...oldState, error }));
-        setIsLoading(false);
-      });
+          setState((oldState: IUseDataTableState<T>) => ({
+            ...oldState,
+            sortParameters,
+            totalPages,
+            totalRows: storedData.current.length,
+            data:
+              (sortParameters &&
+                sort(storedData.current, sortParameters.key, "asc")) ||
+              storedData.current.slice(0, state.rowsPerPage),
+          }));
+          setIsLoading(false);
+        })
+        .catch(error => {
+          setState((oldState: IUseDataTableState<T>) => ({
+            ...oldState,
+            error,
+          }));
+          setIsLoading(false);
+        });
+    }
   }, [fetch]);
 
   /**
@@ -180,13 +185,12 @@ export function useDataTable<T>({
   // ---------------------------------------------------------
   React.useEffect(() => {
     if (
-      storedData &&
-      storedData.length > 0 &&
+      storedData.current.length > 0 &&
       options &&
       options.filter &&
       options.filter.filterBy
     ) {
-      const keys: string[] = Object.keys(storedData[0]);
+      const keys: string[] = Object.keys(storedData.current[0]);
 
       if (options.filter.filterBy.length > 0) {
         const newFilterList = keys
@@ -194,7 +198,7 @@ export function useDataTable<T>({
           .map(m => {
             return {
               name: m as keyof T,
-              values: _.uniq(storedData, m).map(s => s[m]),
+              values: _.uniq(storedData.current, m).map(s => s[m]),
             };
           });
         setFilterList(newFilterList);
@@ -202,13 +206,13 @@ export function useDataTable<T>({
         const newFilterList = keys.map(m => {
           return {
             name: m as keyof T,
-            values: _.uniq(storedData, m).map(s => s[m]),
+            values: _.uniq(storedData.current, m).map(s => s[m]),
           };
         });
         setFilterList(newFilterList);
       }
     }
-  }, [storedData]);
+  }, [storedData.current]);
 
   /**
    * Print the Table
@@ -231,7 +235,7 @@ export function useDataTable<T>({
   const downloadTableAsCSV = React.useCallback(
     (allData?: boolean) => {
       if (state.data.length > 0) {
-        const items = allData ? storedData : state.data;
+        const items = allData ? storedData.current : state.data;
         const replacer = (key, value) => (value === null ? "" : value);
         const header = Object.keys(items[0]);
         const csv = items.map(row =>
@@ -294,7 +298,7 @@ export function useDataTable<T>({
   // ---------------------------------------------------------
   React.useEffect(() => {
     if (filters.length > 0) {
-      const filteredData = storedData.filter(item =>
+      const filteredData = storedData.current.filter(item =>
         options.filter.filtering === "additive"
           ? additiveFilter(item, filters)
           : subtractiveFilter(item, filters),
@@ -307,7 +311,7 @@ export function useDataTable<T>({
     } else {
       setState((oldState: IUseDataTableState<T>) => ({
         ...oldState,
-        data: storedData,
+        data: storedData.current,
       }));
     }
   }, [filters]);
@@ -369,11 +373,11 @@ export function useDataTable<T>({
     (key: keyof T, direction: TSortDirection) => {
       setState((oldState: IUseDataTableState<T>) => ({
         ...oldState,
-        data: sort(storedData, key, direction),
+        data: sort(storedData.current, key, direction),
         sortParameters: { key, direction },
       }));
     },
-    [state, storedData],
+    [state, storedData.current],
   );
 
   /**
@@ -384,17 +388,17 @@ export function useDataTable<T>({
   const setRowsPerPage = React.useCallback(
     (newRowsPerPage: number) => {
       const rowsPerPage =
-        newRowsPerPage !== 0 ? newRowsPerPage : storedData.length;
+        newRowsPerPage !== 0 ? newRowsPerPage : storedData.current.length;
 
       const { totalPages, startIndex, endIndex } = calculatePagination(
-        storedData.length,
+        storedData.current.length,
         rowsPerPage,
         state.currentPage,
       );
 
       setState((oldState: IUseDataTableState<T>) => ({
         ...oldState,
-        data: storedData.slice(startIndex, endIndex),
+        data: storedData.current.slice(startIndex, endIndex),
         rowsPerPage,
         totalPages,
         currentPage: state.currentPage,
@@ -411,18 +415,18 @@ export function useDataTable<T>({
   const setPage = React.useCallback(
     (currentPage: number) => {
       const { startIndex, endIndex } = calculatePagination(
-        storedData.length,
+        storedData.current.length,
         state.rowsPerPage,
         currentPage,
       );
 
       const newData = state.sortParameters
         ? sort(
-            storedData,
+            storedData.current,
             state.sortParameters.key,
             state.sortParameters.direction,
           )
-        : storedData.slice(startIndex, endIndex);
+        : storedData.current.slice(startIndex, endIndex);
 
       setState((oldState: IUseDataTableState<T>) => ({
         ...oldState,
