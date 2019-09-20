@@ -24,8 +24,10 @@ jobs:
   pages:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout
-      uses: actions/checkout@master
+    - uses: actions/checkout@master
+    - name: Run a one-line script
+      run: cd armstrong-react && npm i && cd ../storybook && npm i && node ./symlink.js && npm run build
+      
 
     - name: Build and Deploy
       uses: JamesIves/github-pages-deploy-action@master
@@ -34,4 +36,3 @@ jobs:
         BASE_BRANCH: 4.0 # The branch the action should deploy from.
         BRANCH: gh-pages # The branch the action should deploy to.
         FOLDER: public # The folder the action should deploy.
-        BUILD_SCRIPT: cd armstrong-react && npm i && cd ../storybook && npm i && node ./symlink.js && npm run build
