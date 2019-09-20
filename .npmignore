@@ -1,6 +1,8 @@
 __tests__
 workbench/
 source/
+storybook/
+playground/
 sass_concat.js
 .node-version
 IcoMoon-Ultimate.ttf

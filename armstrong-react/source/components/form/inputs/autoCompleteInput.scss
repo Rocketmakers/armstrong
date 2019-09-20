@@ -12,6 +12,24 @@
   position: relative;
 
 
+
+  &.text-input-icon-left{
+    i{
+      position: absolute;
+      top: 50%;
+      left: 15px;
+      z-index: 4;
+      transform: translateY(-50%);
+    }
+    input{
+      padding-left: 40px;
+    }
+    .placeholder, .selected-value-wrapper{
+      padding-left: 23px;
+    }
+  }
+
+
   &.has-go-button {
     input {
       border-top-right-radius: 0;
@@ -44,7 +62,7 @@
 
       &.selected {
         border: 1px solid $color-info;
-        padding-left: $spacing-small * 1.2;
+        padding-left: calc(#{$spacing-small} * 1.2);
       }
 
       &.in-selected-list {
@@ -66,10 +84,10 @@
     background-color: $gray-medium;
     color: $white;
     border-radius: 0;
-    padding: $spacing-xsmall / 2 $spacing-xsmall;
+    padding: calc(#{$spacing-xsmall} / 2) $spacing-xsmall;
     line-height: normal;
-    margin-right: $field-padding-horizontal/5;
-    margin-bottom: $field-padding-horizontal/5;
+    margin-right: calc(#{$field-padding-horizontal} / 5);
+    margin-bottom: calc(#{$field-padding-horizontal} / 5);
 
     i {
       font-size: 9pt;
@@ -83,12 +101,13 @@
 
   .autocomplete-select-list-wrapper {
     width: 100%;
+    position: relative;
 
     .spinner {
       animation: spin 0.3s forwards infinite linear;
       position: absolute;
       right: $spacing-small;
-      top: $spacing-small*0.75;
+      top: calc(#{$spacing-small}*0.75);
       z-index: 2;
     }
 
@@ -122,8 +141,8 @@
   }
 
   .btn {
-    padding: $spacing-xsmall*1.2 $spacing-small;
-    padding-bottom: $spacing-xsmall*1.4;
+    padding: $spacing-xsmall $spacing-small;
+    padding-bottom: $spacing-xsmall;
     box-shadow: none;
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;

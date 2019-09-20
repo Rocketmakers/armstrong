@@ -1,0 +1,66 @@
+@import "../theme/shared/variables";
+
+#gatsby-focus-wrapper{
+  display: flex;
+  flex-direction: column;
+}
+
+header{
+  padding: $spacing-medium;
+  display: flex;
+  justify-content: space-between;
+
+  .logo{
+    border: none;
+  }
+
+  nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    a {
+      display: inline-block;
+      margin-left: $spacing-large;
+    }
+    &.mobile-nav{
+      &:not(.menu-open){
+        display: none;
+      }
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100vh;
+      width: 100vw;
+      z-index: 255;
+      background: linear-gradient(90deg, #FE435C 0%, #ED5D21 100%);
+      flex-direction: column;
+      a{
+        color: white;
+        margin: 0;
+        font-size: 32px;
+      }
+    }
+  }
+  .menu-button{
+    position: relative;
+    z-index: 256;
+  }
+}
+
+
+main{
+  padding: $spacing-medium;
+  padding-top: $spacing-xlarge;
+  flex: 1;
+}
+
+footer{
+  padding: $spacing-medium;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+@media screen and (max-width: $screen-size-phone){
+
+}

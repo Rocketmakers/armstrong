@@ -1,22 +1,43 @@
-import * as PropTypes from "prop-types";
 import * as React from "react";
-import * as _ from "underscore";
-import { ClassHelpers } from "../../utilities/classNames";
+import { ClassHelpers } from "../../utilities/classHelpers";
+import { utils } from "../../utilities/utils";
 import { FormBinder } from "./formBinders";
-import { DataValidationMessage, getFormBinderFromInjector, IDataBinder, IFormBinderInjector, IFormValidationResult, updateFormBinderInjector } from "./formCore";
+import { DataValidationMessage, DataValidationMode, getFormBinderFromInjector, IChildDataBinder, IDataBinder, IFormBinderInjector, IFormValidationResult, updateFormBinderInjector, ValidationModes } from "./formCore";
+import { IArrayProp, IObjectProp, PropType, toDataPath } from "./propertyPathBuilder";
 import { PropertyPathResolver } from "./propertyPathResolver";
 
-/** The default Json Entity binder - NOTE, the original instance provided is MUTABLE */
-class JsonEntityBinder<T> implements IDataBinder<T> {
-  constructor(private data: T) { }
+/** The default Json Data Binder - NOTE, the original instance provided is MUTABLE */
+class JsonDataBinder<T> implements IDataBinder<T> {
+  constructor(private data: T) {
+    this.getKeyValue = this.getKeyValue.bind(this)
+    this.setKeyValue = this.setKeyValue.bind(this)
+    this.createChildBinder = this.createChildBinder.bind(this)
+  }
   lastDataPathSet?: string;
 
-  getKeyValue = <TKey extends keyof T>(keyName: TKey): T[TKey] => {
-    return this.data[keyName];
+  getKeyValue<X>(dataName: (builder: PropType<T>) => IObjectProp<X>): X
+  getKeyValue<X>(dataName: (builder: PropType<T>) => IArrayProp<X>): X[]
+  getKeyValue<TKey extends keyof T>(keyName: TKey): T[TKey];
+  getKeyValue(keyName: any): any {
+    if (utils.object.isString(keyName)) {
+      return this.data[keyName];
+    }
+
+    return PropertyPathResolver.getValue(this.data, toDataPath(keyName))
   };
 
-  setKeyValue = <TKey extends keyof T>(keyName: TKey, value: T[TKey]): void => {
-    this.data[keyName] = value;
+  setKeyValue<X>(dataName: (builder: PropType<T>) => IObjectProp<X>, value: X): void
+  setKeyValue<X>(dataName: (builder: PropType<T>) => IArrayProp<X>, value: X[]): void
+  setKeyValue<TKey extends keyof T>(keyName: TKey, value: T[TKey]): void;
+  setKeyValue(keyName: any, value: any): void {
+    if (utils.object.isString(keyName)) {
+      this.data[keyName] = value;
+      this.lastDataPathSet = keyName;
+      return
+    }
+    const dataPath = toDataPath(keyName)
+    PropertyPathResolver.setValue(this.data, dataPath, value)
+    this.lastDataPathSet = dataPath;
   };
 
   getValue = (dataPath: string): any => {
@@ -31,6 +52,26 @@ class JsonEntityBinder<T> implements IDataBinder<T> {
   toJson = (): T => {
     return this.data;
   };
+
+  createChildBinder<X>(dataName: (builder: PropType<T>) => IObjectProp<X>, autoSync?: boolean): IChildDataBinder<X>
+  createChildBinder<X>(dataName: (builder: PropType<T>) => IArrayProp<X>, autoSync?: boolean): IChildDataBinder<X[]>
+  createChildBinder<TKey extends keyof T>(keyName: TKey, autoSync?: boolean): IChildDataBinder<T[TKey]>
+  createChildBinder(keyName: any, autoSync?: boolean): IChildDataBinder<any> {
+    return new JsonChildDataBinder(keyName, this, autoSync)
+  }
+}
+
+class JsonChildDataBinder<T> extends JsonDataBinder<T> implements IChildDataBinder<T> {
+  constructor(private parentKey: any, private parentDataBinder: IDataBinder<any>, private autoSync?: boolean) {
+    super(autoSync ? parentDataBinder.getKeyValue(parentKey) : FormDataClone.custom(parentDataBinder.getKeyValue(parentKey)))
+  }
+
+  sync = () => {
+    if (this.autoSync) {
+      return
+    }
+    this.parentDataBinder.setKeyValue(this.parentKey, FormDataClone.custom(this.toJson()))
+  }
 }
 
 export class FormDataClone {
@@ -39,10 +80,10 @@ export class FormDataClone {
   }
 
   static custom<T>(source: T) {
-    const clone = _.clone(source);
-    _.keys(clone).map(key => {
+    const clone = utils.object.clone(source);
+    utils.object.keys(clone).map(key => {
       const value = clone[key];
-      if (_.isObject(value)) {
+      if (utils.object.isObject(value)) {
         clone[key] = FormDataClone.custom(value);
       }
     });
@@ -56,30 +97,18 @@ export function generateUniqueId(formatter?: (unique: string) => string) {
   return formatter ? formatter(u) : u;
 }
 
-export type ValidationModes = "none" | "icon" | "below" | "both";
-
-// tslint:disable-next-line:interface-name
-export interface ValidationProps {
-  /** (string) How to display validation messages */
-  validationMode?: ValidationModes;
-}
-
-export type IFormInputProps<T> = React.Props<T> & ValidationProps;
-
-export type IFormInputHTMLProps<E = React.HTMLAttributes<HTMLElement>> = E & ValidationProps;
-
 export interface IFormCoreProps {
   /** The forms data binder instance, this contains the data that is used by bound form elements */
   dataBinder: IDataBinder<any>;
 
-  /** An optional array of validation results - bound controls whose dataBinder dataPath matches an attribute will be annotated with a 'data-validation-message' property */
+  /** An optional array of validation results - bound controls whose dataBinder dataPath matches an attribute will be annotated with a 'data-validation-message' and 'data-validation-mode' property */
   validationResults?: IFormValidationResult[];
 
   /** (string) How to display validation messages. 'icon' (default) shows a small exclamation symbol in the right of the field, 'below' shows the message below the field, while 'both' is a combination, and none hides all validation UI */
   validationMode?: ValidationModes
 }
 
-export interface IFormProps extends React.FormHTMLAttributes<Form>, IFormCoreProps {
+export interface IFormProps extends React.FormHTMLAttributes<typeof Form>, IFormCoreProps {
   /** Called when bound form data changes: NOTE, this is called on every key stroke/interaction on any of the bound fields */
   onDataChanged?: (data?: any) => void;
 
@@ -108,7 +137,7 @@ export interface IFormContext {
 }
 
 export function extractChildValidationResults(validationResults: IFormValidationResult[], dataPath: string) {
-  const vrs = validationResults && _.filter(validationResults, vr => vr.attribute.indexOf(dataPath + ".") === 0);
+  const vrs = validationResults && utils.array.filter(validationResults, vr => vr.attribute.indexOf(dataPath + ".") === 0);
   if (!vrs) {
     return;
   }
@@ -116,101 +145,73 @@ export function extractChildValidationResults(validationResults: IFormValidation
   return vrs.map(a => ({ ...a, attribute: a.attribute.substring(dataPath.length + 1) }));
 }
 
-export class ParentFormContext extends React.Component {
-  static contextTypes = { form: PropTypes.object };
-
-  render() {
-    const context = Form.getFormContext(this.context)
-    if (!context) {
-      // tslint:disable-next-line:no-console
-      console.error("A ParentFormBinder should be rendered within the context of a parent Form")
-    }
-
-    const children = context ? FormElementProcessor.processChildren(context.coreProps, this.props.children, context.notifyChange) : this.props.children;
-
-    return (
-      <>
-        {children}
-      </>
-    )
-  }
-}
+export const FormContext = React.createContext<IFormContext>(undefined);
 
 /**
  * A stateless data bindable form - state is held within the 'dataBinder' property
  * NOTE: This is designed to render all elements in the form on every change. This allows other participating elements to react to these changes
  * NOTE: This element provides a react context, this can be used to get access to the Forms dataBinder (or any parent Form dataBinder when nested)
  */
-export class Form extends React.Component<IFormProps, {}> {
-  public formDom: HTMLElement;
-
-  static defaultProps: Partial<IFormProps> = {
-    validationMode: "icon",
-  };
-
-  static contextTypes = { form: PropTypes.object };
-
-  static getFormContext(context: any) {
-    return context.form as IFormContext;
-  }
-
-  componentDidMount() {
-    if (this.props.focusFirstEmptyInput) {
-      const f = this.formDom;
-      const inputs = f.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>("input[type=text]:not(:disabled), textarea:not(:disabled)");
+export function Form(props: IFormProps) {
+  const { focusFirstEmptyInput, onSubmit, onDataBinderChange, onDataChanged, dataBinder, children, className, validationMode } = props
+  const formDom = React.useRef<HTMLElement>()
+  React.useEffect(() => {
+    if (focusFirstEmptyInput) {
+      const inputs = formDom.current.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>("input[type=text]:not(:disabled), textarea:not(:disabled)");
       if (inputs[0] && !inputs[0].value) {
         inputs[0].focus();
       }
     }
-  }
+  })
 
-  getChildContext(): { form: IFormContext } {
-    return {
-      form: {
-        dataBinder: this.props.dataBinder,
-        coreProps: this.props,
-        parent: this.context.form,
-        notifyChange: this.notifyChange,
-      },
-    };
-  }
-
-  static childContextTypes = {
-    form: PropTypes.object,
-  };
-
-  static Bind = new FormBinder();
-
-  static jsonDataBinder<T>(data: T): IDataBinder<T> {
-    return new JsonEntityBinder(data);
-  }
-
-  static jsonDataBinderWithClone<T>(data: T): IDataBinder<T> {
-    return new JsonEntityBinder(FormDataClone.custom(data));
-  }
-
-  private preventDefault = e => {
-    if (this.props.onSubmit){
-      this.props.onSubmit();
+  const preventDefault = React.useCallback(e => {
+    if (onSubmit) {
+      onSubmit();
     }
     e.preventDefault();
     return false;
-  };
+  }, [onSubmit]);
 
-  private setRef = (r: HTMLElement) => (this.formDom = r)
-  render() {
-    const ch = FormElementProcessor.processChildren(this.props, this.props.children, this.notifyChange);
-    const hasParentForm = !!Form.getFormContext(this.context);
-    const className = ClassHelpers.classNames("form", hasParentForm && "form-nested", this.props.className);
-    return hasParentForm ?
-      React.createFactory("div")({ className, ref: this.setRef }, ch) :
-      React.createFactory("form")({ className, onSubmit: this.preventDefault, ref: this.setRef }, ch);
+  const notifyChange = React.useCallback(() => {
+    if (onDataBinderChange) { onDataBinderChange(dataBinder); }
+    if (onDataChanged) { onDataChanged(dataBinder.toJson()); }
+  }, [onDataBinderChange, onDataChanged, dataBinder]);
+
+  const ch = FormElementProcessor.processChildren({ ...props, validationMode: validationMode || "icon" }, children, notifyChange);
+  const context = React.useContext(FormContext)
+  const hasParentForm = !!context
+
+  const className1 = React.useMemo(() => ClassHelpers.classNames("form", hasParentForm && "form-nested", className), [hasParentForm, className]);
+  return <FormContext.Provider value={{
+    dataBinder,
+    coreProps: props,
+    parent: context,
+    notifyChange,
+  }}> {hasParentForm ?
+    React.createFactory("div")({ className: className1, ref: formDom }, ch) :
+    React.createFactory("form")({ className: className1, onSubmit: preventDefault, ref: formDom }, ch)
+    }
+  </FormContext.Provider>
+}
+
+Form.Bind = new FormBinder<any>();
+
+// tslint:disable-next-line: only-arrow-functions
+Form.jsonDataBinder = function <T>(data: T): IDataBinder<T> { return new JsonDataBinder(data) }
+
+// tslint:disable-next-line: only-arrow-functions
+Form.jsonDataBinderWithClone = function <T>(data: T): IDataBinder<T> { return new JsonDataBinder(FormDataClone.custom(data)) }
+
+export function ParentFormContext(props: { children: React.ReactNode }) {
+  const { children } = props
+
+  const context = React.useContext(FormContext)
+  if (!context) {
+    // tslint:disable-next-line:no-console
+    console.error("A ParentFormBinder should be rendered within the context of a parent Form")
   }
 
-  private notifyChange = () => {
-    if (this.props.onDataBinderChange) { this.props.onDataBinderChange(this.props.dataBinder); }
-    if (this.props.onDataChanged) { this.props.onDataChanged(this.props.dataBinder.toJson()); }
-  };
+  return context ? FormElementProcessor.processChildren(context.coreProps, children, context.notifyChange) : children;
 }
 
 class FormElementProcessor {
@@ -221,13 +222,7 @@ class FormElementProcessor {
         return element
       }
 
-      const props: React.DOMAttributes<HTMLElement> = _.extend({}, element.props);
-
-      // TODO: Was this needed - its set below if a form binder exists!
-      // if (formProps.validationMode && props["validationMode"]) {
-      //   props["validationMode"] = formProps.validationMode;
-      // }
-
+      const props: React.DOMAttributes<HTMLElement> = { ...element.props };
       let children = element.props.children;
 
       const injector = props as IFormBinderInjector<any>;
@@ -235,9 +230,13 @@ class FormElementProcessor {
       if (formBinder) {
         updateFormBinderInjector(injector, null);
         if (validationResults && validationResults.length) {
-          const vrs: IFormValidationResult = _.find(validationResults, vr => vr.attribute === formBinder.dataPath);
-          if (vrs) {
-            DataValidationMessage.set(props, vrs.message);
+          if (formProps.validationMode && formProps.validationMode !== "none") {
+            DataValidationMode.set(props, formProps.validationMode)
+          }
+
+          const validationResult: IFormValidationResult = utils.array.find(validationResults, vr => vr.attribute === formBinder.dataPath);
+          if (validationResult) {
+            DataValidationMessage.set(props, validationResult.message);
           } else {
             // use for child form
             const childValidators = extractChildValidationResults(validationResults, formBinder.dataPath);
@@ -245,12 +244,6 @@ class FormElementProcessor {
               // tslint:disable-next-line:no-string-literal
               props["validationResults"] = childValidators;
             }
-          }
-
-          // tslint:disable-next-line:no-string-literal
-          if (formProps.validationMode && props["validationMode"]) {
-            // tslint:disable-next-line:no-string-literal
-            props["validationMode"] = formProps.validationMode;
           }
         }
 

@@ -1,0 +1,25 @@
+@import "shared/fonts";
+@import "shared/icomoon";
+//@import "fonts";
+@import "../_symlink/imports";
+@import "../_symlink/core";
+@import "../_symlink/form";
+@import "../_symlink/navigation";
+@import "../_symlink/animation";
+
+.intro-view{
+  padding: $spacing-xlarge;
+  h2,p{
+    font-family: 'Cabin', sans-serif;
+    line-height: 1.4em;
+  }
+  h2{
+    font-size: 32px;
+    font-weight: 600;
+    margin-bottom: $spacing-medium;
+  }
+  p{
+    font-size: 24px;
+    font-weight: 400;
+  }
+}

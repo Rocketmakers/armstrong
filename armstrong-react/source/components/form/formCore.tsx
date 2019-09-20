@@ -1,4 +1,7 @@
 import * as React from "react";
+import { IArrayProp, IObjectProp, PropType } from "./propertyPathBuilder";
+
+export type ValidationModes = "none" | "icon" | "below" | "both";
 
 export namespace DataValidationMessage {
   const attributeName = "data-validation-message"
@@ -10,6 +13,21 @@ export namespace DataValidationMessage {
   }
   export function get(props): string {
     return props[attributeName]
+  }
+}
+
+export namespace DataValidationMode {
+  const attributeName = "data-validation-mode"
+  export function spread(mode: ValidationModes): { ["data-validation-mode"]: ValidationModes } {
+    return { [attributeName]: mode }
+  }
+
+  export function set(props, mode: ValidationModes) {
+    props[attributeName] = mode
+  }
+
+  export function get(props): ValidationModes {
+    return props[attributeName] || "none"
   }
 }
 
@@ -35,7 +53,7 @@ export interface IFormBinder<TComponentProps, TData> {
   setElementProperty(props: TComponentProps, dataBinder: IDataBinder<TData>, validationResults?: IFormValidationResult[]): void;
 
   /**
-   * Add the value changed event handler, calling the supplied `notifyChanged` function when a change event has occured
+   * Add the value changed event handler, calling the supplied `notifyChanged` function when a change event has occurred
    */
   handleValueChanged(props: TComponentProps, dataBinder: IDataBinder<TData>, notifyChanged: () => void): void;
 
@@ -58,8 +76,12 @@ export interface IFormBinder<TComponentProps, TData> {
 export interface IDataBinder<T> {
   lastDataPathSet?: string
   /** Gets a value for the key name (does NOT use dot notation) */
+  getKeyValue<X>(dataName: (builder: PropType<T>) => IObjectProp<X>): X
+  getKeyValue<X>(dataName: (builder: PropType<T>) => IArrayProp<X>): X[]
   getKeyValue<TKey extends keyof T>(keyName: TKey): T[TKey];
   /** Sets a value for the key name (does NOT use dot notation) */
+  setKeyValue<X>(dataName: (builder: PropType<T>) => IObjectProp<X>, value: X): void
+  setKeyValue<X>(dataName: (builder: PropType<T>) => IArrayProp<X>, value: X[]): void
   setKeyValue<TKey extends keyof T>(keyName: TKey, value: T[TKey]): void;
   /** Gets a value for the data path (uses dot notation) */
   getValue(dataPath: string): any;
@@ -67,12 +89,20 @@ export interface IDataBinder<T> {
   setValue(dataPath: string, value: any): void;
   /** Gets the inner data as the native object */
   toJson(): T;
+
+  createChildBinder<X>(dataName: (builder: PropType<T>) => IObjectProp<X>, autoSync?: boolean): IChildDataBinder<X>
+  createChildBinder<X>(dataName: (builder: PropType<T>) => IArrayProp<X>, autoSync?: boolean): IChildDataBinder<X[]>
+  createChildBinder<TKey extends keyof T>(keyName: TKey, autoSync?: boolean): IChildDataBinder<T[TKey]>
+}
+
+export interface IChildDataBinder<T> extends IDataBinder<T> {
+  sync(): void
 }
 
 const FormBinderInjectorKey = "data-form-binder"
 /** Used to inject properties onto React components to permit form binding */
 export interface IFormBinderInjector<TComponentProps> {
-  "data-form-binder": IFormBinder<TComponentProps, any>
+  [FormBinderInjectorKey]: IFormBinder<TComponentProps, any>
 }
 
 export function getFormBinderFromInjector<TComponentProps>(injector: IFormBinderInjector<TComponentProps>): IFormBinder<TComponentProps, any> {

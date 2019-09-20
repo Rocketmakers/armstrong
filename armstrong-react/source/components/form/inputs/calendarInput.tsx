@@ -1,182 +1,105 @@
-import * as moment from "moment";
 import * as React from "react";
-import * as ReactDOM from "react-dom";
-import * as _ from "underscore";
 import { isLocaleSet } from "../../../config/config"
-import { ClassHelpers } from "../../../utilities/classNames";
+import { IDay, useCalendar } from "../../../hooks/useCalendar";
+import { useDidUpdateEffect } from "../../../hooks/useDidUpdateEffect";
+import { ClassHelpers } from "../../../utilities/classHelpers";
+import { utils } from "../../../utilities/utils";
 import { Icon } from "../../display/icon";
 import { Col, Grid, Row } from "../../layout/grid";
-import { IFormInputHTMLProps } from "../form";
-import { DataValidationMessage } from "../formCore";
+import { DataValidationMessage, DataValidationMode } from "../formCore";
 import { ValidationLabel } from "../validationWrapper";
 
-export interface ICalendarInputProps extends IFormInputHTMLProps<React.InputHTMLAttributes<HTMLInputElement>> {
+export interface ICalendarInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+  /** The current date */
   date?: string;
+  /** The 'wire' format of the date */
   format?: string;
+  /** The 'display' format of the date (to use in the UI) */
+  displayFormat?: string;
+  /** The minimum date */
   min?: string;
+  /** The maximum date */
   max?: string;
-  onDateChanged?: (date: string) => void;
+  /** Always show the calendar inline (not as a popup) */
   alwaysShowCalendar?: boolean;
-  nativeInput?: boolean;
+  /** The icon to display */
   icon?: string;
+  /** Is the control disabled */
   disabled?: boolean;
+  /** Disable the ability to clear the current date */
   disableClear?: boolean;
+<<<<<<< HEAD
   clearButtonProps?: React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>;
+||||||| merged common ancestors
+=======
+  /** Callback when the selected date has changed */
+  onDateChanged?: (date: string) => void;
+>>>>>>> 4.0
 }
 
-export interface ICalendarInputState {
-  inputValue?: string;
-  selectedMonthStart?: moment.Moment;
-  pickerBodyVisible?: boolean;
-  showOnTop?: boolean;
-  calendarOffset?: number;
-}
+export const CalendarInput: React.FC<ICalendarInputProps> = props => {
 
-const isoFormat = "YYYY-MM-DD";
+  const { icon, placeholder, alwaysShowCalendar, disableClear, className, disabled, min, max, date } = props
 
-export class CalendarInput extends React.Component<ICalendarInputProps, ICalendarInputState> {
+  const mouseWheelDispose = React.useRef<() => void>(undefined);
 
-  private format: string;
+  const inputElement = React.useRef<HTMLInputElement>();
+  const bodyElement = React.useRef<HTMLDivElement>();
+  const rootElement = React.useRef<HTMLDivElement>();
 
-  private inputElement: HTMLInputElement;
-  private bodyElement: HTMLDivElement;
+  const [pickerBodyVisible, setPickerBodyVisible] = React.useState<boolean>(false)
+  const [showOnTop, setShowOnTop] = React.useState<boolean>(false)
+  const [calendarOffset, setCalendarOffset] = React.useState<number>(0)
 
-  static defaultProps: Partial<ICalendarInputProps> = {
-    format: "L",
-    validationMode: "none",
-  }
+  const onDateChanged = React.useCallback((d: string) => {
+    setPickerBodyVisible(false);
+    if (props.onDateChanged) {
+      props.onDateChanged(d)
+    }
+  }, [props.onDateChanged, setPickerBodyVisible])
 
-  constructor(props: ICalendarInputProps) {
-    super(props);
+  const { month, clearSelectedDate, nextMonth, previousMonth, selectDate, selectedDate, selectedDateDisplay } = useCalendar({ format: props.format, displayFormat: props.displayFormat, minDate: min, maxDate: max, selectedDate: date, onDateChanged })
+  const calcTop = React.useCallback(() => {
+    if (inputElement.current) {
+      const bounds = inputElement.current.getBoundingClientRect();
+      setCalendarOffset(bounds.bottom);
+    }
+  }, [inputElement])
+
+  const disposal = React.useCallback((newCurrent: () => void = undefined) => {
+    if (mouseWheelDispose.current) {
+      try {
+        mouseWheelDispose.current()
+      } catch (error) {
+        // noop
+      }
+      mouseWheelDispose.current = newCurrent
+    }
+  }, [])
+
+  React.useEffect(() => {
     if (!isLocaleSet()) {
       // tslint:disable-next-line:no-console
       console.warn("Using CalendarInput without setting the global Armstrong locale is not recommended. See https://github.com/Rocketmakers/armstrong-react#form---calendar--datepickers")
     }
 
-    this.format = this.props.nativeInput ? isoFormat : props.format;
-    const initialDate = props.date ? moment(props.date, isoFormat, true) : null;
-    let inputValue = "";
-    let selectedMonthStart = moment().startOf("month");
-    if (initialDate) {
-      inputValue = initialDate.format(this.format);
-      selectedMonthStart = initialDate.clone().startOf("month");
-    }
-    this.state = { inputValue, pickerBodyVisible: false, showOnTop: false, calendarOffset: 0, selectedMonthStart };
-  }
+    window.removeEventListener("mousedown", handleEvent);
+    return () => {
+      window.addEventListener("mousedown", handleEvent);
+      disposal()
+    };
+  }, [])
 
-  onDaySelected(date: moment.Moment) {
-    if (!this.fallsWithinRange(date)) {
-      return;
-    }
-    const newDate = date.clone();
-    this.setState({ pickerBodyVisible: false, inputValue: newDate.format(this.format) });
-    if (this.props.onDateChanged) {
-      this.props.onDateChanged(newDate.format(isoFormat));
-    }
-  }
+  useDidUpdateEffect(() => {
+    selectDate(date);
+  }, [date])
 
-  isEndOfMonth(date: moment.Moment): boolean {
-    const endOfMonth = date.clone().endOf("month");
-    return endOfMonth.isSame(date, "day");
-  }
-
-  fallsWithinRange(date: moment.Moment) {
-    if (this.props.min && date.isBefore(moment(this.props.min, isoFormat, true), "day")) {
-      return false;
+  const handleEvent = React.useCallback((e: Event) => {
+    const domNode = rootElement.current;
+    if (!domNode) {
+      return
     }
-    if (this.props.max && date.isAfter(moment(this.props.max, isoFormat, true), "day")) {
-      return false;
-    }
-    return true;
-  }
-  calcTop() {
-    if (this.inputElement) {
-      const bounds = this.inputElement.getBoundingClientRect();
-      this.setState({ calendarOffset: bounds.bottom });
-    }
-  }
 
-  getDaysInMonth() {
-    const days = [];
-    const a = this.state.selectedMonthStart.clone().startOf("month").startOf("day");
-    const b = a.clone().endOf("month");
-    let firstDay = false;
-
-    for (const m = moment(a); m.isBefore(b); m.add(1, "days")) {
-      if (!firstDay) {
-        firstDay = true;
-        const firstDayIndex = m.weekday();
-        for (let i = firstDayIndex; i > 0; i--) {
-          days.push(this.getDayComponent(true, this.onDaySelected.bind(this), m.clone().subtract(i, "days")));
-        }
-      }
-      days.push(this.getDayComponent(false, this.onDaySelected.bind(this), m.clone()));
-      if (this.isEndOfMonth(m)) {
-        const lastDayIndex = m.weekday();
-        for (let i = 1; i < 7 - lastDayIndex; i++) {
-          days.push(this.getDayComponent(true, this.onDaySelected.bind(this), m.clone().add(i, "days")));
-        }
-      }
-    }
-    return days;
-  }
-
-  getDayComponent(notInCurrentMonth: boolean, dayClicked: (d: moment.Moment) => void, date: moment.Moment) {
-    const d = date.clone();
-    const dateWithinRange = this.fallsWithinRange(d);
-    const isSelected = d.format(isoFormat) === this.props.date;
-    const isToday = d.clone().startOf("day").isSame(moment().startOf("day"));
-    return <CalendarDay
-      key={`Calendar_day_${date.format("DDMMYYYY")}`}
-      selected={isSelected}
-      isToday={isToday}
-      withinRange={dateWithinRange}
-      notInCurrentMonth={notInCurrentMonth}
-      dayClicked={dayClicked}
-      date={d} />;
-  }
-
-  changeMonth(increment: number) {
-    this.setState({ selectedMonthStart: this.state.selectedMonthStart.clone().add(increment, "months") }, () => {
-      this.shouldShowOnTop();
-    });
-  }
-
-  checkDate(dateString: string) {
-    if (dateString === this.state.inputValue) {
-      return;
-    }
-    const m = moment(dateString, this.format, false);
-    if (m.isValid() && this.fallsWithinRange(m)) {
-      const formattedDate = m.format(this.format);
-      if (this.props.onDateChanged) {
-        this.props.onDateChanged(m.format(isoFormat));
-      }
-    } else {
-      this.resetState(this.props);
-    }
-  }
-
-  componentWillUnmount() {
-    if (!this.props.nativeInput) {
-      window.removeEventListener("mousedown", this);
-    }
-  }
-
-  componentDidMount() {
-    if (!this.props.nativeInput) {
-      window.addEventListener("mousedown", this);
-    }
-  }
-
-  componentWillReceiveProps(nextProps: ICalendarInputProps): void {
-    if (this.props.date !== nextProps.date) {
-      this.resetState(nextProps);
-    }
-  }
-
-  handleEvent(e: Event) {
-    const domNode = ReactDOM.findDOMNode(this);
     if (domNode.contains(e.target as Node) && e.type !== "mousewheel" && e.type !== "keydown") {
       return;
     }
@@ -184,61 +107,23 @@ export class CalendarInput extends React.Component<ICalendarInputProps, ICalenda
     if (e.type === "keydown" && e["keyCode"] !== 9) {
       return;
     }
-    document.removeEventListener("mousewheel", this, false);
-    if (!this.state.inputValue) {
-      this.resetState(this.props);
-    } else {
-      this.setState({ pickerBodyVisible: false });
-    }
-  }
+    disposal()
+    setPickerBodyVisible(false);
+  }, [rootElement, setPickerBodyVisible])
 
-  resetState(props: Readonly<ICalendarInputProps>): void {
-    const selectedDate = props.date ? moment(props.date, isoFormat, true) : null;
-    if (selectedDate) {
-      this.setState({
-        pickerBodyVisible: false,
-        inputValue: selectedDate.format(this.format),
-        selectedMonthStart: selectedDate.clone().startOf("month"),
-      });
-    } else {
-      this.setState({
-        pickerBodyVisible: false,
-        inputValue: "",
-        selectedMonthStart: moment().startOf("month"),
-      });
-    }
-
-  }
-
-  onInputFocus() {
-    document.addEventListener("mousewheel", this, false);
-    this.calcTop();
-    this.setState({ pickerBodyVisible: true }, () => {
-      this.shouldShowOnTop();
-    })
-  }
-
-  shouldShowOnTop(): boolean {
-    if (this.props.nativeInput || !this.inputElement) {
+  const shouldShowOnTop = React.useCallback(() => {
+    if (!inputElement.current) {
       return;
     }
-    const height = this.bodyElement.clientHeight + 50;
-    const visibleBottom = (window.innerHeight + window.scrollY);
-    const inputRect = this.inputElement.getBoundingClientRect();
+    const height = bodyElement.current.clientHeight + 50;
+    const inputRect = inputElement.current.getBoundingClientRect();
     const remainingSpace = window.innerHeight - inputRect.bottom;
     if (remainingSpace < height) {
-      this.setState({ showOnTop: true });
+      setShowOnTop(true)
       return true;
-    } else {
-      this.setState({ showOnTop: false })
-      return false;
     }
-  }
 
-  propsDateAsMoment(): moment.Moment {
-    return moment(this.props.date, isoFormat, true);
-  }
-
+<<<<<<< HEAD
   render() {
     const validationMessage = DataValidationMessage.get(this.props)
     const { icon, placeholder, alwaysShowCalendar, disableClear, onDateChanged, className, disabled, validationMode, nativeInput, min, max, date, clearButtonProps } = this.props
@@ -311,34 +196,182 @@ export class CalendarInput extends React.Component<ICalendarInputProps, ICalenda
               {weekdays}
               {days}
             </div>
-          </div>
-        </div>
-        <ValidationLabel message={validationMessage} mode={validationMode} />
-      </div>
-    )
-  }
-}
-
-interface ICalendarDayProps extends React.Props<CalendarDay> {
-  date: moment.Moment;
-  dayClicked: (date: moment.Moment) => void;
-  notInCurrentMonth?: boolean;
-  selected?: boolean;
-  withinRange?: boolean;
-  isToday?: boolean;
-}
-
-class CalendarDay extends React.Component<ICalendarDayProps, {}> {
+||||||| merged common ancestors
   render() {
-    const { notInCurrentMonth, selected, isToday, withinRange, date, dayClicked } = this.props
+    const validationMessage = DataValidationMessage.get(this.props)
+    const { icon, placeholder, alwaysShowCalendar, disableClear, onDateChanged, className, disabled, validationMode, nativeInput, min, max, date } = this.props
+    const { selectedMonthStart, pickerBodyVisible, showOnTop, inputValue, calendarOffset } = this.state
+    const weekdays = _.range(0, 7).map(n => <div className="date-picker-week-day" key={`day_name_${n}`}>{moment().startOf("week").add(n, "days").format("dd")}</div>)
+    const days = this.getDaysInMonth();
+    const currentDisplayDate = selectedMonthStart.format("MMMM - YYYY");
     const classes = ClassHelpers.classNames(
+      "date-picker-body",
       {
-        "not-in-month": notInCurrentMonth,
-        "selected-day": selected,
-        "is-today": isToday,
-        "day-disabled": !withinRange,
+        "date-picker-body-visible": pickerBodyVisible && !alwaysShowCalendar,
+        "date-picker-top": showOnTop,
+        "always-show-calendar": alwaysShowCalendar,
       },
     );
-    return <div className={classes} onClick={() => dayClicked(date)}>{date.format("DD")}</div>
-  }
+    const rootClasses = ClassHelpers.classNames(
+      "date-picker",
+      "armstrong-input",
+      className,
+      {
+        "has-icon": icon !== null,
+        "disabled": disabled,
+        "show-validation": (validationMode !== "none" && validationMessage),
+      },
+    );
+    if (nativeInput) {
+      return (
+        <div className={rootClasses}>
+          {icon && <Icon icon={icon} />}
+          <input ref={i => this.inputElement = i}
+            {...DataValidationMessage.spread(validationMessage)}
+            type="date"
+            min={min || ""}
+            max={max || ""}
+            onChange={e => this.checkDate(e.target.value)}
+            value={this.propsDateAsMoment().format(this.format)}
+            placeholder={placeholder}
+          />
+        </div>
+      )
+    }
+    return (
+      <div className={rootClasses}>
+        <Icon icon={icon || Icon.Icomoon.calendar2} />
+        {!alwaysShowCalendar &&
+          <input className="cal-input" ref={i => this.inputElement = i}
+            {...DataValidationMessage.spread(validationMessage)}
+            disabled={disabled}
+            type="text"
+            value={inputValue}
+            onKeyDown={e => this.handleEvent(e.nativeEvent)}
+            onFocus={e => this.onInputFocus()}
+            onChange={e => { /* This noop handler is here to stop react complaining! */ }}
+            placeholder={placeholder}
+          />
+        }
+        {!alwaysShowCalendar && date && !disableClear &&
+          <div className="clear-date-button" onClick={() => onDateChanged(null)}><Icon icon={Icon.Icomoon.cross} /></div>
+        }
+        <div ref={b => this.bodyElement = b} className={classes} style={{ top: `${calendarOffset}px` }}>
+          <div className="date-picker-body-wrapper">
+            <Grid className="date-picker-header">
+              <Row>
+                <Col onClick={() => this.changeMonth(-1)} width="auto">{`<`}</Col>
+                <Col>{currentDisplayDate}</Col>
+                <Col onClick={() => this.changeMonth(1)} width="auto">{`>`}</Col>
+              </Row>
+            </Grid>
+            <div className="date-picker-days">
+              {weekdays}
+              {days}
+            </div>
+=======
+    setShowOnTop(false)
+    return false;
+  }, [inputElement, bodyElement, setShowOnTop])
+
+  const onInputFocus = React.useCallback(() => {
+    disposal(() => document.removeEventListener("mousewheel", handleEvent, false))
+    document.addEventListener("mousewheel", handleEvent, false);
+    calcTop();
+    setPickerBodyVisible(true)
+    shouldShowOnTop();
+  }, [calcTop, shouldShowOnTop])
+
+  const validationMessage = DataValidationMessage.get(props)
+  const validationMode = DataValidationMode.get(props)
+
+  const weekdays = React.useMemo(() => month.daysOfWeek.map(n => <div className="date-picker-week-day" key={`day_name_${n}`}>{n}</div>), [month.daysOfWeek])
+  const currentDisplayDate = month.shortName + " - " + month.year;
+
+  const classes = React.useMemo(() => ClassHelpers.classNames(
+    "date-picker-body",
+    {
+      "date-picker-body-visible": pickerBodyVisible && !alwaysShowCalendar,
+      "date-picker-top": showOnTop,
+      "always-show-calendar": alwaysShowCalendar,
+    },
+  ), [pickerBodyVisible, alwaysShowCalendar, showOnTop, alwaysShowCalendar]);
+
+  const rootClasses = React.useMemo(() => ClassHelpers.classNames(
+    "date-picker",
+    "armstrong-input",
+    className,
+    {
+      "has-icon": icon !== null,
+      "disabled": disabled,
+      "show-validation": (validationMode !== "none" && validationMessage),
+    },
+  ), [className, icon, disabled, validationMode, validationMessage]);
+
+  const days = utils.array.reduce(month.weeks, (w, c) => {
+    w.push(...c.days)
+    return w
+  }, [] as IDay[])
+  return (
+    <div ref={rootElement} className={rootClasses}>
+      <Icon icon={icon || Icon.Icomoon.calendar2} />
+      {!alwaysShowCalendar &&
+        <input className="cal-input" ref={inputElement}
+          {...DataValidationMessage.spread(validationMessage)}
+          disabled={disabled}
+          type="text"
+          value={selectedDateDisplay}
+          onKeyDown={e => handleEvent(e.nativeEvent)}
+          onFocus={onInputFocus}
+          onChange={e => { /* This noop handler is here to stop react complaining! */ }}
+          placeholder={placeholder}
+        />
+      }
+      {!alwaysShowCalendar && selectedDate && !disableClear &&
+        <div className="clear-date-button" onClick={clearSelectedDate}><Icon icon={Icon.Icomoon.cross} /></div>
+      }
+      <div ref={bodyElement} className={classes} style={{ top: `${calendarOffset}px` }}>
+        <div className="date-picker-body-wrapper">
+          <Grid className="date-picker-header">
+            <Row>
+              <Col onClick={previousMonth} width="auto">{`<`}</Col>
+              <Col>{currentDisplayDate}</Col>
+              <Col onClick={nextMonth} width="auto">{`>`}</Col>
+            </Row>
+          </Grid>
+          <div className="date-picker-days">
+            {weekdays}
+            {days.map(day => <CalendarDay key={day.date} day={day} dayClicked={selectDate} />)}
+>>>>>>> 4.0
+          </div>
+        </div>
+      </div>
+      <ValidationLabel message={validationMessage} mode={validationMode} />
+    </div>
+  )
+}
+
+CalendarInput.defaultProps = {
+  displayFormat: "L",
+}
+
+interface ICalendarDayProps extends React.Props<typeof CalendarDay> {
+  day: IDay;
+  dayClicked: (date: string) => void;
+}
+
+const CalendarDay: React.FC<ICalendarDayProps> = props => {
+  const { day, dayClicked } = props
+  const classes = React.useMemo(() => ClassHelpers.classNames(
+    {
+      "not-in-month": !day.isCurrentMonth,
+      "selected-day": day.isCurrentDate,
+      "is-today": day.isToday,
+      "day-disabled": day.outOfRange,
+    },
+  ), [day.isCurrentMonth, day.isCurrentDate, day.isToday, day.outOfRange]);
+
+  const onClick = React.useCallback(() => dayClicked(day.date), [day])
+
+  return <div className={classes} onClick={onClick}>{day.dayNumber}</div>
 }

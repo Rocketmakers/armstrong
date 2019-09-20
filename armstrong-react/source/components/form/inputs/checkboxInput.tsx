@@ -1,48 +1,63 @@
 import * as React from "react";
-import { ClassHelpers } from "../../../utilities/classNames";
-import { generateUniqueId, IFormInputHTMLProps } from "../form";
-import { DataValidationMessage } from "../formCore";
+import { ClassHelpers } from "../../../utilities/classHelpers";
+import { generateUniqueId } from "../form";
+import { DataValidationMessage, DataValidationMode } from "../formCore";
+import { ValidationLabel } from "../validationWrapper";
 
-export interface ICheckboxInputProps extends IFormInputHTMLProps<React.InputHTMLAttributes<HTMLInputElement>> {
-  labelContent: string | React.ReactElement<any>;
+export interface ICheckboxInput {
+  focus: () => void
+  blur: () => void
 }
 
-export class CheckboxInput extends React.Component<ICheckboxInputProps, {}> {
-  static defaultProps: Partial<ICheckboxInputProps> = {
-    validationMode: "none",
-  }
+export interface ICheckboxInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+  labelContent: React.ReactNode;
+}
 
-  private input: HTMLInputElement;
+const CheckboxInputRef: React.RefForwardingComponent<ICheckboxInput, ICheckboxInputProps> = (props, ref) => {
 
-  focus() {
-    if (this.input) {
-      this.input.focus()
-    }
-  }
-  blur() {
-    if (this.input) {
-      this.input.blur()
-    }
-  }
+  const input = React.useRef<HTMLInputElement>(undefined)
 
-  render() {
-    const validationMessage = DataValidationMessage.get(this.props)
-    const { validationMode, labelContent, id, ...attrs } = this.props
-    const autoId = id || generateUniqueId(u => "checkbox_" + u);
-    const classes = ClassHelpers.classNames(
-      "armstrong-input",
-      "checkbox",
-      this.props.className,
-      {
-        "show-validation": (validationMode !== "none" && validationMessage),
+  const refCallback = React.useCallback(() => {
+    return {
+      focus() {
+        if (input.current) {
+          input.current.focus()
+        }
       },
-    );
-    return (
-      <div className={classes}>
-        <input {...attrs} ref={i => this.input = i} id={autoId} type="checkbox" />
-        <label htmlFor={autoId} />
-        <label className="checkbox-label" htmlFor={autoId}>{labelContent}</label>
-      </div>
-    );
-  }
+      blur() {
+        if (input.current) {
+          input.current.blur()
+        }
+      },
+    }
+  }, [input])
+
+  React.useImperativeHandle(ref, refCallback, [refCallback])
+
+  const validationMessage = DataValidationMessage.get(props)
+  const validationMode = DataValidationMode.get(props)
+
+  const { labelContent, id, ...attrs } = props
+
+  const autoId = React.useMemo(() => id || generateUniqueId(u => "checkbox_" + u), [id]);
+
+  const classes = React.useMemo(() => ClassHelpers.classNames(
+    "armstrong-input",
+    "checkbox",
+    props.className,
+    {
+      "show-validation": (validationMode !== "none" && validationMessage),
+    },
+  ), [props.className, validationMode, validationMessage]);
+
+  return (
+    <div className={classes} title={validationMessage}>
+      <input {...attrs} ref={input} id={autoId} type="checkbox" />
+      <label htmlFor={autoId} />
+      <label className="checkbox-label" htmlFor={autoId}>{labelContent}</label>
+      <ValidationLabel message={validationMessage} mode={validationMode} />
+    </div>
+  )
 }
+
+export const CheckboxInput = React.forwardRef(CheckboxInputRef)

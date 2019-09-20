@@ -1,18 +1,20 @@
 {
-  "name": "armstrong-react",
-  "version": "3.0.14",
+  "name": "@rocketmakers/armstrong",
+  "version": "1.0.0-alpha.1",
   "description": "Rocketmakers Armstrong library of React components",
   "main": "./dist/index.js",
   "style": "./dist/style.scss",
   "typings": "./dist/index.d.ts",
   "scripts": {
+    "test": "npm run build-ts && mocha --reporter spec",
     "build-ts": "tsc --pretty -p source -d",
     "build-scss": "node sass_concat.js",
-    "build": "yarn run build-ts && yarn run build-scss",
+    "build": "npm run build-ts && npm run build-scss",
     "watch-scss": "node sass_copy.js",
     "watch-ts": "tsc -p source -d -w",
-    "watch": "parallelshell -v \"yarn run watch-ts\" \"yarn run watch-scss\"",
-    "lint": "tslint -c tslint.json 'source/**/*.ts{,x}'"
+    "watch": "parallelshell -v \"npm run watch-ts\" \"npm run watch-scss\"",
+    "lint": "tslint -c tslint.json 'source/**/*.ts{,x}'",
+    "prepublishOnly": "npm run build"
   },
   "repository": {
     "type": "git",
@@ -26,8 +28,8 @@
   "author": "developers@rocketmakers.com",
   "license": "MIT",
   "dependencies": {
-    "moment": "^2.22.2",
-    "prop-types": "^15.6.2",
+    "moment": "^2.24.0",
+    "prop-types": "^15.7.2",
     "tslib": "^1.9.3",
     "underscore": "^1.9.1"
   },
@@ -37,17 +39,21 @@
     "react-dom": "16.x"
   },
   "devDependencies": {
-    "@types/node": "9.6.31",
-    "@types/react": "16.4.14",
-    "@types/react-dom": "^16.0.7",
-    "@types/underscore": "^1.8.9",
-    "chokidar": "^2.0.4",
+    "@types/mocha": "^5.2.6",
+    "@types/node": "11.13.5",
+    "@types/react": "16.8.13",
+    "@types/react-dom": "^16.8.4",
+    "@types/underscore": "^1.8.14",
+    "chokidar": "^2.1.5",
     "import-resolve": "^0.4.0",
+    "mocha": "^6.1.4",
     "parallelshell": "^3.0.2",
-    "react": "^16.5.1",
-    "react-dom": "^16.5.1",
-    "ts-loader": "^3.5.0",
-    "tslint": "^5.11.0",
-    "typescript": "~3.0.3"
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "react-hooks-testing-library": "^0.5.0",
+    "react-test-renderer": "^16.8.6",
+    "ts-loader": "^6.0.4",
+    "tslint": "^5.16.0",
+    "typescript": "~3.6.2"
   }
 }

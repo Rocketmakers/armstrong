@@ -1,4 +1,4 @@
-import * as _ from "underscore";
+import { utils } from "../../utilities/utils";
 
 /**
  * Get and Set values in JSON data objects
@@ -17,7 +17,7 @@ export class PropertyPathResolver {
    */
   static getValue(data: any, dataPath: string): any {
     const parts = dataPath.split(".");
-    return _.reduce(parts, (result, p: string, index: number) => {
+    return utils.array.reduce(parts, (result, p: string, index: number) => {
       if (!result || !p) {
         throw new Error(`armstrong-react: Your form binding ${dataPath} is incorrect! getValue failed on '${p}' (part: ${index})`);
       }
@@ -34,7 +34,7 @@ export class PropertyPathResolver {
   static setValue(data: any, dataPath: string, value: any): void {
     const parts = dataPath.split(".");
     const lastIndex = parts.length - 1;
-    _.each(parts, (p, index) => {
+    utils.array.each(parts, (p, index) => {
       if (!data || !p) {
         throw new Error(`armstrong-react: Your form binding ${dataPath} is incorrect! setValue failed on '${p}' (part: ${index})`);
       }

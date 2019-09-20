@@ -1,146 +1,176 @@
-import * as React from "react";
-import * as ReactDOM from "react-dom";
-import * as _ from "underscore";
-import { generateUniqueId } from "../form/form";
-import { Icon } from "./../display/icon";
+import * as React from "react"
+import { delay } from "../../utilities/async";
+import { utils } from "../../utilities/utils";
+import { Icon } from "../display/icon";
+import { Button } from "../interaction/button";
 
 export interface IBurgerMenuProps {
-  buttonIcon?: string;
-  bodyId?: string;
-  closeOnNavigate?: boolean;
-  burgerButtonHidden?: boolean;
-  onMenuToggle?: (sender: BurgerMenu) => any;
-  mode?: "push" | "slide";
-  /** ID for the burger menu node, avoids auto-generation for isomorphic use. */
-  burgerMenuId?: string;
-  wrappingComponent?: any;
+  /** Inner content of the menu */
+  content: JSX.Element
+  /** Does the menu come in over the top, or push the side */
+  mode?: "push" | "slide"
+  /** Callback which passes the state of the menu */
+  onChange?: (state: "open" | "closed") => void
+  /** Position of the menu */
+  position?: "left" | "right"
+  /** Icon for the open button */
+  openButtonIcon?: string
+  /** Icon for the close button */
+  closeButtonIcon?: string
+  /** How long the transition takes in ms */
+  transitionTime?: number
+  /** Hide the open button, so that you can put a custom button in */
+  hideOpenButton?: boolean
+  /** Hide the close button, so that you can put a custom button in */
+  hideCloseButton?: boolean
+  /** Auto closes the burger menu when navigating */
+  closeOnNavigate?: boolean
 }
 
-export class BurgerMenu extends React.Component<IBurgerMenuProps, {}> {
-  private appNode: HTMLElement;
-  private portalNode: HTMLElement;
-  private menuId: string;
-  isOpen: boolean;
+const BurgerMenuComponent: React.FC<IBurgerMenuProps> = ({
+  openButtonIcon,
+  closeButtonIcon,
+  onChange,
+  content: Content,
+  position,
+  mode,
+  transitionTime,
+  children,
+  hideOpenButton,
+  hideCloseButton,
+  closeOnNavigate
+}) => {
+  const { isOpen, setIsOpen, transitioning, setTransitioning } = React.useContext(BurgerMenuContext)
 
-  constructor(props: IBurgerMenuProps) {
-    super(props);
-    this.menuId = props.burgerMenuId || generateUniqueId(u => `burger-menu-${u}`);
-  }
-  toggleMenu() {
-    if (!this.isOpen) {
-      this.openMenu();
-    } else {
-      this.closeMenu();
-    }
-  }
-  closeMenu() {
-    const mode = this.props.mode || "push";
-    if (mode === "push") {
-      this.appNode.classList.remove("menu-open");
-      this.appNode.classList.remove("menu-push");
-    } else {
-      this.appNode.classList.remove("menu-open");
-      this.appNode.classList.remove("menu-slide");
-    }
-    this.isOpen = false;
-    if (this.props.onMenuToggle) {
-      this.props.onMenuToggle(this);
-    }
-  }
-  openMenu() {
-    const mode = this.props.mode || "push";
-    if (mode === "push") {
-      this.appNode.classList.add("menu-open");
-      this.appNode.classList.add("menu-push");
-    } else {
-      this.appNode.classList.add("menu-open");
-      this.appNode.classList.add("menu-slide");
-    }
-    this.isOpen = true;
-    if (this.props.onMenuToggle) {
-      this.props.onMenuToggle(this);
-    }
-  }
+  const [menuWidth, setMenuWidth] = React.useState(0)
 
-  componentDidMount() {
-    const id = this.props.bodyId || "host";
-    const appNode = document.getElementById(id);
-    this.appNode = appNode;
-    if (!appNode) {
-      // tslint:disable-next-line:no-console
-      console.error(`Cannot find document node of ${id}`);
-      return;
-    }
-  }
-  private closeNav(e, handler) {
-    // There is a probably a nicer way to do this, but CBA right now
-    if (this.props.closeOnNavigate) {
-      handler();
-    }
-  }
+  const menuRef = React.useRef<HTMLDivElement>()
+  const menuContentRef = React.useRef<HTMLDivElement>()
 
-  private renderMenu() {
-    let wrapper = this.props.wrappingComponent;
+  React.useEffect(() => {
+    if (menuContentRef.current && closeOnNavigate) {
+      menuContentRef.current.querySelectorAll("a").forEach(tag => tag.addEventListener("click", close))
+    }
 
-    return React.cloneElement(
-      wrapper || <></>,
-      null,
-      <div>
-        {this.props.mode === "slide" && <div className="burger-blocker" onClick={() => this.closeMenu()} />}
-        <nav className="burger-menu">
-          <ul className="burger-menu-list">
-            {React.Children.map(this.props.children, (c, index) => {
-              return (
-                <li onClick={e => this.closeNav(e, () => this.closeMenu())} key={`nav_item_${index}`}>
-                  {c}
-                </li>
-              );
-            })}
-          </ul>
-        </nav>
+    return () => {
+      if (menuContentRef.current && closeOnNavigate) {
+        menuContentRef.current.querySelectorAll("a").forEach(tag => tag.removeEventListener("click", close))
+      }
+    }
+  }, [menuContentRef])
+
+  const close = React.useCallback(() => {
+    setIsOpen(false)
+  }, [])
+
+  React.useEffect(() => {
+    if (onChange) { onChange(isOpen ? "open" : "closed") }
+  }, [isOpen])
+
+  React.useEffect(() => {
+    if (menuRef.current) {
+      setMenuWidth(menuRef.current.clientWidth)
+    }
+  }, [menuRef])
+
+  const transition = React.useCallback(async () => {
+    setTransitioning(true)
+    await delay(transitionTime)
+    setTransitioning(false)
+  }, [setTransitioning, transitionTime])
+
+  React.useEffect(() => {
+    transition()
+  }, [isOpen, transitionTime])
+
+  const slideTransform: React.CSSProperties = React.useMemo(() => (mode === "push" ? { transform: isOpen ? `translateX(${position === "left" ? menuWidth : -menuWidth}px)` : `translateX(0)` } : {}), [menuWidth, isOpen, mode])
+
+  return (
+    <>
+      <nav className="armstrong-menu"
+        ref={menuRef}
+        data-open={isOpen}
+        data-position={position}
+        data-mode={mode}
+        style={{ transition: `${transitionTime}ms` }}
+        role="navigation"
+      >
+        {!hideCloseButton && <Button
+          className="armstrong-menu-button close"
+          onClick={() => setIsOpen(false)}
+          aria-label="Close the menu"
+        >
+          {closeButtonIcon && <Icon aria-hidden={true} icon={closeButtonIcon} />}
+        </Button>
+        }
+        <div className="armstrong-burger-content" ref={menuContentRef}>{Content}</div>
+      </nav>
+      {!hideOpenButton && <Button
+        data-position={position}
+        className="armstrong-menu-button open"
+        onClick={() => setIsOpen(true)}
+        aria-label="Open the menu">
+        {openButtonIcon && <Icon aria-hidden={true} icon={openButtonIcon} />}
+      </Button>}
+      {mode === "slide" && <div
+        className="armstrong-menu-overlay"
+        onClick={() => setIsOpen(false)}
+        aria-label="Close the menu"
+        aria-hidden={!open}
+        style={{ transition: `${transitionTime}ms` }}
+        data-transition={transitioning ? isOpen ? "in" : "out" : isOpen ? "open" : "closed"}
+      />}
+      <div className="armstrong-site-content-wrapper" style={{ ...slideTransform, transition: `transform ${transitionTime}ms` }}>
+        {children}
       </div>
-    );
-  }
-
-  render() {
-    return (
-      <>
-        <button className={`burger-menu-button${this.props.burgerButtonHidden ? " hidden" : ""}`} onClick={() => this.toggleMenu()}>
-          {this.props.buttonIcon && <Icon icon={this.props.buttonIcon} />}
-        </button>
-        {ReactDOM.createPortal(this.renderMenu(), document.getElementById(this.props.bodyId || "host"))}
-      </>
-    );
-  }
+    </>
+  )
 }
 
-export interface IBurgerMenuItemProps extends React.HTMLAttributes<HTMLDivElement> {
-  title: string;
-  icon?: string;
-  onClick?: () => void;
-  style?: any;
-  delayActionMs?: number;
-  active?: boolean;
+BurgerMenuComponent.defaultProps = {
+  position: "left",
+  mode: "slide",
+  transitionTime: 300,
+  closeButtonIcon: Icon.Icomoon.cross,
+  openButtonIcon: Icon.Icomoon.menu7,
+  closeOnNavigate: true
 }
 
-export class BurgerMenuItem extends React.Component<IBurgerMenuItemProps, {}> {
-  private handleClick(handler) {
-    if (this.props.delayActionMs) {
-      window.setTimeout(() => {
-        handler();
-      }, this.props.delayActionMs);
-    } else {
-      handler();
-    }
-  }
-  render() {
-    const { title, icon, onClick, style, delayActionMs, active, ...attrs } = this.props;
+interface IBurgerMenuContext {
+  isOpen: boolean
+  setIsOpen: (open: boolean) => void
+  transitioning: boolean
+  setTransitioning: (transitioning: boolean) => void
+  toggle: () => void
+  open: () => void
+  close: () => void
+}
 
-    return (
-      <div {...attrs} role="menuitem" className={`burger-menu-item${active ? " active" : ""}`} style={style} aria-selected={active || false} onClick={() => (onClick ? this.handleClick(onClick) : null)}>
-        {icon && <Icon icon={icon} />}
-        {title}
-      </div>
-    );
-  }
+export const BurgerMenuContext = React.createContext<IBurgerMenuContext>(undefined)
+
+export const BurgerMenu: React.FC<IBurgerMenuProps> = props => {
+  const [isOpen, setIsOpen] = React.useState(false)
+  const [transitioning, setTransitioning] = React.useState(false)
+
+  const toggle = React.useCallback(() => {
+    setIsOpen(!isOpen)
+  }, [isOpen])
+  const open = React.useCallback(() => {
+    setIsOpen(true)
+  }, [])
+  const close = React.useCallback(() => {
+    setIsOpen(false)
+  }, [])
+
+  return (
+    <BurgerMenuContext.Provider value={{ open, setIsOpen, transitioning, setTransitioning, toggle, isOpen, close }}>
+      <BurgerMenuComponent {...props} />
+    </BurgerMenuContext.Provider>
+  )
+}
+
+export const useBurgerMenu = () => {
+
+  const { toggle, transitioning, open, close, isOpen } = React.useContext(BurgerMenuContext)
+  return { toggle, transitioning, open, close, isOpen }
 }

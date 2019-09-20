@@ -1,0 +1,14 @@
+.btn{
+  background: none;
+  border: 2px solid $brand-primary;
+  color: black;
+  border-radius: 30px;
+  font-weight: 600;
+  padding: 10px 20px;
+  transition: none;
+  display: inline-block;
+  &:hover{
+    background: linear-gradient(90deg, #FE435C 0%, #ED5D21 100%);
+    color: white;
+  }
+}

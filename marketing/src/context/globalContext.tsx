@@ -1,0 +1,44 @@
+import * as React from "react";
+import * as _ from "underscore";
+
+
+interface IContextState {
+  isMobileSize: boolean;
+}
+
+export const defaultState: IContextState = {
+  isMobileSize: false
+};
+
+const GlobalContext = React.createContext(defaultState)
+
+export const GlobalContextProvider: React.FunctionComponent = props => {
+  const [isMobileSize, setisMobileSize] = React.useState<boolean>(false);
+
+  const handleSizeChange = React.useCallback((x: MediaQueryList) => {
+    console.log('size change')
+    setisMobileSize(!x.matches);
+  }, []);
+
+  // Watch for mobile
+  React.useEffect(() => {
+    console.log('hookin up')
+    var x = window.matchMedia("(min-width: 600px)");
+    handleSizeChange(x);
+    x.addListener(() => handleSizeChange(x));
+
+    return () => {
+      x.removeListener(() => handleSizeChange)
+    }
+  }, [])
+
+
+
+  return (
+    <GlobalContext.Provider value={{ isMobileSize }}>
+      {props.children}
+    </GlobalContext.Provider>
+  )
+}
+
+export default GlobalContext

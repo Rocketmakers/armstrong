@@ -5,7 +5,7 @@
   margin-right: $spacing-medium;
 
   .checkbox-label {
-    padding-left: $spacing-small * 3;
+    padding-left: calc(#{$spacing-small} * 3);
     position: relative;
     top: 50%;
     transform: translateY(-50%);
@@ -19,9 +19,9 @@
     & + label {
       position: absolute;
       display: inline-block;
-      padding-left: $spacing-small * 3;
+      padding-left: calc(#{$spacing-small} * 3);
       cursor: pointer;
-      min-height: $spacing-small * 2;
+      min-height: calc(#{$spacing-small} * 2);
       padding-top: 1px;
       padding-bottom: 1px;
 
