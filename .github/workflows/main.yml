@@ -1,0 +1,13 @@
+name: CI
+
+on: [push]
+
+jobs:
+  build:
+    container: 
+      image: node:10-16-jessie   
+    
+    steps:
+    - uses: actions/checkout@v1
+    - name: Run a one-line script
+      run: cd armstrong-react && npm i && npm run build
