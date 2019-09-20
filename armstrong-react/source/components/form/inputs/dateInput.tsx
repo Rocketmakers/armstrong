@@ -117,71 +117,6 @@ export const DateInput: React.FC<IDateInputProps> = props => {
         delete newState.month
       }
     }
-<<<<<<< HEAD
-    const classes = ClassHelpers.classNames(
-      "armstrong-input",
-      "date-input",
-      className,
-      {
-        "show-validation": (validationMode !== "none" && validationMessage),
-        "input-disabled": disabled,
-      },
-    );
-    return (
-      <Form
-        className={classes} title={validationMessage}
-        onDataChanged={this.handleDataChanged}
-        dataBinder={Form.jsonDataBinder(this.state)}>
-        <Grid>
-          <Row>
-            {datePartOrder.map((key, idx) => {
-              return (
-                <Col key={idx}>
-                  <select tabIndex={tabIndex} {...Form.Bind.selectNumeric(key)} disabled={disabled} autoFocus={this.props.autoFocus && idx === 0}>
-                    {options[key]}
-                  </select>
-                </Col>
-              )
-            })}
-          </Row>
-          <ValidationLabel message={validationMessage} mode={validationMode} wrapper={p => <Row height="auto"><Col {...p} /></Row>} />
-        </Grid>
-      </Form>
-    )
-  }
-||||||| merged common ancestors
-    const classes = ClassHelpers.classNames(
-      "armstrong-input",
-      "date-input",
-      className,
-      {
-        "show-validation": (validationMode !== "none" && validationMessage),
-        "input-disabled": disabled,
-      },
-    );
-    return (
-      <Form
-        className={classes} title={validationMessage}
-        onDataChanged={this.handleDataChanged}
-        dataBinder={Form.jsonDataBinder(this.state)}>
-        <Grid>
-          <Row>
-            {datePartOrder.map((key, idx) => {
-              return (
-                <Col key={idx}>
-                  <select tabIndex={tabIndex} {...Form.Bind.selectNumeric(key)} disabled={disabled}>
-                    {options[key]}
-                  </select>
-                </Col>
-              )
-            })}
-          </Row>
-          <ValidationLabel message={validationMessage} mode={validationMode} wrapper={p => <Row height="auto"><Col {...p} /></Row>} />
-        </Grid>
-      </Form>
-    )
-  }
-=======
 
     newState.date = calendarUtils.datePart.format(newState)
     setDateState(newState)
@@ -239,5 +174,4 @@ DateInput.defaultProps = {
   monthLabel: "Month",
   dayLabel: "Day",
   datePartOrder: ["day", "month", "year"],
->>>>>>> 4.0
 }
