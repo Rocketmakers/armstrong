@@ -2,9 +2,6 @@ import assert = require("assert");
 import { act, renderHook } from "react-hooks-testing-library";
 import { IUseDataTableResult } from "../components/tables/tableTypes";
 import { useDataTable } from "../hooks/useDataTable";
-import { utils } from "../utilities/utils";
-
-const todoDataUrl = "https://jsonplaceholder.typicode.com/todos";
 
 interface ITodos {
   userId: number;
@@ -88,13 +85,21 @@ describe("useDataTable", () => {
     const { result } = renderHook(() =>
       useDataTable({ data: localData, options: { rowsPerPage } }),
     );
+
     assert(
       result.current.data.length === localData.length,
       "Should have an data on first render",
     );
+    act(() => result.current.setRowsPerPage(5));
+
     assert(
       result.current.options.rowsPerPage === rowsPerPage,
       `Rows should equal ${rowsPerPage}`,
+    );
+
+    assert(
+      result.current.data.length === rowsPerPage,
+      `Items in table should equal ${rowsPerPage}`,
     );
   });
 
@@ -153,11 +158,9 @@ describe("useDataTable", () => {
 
     act(() => result.current.setRowsPerPage(newRowsPerPage));
 
-    // assert(result.current.currentPage === 1, `Should be on page 1`);
-    // assert(result.current.totalPages === 1, `Should be on page 1`);
-    // assert(
-    //   result.current.data.length === defaultRowsPerPage,
-    //   `Should be on page 1`,
-    // );
+    assert(
+      result.current.data.length === 10,
+      `Should have 10 items in the table`,
+    );
   });
 });

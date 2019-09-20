@@ -203,25 +203,22 @@ storiesOf("Table", module)
     });
 
     return (
-      <>
-        {JSON.stringify(data)}
-        <Table<ITodos>
-          headerFormatter={{
-            id: null,
-            completed: null,
-            title: null,
-            userId: null,
-          }}
-          columnFormatter={{
-            completed: CompletedTableCell,
-          }}
-          numberOfPages={totalPages}
-          onChangePage={setPage}
-          onChangeRowsPerPage={setRowsPerPage}
-          options={options}
-          data={data}
-        />
-      </>
+      <Table<ITodos>
+        headerFormatter={{
+          id: null,
+          completed: null,
+          title: null,
+          userId: null,
+        }}
+        columnFormatter={{
+          completed: CompletedTableCell,
+        }}
+        numberOfPages={totalPages}
+        onChangePage={setPage}
+        onChangeRowsPerPage={setRowsPerPage}
+        options={options}
+        data={data}
+      />
     );
   })
   .add("Table with titles", () => {
