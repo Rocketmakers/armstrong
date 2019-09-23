@@ -335,6 +335,10 @@ const ToastContainerInner: React.FC<IToastContainerProps> = ({
 /** Renders the toasts in a list in a fixed element overlaying everything */
 
 const ToastContainer: React.FC<IToastContainerProps> = props => {
+  if (typeof document === "undefined") {
+    return null
+  }
+
   if (props.settings.hostElement) {
     return ReactDOM.createPortal(
       <ToastContainerInner {...props} />,

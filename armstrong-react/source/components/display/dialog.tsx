@@ -26,6 +26,10 @@ export interface IDialogProps extends React.HTMLAttributes<HTMLElement> {
 }
 
 export const Dialog: React.FC<IDialogProps> = props => {
+  if (typeof document === "undefined") {
+    return null
+  }
+
   const onClose = React.useCallback((reason: DialogLayerCloseReason) => {
     if (reason === "background") {
       if (props.closeOnBackgroundClick !== false) {
@@ -167,6 +171,10 @@ export interface IUsePortalProps {
 
 export function usePortal(PortalComponent: React.FC<IUsePortalProps>, settings?: IUsePortalSettings) {
   const portal = React.useMemo(() => {
+    if (typeof document === "undefined") {
+      return null
+    }
+
     return ReactDOM.createPortal(<PortalComponent removeFromDOM={() => setState(defaultState)} />, document.querySelector(settings && settings.hostElement || "#host"))
   }, [PortalComponent, settings && settings.hostElement])
 
