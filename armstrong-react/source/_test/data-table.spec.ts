@@ -80,6 +80,10 @@ async function loadTodoData() {
 }
 
 describe("useDataTable", () => {
+  /**
+   * Simple Test
+   */
+  // ------------------------------------------------------------------------
   it("Simple", async () => {
     const rowsPerPage = 5;
     const { result } = renderHook(() =>
@@ -103,6 +107,10 @@ describe("useDataTable", () => {
     );
   });
 
+  /**
+   * Pagination Tests
+   */
+  // ------------------------------------------------------------------------
   it("Pagination", async () => {
     const rowsPerPage = 5;
     const totalPages = localData.length / rowsPerPage;
@@ -162,5 +170,106 @@ describe("useDataTable", () => {
       result.current.data.length === 10,
       `Should have 10 items in the table`,
     );
+  });
+
+  /**
+   * Sort Tests
+   */
+  // ------------------------------------------------------------------------
+  it("Sort", async () => {
+    const { result } = renderHook(() =>
+      useDataTable({
+        data: localData,
+        options: {
+          sort: { initialSortBy: { key: "id", direction: "desc" } },
+        },
+      }),
+    );
+
+    assert(
+      result.current.data.length === localData.length,
+      "Should have an data on first render",
+    );
+    act(() => result.current.sortDataBy("id", "desc"));
+
+    assert(result.current.data[0].id === 1, "Data should begin with id 1");
+
+    act(() => result.current.sortDataBy("id", "asc"));
+
+    assert(result.current.data[0].id === 10, "Data should begin with id 10");
+  });
+
+  /**
+   * Filter Tests
+   */
+  // ------------------------------------------------------------------------
+  it("Filter (Additive)", async () => {
+    const { result } = renderHook(() =>
+      useDataTable({
+        data: localData,
+        options: {
+          filter: { filterBy: ["userId"], filtering: "additive" },
+        },
+      }),
+    );
+
+    assert(
+      result.current.data.length === localData.length,
+      "Should have an data on first render",
+    );
+
+    act(() => result.current.updateFilter("add", "userId", "1"));
+
+    assert(
+      result.current.data[0].userId === 1,
+      "Should have data for userId 1",
+    );
+
+    assert(
+      result.current.data[0].userId !== 2,
+      "Should not have data for userId 2",
+    );
+
+    act(() => result.current.updateFilter("add", "userId", "2"));
+    assert(
+      result.current.data[0].userId === 1,
+      "Should have data for userId 1",
+    );
+
+    assert(
+      result.current.data[1].userId === 2,
+      "Should have data for userId 2",
+    );
+  });
+
+  it("Filter (Subtractive)", async () => {
+    const { result } = renderHook(() =>
+      useDataTable({
+        data: localData,
+        options: {
+          filter: {
+            filterBy: ["userId", "completed"],
+            filtering: "subtractive",
+          },
+        },
+      }),
+    );
+
+    assert(
+      result.current.data.length === localData.length,
+      "Should have an data on first render",
+    );
+
+    act(() => result.current.updateFilter("add", "completed", "true"));
+
+    assert(result.current.data.length === 4, "Should have 4 items");
+    assert(
+      result.current.data[0].completed && result.current.data[1].completed,
+      "Should just have data for completed items",
+    );
+
+    act(() => result.current.updateFilter("add", "userId", "4"));
+
+    assert(result.current.data.length === 1, "Should have 1 items");
   });
 });
