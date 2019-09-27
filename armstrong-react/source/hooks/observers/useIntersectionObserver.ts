@@ -1,4 +1,4 @@
-import * as React from 'react'
+import * as React from "react";
 
 /**
  * Use an intersection observer to fire the passed callback upon intersection - also cleans up on unmount
@@ -9,20 +9,25 @@ import * as React from 'react'
 
 export const useIntersectionObserver = (
   ref: React.MutableRefObject<HTMLElement>,
-  callback: (isIntersecting: boolean, entries: IntersectionObserverEntry[], io: IntersectionObserver) => any,
+  callback: (
+    isIntersecting: boolean,
+    entries: IntersectionObserverEntry[],
+    io: IntersectionObserver
+  ) => any,
   options?: IntersectionObserverInit
 ) => {
-  const io = React.useRef<IntersectionObserver>(null)
+  const io = React.useRef<IntersectionObserver>(null);
 
   React.useLayoutEffect(() => {
     if (!!ref && !!ref.current) {
       io.current = new IntersectionObserver(
-        (entries, observer) => callback(entries[0].isIntersecting, entries, observer),
+        (entries, observer) =>
+          callback(entries[0].isIntersecting, entries, observer),
         options
-      )
-      io.current.observe(ref.current)
+      );
+      io.current.observe(ref.current);
 
-      return () => io.current.unobserve(ref.current)
+      return () => io.current.unobserve(ref.current);
     }
-  }, [ref])
-}
+  }, [ref]);
+};

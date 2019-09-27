@@ -1,0 +1,90 @@
+$default-height: 25px;
+$default-width: 50px;
+
+$default-padding: 2px;
+
+$default-hover-nudge-amount: 5px;
+
+$default-inactive-colour: $gray-light;
+$default-hover-colour: darken($gray-light, 5%);
+$default-active-colour: $color-positive;
+
+
+@mixin resize-switch($switch-width, $switch-height, $switch-padding, $switch-hover-nudge-amount) {
+    $dude-size: calc(#{$switch-height} - #{$switch-padding} * 2);
+    $checked-transform: calc(#{$switch-width} - #{$dude-size} - #{$switch-padding} * 2);
+
+    width: $switch-width;
+    height: $switch-height;
+    border-radius: calc(#{$switch-height} / 2);
+
+    &::after {
+        width: $dude-size;
+        height: $dude-size;
+
+        left: $switch-padding;
+        top: $switch-padding;
+    }
+
+    &:checked::after {
+        transform: translateX($checked-transform)
+    }
+
+    &:hover[data-hover-nudge-enabled="true"][data-has-clicked="false"] {
+        &::after {
+            transform: translateX($switch-hover-nudge-amount);
+        }
+
+        &:checked::after {
+            transform: translateX(calc(#{$checked-transform} - #{$switch-hover-nudge-amount}));
+        }
+    }
+}
+
+@mixin recolour-switch($switch-inactive-colour, $switch-hover-colour, $switch-active-colour) {
+
+    background-color: $switch-inactive-colour;
+
+    &:checked {
+        background-color: $switch-active-colour;
+    }
+
+    &:hover[data-has-clicked="false"] {
+        &:not(:checked) {
+            background-color: $switch-hover-colour;
+        }
+    }
+}
+
+.armstrong-input.switch-input > input {
+    position: relative;
+
+    transition: background-color 0.3s, opacity 0.3s;
+    cursor: pointer;
+
+    border: none;
+
+    @include resize-switch(var(--armstrong-switch-width, #{$default-width}), var(--armstrong-switch-height, #{$default-height}), var(--armstrong-switch-padding, #{$default-padding}), var(--armstrong-switch-hover-nudge-amount, #{$default-hover-nudge-amount}));
+    @include recolour-switch(var(--armstrong-switch-inactive-colour, #{$default-inactive-colour}), var(--armstrong-switch-hover-colour, #{$default-hover-colour}), var(--armstrong-switch-active-colour, #{$default-active-colour}));
+
+    &:focus {
+        border: none;
+    }
+
+    &::after {
+        content: '';
+        display: block;
+        position: absolute;
+
+        background-color: white;
+        border-radius: 50%;
+        box-shadow: 0 0 12px rgba(black, 0.3);
+
+        transition: transform 0.3s;
+    }
+
+    &[data-disabled="true"]{
+        opacity: 0.5;
+        pointer-events: none;
+    }
+}

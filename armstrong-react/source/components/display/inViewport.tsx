@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useIntersectionObserver } from "../..";
 
 interface IInViewportChildrenArgs {
   element: React.MutableRefObject<any>;
@@ -8,45 +9,49 @@ interface IInViewportChildrenArgs {
 interface IInViewportProps {
   IOProps?: IntersectionObserverInit;
   once?: boolean;
+
+  onEnter?: (entry: IntersectionObserverEntry) => void;
+  onExit?: (entry: IntersectionObserverEntry) => void;
+
   children: (props: IInViewportChildrenArgs) => any;
 }
 
-export const InViewport: React.FunctionComponent<IInViewportProps> = props => {
-  const { once, children, IOProps } = props;
-
+export const InViewport: React.FunctionComponent<IInViewportProps> = ({
+  once,
+  children,
+  IOProps,
+  onEnter,
+  onExit
+}) => {
   const [enteredViewport, setEnteredViewport] = React.useState(false);
   const element = React.useRef(null);
 
-  let observer: IntersectionObserver;
+  const intersectionCallback = React.useCallback(
+    (___, entries: IntersectionObserverEntry[], io: IntersectionObserver) => {
+      const entry = entries[0];
 
-  React.useEffect(() => {
-    if (!!element && element.current) {
-      observer = new IntersectionObserver(
-        (entries, io) => {
-          const entry = entries[0];
-          if (entry.isIntersecting) {
-            setEnteredViewport(true);
-            if (once) {
-              io.unobserve(element.current);
-            }
-          } else {
-            setEnteredViewport(false);
-          }
-        },
-        {
-          ...IOProps
+      if (entry.isIntersecting) {
+        setEnteredViewport(true);
+
+        if (once) {
+          io.unobserve(element.current);
         }
-      );
 
-      observer.observe(element.current);
-
-      return () => {
-        if (!!element && element.current) {
-          observer.unobserve(element.current);
+        if (!!onEnter) {
+          onEnter(entry);
         }
-      };
-    }
-  }, [element]);
+      } else {
+        setEnteredViewport(false);
+
+        if (!!onExit) {
+          onExit(entry);
+        }
+      }
+    },
+    [once, onEnter, onExit]
+  );
+
+  useIntersectionObserver(element, intersectionCallback, IOProps);
 
   return children({ element, enteredViewport });
 };

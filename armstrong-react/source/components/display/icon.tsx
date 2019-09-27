@@ -9,11 +9,16 @@ export interface IIconProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
 }
 
-export function Icon(props: IIconProps) {
-  const { icon, className, ...attrs } = props
+export const Icon: React.FunctionComponent<IIconProps> & {
+  Icomoon: typeof Icons.Icomoon;
+} = props => {
+  const { icon, className, ...attrs } = props;
   return (
-    <i {...attrs} className={ClassHelpers.classNames(className, "icon", icon)} />
+    <i
+      {...attrs}
+      className={ClassHelpers.classNames(className, "icon", icon)}
+    />
   );
-}
+};
 
-Icon.Icomoon = Icons.Icomoon
+Icon.Icomoon = Icons.Icomoon;
