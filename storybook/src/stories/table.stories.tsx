@@ -221,6 +221,44 @@ storiesOf("Table", module)
       />
     );
   })
+  .add("Update Data (Hooks)", () => {
+    const {
+      data,
+      options,
+      setPage,
+      setRowsPerPage,
+      totalPages,
+      updateData,
+    } = useDataTable<ITodos>({
+      options: {
+        rowsPerPage: 5,
+        paginate: true,
+      },
+    });
+
+    React.useEffect(() => {
+      updateData(localTodos);
+    }, []);
+
+    return (
+      <Table<ITodos>
+        headerFormatter={{
+          id: null,
+          completed: null,
+          title: null,
+          userId: null,
+        }}
+        columnFormatter={{
+          completed: CompletedTableCell,
+        }}
+        numberOfPages={totalPages}
+        onChangePage={setPage}
+        onChangeRowsPerPage={setRowsPerPage}
+        options={options}
+        data={data}
+      />
+    );
+  })
   .add("Table with titles", () => {
     const [state, setState] = React.useState([]);
 

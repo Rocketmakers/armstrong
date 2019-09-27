@@ -145,6 +145,7 @@ export function Table<T = any>({
           })}
         </tbody>
       </table>
+      {!data || (data.length === 0 && "No Data")}
       {onChangePage && numberOfPages && PaginationElement && (
         <div className={ClassHelpers.classNames("table-pagination")}>
           <div style={{ flex: 0.5 }}></div>
