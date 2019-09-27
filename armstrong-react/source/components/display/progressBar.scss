@@ -1,0 +1,48 @@
+.progress-bar {
+    position: relative;
+    background-color: lighten($brand-primary, 30%);
+    border-radius: 9px;
+    user-select: none;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .progress-bar-inner {
+        transition: width 0.2s, height 0.2s;
+        position: absolute;
+        background-color: $brand-primary;
+        border-radius: 9px;
+
+    }
+
+    p.label {
+        margin: 0;
+
+        &[data-variant="following"] {
+            position: absolute;
+            transition: left 0.3s, top 0.3s, bottom 0.3s, right 0.3s;
+        }
+
+        &[data-variant="centre"] {
+            color: white;
+            text-align: center;
+            position: relative;
+        }
+
+    }
+
+    &[data-direction="down"],
+    &[data-direction="up"] {
+        p.label[data-variant="following"] {
+            right: -$spacing-large;
+        }
+    }
+
+    &[data-direction="left"],
+    &[data-direction="right"] {
+        p.label[data-variant="following"] {
+            top: -$spacing-large;
+        }
+    }
+}
