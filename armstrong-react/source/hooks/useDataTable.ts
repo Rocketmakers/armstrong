@@ -64,6 +64,7 @@ interface IUseDataTable<T> {
   sortParameters: ISortParameters<T>;
   totalRows: number;
   totalPages: number;
+  updateData: (newData: T[]) => void;
   updateFilter: (
     action: TFilterAction,
     key?: any,
@@ -437,6 +438,34 @@ export function useDataTable<T>({
     [state, state.currentPage, state.rowsPerPage],
   );
 
+  /**
+   * Update the Data Source
+   * @param newData : new Data
+   */
+  // ---------------------------------------------------------
+  const updateData = React.useCallback(
+    (nData: T[]) => {
+      storedData.current = nData || [];
+
+      const { totalPages } = calculatePagination(
+        storedData.current.length,
+        state.rowsPerPage,
+        1,
+      );
+
+      const newData = storedData.current.slice(0, state.rowsPerPage);
+
+      setState((oldState: IUseDataTableState<T>) => ({
+        ...oldState,
+        data: newData,
+        rowsPerPage: state.rowsPerPage,
+        totalPages,
+        currentPage: 1,
+      }));
+    },
+    [state, state.currentPage, state.rowsPerPage],
+  );
+
   return {
     currentPage: state.currentPage,
     data: state.data,
@@ -452,6 +481,7 @@ export function useDataTable<T>({
     sortParameters: state.sortParameters,
     totalRows: state.totalRows,
     totalPages: state.totalPages,
+    updateData,
     updateFilter,
   };
 }
