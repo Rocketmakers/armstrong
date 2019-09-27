@@ -22,6 +22,10 @@
         &[data-variant="following"] {
             position: absolute;
             transition: left 0.3s, top 0.3s, bottom 0.3s, right 0.3s;
+            background-color: white;
+            box-shadow: 1px 1px 9px rgba(black , 0.2);
+            padding: $spacing-xsmall;
+            border-radius: 9px;
         }
 
         &[data-variant="centre"] {
@@ -35,14 +39,14 @@
     &[data-direction="down"],
     &[data-direction="up"] {
         p.label[data-variant="following"] {
-            right: -$spacing-large;
+            left: $spacing-small;
         }
     }
 
     &[data-direction="left"],
     &[data-direction="right"] {
         p.label[data-variant="following"] {
-            top: -$spacing-large;
+            top: $spacing-small;
         }
     }
 }
