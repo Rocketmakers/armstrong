@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "postinstall": "node symlink.js",
     "start": "start-storybook -s ./static -p 6006",
     "build": "build-storybook -o ../public -s ./static --quiet"
   },
