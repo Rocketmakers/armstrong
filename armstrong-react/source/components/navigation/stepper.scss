@@ -1,0 +1,22 @@
+.stepper {
+  &[data-direction="horizontal"] {
+    flex-direction: row;
+  }
+  &[data-direction="vertical"] {
+    flex-direction: column;
+  }
+  align-items: center;
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.stepper-spacer {
+  flex: 1;
+  padding: 0 5px;
+  &[data-direction="horizontal"] {
+    border-bottom: 1px black solid;
+  }
+  &[data-direction="vertical"] {
+    border-left: 1px black solid;
+  }
+}

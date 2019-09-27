@@ -196,3 +196,4 @@ export { useDidUpdateEffect } from "./hooks/useDidUpdateEffect";
 export { usePrevious } from "./hooks/usePrevious";
 export { useThrottle } from "./hooks/useThrottle";
 export { useMedia } from "./hooks/useMedia";
+export { useStepper } from "./hooks/useStepper";
