@@ -19,8 +19,10 @@ import {
 } from "./tableTypes";
 
 export interface ITableProps<T> {
-  /** (React.ReactNode) Specify the formatting of the individual column */
-  columnFormatter?: { [P in keyof T]?: (value: T[P]) => React.ReactNode };
+  /** (React.ReactNode) Specify the formatting of the individual column, you have access to both the  */
+  columnFormatter?: {
+    [P in keyof T]?: (value: T[P], row?: T) => React.ReactNode;
+  };
   /** (T[]) The data to display */
   data?: T[];
   /** (IFilter[]) The active filter list  */
