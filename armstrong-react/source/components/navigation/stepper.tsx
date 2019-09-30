@@ -4,25 +4,28 @@ import { TStepperDirection } from "../../hooks/useStepper";
 import "./stepper.scss";
 
 export interface IStepperProps {
+  /** (TStepperDirection) Should the stepper be vertical or horizontal */
   direction: TStepperDirection;
 }
 
-const stepperContent = React.createContext<IStepperProps>(undefined);
+const StepperContent = React.createContext<IStepperProps>(undefined);
 export const Stepper: React.FunctionComponent<IStepperProps> = ({
   children,
   direction,
 }) => {
   return (
-    <stepperContent.Provider value={{ direction }}>
+    <StepperContent.Provider value={{ direction }}>
       <div className="stepper" data-direction={direction}>
         {children}
       </div>
-    </stepperContent.Provider>
+    </StepperContent.Provider>
   );
 };
 
 export interface IStepProps {
+  /** (JSX.Element) Custom Spacer Item */
   customSpacer?: JSX.Element;
+  /** (boolean) Should there be a spacer */
   spacer?: boolean;
 }
 
@@ -31,7 +34,7 @@ export const Step: React.FunctionComponent<IStepProps> = ({
   customSpacer,
   spacer,
 }) => {
-  const ctx = React.useContext(stepperContent);
+  const ctx = React.useContext(StepperContent);
   return (
     <>
       {children}

@@ -8,11 +8,13 @@ export interface IUseStepperProps {
 }
 
 export interface IUseStepper {
+  canGoBack: boolean;
   currentStep: number;
+  hasStepCompleted: (step: number) => boolean;
+  isLastStep: (step: number) => boolean;
+  lastStep: number | undefined;
   nextStep: number | undefined;
   onLastStep: boolean;
-  isLastStep: (step: number) => boolean;
-  hasStepCompleted: (step: number) => boolean;
   setStep: (step: number, force?: boolean) => void;
 }
 
@@ -35,7 +37,7 @@ export function useStepper({
 
   const hasStepCompleted = React.useCallback(
     (step: number) => {
-      return step <= currentStep;
+      return step < currentStep;
     },
     [currentStep],
   );
@@ -47,13 +49,15 @@ export function useStepper({
     [currentStep],
   );
 
-  const lastStep = numberOfSteps - 1;
+  const finalStep = numberOfSteps - 1;
   return {
+    canGoBack: currentStep >= 1,
     currentStep,
-    setStep,
     hasStepCompleted,
     isLastStep,
-    onLastStep: currentStep === lastStep,
-    nextStep: currentStep < lastStep ? currentStep + 1 : undefined,
+    lastStep: currentStep >= 1 ? currentStep - 1 : undefined,
+    nextStep: currentStep < finalStep ? currentStep + 1 : undefined,
+    onLastStep: currentStep === finalStep,
+    setStep,
   };
 }
