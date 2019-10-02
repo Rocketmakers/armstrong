@@ -12,17 +12,17 @@ storiesOf('Tooltip', module)
     </Tooltip>
   )
   .add('Manual aria', () =>
-    <Tooltip tooltip="It is me. The tooltip" ariaLabel="The tooltip I am.">
+    <Tooltip tooltip="It is me. The tooltip." ariaLabel="The tooltip I am.">
       <span>Hover here</span>
     </Tooltip>
   )
   .add('No aria', () =>
-    <Tooltip tooltip={<span>It is me. The tooltip</span>} ariaHideTooltip>
+    <Tooltip tooltip={<span>It is me. The tooltip.</span>} ariaHideTooltip>
       <span>Hover here</span>
     </Tooltip>
   )
   .add('Custom position', () =>
-  <Tooltip tooltip="It is me. The tooltip" position={["left", "top"]}>
+  <Tooltip tooltip="It is me. The tooltip." position={["left", "top"]}>
     <span>Hover here</span>
   </Tooltip>
   )
