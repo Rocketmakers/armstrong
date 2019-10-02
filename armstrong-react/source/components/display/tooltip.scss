@@ -1,6 +1,6 @@
 .tooltip-wrapper {
   position: relative;
-  width: fit-content;
+  width: max-content;
 
   .tooltip-children:hover {
     +.tooltip:not([data-position=hidden]) {
