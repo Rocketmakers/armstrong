@@ -1,7 +1,7 @@
-import * as React from "react";
-import { Spinner } from "../../../../storybook/src/_symlink";
-import InViewport from "../../../../storybook/src/_symlink/components/display/inViewport";
-import { ClassHelpers } from "../../utilities/classHelpers";
+import * as React from 'react';
+import { ClassHelpers } from '../../utilities/classHelpers';
+import InViewport from './inViewport';
+import { Spinner } from '../..';
 
 export interface IImageProps
   extends React.ImgHTMLAttributes<HTMLPictureElement> {
@@ -26,7 +26,7 @@ export function useRandomUserImageSrc(sampleUserSeed?: string) {
 
   React.useEffect(() => {
     const url = `https://randomuser.me/api?exc=login,name,location,email,registered,dob,phone,cell,id,nat${
-      sampleUserSeed ? `&seed=${sampleUserSeed}` : ""
+      sampleUserSeed ? `&seed=${sampleUserSeed}` : ''
     }`;
 
     const xmlHttp = new XMLHttpRequest();
@@ -38,7 +38,7 @@ export function useRandomUserImageSrc(sampleUserSeed?: string) {
       }
     };
 
-    xmlHttp.open("GET", url, true);
+    xmlHttp.open('GET', url, true);
     xmlHttp.send(null);
   }, [sampleUserSeed]);
 
@@ -78,7 +78,7 @@ export const Image: React.FunctionComponent<IImageProps> = (
       {({ element, enteredViewport }) => (
         <>
           <picture ref={element} data-loaded={!loading}>
-            {(alternateSources || []).map(alternateSource => (
+            {(enteredViewport || !lazy) && (alternateSources || []).map(alternateSource => (
               <source {...alternateSource} />
             ))}
 
@@ -86,7 +86,7 @@ export const Image: React.FunctionComponent<IImageProps> = (
               {...attrs}
               onLoad={() => setLoading(false)}
               className={classes}
-              src={(enteredViewport || !lazy) && src}
+              src={(enteredViewport || !lazy) ? src : ""}
             />
           </picture>
 
@@ -98,6 +98,6 @@ export const Image: React.FunctionComponent<IImageProps> = (
 };
 
 Image.defaultProps = {
-  rootMargin: "200px",
+  rootMargin: '200px',
   loadingChildren: () => <Spinner />
 };

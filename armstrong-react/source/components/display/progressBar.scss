@@ -21,17 +21,19 @@
 
         &[data-variant="following"] {
             position: absolute;
-            transition: left 0.3s, top 0.3s, bottom 0.3s, right 0.3s;
+            transition: left 0.2s, top 0.2s, bottom 0.2s, right 0.2s;
             background-color: white;
             box-shadow: 1px 1px 9px rgba(black , 0.2);
             padding: $spacing-xsmall;
             border-radius: 9px;
+            transform: translateY(50%);
         }
 
         &[data-variant="centre"] {
             color: white;
             text-align: center;
             position: relative;
+            font-size: 0.8rem;
         }
 
     }

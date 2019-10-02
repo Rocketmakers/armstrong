@@ -1,6 +1,6 @@
 import * as React from "react";
-import { ClassHelpers } from "../../utilities/classHelpers";
 import { Icon } from "./icon";
+import { ClassHelpers } from '../..';
 
 interface ISpinnerProps extends React.HTMLProps<HTMLDivElement> {
     reversed?: boolean

@@ -202,7 +202,6 @@ ToastProvider.defaultProps = {
   dismissTime: 500,
   disableAutodismissOnHover: true,
   renderInProvider: true,
-  renderTimestamp: "below title",
   timestampFormat: "HH:mm",
 };
 

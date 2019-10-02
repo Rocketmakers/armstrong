@@ -18,11 +18,11 @@ storiesOf('Progress Bar', module)
     React.useEffect(() => {
       timeout.current = setTimeout(() => {
         if (progress < 100) {
-          setProgress(progress + 10);
+          setProgress(progress + 1);
         } else {
           setProgress(0);
         }
-      }, 200);
+      }, 10);
     });
 
     return <ProgressBar progress={progress} labelText={`${progress}%`} />;
@@ -34,11 +34,11 @@ storiesOf('Progress Bar', module)
     React.useEffect(() => {
       timeout.current = setTimeout(() => {
         if (progress < 100) {
-          setProgress(progress + 10);
+          setProgress(progress + 1);
         } else {
           setProgress(0);
         }
-      }, 200);
+      }, 10);
     });
 
     return <ProgressBar progress={progress} direction='up' thickness="9px" className="vertical-dude" labelText={`${progress}%`} labelVariant="following" />;
