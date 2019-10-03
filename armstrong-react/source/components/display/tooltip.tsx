@@ -29,16 +29,11 @@ export const Tooltip: React.FC<ITooltipProps> = props => {
   const [currentPosition, setCurrentPosition] = React.useState(0) // Index in position priority array currently being used
 
   // Creates full position priority array, by taking user specified positions, & adding unspecified positions onto the end
-  const normalisePositionPriority = React.useCallback((positions: Positions): PositionPriority => {
-    const positionsArray: Position[] = typeof positions === "string" ? [positions] : positions
+  const positionPriority = React.useMemo((): PositionPriority => {
+    const positionsArray: Position[] = typeof position === "string" ? [position] : position
     const uniquePositions: Position[] = _.uniq(positionsArray)
     const unsetPositions: Position[] = _.difference(defaultPositions, uniquePositions)
     return [...uniquePositions, ...unsetPositions] as PositionPriority
-  }, [])
-
-  // Uses default postion priority array, if no position prop is passed
-  const positionPriority = React.useMemo(() => {
-    return position ? normalisePositionPriority(position) : defaultPositions
   }, [position])
 
   // Checks if an element is fully within the viewport
@@ -65,15 +60,6 @@ export const Tooltip: React.FC<ITooltipProps> = props => {
     }
   }, [ariaLabel])
 
-  // Determines if tooltip should be aria-hidden
-  const ariaHidden = React.useMemo(() => {
-    if (typeof ariaHideTooltip === "boolean") {
-      return ariaHideTooltip
-    } else {
-      return true
-    }
-  }, [ariaHideTooltip])
-
   // If current tooltip position is not visible, moves on to next position
   React.useEffect(() => {
     if (tooltipElement.current && currentPosition < 5 && (currentPosition < 0 || !isInViewport(tooltipElement.current))) {
@@ -89,7 +75,7 @@ export const Tooltip: React.FC<ITooltipProps> = props => {
       </div>
       <div className="tooltip"
         ref={tooltipElement}
-        aria-hidden={ariaHidden}
+        aria-hidden={ariaHideTooltip}
         data-retain={!!retain}
         data-position={positionPriority[currentPosition] ? positionPriority[currentPosition] : "hidden"}
       >
@@ -97,4 +83,10 @@ export const Tooltip: React.FC<ITooltipProps> = props => {
       </div>
     </div>
   )
+}
+
+Tooltip.defaultProps = {
+  ariaHideTooltip: true,
+  retain: false,
+  position: ["right", "left", "bottom", "top", "fixed", "hidden"]
 }
