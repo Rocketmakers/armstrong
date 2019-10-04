@@ -1,11 +1,13 @@
 import * as React from "react";
 import _ = require('underscore');
 
-type Position = "left" | "right" | "top" | "bottom" | "fixed" | "hidden"
+export type ITooltipPosition = "left" | "right" | "top" | "bottom" | "fixed" | "hidden"
 
-type Positions = Position | Position[]
+export type ITooltipPositions = ITooltipPosition | ITooltipPosition[]
 
-type PositionPriority = [Position, Position, Position, Position, Position, Position]
+export type ITooltipCustomPositions = string | string[]
+
+export type ITooltipPositionPriority = [ITooltipPosition, ITooltipPosition, ITooltipPosition, ITooltipPosition, ITooltipPosition, ITooltipPosition]
 
 export interface ITooltipProps {
   /** (JSX.Element | string) The content to appear on hover.  Passing a string will apply it as an aria-label to children, if ariaLabel not passed */
@@ -18,22 +20,42 @@ export interface ITooltipProps {
   ariaHideTooltip?: boolean
   /** (boolean) Retain tooltip when tooltip is hovered, default false */
   retain?: boolean
-  /** (Position) Priority order, or just top priority, for tooltip location, default ["right", "left", "bottom", "top", "fixed", "hidden"] */
-  position?: Positions
+  /** (Position) Priority order, or just top priority, for tooltip location, default ["right", "left", "bottom", "top", "fixed", "hidden"].  Only for use with preset positions, & appends unspecified positions to user defined list. */
+  position?: ITooltipPositions
+  /** (ITooltipCustomPositions) Priority order, or just top priority, for tooltip location.  Overrides position prop.  Can use custom user positions created in css, & preset positions. */
+  customPosition?: ITooltipCustomPositions
+  /** (string) Appended to the className of the tooltip wrapper */
+  tooltipWrapperClass?: string
+  /** (string) Appended to the className of the tooltip children */
+  tooltipChildrenClass?: string
+  /** (string) Appended to the className of the tooltip */
+  tooltipClass?: string
 }
 
 export const Tooltip: React.FC<ITooltipProps> = props => {
-  const {tooltip, children, ariaLabel, ariaHideTooltip, retain, position} = props
-  const defaultPositions: PositionPriority = ["right", "left", "bottom", "top", "fixed", "hidden"]
+  const {tooltip, children, ariaLabel, ariaHideTooltip, retain, position, customPosition, tooltipWrapperClass, tooltipChildrenClass, tooltipClass} = props
+  const defaultPositions: ITooltipPositionPriority = ["right", "left", "bottom", "top", "fixed", "hidden"]
   const tooltipElement = React.useRef<HTMLDivElement>(null)
   const [currentPosition, setCurrentPosition] = React.useState(0) // Index in position priority array currently being used
 
   // Creates full position priority array, by taking user specified positions, & adding unspecified positions onto the end
-  const positionPriority = React.useMemo((): PositionPriority => {
-    const positionsArray: Position[] = typeof position === "string" ? [position] : position
-    const uniquePositions: Position[] = _.uniq(positionsArray)
-    const unsetPositions: Position[] = _.difference(defaultPositions, uniquePositions)
-    return [...uniquePositions, ...unsetPositions] as PositionPriority
+  const normalisePositionPriority = React.useCallback((positions: ITooltipPositions): ITooltipPositionPriority => {
+    const positionsArray: ITooltipPosition[] = typeof positions === "string" ? [positions] : positions
+    const uniquePositions: ITooltipPosition[] = _.uniq(positionsArray)
+    const unsetPositions: ITooltipPosition[] = _.difference(defaultPositions, uniquePositions)
+    return [...uniquePositions, ...unsetPositions] as ITooltipPositionPriority
+  }, [])
+
+  // Uses customPosition if passed in, otherwise gets normalised position priority
+  const positionPriority = React.useMemo(() => {
+    switch (typeof customPosition) {
+      case "string":
+        return [customPosition]
+      case "object":
+        return customPosition
+      case "undefined":
+        return normalisePositionPriority(position)
+    }
   }, [position])
 
   // Checks if an element is fully within the viewport
@@ -60,20 +82,20 @@ export const Tooltip: React.FC<ITooltipProps> = props => {
     }
   }, [ariaLabel])
 
-  // If current tooltip position is not visible, moves on to next position
+  // If current tooltip position is not visible, moves on to next position, unless already on last position
   React.useEffect(() => {
-    if (tooltipElement.current && currentPosition < 5 && (currentPosition < 0 || !isInViewport(tooltipElement.current))) {
+    if (tooltipElement.current && currentPosition + 1 < positionPriority.length && (currentPosition < 0 || !isInViewport(tooltipElement.current))) {
       setCurrentPosition(currentPosition + 1)
     }
   }, [tooltipElement, currentPosition])
 
   return (
     // currentPosition set to -1, as setting to 0 doesn't trigger useEffect when it's already 0
-    <div className="tooltip-wrapper" onMouseEnter={() => setCurrentPosition(-1)}>
-      <div className="tooltip-children" aria-label={actualAriaLabel}>
+    <div className={"tooltip-wrapper " + (tooltipWrapperClass ? tooltipWrapperClass : "")} onMouseEnter={() => setCurrentPosition(-1)}>
+      <div className={"tooltip-children " + (tooltipChildrenClass ? tooltipChildrenClass : "")} aria-label={actualAriaLabel}>
         {children}
       </div>
-      <div className="tooltip"
+      <div className={"tooltip " + (tooltipClass ? tooltipClass : "")}
         ref={tooltipElement}
         aria-hidden={ariaHideTooltip}
         data-retain={!!retain}

@@ -28,7 +28,14 @@ export {
   useDialogProvider
 } from "./components/display/dialogProvider";
 export { IDataListProps, DataList } from "./components/display/dataList";
-export { ITooltipProps, Tooltip } from "./components/display/tooltip";
+export {
+  ITooltipPosition,
+  ITooltipPositions,
+  ITooltipPositionPriority,
+  ITooltipCustomPositions,
+  ITooltipProps,
+  Tooltip
+} from "./components/display/tooltip";
 
 // Form
 export {
