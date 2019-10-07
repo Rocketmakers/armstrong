@@ -17,4 +17,4 @@ jobs:
       - name: Publish
         run: env && cd armstrong-react && npm i && npm publish
         env:
-          NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+          NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
