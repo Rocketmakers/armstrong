@@ -1,0 +1,32 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - v*
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: node:10.15.3-alpine
+
+    steps:
+      - uses: actions/checkout@master
+      - name: Run a one-line script
+        run: cd armstrong-react && npm i && npm run build
+
+      - uses: actions/upload-artifact@master
+        with:
+          name: dist
+          path: armstrong-react/dist
+
+  publish:
+    runs-on: ubuntu-latest
+    container:
+      image: node:10.15.3-alpine
+
+    steps:
+      - uses: actions/checkout@master
+      - name: Run a one-line script
+        run: cd armstrong-react && npm publish
