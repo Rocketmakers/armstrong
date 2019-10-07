@@ -19,5 +19,6 @@ jobs:
 
       - name: Publish package
         uses: actions/npm@master
+        args: "publish"
         env:
           NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
