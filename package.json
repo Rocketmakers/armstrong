@@ -1,0 +1,20 @@
+{
+  "name": "@rocketmakers/armstrong-monorepo",
+  "version": "1.0.0",
+  "description": "<p align=\"center\"> <img src=\"http://armstrongcss.org/assets/logolarge.svg\" width=\"256\" height=\"256\" /> </p>",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Rocketmakers/armstrong.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Rocketmakers/armstrong/issues"
+  },
+  "homepage": "https://github.com/Rocketmakers/armstrong#readme"
+}
