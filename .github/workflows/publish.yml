@@ -14,10 +14,7 @@ jobs:
     steps:
       - uses: actions/checkout@master
 
-      - name: Build
-        run: cd armstrong-react && npm i && npm run build
-
-      - name: Publish package
-        run: cd armstrong-react && npm publish
+      - name: Publish
+        run: cd armstrong-react && npm i && npm publish
         env:
           NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
