@@ -30,8 +30,8 @@ storiesOf('Tooltip', module)
     </Tooltip>
   )
   .add('Position priority', () => <>
-    {positionPriorities.map(positionPrioritity => 
-      <Tooltip tooltip="It is me. The tooltip." position={positionPrioritity}>
+    {positionPriorities.map((positionPrioritity, i) => 
+      <Tooltip tooltip="It is me. The tooltip." position={positionPrioritity} key={"tooltip" + i}>
         <span>{
           typeof positionPrioritity ==="string" ?
             `"${positionPrioritity}"`
@@ -62,8 +62,8 @@ storiesOf('Tooltip', module)
         left: 100%;
       }
     `}} />
-    {customPositionPriorities.map(customPositionPriority => 
-      <Tooltip tooltip="It is me. The tooltip." customPosition={customPositionPriority} tooltipClass="tooltip-example-1">
+    {customPositionPriorities.map((customPositionPriority, i) => 
+      <Tooltip tooltip="It is me. The tooltip." customPosition={customPositionPriority} tooltipClass="tooltip-example-1" key={"customPositionTooltip" + i}>
         <span>{
           typeof customPositionPriority ==="string" ?
             `"${customPositionPriority}"`
