@@ -48,7 +48,7 @@ storiesOf('Mobile Data List', module)
     return (
       <div style={{ height: "400px" }}>
         <DataList skipFirstFetch={true} refreshData={() => getSomeData(setFetchingData)} refreshing={fetchingData} postRefreshDelayMs={1000}>
-          {items.map(item => <div style={dataItemStyle}>{item}</div>)}
+          {items.map((item, index) => <div key={`data-list-item-${index}`} style={dataItemStyle}>{item}</div>)}
         </DataList>
       </div>
     )
@@ -58,7 +58,7 @@ storiesOf('Mobile Data List', module)
     return (
       <div style={{ height: "400px" }}>
         <DataList refreshData={() => getSomeData(setFetchingData)} refreshing={fetchingData} hideChildrenWhileRefreshing={true}>
-          {items.map(item => <div style={dataItemStyle}>{item}</div>)}
+          {items.map((item, index) => <div key={`data-list-item-${index}`} style={dataItemStyle}>{item}</div>)}
         </DataList>
       </div>
     )
@@ -72,7 +72,7 @@ storiesOf('Mobile Data List', module)
           refreshData={() => getSomeData(setFetchingData)}
           refreshing={fetchingData}
           refreshingComponent={<div style={customRefreshStyle}>IT IS ME. THE CUSTOM REFRESH UI</div>}>
-          {items.map(item => <div style={dataItemStyle}>{item}</div>)}
+          {items.map((item, index) => <div key={`data-list-item-${index}`} style={dataItemStyle}>{item}</div>)}
         </DataList>
       </div>
     )

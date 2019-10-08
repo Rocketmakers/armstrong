@@ -1,7 +1,7 @@
 import * as React from "react";
 import Helmet from "react-helmet";
 
-import { ClassHelpers, Icon, Button } from "armstrong-react"
+import { ClassHelpers, Button } from "armstrong-react"
 
 import "../theme/theme.scss";
 import "./shell.scss";

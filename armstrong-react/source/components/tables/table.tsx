@@ -1,5 +1,4 @@
 import * as React from "react";
-import * as _ from "underscore";
 import { ClassHelpers } from "../../";
 import { Dialog } from "../display/dialog";
 import { TableFiltersDialog } from "./tableFilterDialog";
@@ -135,7 +134,7 @@ export function Table<T = any>({
           </thead>
         )}
         <tbody className={ClassHelpers.classNames("table-body")}>
-          {data.map((rows: T, idx: number) => {
+          {data && data.map((rows: T, idx: number) => {
             return (
               <TableItem
                 key={idx}

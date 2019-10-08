@@ -73,11 +73,11 @@ const localData: ITodos[] = [
   },
 ];
 
-async function loadTodoData() {
-  return async (): Promise<IUseDataTableResult<ITodos>> => {
-    return { data: localData };
-  };
-}
+// async function loadTodoData() {
+//   return async (): Promise<IUseDataTableResult<ITodos>> => {
+//     return { data: localData };
+//   };
+// }
 
 describe("useDataTable", () => {
   /**

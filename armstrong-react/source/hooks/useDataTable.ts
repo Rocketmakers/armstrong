@@ -280,7 +280,7 @@ export function useDataTable<T>({
     [
       state.rowsPerPage,
       state.totalRows,
-      options.rowsPerPage,
+      options ? options.rowsPerPage : 10,
       data,
       fetch,
       filters,

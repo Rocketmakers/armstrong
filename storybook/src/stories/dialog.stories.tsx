@@ -1,11 +1,9 @@
 import * as React from "react"
 
 import { storiesOf } from '@storybook/react';
-import { Grid, Row, Col, Dialog, TextInput, Button, useDialog, DateInput } from "../_symlink";
+import { Dialog, Button, useDialog, DateInput } from "../_symlink";
 
 import "../theme/theme.scss";
-
-const data = { name: "keith" }
 
 storiesOf('Dialog', module)
   .addParameters({

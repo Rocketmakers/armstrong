@@ -110,13 +110,3 @@ const PageContentHooks: React.FC<{}> = p => {
     </div>
   )
 }
-
-
-const Header: React.FC<{}> = p => {
-  const { toggle, isOpen } = useBurgerMenu()
-  return (
-    <>
-      <Button onClick={toggle}>{isOpen ? "CLOSE" : "OPEN"} MENU</Button>
-    </>
-  )
-}

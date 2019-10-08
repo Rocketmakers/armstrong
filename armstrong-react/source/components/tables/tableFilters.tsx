@@ -15,13 +15,12 @@ export function TableFilters<T>({
 }: React.PropsWithChildren<ITableFilters<T>>) {
   return (
     <div>
-      {filters && filters.map((filter: IFilter) => {
+      {filters && filters.map((filter, index) => {
         return (
-          <Button
+          <Button key={`filter-button-${index}`}
             leftIcon={Icon.Icomoon.cross}
             rounded
-            onClick={() => onRemove(filter.key, filter.value)}
-          >
+            onClick={() => onRemove(filter.key, filter.value)}>
             {filter.key} {filter.value}
           </Button>
         );
