@@ -4,7 +4,7 @@
 import * as cp from "child_process";
 import * as fs from "fs";
 
-import { ConsoleLogger, IConsoleLoggerSettings, Logger } from "rokot-log";
+import { ConsoleLogger, IConsoleLoggerSettings, Logger } from "@rocketmakers/log";
 
 import { URL } from "url";
 
