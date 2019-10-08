@@ -73,7 +73,7 @@ storiesOf('Image', module)
       />
     </div>
   ))
-  .add('Error Warning', () => (
+  .add('Image Error Handling', () => (
     <div
       style={{
         width: '800px',
