@@ -25,27 +25,6 @@ export function readFileAsync(
   });
 }
 
-export const envs = {
-  dev: {
-    name: "Dev",
-    url: "https://ameko.rocketmakers.net",
-  },
-  staging: {
-    name: "Staging",
-    url: "https://staging.ameko.app",
-  },
-  production: {
-    name: "Production",
-    url: "https://ameko.app",
-  },
-};
-
-export const hostnames = [
-  "ameko.rocketmakers.net",
-  "ameko-api.rocketmakers.net",
-  "ameko-upload.rocketmakers.net",
-];
-
 /**
  * Helper function for getting environment variables
  * @param name
@@ -69,7 +48,7 @@ const settings: IConsoleLoggerSettings = {
   mode: "short",
 };
 
-export const logger: Logger = ConsoleLogger.create("Ameko", settings);
+export const logger: Logger = ConsoleLogger.create("Armstrong", settings);
 
 /**
  * Exec: runs shell command and returns promise

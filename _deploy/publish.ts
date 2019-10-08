@@ -16,7 +16,7 @@ export async function publish() {
     false,
     { output: true })
 
-  console.log(`Armstrong version ${currentVersion} [${branch}]`)
+  console.log(`💪 Armstrong version ${currentVersion} [${branch}]`)
 
   const response = await prompts([
     {
@@ -56,6 +56,25 @@ export async function publish() {
         releaseType,
         `--preid=${preId}`
       ], false)
+
+    const pushConfirmation = await prompts([
+      {
+        type: 'confirm',
+        name: 'confirm',
+        message: `Everything looks good. Would you like to push the tag now for publish?`,
+        initial: 'y'
+      }
+    ])
+
+    if (pushConfirmation.confirm) {
+      await exec("git",
+        [
+          "push",
+          "--tags"
+        ], false)
+    } else {
+      console.log("No worries 😎. When you're happy just run 'git push --tags' to start the publishing process.")
+    }
   }
 }
 
