@@ -4,7 +4,7 @@
 
 # Armstrong
 
-[![Actions Status](https://github.com/Rocketmakers/armstrong/workflows/build/badge.svg)](https://github.com/Rocketmakers/armstrong/actions)
+[![Actions Status](https://github.com/Rocketmakers/armstrong/workflows/Build/badge.svg)](https://github.com/Rocketmakers/armstrong/actions)
 
 [![Greenkeeper badge](https://badges.greenkeeper.io/Rocketmakers/armstrong.svg)](https://greenkeeper.io/)
 
