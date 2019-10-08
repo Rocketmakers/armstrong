@@ -15,6 +15,6 @@ jobs:
       - uses: actions/checkout@master
 
       - name: Publish
-        run: env && cd armstrong-react && npm i && npm publish
+        run: cd armstrong-react && npm i && echo //registry.npmjs.org/:_authToken=$NPM_TOKEN > .npmrc && npm publish
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

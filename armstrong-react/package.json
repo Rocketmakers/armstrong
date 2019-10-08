@@ -16,6 +16,9 @@
     "lint": "tslint -c tslint.json 'source/**/*.ts{,x}'",
     "prepublishOnly": "npm run build"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/Rocketmakers/armstrong-react.git"
