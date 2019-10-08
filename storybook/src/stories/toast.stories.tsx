@@ -11,6 +11,7 @@ const BasicInner = () => {
   return (
     <>
       <Button
+        style={{ margin: '10px' }}
         onClick={() =>
           dispatch({
             title: 'Info',
@@ -24,6 +25,7 @@ const BasicInner = () => {
       </Button>
 
       <Button
+        style={{ margin: '10px' }}
         onClick={() =>
           dispatch({
             title: 'Warning',
@@ -37,6 +39,7 @@ const BasicInner = () => {
       </Button>
 
       <Button
+        style={{ margin: '10px' }}
         onClick={() =>
           dispatch({
             title: 'Error',
@@ -50,6 +53,7 @@ const BasicInner = () => {
       </Button>
 
       <Button
+        style={{ margin: '10px' }}
         onClick={() =>
           dispatch({
             title: 'Success',
@@ -63,6 +67,7 @@ const BasicInner = () => {
       </Button>
 
       <Button
+        style={{ margin: '10px' }}
         onClick={() =>
           dispatch({
             title: 'Top left',
@@ -84,6 +89,7 @@ const ComplexInner = () => {
 
   return (
     <Button
+      style={{ margin: '10px' }}
       onClick={() =>
         dispatch({
           title: 'TOAST',
@@ -93,7 +99,9 @@ const ComplexInner = () => {
             <>
               <p>Look at this here</p>
               <TextInput />
-              <Button onClick={dismiss}>Dismiss</Button>
+              <Button style={{ margin: '10px' }} onClick={dismiss}>
+                Dismiss
+              </Button>
             </>
           )
         })
@@ -110,6 +118,7 @@ const CustomInner = () => {
   return (
     <div>
       <Button
+        style={{ margin: '10px' }}
         onClick={() =>
           dispatch({
             title: 'TOAST',
@@ -121,7 +130,9 @@ const CustomInner = () => {
         Dispatch a Toast Notification
       </Button>
 
-      <Button onClick={dismissAll}>Clear all Toasts</Button>
+      <Button style={{ margin: '10px' }} onClick={dismissAll}>
+        Clear all Toasts
+      </Button>
 
       <div className='toasts'>
         {toasts.map((toast, i) => (
@@ -137,9 +148,9 @@ const CustomInner = () => {
             <p>{toast.message}</p>
             {typeof toast.content === 'function'
               ? toast.content({
-                dismiss: () => dismiss(i),
-                timestamp: toast.timestamp
-              })
+                  dismiss: () => dismiss(i),
+                  timestamp: toast.timestamp
+                })
               : toast.content}
           </div>
         ))}
@@ -149,11 +160,12 @@ const CustomInner = () => {
 };
 
 const HistoryInner = () => {
-  const { dispatch, toastsHistory } = useToast();
+  const { dispatch, toastsHistory, clearToastHistory } = useToast();
 
   return (
     <>
       <Button
+        style={{ margin: '10px' }}
         onClick={() =>
           dispatch({
             title: 'TOAST',
@@ -164,6 +176,10 @@ const HistoryInner = () => {
         }
       >
         Dispatch a Toast Notification
+      </Button>
+
+      <Button style={{ margin: '10px' }} onClick={clearToastHistory}>
+        Clear Toast Notifications
       </Button>
 
       <div className='notifications'>
@@ -230,7 +246,9 @@ const BigDemoInner = () => {
 
   return (
     <>
-      <Button onClick={onClick}>Dispatch a Toast Notification</Button>
+      <Button style={{ margin: '10px' }} onClick={onClick}>
+        Dispatch a Toast Notification
+      </Button>
     </>
   );
 };
@@ -246,7 +264,7 @@ storiesOf('Toasts', module)
       <p>
         Armstrong toasts, dispatched by the useToast hook, and handled by the
         ToastProvider component by default. Different types of notification are
-    </p>
+      </p>
 
       <BasicInner />
     </ToastProvider>
@@ -256,7 +274,7 @@ storiesOf('Toasts', module)
       <p>
         Custom JSX content can be rendered on a per toast basis, passed into the
         dispatch function returned by useToast
-    </p>
+      </p>
 
       <ComplexInner />
     </ToastProvider>
@@ -278,9 +296,9 @@ storiesOf('Toasts', module)
       renderInProvider={false}
     >
       <p>
-        Default rendering has been disabled for these toasts and they are rendered
-        manually using the useToast hook.
-    </p>
+        Default rendering has been disabled for these toasts and they are
+        rendered manually using the useToast hook.
+      </p>
 
       <CustomInner />
     </ToastProvider>
@@ -291,7 +309,8 @@ storiesOf('Toasts', module)
 
       <BasicInner />
     </ToastProvider>
-  )).add('Toast history', () => (
+  ))
+  .add('Toast history', () => (
     <ToastProvider
       location='top right'
       dismissButton={<Icon icon={Icon.Icomoon.arrowRight3} />}
@@ -301,11 +320,12 @@ storiesOf('Toasts', module)
       <p>
         These toasts are kept in a toast history state, and can be rendered
         elsewhere - ie in a notification centre
-    </p>
+      </p>
 
       <HistoryInner />
     </ToastProvider>
-  )).add('Big demo', () => (
+  ))
+  .add('Big demo', () => (
     <ToastProvider location='top right' hostElement='body' saveHistory>
       <p>Here's a demo with a bunch of stuff happening</p>
 
