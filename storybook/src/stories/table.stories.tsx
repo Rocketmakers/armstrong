@@ -139,6 +139,21 @@ function CompletedTableCell(value: boolean) {
   );
 }
 
+const CompletedTableCell2: React.FunctionComponent<{ values: ITodos }> = ({
+  values,
+}) => {
+  return (
+    <div style={{ textAlign: "center" }}>
+      {JSON.stringify(values)}
+      {/* {value ? (
+        <Icon icon={Icon.Icomoon.thumbsUp} />
+      ) : (
+        <Icon icon={Icon.Icomoon.thumbsDown} />
+      )} */}
+    </div>
+  );
+};
+
 function CompletedTableCellButton(value: boolean) {
   return <button>{value ? "true" : "false"}</button>;
 }
@@ -369,6 +384,11 @@ storiesOf("Table", module)
           userId: TableHeaderCell,
         }}
         columnFormatter={{
+          title: (colValue: string, rowValue: ITodos) => (
+            <div onClick={() => alert(JSON.stringify(rowValue))}>
+              {colValue}
+            </div>
+          ),
           completed: CompletedTableCellButton,
         }}
         data={state}
