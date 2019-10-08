@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - develop
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: node:10.15.3-alpine
+
+    steps:
+      - uses: actions/checkout@master
+      - name: Run a one-line script
+        run: cd armstrong-react && npm i && npm run build
+
+      - uses: actions/upload-artifact@master
+        with:
+          name: dist
+          path: armstrong-react/dist
+
+  pages:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: Run a one-line script
+        run: cd armstrong-react && npm i && cd ../storybook && npm i && node ./symlink.js && npm run build
+
+      - name: Build and Deploy
+        uses: JamesIves/github-pages-deploy-action@master
+        env:
+          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          BASE_BRANCH: "4.0" # The branch the action should deploy from.
+          BRANCH: gh-pages # The branch the action should deploy to.
+          FOLDER: public # The folder the action should deploy.

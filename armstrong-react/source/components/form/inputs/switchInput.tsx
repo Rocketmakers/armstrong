@@ -1,6 +1,7 @@
 import * as React from "react";
 import { ClassHelpers, generateUniqueId, ValidationLabel } from "../../..";
 import { useCSSVariables } from "../../../hooks/useCssVariables";
+import { Icon } from "../../display/icon";
 import { DataValidationMessage, DataValidationMode } from "../formCore";
 
 export interface ISwitchInput {
@@ -32,7 +33,13 @@ export interface ISwitchInputProps
   activeColour?: string;
 
   /** grey out the switch and stop it from being interactible */
-  disabled?: boolean
+  disabled?: boolean;
+
+  /** icon to show on the nubbin when the value of checked is true */
+  activeIcon?: string;
+
+  /** icon to show on the nubbin when the value of checked is false */
+  inactiveIcon?: string;
 }
 
 const SwitchInputRef: React.RefForwardingComponent<
@@ -50,13 +57,23 @@ const SwitchInputRef: React.RefForwardingComponent<
     activeColour,
     id,
     disabled,
+    activeIcon,
+    inactiveIcon,
     ...attrs
   } = props;
 
-  const input = useCSSVariables([
-    { name: "--armstrong-switch-height", value: `${height}px`, enabled: !!height },
+  const inputWrapper = useCSSVariables([
+    {
+      name: "--armstrong-switch-height",
+      value: `${height}px`,
+      enabled: !!height
+    },
     { name: "--armstrong-switch-width", value: `${width}px`, enabled: !!width },
-    { name: "--armstrong-switch-padding", value: `${padding}px`, enabled: !!padding },
+    {
+      name: "--armstrong-switch-padding",
+      value: `${padding}px`,
+      enabled: !!padding
+    },
     {
       name: "--armstrong-switch-hover-nudge-amount",
       value: `${hoverNudgeAmount}px`,
@@ -75,6 +92,8 @@ const SwitchInputRef: React.RefForwardingComponent<
       value: activeColour
     }
   ]);
+
+  const input = React.useRef(null);
 
   const refCallback = React.useCallback(() => {
     return {
@@ -112,7 +131,7 @@ const SwitchInputRef: React.RefForwardingComponent<
   );
 
   return (
-    <div className={classes} title={validationMessage}>
+    <div className={classes} title={validationMessage} ref={inputWrapper}>
       <input
         ref={input}
         name={name}
@@ -125,6 +144,10 @@ const SwitchInputRef: React.RefForwardingComponent<
         data-hover-nudge-enabled={!!hoverNudgeAmount}
         data-disabled={disabled}
       />
+
+      {activeIcon && <Icon className="active-icon" icon={activeIcon} />}
+      {inactiveIcon && <Icon className="inactive-icon" icon={inactiveIcon} />}
+
       <ValidationLabel message={validationMessage} mode={validationMode} />
     </div>
   );

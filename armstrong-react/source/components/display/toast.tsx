@@ -69,7 +69,7 @@ export interface IGlobalToastSettings {
   hostElement?: string;
 
   /** Location to render the timestamp of a notification, set to undefined to not render timestamp at all — can alternatively be accessed in the content prop on a notification - below title by default */
-  renderTimestamp?: "below title" | "below content";
+  renderTimestamp?: "below title" | "below content" | false;
 
   /** Timestamp format as a moment format string — only relevant if renderTimestamp is not set to undefined */
   timestampFormat?: string;

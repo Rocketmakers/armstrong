@@ -9,10 +9,8 @@ interface ICSSVariable {
 
 /** define a number of css variables on a dom element in a ref */
 
-export const useCSSVariables = (
-  variables: ICSSVariable[],
-) => {
-    const element = React.useRef<React.DetailedHTMLProps<any, HTMLElement>>(null)
+export const useCSSVariables = (variables: ICSSVariable[]) => {
+  const element = React.useRef<React.DetailedHTMLProps<any, HTMLElement>>(null);
 
   React.useEffect(() => {
     if (element.current) {
@@ -31,5 +29,5 @@ export const useCSSVariables = (
     }
   }, [element, variables]);
 
-  return element
+  return element;
 };

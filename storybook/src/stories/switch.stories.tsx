@@ -5,6 +5,7 @@ import { storiesOf } from '@storybook/react';
 import '../theme/theme.scss';
 
 import { SwitchInput } from '../_symlink/components/form/inputs/switchInput';
+import { Icon } from '../_symlink';
 
 storiesOf('Switch', module)
   .addParameters({
@@ -18,6 +19,9 @@ storiesOf('Switch', module)
       <br />
       <br />
       <SwitchInput width={120} height={90} padding={10} hoverNudgeAmount={10} />
+      <br />
+      <br />
+      <SwitchInput width={400} height={60} padding={3} hoverNudgeAmount={10} />
       <br />
       <br />
       <SwitchInput
@@ -62,4 +66,19 @@ storiesOf('Switch', module)
       <p>--armstrong-switch-hover-colour</p>
       <p>--armstrong-switch-active-colour</p>
     </div>
-  ));
+  ))
+  .add('Switch with Icons', () => (
+    <div>
+    <SwitchInput
+      width={80}
+      height={50}
+      padding={0}
+      hoverNudgeAmount={5}
+      inactiveColour='red'
+      activeColour='green'
+      hoveringColour='red'
+      activeIcon={Icon.Icomoon.checkmark3}
+      inactiveIcon={Icon.Icomoon.cross2}
+    />
+    </div>
+  ))

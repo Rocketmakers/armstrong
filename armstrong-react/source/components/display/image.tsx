@@ -1,24 +1,40 @@
 import * as React from 'react';
 import { ClassHelpers } from '../../utilities/classHelpers';
+import { Icon } from './icon';
 import InViewport from './inViewport';
-import { Spinner } from '../..';
+import { Spinner } from './spinner';
 
 export interface IImageProps
   extends React.ImgHTMLAttributes<HTMLPictureElement> {
   /** Should the image be circular? */
   rounded?: boolean;
+
   /** Additional sources - will be set based  */
   alternateSources?: Array<React.HTMLProps<HTMLSourceElement>>;
+
   /** should the image lazy load */
   lazy?: boolean;
-  /** element to render while the image loads */
-  loadingChildren?: () => JSX.Element;
+
   /** callback to execute when the image enters the viewport */
   onEnterViewport?: (entry: IntersectionObserverEntry) => void;
+
   /** callback to execute when the image exits the viewport */
   onExitViewport?: (entry: IntersectionObserverEntry) => void;
+
   /** distance from the edge of the screen to load the image (if lazy loading is enabled) */
   rootMargin?: string;
+
+  /** render a spinner that will centre itself in the img's parent until the image has loaded */
+  renderSpinner?: boolean;
+
+  /** override the default spinner to be rendered if renderSpinner is set to true */
+  spinnerElement?: JSX.Element;
+
+  /** render an element if there is an error loading the image */
+  renderError?: boolean;
+
+  /** the elemnt to render if renderError is set to true and there is an error loading the image */
+  errorElement?: JSX.Element;
 }
 
 export function useRandomUserImageSrc(sampleUserSeed?: string) {
@@ -58,15 +74,28 @@ export const Image: React.FunctionComponent<IImageProps> = (
     src,
     alternateSources,
     lazy,
-    loadingChildren,
     onEnterViewport,
     onExitViewport,
     rootMargin,
+    renderSpinner,
+    spinnerElement,
+    renderError,
+    errorElement,
     ...attrs
   } = props;
   const classes = ClassHelpers.classNames(className, { rounded });
 
   const [loading, setLoading] = React.useState(true);
+  const [errored, setErrored] = React.useState(false);
+
+  const onLoad = React.useCallback(() => {
+    setLoading(false);
+  }, []);
+
+  const onError = React.useCallback(() => {
+    setErrored(true);
+    setLoading(false);
+  }, []);
 
   return (
     <InViewport
@@ -77,20 +106,27 @@ export const Image: React.FunctionComponent<IImageProps> = (
     >
       {({ element, enteredViewport }) => (
         <>
+          {errored && renderError && !!errorElement && errorElement}
+
           <picture ref={element} data-loaded={!loading}>
-            {(enteredViewport || !lazy) && (alternateSources || []).map(alternateSource => (
-              <source {...alternateSource} />
-            ))}
+            {(enteredViewport || !lazy) &&
+              (alternateSources || []).map(alternateSource => (
+                <source
+                  {...alternateSource}
+                  key={JSON.stringify(alternateSource)}
+                />
+              ))}
 
             <img
               {...attrs}
-              onLoad={() => setLoading(false)}
+              onLoad={onLoad}
+              onError={onError}
               className={classes}
-              src={(enteredViewport || !lazy) ? src : ""}
+              src={enteredViewport || !lazy ? src : ''}
             />
           </picture>
 
-          {loading && !!loadingChildren && loadingChildren()}
+          {loading && renderSpinner && !!spinnerElement && spinnerElement}
         </>
       )}
     </InViewport>
@@ -99,5 +135,13 @@ export const Image: React.FunctionComponent<IImageProps> = (
 
 Image.defaultProps = {
   rootMargin: '200px',
-  loadingChildren: () => <Spinner />
+  spinnerElement: <Spinner />,
+  errorElement: (
+    <div className='image-not-found'>
+      <Icon icon={Icon.Icomoon.warning} />
+      <p>Image not found</p>
+    </div>
+  ),
+  renderSpinner: false,
+  renderError: false
 };

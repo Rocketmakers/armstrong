@@ -3,7 +3,25 @@ img.rounded {
 }
 
 picture {
+  opacity: 0;
+  
   &[data-loaded="true"] {
     animation: fade-in 0.3s forwards;
+  }
+}
+
+.image-not-found{
+  text-align: center;
+
+  .icon{
+    font-size: 2rem;
+  }
+
+  p{
+    margin-top: $spacing-xsmall;
+  }
+
+  + picture img{
+    opacity: 0;
   }
 }

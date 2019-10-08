@@ -26,47 +26,80 @@ storiesOf('Image', module)
   .add('Random user', () => {
     const src = useRandomUserImageSrc('Neil');
 
-    return <Image src={src} />;
+    return (
+      <div style={{ width: '100px', height: '100px' }}>
+        <Image src={src} renderSpinner />
+      </div>
+    );
   })
   .add('Lazy loading', () => (
     <>
-      <Image lazy src={require('../assets/images/frank.jpg')} />
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <Image lazy src={require('../assets/images/frank.jpg')} />
+      <Image renderSpinner lazy src={require('../assets/images/frank.jpg')} />
+
+      <p>Scroll down for a lazy loaded image</p>
+
+      <div className='space' style={{ height: '1024px' }} />
+
+      <Image renderSpinner lazy src={require('../assets/images/frank2.jpg')} />
     </>
+  ))
+  .add('Custom Loader', () => (
+    <div
+      style={{
+        width: '800px',
+        height: '600px',
+        backgroundColor: 'lightgray',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        position: 'relative'
+      }}
+    >
+      <Image
+        style={{
+          position: 'absolute',
+          left: 0,
+          top: 0,
+          width: '100%',
+          height: '100%',
+          objectFit: 'cover',
+          objectPosition: 'centre'
+        }}
+        src={
+          'https://upload.wikimedia.org/wikipedia/commons/3/3f/Fronalpstock_big.jpg'
+        }
+        renderSpinner
+        spinnerElement={<p>Loading nice image...</p>}
+      />
+    </div>
+  ))
+  .add('Error Warning', () => (
+    <div
+      style={{
+        width: '800px',
+        height: '600px',
+        backgroundColor: 'lightgray',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        position: 'relative'
+      }}
+    >
+      <Image
+        style={{
+          position: 'absolute',
+          left: 0,
+          top: 0,
+          width: '100%',
+          height: '100%',
+          objectFit: 'cover',
+          objectPosition: 'centre'
+        }}
+        src={
+          'THIS ISNT A URL'
+        }
+        renderSpinner
+        renderError
+      />
+    </div>
   ));
