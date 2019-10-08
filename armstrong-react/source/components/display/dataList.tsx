@@ -1,10 +1,11 @@
 import * as React from "react";
 import * as _ from "underscore";
+
 import { ClassHelpers, Icon } from "../..";
 
 type RefreshStatus = "required" | "refreshing" | "idle";
 
-export interface IDataListProps {
+export interface IDataListProps extends React.HTMLAttributes<HTMLDivElement> {
   /** The maximum distance in pixels you can pull down from the top of the list */
   maxDistance?: number;
   /** The distance in pixels you need to pull down before triggering the refresh action */
@@ -39,6 +40,8 @@ export const DataList: React.FunctionComponent<IDataListProps> = props => {
   const [refreshStatus, setrefreshStatus] = React.useState<RefreshStatus>(
     "idle"
   );
+
+  const { className, maxDistance, refreshThreshold, postRefreshDelayMs, refreshing, hideChildrenWhileRefreshing, refreshData, refreshingComponent, skipFirstFetch, onScrollToBottom, scrollToBottomRootMargin, ...attrs } = props;
 
   const handleDragStart = React.useCallback(
     (e: React.TouchEvent<HTMLDivElement>) => {
@@ -92,8 +95,8 @@ export const DataList: React.FunctionComponent<IDataListProps> = props => {
         const hasScrolledToBottom =
           top >=
           e.currentTarget.scrollHeight -
-            e.currentTarget.clientHeight -
-            props.scrollToBottomRootMargin;
+          e.currentTarget.clientHeight -
+          props.scrollToBottomRootMargin;
 
         if (hasScrolledToBottom !== scrolledToBottom) {
           setScrolledToBottom(hasScrolledToBottom);
@@ -164,9 +167,7 @@ export const DataList: React.FunctionComponent<IDataListProps> = props => {
   }, []);
 
   return (
-    <div
-      className={ClassHelpers.classNames("data-list-container", refreshStatus)}
-    >
+    <div className={ClassHelpers.classNames("data-list-container", refreshStatus, className)} {...attrs}>
       <div
         className="refresh-indicator"
         style={{
