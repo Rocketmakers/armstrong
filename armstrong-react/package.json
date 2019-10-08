@@ -1,6 +1,6 @@
 {
   "name": "@rocketmakers/armstrong",
-  "version": "1.0.0",
+  "version": "0.0.1-alpha.1",
   "description": "Rocketmakers Armstrong library of React components",
   "main": "./dist/index.js",
   "style": "./dist/style.scss",
@@ -15,6 +15,9 @@
     "watch": "parallelshell -v \"npm run watch-ts\" \"npm run watch-scss\"",
     "lint": "tslint -c tslint.json 'source/**/*.ts{,x}'",
     "prepublishOnly": "npm run build"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "repository": {
     "type": "git",

@@ -1,26 +1,11 @@
-name: CI
+name: Publish
 
 on:
   push:
-    branches:
-      - v*
+    tags:
+      - "*"
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    container:
-      image: node:10.15.3-alpine
-
-    steps:
-      - uses: actions/checkout@master
-      - name: Run a one-line script
-        run: cd armstrong-react && npm i && npm run build
-
-      - uses: actions/upload-artifact@master
-        with:
-          name: dist
-          path: armstrong-react/dist
-
   publish:
     runs-on: ubuntu-latest
     container:
@@ -28,5 +13,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@master
-      - name: Run a one-line script
-        run: cd armstrong-react && npm publish
+
+      - name: Publish
+        run: cd armstrong-react && npm i && echo //registry.npmjs.org/:_authToken=$NPM_TOKEN > .npmrc && npm publish
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
