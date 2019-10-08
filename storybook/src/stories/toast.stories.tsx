@@ -179,7 +179,7 @@ const HistoryInner = () => {
       </Button>
 
       <Button style={{ margin: '10px' }} onClick={clearToastHistory}>
-        Clear Toast Notifications
+        Clear Toast Notifications History
       </Button>
 
       <div className='notifications'>
