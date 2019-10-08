@@ -61,7 +61,7 @@ export async function publish() {
       {
         type: 'confirm',
         name: 'confirm',
-        message: `Everything looks good. Would you like to push the tag now for publish?`,
+        message: `Everything looks good. Would you like to push everything for publish now?`,
         initial: 'y'
       }
     ])
@@ -70,10 +70,10 @@ export async function publish() {
       await exec("git",
         [
           "push",
-          "--tags"
+          "--follow-tags"
         ], false)
     } else {
-      console.log("No worries 😎. When you're happy just run 'git push --tags' to start the publishing process.")
+      console.log("No worries 😎. When you're happy just run 'git push --follow-tags' to start the publishing process.")
     }
   }
 }
