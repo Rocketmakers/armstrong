@@ -36,6 +36,8 @@ export interface IDateInputProps extends React.Props<typeof DateInput> {
   dayLabel?: string;
   /** Control date part order (`day`, `month`, `year`) */
   datePartOrder?: DateParts[];
+  /** Autofocuses first input */
+  autoFocus?: boolean;
 }
 
 export interface IDateInputState {

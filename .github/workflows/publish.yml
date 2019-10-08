@@ -1,0 +1,20 @@
+name: Publish
+
+on:
+  push:
+    tags:
+      - "*"
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    container:
+      image: node:10.15.3-alpine
+
+    steps:
+      - uses: actions/checkout@master
+
+      - name: Publish
+        run: cd armstrong-react && npm i && npm run build && echo //registry.npmjs.org/:_authToken=$NPM_TOKEN > .npmrc && npm publish
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

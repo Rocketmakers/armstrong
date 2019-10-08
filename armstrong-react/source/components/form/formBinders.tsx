@@ -66,6 +66,7 @@ export class SelectMultipleFormBinder<TDataProp> extends InputFormBinder<TDataPr
   }
 }
 
+
 export class CheckboxFormBinder<TDataPropValue, TComponentPropValue> extends InputFormBinder<TDataPropValue, TComponentPropValue> {
   constructor(dataPath: string, valueConverter?: IValueConverter<TDataPropValue, TComponentPropValue>) {
     super(dataPath, "checked", valueConverter);

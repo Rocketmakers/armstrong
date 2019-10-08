@@ -21,6 +21,10 @@ export interface IDataListProps {
   refreshingComponent?: JSX.Element;
   /** Skips showing refreshing UI for first fetch */
   skipFirstFetch?: boolean;
+  /** Callback to run when the list is scrolled to the bottom - use for infinite paging */
+  onScrollToBottom?: () => void;
+  /** If onScrollToBottom is provided, the distance in px from the bottom of the screen to run that callback */
+  scrollToBottomRootMargin?: number;
 }
 
 export const DataList: React.FunctionComponent<IDataListProps> = props => {
@@ -30,46 +34,76 @@ export const DataList: React.FunctionComponent<IDataListProps> = props => {
   const [dragDeltaY, setDragDeltaY] = React.useState(0);
   const [scrollOffsetY, setscrollOffsetY] = React.useState(0);
 
+  const [scrolledToBottom, setScrolledToBottom] = React.useState(false);
+
   const [refreshStatus, setrefreshStatus] = React.useState<RefreshStatus>(
-    "idle",
+    "idle"
   );
 
-  const handleDragStart = (e: React.TouchEvent<HTMLDivElement>) => {
-    if (refreshStatus === "refreshing") {
-      return;
-    }
-    setDragStartY(e.touches[0].clientY + scrollOffsetY);
-  };
-
-  const handleDragEnd = (e: React.TouchEvent<HTMLDivElement>) => {
-    setDragDeltaY(0);
-    setDragStartY(null);
-    runRefresh();
-  };
-
-  const runRefresh = (force?: boolean) => {
-    if (refreshStatus === "required" || force) {
-      props.refreshData();
-      setrefreshStatus("refreshing");
-    }
-  };
-
-  const handleDragMove = (e: React.TouchEvent<HTMLDivElement>) => {
-    if (refreshStatus === "refreshing") {
-      return;
-    }
-    if (dragStartY !== null) {
-      const delta = dragStartY - e.touches[0].clientY;
-      if (delta < 10 && scrollOffsetY === 0) {
-        setDragDeltaY(Math.max(delta, -props.maxDistance));
+  const handleDragStart = React.useCallback(
+    (e: React.TouchEvent<HTMLDivElement>) => {
+      if (refreshStatus === "refreshing") {
+        return;
       }
-    }
-  };
+      setDragStartY(e.touches[0].clientY + scrollOffsetY);
+    },
+    [refreshStatus]
+  );
 
-  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
-    const top = (e.target as HTMLDivElement).scrollTop;
-    setscrollOffsetY(top);
-  };
+  const runRefresh = React.useCallback(
+    (force?: boolean) => {
+      if (refreshStatus === "required" || force) {
+        props.refreshData();
+        setrefreshStatus("refreshing");
+      }
+    },
+    [refreshStatus, props.refreshData]
+  );
+
+  const handleDragEnd = React.useCallback(
+    (e: React.TouchEvent<HTMLDivElement>) => {
+      setDragDeltaY(0);
+      setDragStartY(null);
+      runRefresh();
+    },
+    [runRefresh]
+  );
+
+  const handleDragMove = React.useCallback(
+    (e: React.TouchEvent<HTMLDivElement>) => {
+      if (refreshStatus === "refreshing") {
+        return;
+      }
+      if (dragStartY !== null) {
+        const delta = dragStartY - e.touches[0].clientY;
+        if (delta < 10 && scrollOffsetY === 0) {
+          setDragDeltaY(Math.max(delta, -props.maxDistance));
+        }
+      }
+    },
+    [refreshStatus, dragStartY, scrollOffsetY, props.maxDistance]
+  );
+
+  const handleScroll = React.useCallback(
+    (e: React.UIEvent<HTMLDivElement>) => {
+      const top = e.currentTarget.scrollTop;
+
+      if (props.onScrollToBottom) {
+        const hasScrolledToBottom =
+          top >=
+          e.currentTarget.scrollHeight -
+            e.currentTarget.clientHeight -
+            props.scrollToBottomRootMargin;
+
+        if (hasScrolledToBottom !== scrolledToBottom) {
+          setScrolledToBottom(hasScrolledToBottom);
+        }
+      }
+
+      setscrollOffsetY(top);
+    },
+    [scrolledToBottom, props.onScrollToBottom]
+  );
 
   React.useEffect(() => {
     if (dragDeltaY > -props.refreshThreshold) {
@@ -110,7 +144,7 @@ export const DataList: React.FunctionComponent<IDataListProps> = props => {
     dragDeltaY,
     props.maxDistance,
     refreshStatus,
-    props.refreshThreshold,
+    props.refreshThreshold
   ]);
 
   const calculateTransformValue = React.useCallback(() => {
@@ -137,7 +171,7 @@ export const DataList: React.FunctionComponent<IDataListProps> = props => {
         className="refresh-indicator"
         style={{
           opacity: calculatePullPercentage() / 100,
-          height: `${calculateTransformValue()}px`,
+          height: `${calculateTransformValue()}px`
         }}
       >
         {!props.refreshingComponent && (
@@ -155,7 +189,7 @@ export const DataList: React.FunctionComponent<IDataListProps> = props => {
         className={ClassHelpers.classNames(
           "data-list",
           { dragging: dragStartY !== null },
-          { "hide-flow": Math.round(dragDeltaY) < 0 },
+          { "hide-flow": Math.round(dragDeltaY) < 0 }
         )}
         onScroll={handleScroll}
         onTouchMove={handleDragMove}
@@ -176,5 +210,5 @@ DataList.defaultProps = {
   refreshThreshold: 50,
   postRefreshDelayMs: 1000,
   hideChildrenWhileRefreshing: false,
-  skipFirstFetch: true,
+  skipFirstFetch: true
 };

@@ -77,4 +77,16 @@
       animation: spin 0.75s linear infinite;
     }
   }
+
+  &[data-is-icon-button="true"]{
+    border-radius: 50%;
+
+    .left-icon{
+      margin-right: 0;
+    }
+
+    .right-icon{
+      margin-left: 0;
+    }
+  }
 }
