@@ -1,0 +1,119 @@
+.table-container {
+  .table-titles {
+    .title {
+      font-weight: 500;
+      font-size: $font-size-large;
+    }
+    .sub-title {
+      font-weight: 300;
+      font-size: $font-size-medium;
+      color: $gray-base;
+    }
+    margin-bottom: $spacing-small;
+  }
+
+  .table-options-container {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    padding: $spacing-small 0px;
+
+    .table-options {
+      flex: 1;
+      display: flex;
+      justify-content: flex-end;
+      i {
+        padding: 0px $spacing-small;
+
+        &:last-of-type {
+          padding-right: 0px;
+        }
+
+        &:hover {
+          color: $color-info;
+        }
+        &:active {
+          color: $color-positive;
+        }
+      }
+    }
+  }
+
+  .table {
+    border: 1px solid $gray-very-dark;
+    border-collapse: collapse;
+    width: 100%;
+    .table-header {
+      border: 1px solid $gray-very-dark;
+      text-align: left;
+      vertical-align: middle;
+
+      tr {
+        height: 40px;
+        th {
+          border: 1px solid $gray-very-dark;
+        }
+      }
+    }
+
+    .table-body {
+      .table-row {
+        text-align: left;
+        vertical-align: middle;
+        td {
+          height: 20px;
+          border: 1px solid $gray-very-dark;
+        }
+      }
+    }
+  }
+}
+.table-pagination {
+  padding: $spacing-small;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  .pagination {
+    justify-self: center;
+  }
+
+  .table-item-dropdown {
+    display: flex;
+    flex: 1;
+    min-width: 100px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+    select {
+      margin-left: $spacing-small;
+      flex: 1;
+      min-width: 100px;
+      padding: $spacing-small;
+      border: none;
+    }
+  }
+}
+
+.table-filters {
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+  align-items: center;
+
+  .title {
+    font-size: $font-size-medium;
+    color: $gray-base;
+    font-weight: 500;
+  }
+
+  .table-reset-filter-btn {
+    background-color: transparent;
+    color: $color-info;
+  }
+}
+
+.table-filter-dialog-container {
+  width: 50%;
+  height: 50%;
+}

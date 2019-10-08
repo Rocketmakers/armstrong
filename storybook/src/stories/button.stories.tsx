@@ -22,3 +22,6 @@ storiesOf('Button', module)
   .add('Left icon', () =>
     <Button leftIcon={Icon.Icomoon.rocket} onClick={action('clicked')}>Launch rocket</Button>
   )
+  .add('Icon button', () =>
+    <Button leftIcon={Icon.Icomoon.rocket} onClick={action('clicked')} />
+  )

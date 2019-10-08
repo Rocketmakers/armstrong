@@ -19,9 +19,6 @@
     "noEmit": false,
     "noEmitHelpers": false,
     "moduleResolution": "node",
-    "lib": [
-      "es2015",
-      "dom"
-    ]
+    "lib": ["es2016", "dom"]
   }
 }

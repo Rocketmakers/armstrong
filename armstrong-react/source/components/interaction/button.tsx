@@ -44,8 +44,11 @@ const ButtonRef: React.RefForwardingComponent<IButton, IButtonProps> = (props, r
       "pending": pending,
     },
   );
+
+  const isIconButton = React.useMemo(() => !children && (!!leftIcon || !!rightIcon), [leftIcon, children, rightIcon])
+
   return (
-    <button ref={buttonRef} disabled={pending || disabled} type={type || "button"} onClick={handleClick} {...attrs} className={classes}>
+    <button ref={buttonRef} data-is-icon-button={isIconButton} disabled={pending || disabled} type={type || "button"} onClick={handleClick} {...attrs} className={classes}>
       {leftIcon && <Icon className="left-icon" icon={leftIcon} />}
       {children}
       {rightIcon && <Icon className="right-icon" icon={rightIcon} />}

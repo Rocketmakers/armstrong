@@ -1,43 +1,147 @@
-import * as React from "react";
-import { ClassHelpers } from "../../utilities/classHelpers";
+import * as React from 'react';
+import { ClassHelpers } from '../../utilities/classHelpers';
+import { Icon } from './icon';
+import InViewport from './inViewport';
+import { Spinner } from './spinner';
 
-export interface IImageProps extends React.ImgHTMLAttributes<HTMLPictureElement> {
+export interface IImageProps
+  extends React.ImgHTMLAttributes<HTMLPictureElement> {
   /** Should the image be circular? */
   rounded?: boolean;
-  /** WEBP source */
-  webpSrc?: string;
+
+  /** Additional sources - will be set based  */
+  alternateSources?: Array<React.HTMLProps<HTMLSourceElement>>;
+
+  /** should the image lazy load */
+  lazy?: boolean;
+
+  /** callback to execute when the image enters the viewport */
+  onEnterViewport?: (entry: IntersectionObserverEntry) => void;
+
+  /** callback to execute when the image exits the viewport */
+  onExitViewport?: (entry: IntersectionObserverEntry) => void;
+
+  /** distance from the edge of the screen to load the image (if lazy loading is enabled) */
+  rootMargin?: string;
+
+  /** render a spinner that will centre itself in the img's parent until the image has loaded */
+  renderSpinner?: boolean;
+
+  /** override the default spinner to be rendered if renderSpinner is set to true */
+  spinnerElement?: JSX.Element;
+
+  /** render an element if there is an error loading the image */
+  renderError?: boolean;
+
+  /** the elemnt to render if renderError is set to true and there is an error loading the image */
+  errorElement?: JSX.Element;
 }
 
 export function useRandomUserImageSrc(sampleUserSeed?: string) {
-  const [src, setSrc] = React.useState<string>(undefined)
-  React.useMemo(() => {
-    const url = `https://randomuser.me/api?exc=login,name,location,email,registered,dob,phone,cell,id,nat${sampleUserSeed ? `&seed=${sampleUserSeed}` : ""}`;
+  const [src, setSrc] = React.useState<string>(undefined);
+
+  React.useEffect(() => {
+    const url = `https://randomuser.me/api?exc=login,name,location,email,registered,dob,phone,cell,id,nat${
+      sampleUserSeed ? `&seed=${sampleUserSeed}` : ''
+    }`;
+
     const xmlHttp = new XMLHttpRequest();
     xmlHttp.onreadystatechange = () => {
       if (xmlHttp.readyState === 4 && xmlHttp.status === 200) {
         const response = JSON.parse(xmlHttp.responseText);
         const pictureUrl = response.results[0].picture.large;
-        setSrc(pictureUrl)
+        setSrc(pictureUrl);
       }
-    }
-    xmlHttp.open("GET", url, true);
+    };
+
+    xmlHttp.open('GET', url, true);
     xmlHttp.send(null);
-    return
-  }, [sampleUserSeed])
-  return src
+  }, [sampleUserSeed]);
+
+  return src;
 }
 
 export function useDummyImageSrc(width: number, height: number) {
-  return `http://dummyimage.com/${height}x${width}/4f5c69/ffffff.png`
+  return `http://dummyimage.com/${height}x${width}/4f5c69/ffffff.png`;
 }
 
-export function Image(props: IImageProps) {
-  const { className, rounded, src, webpSrc, ...attrs } = props
+export const Image: React.FunctionComponent<IImageProps> = (
+  props: IImageProps
+) => {
+  const {
+    className,
+    rounded,
+    src,
+    alternateSources,
+    lazy,
+    onEnterViewport,
+    onExitViewport,
+    rootMargin,
+    renderSpinner,
+    spinnerElement,
+    renderError,
+    errorElement,
+    ...attrs
+  } = props;
   const classes = ClassHelpers.classNames(className, { rounded });
+
+  const [loading, setLoading] = React.useState(true);
+  const [errored, setErrored] = React.useState(false);
+
+  const onLoad = React.useCallback(() => {
+    setLoading(false);
+  }, []);
+
+  const onError = React.useCallback(() => {
+    setErrored(true);
+    setLoading(false);
+  }, []);
+
   return (
-    <picture>
-      {webpSrc && <source srcSet={webpSrc} type="image/webp"></source>}
-      <img {...attrs} className={classes} src={src} />
-    </picture>
-  )
-}
+    <InViewport
+      once={true}
+      IOProps={{ rootMargin }}
+      onEnter={onEnterViewport}
+      onExit={onExitViewport}
+    >
+      {({ element, enteredViewport }) => (
+        <>
+          {errored && renderError && !!errorElement && errorElement}
+
+          <picture ref={element} data-loaded={!loading}>
+            {(enteredViewport || !lazy) &&
+              (alternateSources || []).map(alternateSource => (
+                <source
+                  {...alternateSource}
+                  key={JSON.stringify(alternateSource)}
+                />
+              ))}
+
+            <img
+              {...attrs}
+              onLoad={onLoad}
+              onError={onError}
+              className={classes}
+              src={enteredViewport || !lazy ? src : ''}
+            />
+          </picture>
+
+          {loading && renderSpinner && !!spinnerElement && spinnerElement}
+        </>
+      )}
+    </InViewport>
+  );
+};
+
+Image.defaultProps = {
+  rootMargin: '200px',
+  spinnerElement: <Spinner />,
+  errorElement: (
+    <div className='image-not-found'>
+      <Icon icon={Icon.Icomoon.warning} />
+      <p>Image not found</p>
+    </div>
+  ),
+  renderSpinner: false,
+  renderError: false
+};
