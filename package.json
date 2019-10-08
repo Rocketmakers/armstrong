@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "release": "ts-node _deploy/publish.ts",
-    "version": "(cd armstrong-react && npm version prerelease --preid=alpha --git-tag-version=false) && git add ."
+    "version": "(cd armstrong-react && npm version prerelease --preid=alpha --git-tag-version=false) && (cd marketing && npm version prerelease --preid=alpha --git-tag-version=false) && (cd storybook && npm version prerelease --preid=alpha --git-tag-version=false) && git add ."
   },
   "repository": {
     "type": "git",
@@ -25,9 +25,10 @@
     "@types/semver": "^6.0.2",
     "current-git-branch": "^1.1.0",
     "prompts": "^2.2.1",
-    "rokot-log": "^0.3.2",
+    "@rocketmakers/log": "^0.1.0",
     "semver": "^6.3.0",
     "ts-node": "^8.4.1",
     "typescript": "^3.6.3"
-  }
+  },
+  "dependencies": {}
 }
