@@ -85,17 +85,26 @@ export const Image: React.FunctionComponent<IImageProps> = (
   } = props;
   const classes = ClassHelpers.classNames(className, { rounded });
 
-  const [loading, setLoading] = React.useState(true);
+  const [loaded, setLoaded] = React.useState(false);
   const [errored, setErrored] = React.useState(false);
 
+  const imgRef = React.useRef<HTMLImageElement>(null);
+
   const onLoad = React.useCallback(() => {
-    setLoading(false);
+    setLoaded(true);
   }, []);
 
   const onError = React.useCallback(() => {
     setErrored(true);
-    setLoading(false);
+    setLoaded(true);
   }, []);
+
+  React.useLayoutEffect(() => {
+    // check if image is cached and run onLoad if it is - (load event does not fire if image is already loaded in another img)
+    if (imgRef.current.complete) {
+      onLoad()
+    }
+  }, [onLoad]);
 
   return (
     <InViewport
@@ -108,7 +117,7 @@ export const Image: React.FunctionComponent<IImageProps> = (
         <>
           {errored && renderError && !!errorElement && errorElement}
 
-          <picture ref={element} data-loaded={!loading}>
+          <picture ref={element} data-loaded={loaded}>
             {(enteredViewport || !lazy) &&
               (alternateSources || []).map(alternateSource => (
                 <source
@@ -123,10 +132,11 @@ export const Image: React.FunctionComponent<IImageProps> = (
               onError={onError}
               className={classes}
               src={enteredViewport || !lazy ? src : ''}
+              ref={imgRef}
             />
           </picture>
 
-          {loading && renderSpinner && !!spinnerElement && spinnerElement}
+          {!loaded && renderSpinner && !!spinnerElement && spinnerElement}
         </>
       )}
     </InViewport>

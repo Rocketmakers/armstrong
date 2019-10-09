@@ -11,25 +11,25 @@ export interface ISwitchInput {
 
 export interface ISwitchInputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
-  /** if enabled, the switch will nudge across a bit when hovered to provide a visual cue */
+  /** if enabled, the switch will nudge across a bit when hovered to provide a visual cue — set with css variable --armstrong-switch-hover-nudge-amount */
   hoverNudgeAmount?: number;
 
-  /** width of the switch track - 50 by default */
+  /** width of the switch track - 50 by default — set with css variable --armstrong-switch-width */
   width?: number;
 
-  /** height of the switch track - 25 by default */
+  /** height of the switch track - 25 by default — set with css variable --armstrong-switch-height */
   height?: number;
 
-  /** padding of the switch track (if negative, the nubbin will be bigger than the track) - 2px by default */
+  /** padding of the switch track (if negative, the nubbin will be bigger than the track) - 2px by default — set with css variable --armstrong-switch-padding */
   padding?: number;
 
-  /** colour of the switch track when inactive */
+  /** colour of the switch track when inactive — set with css variable --armstrong-switch-inactive-colour */
   inactiveColour?: string;
 
-  /** colour of the switch track when hovering */
+  /** colour of the switch track when hovering — set with css variable --armstrong-switch-hover-colour */
   hoveringColour?: string;
 
-  /** colour of the switch track when active */
+  /** colour of the switch track when active — set with css variable --armstrong-switch-active-colour */
   activeColour?: string;
 
   /** grey out the switch and stop it from being interactible */
