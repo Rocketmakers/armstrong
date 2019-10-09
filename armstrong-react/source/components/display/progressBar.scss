@@ -11,7 +11,7 @@ $transition-time: 0.2s;
     justify-content: center;
 
     .progress-bar-inner {
-        transition: width $transition-time, height $transition-time;
+        transition: width $transition-time, height $transition-time, background-color $transition-time;
         position: absolute;
         background-color: $brand-primary;
         border-radius: 9px;

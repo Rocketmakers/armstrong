@@ -84,14 +84,19 @@ storiesOf('Progress Bar', module)
   })
   .add('Fake Progress Bar', () => {
     const [loaded, setLoaded] = React.useState(false);
+    const [loading, setLoading] = React.useState(false);
 
     const [resetting, setResetting] = useTemporaryState(false, 100);
 
     return (
       <>
-        {!resetting && <AutoProgressBar startColour='red' endColour='green' thickness={'4px'} loaded={loaded} />}
+        {!resetting && <AutoProgressBar loading={loading} startColour='red' endColour='yellowgreen' completeColour="green" thickness={'4px'} loaded={loaded} />}
 
         <br />
+
+        <Button style={{ margin: '10px' }} onClick={() => setLoading(!loading)}>
+          Set {loading && "not"} Loading
+        </Button>
 
         <Button style={{ margin: '10px' }} onClick={() => setLoaded(true)}>
           Set Loaded

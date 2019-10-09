@@ -21,8 +21,11 @@ interface IProgressBarProps {
   /** initial colour when progress is at 0 - will fade to endColour (both must be set) */
   startColour?: string;
 
-  /** end colour when progress is at 100 - will fade from startColour (both must be set) */
+  /** end colour as progress approaches 100 - will fade from startColour (both must be set) */
   endColour?: string;
+
+  /** colour when the progress has hit 100 */
+  completeColour?: string;
 
   className?: string;
 }
@@ -37,7 +40,8 @@ export const ProgressBar: React.FunctionComponent<IProgressBarProps> = ({
   labelVariant,
   className,
   startColour,
-  endColour
+  endColour,
+  completeColour
 }) => {
   const outerStyle = React.useMemo<React.CSSProperties>(() => {
     switch (direction) {
@@ -145,12 +149,16 @@ export const ProgressBar: React.FunctionComponent<IProgressBarProps> = ({
 
   const colourStyle = React.useMemo<React.CSSProperties>(
     () =>
-      startColour && endColour
+      completeColour && clampedProgress >= 100
+        ? {
+            backgroundColor: completeColour
+          }
+        : startColour && endColour
         ? {
             backgroundColor: `rgb(${currentColour.r}, ${currentColour.g}, ${currentColour.b})`
           }
         : {},
-    [startColour, endColour, currentColour]
+    [startColour, endColour, currentColour, completeColour]
   );
 
   return (
@@ -181,17 +189,20 @@ ProgressBar.defaultProps = {
 };
 
 interface IAutoProgressBarProps extends Omit<IProgressBarProps, "progress"> {
-  /** the time in ms to add to the remaining progress — defaults to 100 */
+  /** the time in ms to add to the remaining progress — defaults to 300 */
   increaseInterval?: number;
 
-  /** the proportion of the remaining progress to add each time - defaults to 0.1 */
+  /** the proportion of the remaining progress to add each time - defaults to 0.3 */
   increaseProportion?: number;
 
-  /** the maximum the progress can be out of 100 if the content hasn't loaded yet - defaults to 98 */
+  /** the maximum the progress can be out of 100 if the content hasn't loaded yet - defaults to 90 */
   maxProgressBeforeLoaded?: number;
 
   /** will fill the loading bar */
   loaded?: boolean;
+
+  /** should be filling the loading bar */
+  loading?: boolean;
 }
 
 /**
@@ -205,6 +216,7 @@ export const AutoProgressBar: React.FunctionComponent<
   increaseInterval,
   increaseProportion,
   loaded,
+  loading,
   maxProgressBeforeLoaded,
   ...props
 }) => {
@@ -212,15 +224,19 @@ export const AutoProgressBar: React.FunctionComponent<
   const interval = React.useRef(null);
 
   const onInterval = React.useCallback(() => {
-    setProgress(p => p + (maxProgressBeforeLoaded - p) * increaseProportion);
-  }, [increaseInterval]);
+    if (loading) {
+      setProgress(p => p + (maxProgressBeforeLoaded - p) * increaseProportion);
+    }
+  }, [increaseInterval, loading]);
 
   React.useEffect(() => {
-    interval.current = setInterval(onInterval, increaseInterval);
+    if (loading) {
+      interval.current = setInterval(onInterval, increaseInterval);
+    }
     return () => {
       clearInterval(interval.current);
     };
-  }, []);
+  }, [loading]);
 
   React.useEffect(() => {
     if (loaded) {
@@ -233,7 +249,7 @@ export const AutoProgressBar: React.FunctionComponent<
 };
 
 AutoProgressBar.defaultProps = {
-  increaseInterval: 100,
-  increaseProportion: 0.1,
-  maxProgressBeforeLoaded: 98
+  increaseInterval: 300,
+  increaseProportion: 0.3,
+  maxProgressBeforeLoaded: 90
 };
