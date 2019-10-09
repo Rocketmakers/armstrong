@@ -227,16 +227,16 @@ export const AutoProgressBar: React.FunctionComponent<
     if (loading) {
       setProgress(p => p + (maxProgressBeforeLoaded - p) * increaseProportion);
     }
-  }, [increaseInterval, loading]);
+  }, [increaseInterval, increaseProportion, maxProgressBeforeLoaded, loading]);
 
   React.useEffect(() => {
-    if (loading) {
+    if (loading && !loaded) {
       interval.current = setInterval(onInterval, increaseInterval);
     }
     return () => {
       clearInterval(interval.current);
     };
-  }, [loading]);
+  }, [loading, increaseInterval, increaseProportion, maxProgressBeforeLoaded]);
 
   React.useEffect(() => {
     if (loaded) {
