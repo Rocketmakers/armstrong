@@ -1,6 +1,6 @@
 {
   "name": "@rocketmakers/armstrong-marketing",
-  "version": "0.0.1-alpha.7",
+  "version": "0.0.1-alpha.10",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -22,7 +22,7 @@
     "react-helmet": "^5.2.1"
   },
   "devDependencies": {
-    "@types/react": "^16.8.23",
+    "@types/react": "16.9.5",
     "@types/react-dom": "^16.8.4",
     "@types/react-helmet": "^5.0.8",
     "node-sass": "^4.12.0",
