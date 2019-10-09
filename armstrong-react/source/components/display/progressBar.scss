@@ -1,6 +1,8 @@
+$transition-time: 0.2s;
+
 .progress-bar {
     position: relative;
-    background-color: lighten($brand-primary, 30%);
+    background-color: $gray-light;
     border-radius: 9px;
     user-select: none;
 
@@ -9,7 +11,7 @@
     justify-content: center;
 
     .progress-bar-inner {
-        transition: width 0.2s, height 0.2s;
+        transition: width $transition-time, height $transition-time;
         position: absolute;
         background-color: $brand-primary;
         border-radius: 9px;
@@ -21,7 +23,7 @@
 
         &[data-variant="following"] {
             position: absolute;
-            transition: left 0.2s, top 0.2s, bottom 0.2s, right 0.2s;
+            transition: left $transition-time, top $transition-time, bottom $transition-time, right $transition-time;
             background-color: white;
             box-shadow: 1px 1px 9px rgba(black , 0.2);
             padding: $spacing-xsmall;
