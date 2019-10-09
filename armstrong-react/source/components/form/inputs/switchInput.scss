@@ -8,6 +8,7 @@ $default-hover-nudge-amount: 5px;
 $default-inactive-colour: $gray-light;
 $default-hover-colour: darken($gray-light, 5%);
 $default-active-colour: $color-positive;
+$default-icon-size: 0.7;
 
 $transition-time: 0.3s;
 
@@ -19,10 +20,11 @@ $transition-time: 0.3s;
     }
 }
 
-
-@mixin resize-switch($switch-width, $switch-height, $switch-padding, $switch-hover-nudge-amount) {
+@mixin resize-switch($switch-width, $switch-height, $switch-padding, $switch-hover-nudge-amount, $switch-icon-size) {
     $nubbin-size: calc(#{$switch-height} - #{$switch-padding} * 2);
     $checked-transform: calc(#{$switch-width} - #{$nubbin-size} - #{$switch-padding} * 2);
+
+    $icon-font-size: calc(#{$nubbin-size} * #{$switch-icon-size});
 
     >input {
         width: $switch-width;
@@ -60,13 +62,12 @@ $transition-time: 0.3s;
     }
 
     .icon {
-        font-size: calc(#{$nubbin-size} * 0.5);
+        font-size: $icon-font-size;
 
         top: $switch-padding;
-        bottom: $switch-padding;
-
-        width: $nubbin-size;
         left: $switch-padding;
+        height: $nubbin-size;
+        width: $nubbin-size;
     }
 }
 
@@ -98,8 +99,8 @@ $transition-time: 0.3s;
 
 @supports (color: var(--a)) {
     .armstrong-input.switch-input {
-        @include resize-switch(var(--armstrong-switch-width, #{$default-width}), var(--armstrong-switch-height, #{$default-height}), var(--armstrong-switch-padding, #{$default-padding}), var(--armstrong-switch-hover-nudge-amount, #{$default-hover-nudge-amount}));
-        @include recolour-switch(var(--armstrong-switch-inactive-colour, #{$default-inactive-colour}), var(--armstrong-switch-hover-colour, #{$default-hover-colour}), var(--armstrong-switch-active-colour, #{$default-active-colour}));
+        @include resize-switch(var(--armstrong-switch-width, #{$default-width}), var(--armstrong-switch-height, #{$default-height}), var(--armstrong-switch-padding, #{$default-padding}), var(--armstrong-switch-hover-nudge-amount, #{$default-hover-nudge-amount}), var(--armstrong-switch-icon-size, #{$default-icon-size}));
+        @include recolour-switch(var(--armstrong-switch-inactive-colour, #{$default-inactive-colour}), var(--armstrong-switch-hover-colour, var(--armstrong-switch-inactive-colour, #{$default-hover-colour})), var(--armstrong-switch-active-colour, #{$default-active-colour}));
 
         position: relative;
 

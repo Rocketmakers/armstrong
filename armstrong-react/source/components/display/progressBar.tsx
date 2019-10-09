@@ -27,6 +27,8 @@ interface IProgressBarProps {
   className?: string;
 }
 
+/** A simple progress bar that takes a progress prop between 0 and 100 */
+
 export const ProgressBar: React.FunctionComponent<IProgressBarProps> = ({
   progress,
   direction,
@@ -191,6 +193,11 @@ interface IAutoProgressBarProps extends Omit<IProgressBarProps, "progress"> {
   /** will fill the loading bar */
   loaded?: boolean;
 }
+
+/**
+ * A progress bar which wraps the Armstrong ProgressBar component, where the progress is faked.
+ * Allows visual feedback for requests where progress isn't actually known. The progress increases by a defined proportion of the remaining progress, never reaching 100%, until the prop loaded is set
+ */
 
 export const AutoProgressBar: React.FunctionComponent<
   IAutoProgressBarProps
