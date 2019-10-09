@@ -90,9 +90,9 @@ storiesOf('Progress Bar', module)
 
     return (
       <>
-        {!resetting && <AutoProgressBar loading={loading} startColour='red' endColour='yellowgreen' completeColour="green" thickness={'4px'} loaded={loaded} />}
+        {!resetting && <AutoProgressBar loading={loading} startColour='red' endColour='yellowgreen' completeColour="green" thickness={'4px'} loaded={loaded} labelVariant='following' />}
 
-        <br />
+        <div style={{height:' 100px'}} />
 
         <Button style={{ margin: '10px' }} onClick={() => setLoading(!loading)}>
           Set {loading && "not"} Loading

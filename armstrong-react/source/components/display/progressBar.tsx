@@ -188,14 +188,18 @@ ProgressBar.defaultProps = {
   labelVariant: "centre"
 };
 
-interface IAutoProgressBarProps extends Omit<IProgressBarProps, "progress"> {
+interface IAutoProgressBarProps
+  extends Omit<IProgressBarProps, "progress" | "labelText"> {
+  /** */
+  labelText?: (progress: number) => string;
+
   /** the time in ms to add to the remaining progress — defaults to 300 */
   increaseInterval?: number;
 
   /** the proportion of the remaining progress to add each time - defaults to 0.3 */
   increaseProportion?: number;
 
-  /** the maximum the progress can be out of 100 if the content hasn't loaded yet - defaults to 90 */
+  /** the maximum the progress can be out of 100 if the content hasn't loaded yet (the asymptote of the progress / time curve function) - defaults to 90 */
   maxProgressBeforeLoaded?: number;
 
   /** will fill the loading bar */
@@ -218,6 +222,7 @@ export const AutoProgressBar: React.FunctionComponent<
   loaded,
   loading,
   maxProgressBeforeLoaded,
+  labelText,
   ...props
 }) => {
   const [progress, setProgress] = React.useState(0);
@@ -245,7 +250,13 @@ export const AutoProgressBar: React.FunctionComponent<
     }
   }, [loaded]);
 
-  return <ProgressBar progress={progress} {...props} />;
+  return (
+    <ProgressBar
+      progress={progress}
+      labelText={labelText && labelText(Math.round(progress * 100) * 0.01)}
+      {...props}
+    />
+  );
 };
 
 AutoProgressBar.defaultProps = {
