@@ -100,11 +100,6 @@ async function loadTodoData(): Promise<IUseDataTableResult<ITodos>> {
   };
 }
 
-async function fetchPhotosData() {
-  const res = await fetch(photosDataUrl);
-  return res.json();
-}
-
 async function loadPhotosData(): Promise<IUseDataTableResult<IPhotos>> {
   const res = await fetch(photosDataUrl, { method: "GET" });
   const data = ((await res.json()) as unknown) as IPhotos[];
@@ -139,20 +134,6 @@ function CompletedTableCell(value: boolean) {
   );
 }
 
-const CompletedTableCell2: React.FunctionComponent<{ values: ITodos }> = ({
-  values,
-}) => {
-  return (
-    <div style={{ textAlign: "center" }}>
-      {JSON.stringify(values)}
-      {/* {value ? (
-        <Icon icon={Icon.Icomoon.thumbsUp} />
-      ) : (
-        <Icon icon={Icon.Icomoon.thumbsDown} />
-      )} */}
-    </div>
-  );
-};
 
 function CompletedTableCellButton(value: boolean) {
   return <button>{value ? "true" : "false"}</button>;

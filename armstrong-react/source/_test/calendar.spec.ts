@@ -1,7 +1,7 @@
 import assert = require("assert");
 import * as moment from "moment";
 import { act, renderHook } from "react-hooks-testing-library"
-import { IMonth, IUseCalendar, useCalendar } from "../hooks/useCalendar";
+import { IUseCalendar, useCalendar } from "../hooks/useCalendar";
 
 function assertResult(result: IUseCalendar, expected: { month: number, year: number, date: string, dateInvalid?: boolean }) {
   assert.equal(result.month.number, expected.month)

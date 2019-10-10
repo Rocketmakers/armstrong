@@ -98,8 +98,7 @@ export function useDataTable<T>({
     const rowsPerPage =
       (options && options.rowsPerPage && options.rowsPerPage) || 5;
     const sortParameters =
-      (options &&
-        options.sort &&
+      (options.sort &&
         options.sort.initialSortBy &&
         options.sort.initialSortBy) ||
       null;
@@ -187,7 +186,6 @@ export function useDataTable<T>({
   React.useEffect(() => {
     if (
       storedData.current.length > 0 &&
-      options &&
       options.filter &&
       options.filter.filterBy
     ) {
@@ -280,7 +278,7 @@ export function useDataTable<T>({
     [
       state.rowsPerPage,
       state.totalRows,
-      options ? options.rowsPerPage : 10,
+      options && options.rowsPerPage,
       data,
       fetch,
       filters,
@@ -336,7 +334,7 @@ export function useDataTable<T>({
         endIndex,
       };
     },
-    [state.rowsPerPage, state.totalRows, options.rowsPerPage, data, fetch],
+    [options && options.rowsPerPage, state.rowsPerPage, state.totalRows, data, fetch],
   );
 
   /**
