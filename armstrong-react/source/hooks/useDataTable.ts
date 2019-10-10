@@ -95,8 +95,10 @@ export function useDataTable<T>({
    */
   // ---------------------------------------------------------
   React.useMemo(() => {
-    const rowsPerPage =
-      (options && options.rowsPerPage && options.rowsPerPage) || 5;
+    if (!options) {
+      return null;
+    }
+    const rowsPerPage = options.rowsPerPage || 5;
     const sortParameters =
       (options.sort &&
         options.sort.initialSortBy &&

@@ -452,7 +452,6 @@ export const Toast: React.FC<IToastProps> = ({
       (settings as any).butItsActuallyToast
         ? {
             backgroundImage:
-              (settings as any).butItsActuallyToast &&
               "url(https://pngriver.com/wp-content/uploads/2018/04/Download-Toast-PNG-Photos.png)",
             backgroundSize: "100% 100%",
             backgroundColor: "transparent",

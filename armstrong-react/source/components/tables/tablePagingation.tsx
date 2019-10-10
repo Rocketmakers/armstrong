@@ -57,8 +57,6 @@ export const TablePagination: React.FunctionComponent<ITablePagination> = ({
             true,
           );
           pages = _.flatten([pages, extraPages, GO_RIGHT_PAGE_INDEX]);
-        } else if (hasLeftNeighbour && hasRightNeighbour) {
-          pages = _.flatten([GO_LEFT_PAGE_INDEX, pages, GO_RIGHT_PAGE_INDEX]);
         } else {
           pages = _.flatten([GO_LEFT_PAGE_INDEX, pages, GO_RIGHT_PAGE_INDEX]);
         }
