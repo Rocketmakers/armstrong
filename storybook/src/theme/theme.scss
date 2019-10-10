@@ -7,23 +7,38 @@
 @import "../_symlink/navigation";
 @import "../_symlink/animation";
 
-.intro-view{
+.intro-view {
   padding: $spacing-xlarge;
-  h2,p{
+
+  h2,
+  p {
     font-family: 'Cabin', sans-serif;
     line-height: 1.4em;
   }
-  h2{
+
+  h2 {
     font-size: 32px;
     font-weight: 600;
     margin-bottom: $spacing-medium;
   }
-  p{
+
+  p {
     font-size: 24px;
     font-weight: 400;
   }
 }
 
-.vertical-dude{
+.vertical-dude {
   height: 300px;
+}
+
+.armstrong-input.switch-input.outlined-switch {
+  >input {
+    border: 2px solid red;
+    transition: border-color 0.3s;
+
+    &:checked {
+      border-color: green;
+    }
+  }
 }

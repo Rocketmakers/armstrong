@@ -11,26 +11,38 @@ export interface ISwitchInput {
 
 export interface ISwitchInputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
-  /** if enabled, the switch will nudge across a bit when hovered to provide a visual cue — set with css variable --armstrong-switch-hover-nudge-amount */
+  /** if enabled, the switch will nudge across a bit when hovered to provide a visual cue — Set with css variable --armstrong-switch-hover-nudge-amount */
   hoverNudgeAmount?: number;
 
-  /** width of the switch track - 50 by default — set with css variable --armstrong-switch-width */
+  /** width of the switch track - 50 by default — Set with css variable --armstrong-switch-width */
   width?: number;
 
-  /** height of the switch track - 25 by default — set with css variable --armstrong-switch-height */
+  /** height of the switch track - 25 by default — Set with css variable --armstrong-switch-height */
   height?: number;
 
-  /** padding of the switch track (if negative, the nubbin will be bigger than the track) - 2px by default — set with css variable --armstrong-switch-padding */
+  /** padding of the switch track (if negative, the nubbin will be bigger than the track) - 2px by default — Set with css variable --armstrong-switch-padding */
   padding?: number;
 
-  /** colour of the switch track when inactive — set with css variable --armstrong-switch-inactive-colour */
+  /** colour of the switch track when inactive — Set with css variable --armstrong-switch-inactive-colour */
   inactiveColour?: string;
 
-  /** colour of the switch track when hovering — set with css variable --armstrong-switch-hover-colour */
+  /** colour of the switch track when hovering — Set with css variable --armstrong-switch-hover-colour */
   hoveringColour?: string;
 
-  /** colour of the switch track when active — set with css variable --armstrong-switch-active-colour */
+  /** colour of the switch track when active — Set with css variable --armstrong-switch-active-colour */
   activeColour?: string;
+
+  /** colour of the nubbin when inactive - Set with css variable --armstrong-switch-nubbin-inactive-colour */
+  inactiveNubbinColour?: string;
+
+  /** colour of the nubbin when inactive - Set with css variable --armstrong-switch-nubbin-inactive-colour */
+  hoveringNubbinColour?: string;
+
+  /** colour of the nubbin when active - Set with css variable --armstrong-switch-nubbin-active-colour */
+  activeNubbinColour?: string;
+
+  /** if set to true, the nubbin will have a 1px border in the current colour of the switch */
+  borderedNubbin?: boolean;
 
   /** grey out the switch and stop it from being interactible */
   disabled?: boolean;
@@ -40,6 +52,15 @@ export interface ISwitchInputProps
 
   /** icon to show on the nubbin when the value of checked is false */
   inactiveIcon?: string;
+
+  /** where to render the icon - defalults to on-nubbin */
+  iconStyle?: "on-nubbin" | "is-nubbin" | "static";
+
+  /** size of the icon as a proportion of the size of the nubbin (from 0 to 1), if activeIcon or inactiveIcon are set, defaults to 0.8 — Set with css variable --armstrong-switch-icon-size */
+  iconSize?: number;
+
+  /** renders shadows around the nubbin and inset into the track — true by default */
+  renderShadows?: boolean;
 }
 
 const SwitchInputRef: React.RefForwardingComponent<
@@ -55,10 +76,18 @@ const SwitchInputRef: React.RefForwardingComponent<
     inactiveColour,
     hoveringColour,
     activeColour,
+    inactiveNubbinColour,
+    hoveringNubbinColour,
+    activeNubbinColour,
     id,
     disabled,
     activeIcon,
     inactiveIcon,
+    iconSize,
+    iconStyle,
+    borderedNubbin,
+    renderShadows,
+    style,
     ...attrs
   } = props;
 
@@ -90,10 +119,26 @@ const SwitchInputRef: React.RefForwardingComponent<
     {
       name: "--armstrong-switch-active-colour",
       value: activeColour
+    },
+    {
+      name: "--armstrong-switch-nubbin-inactive-colour",
+      value: inactiveNubbinColour
+    },
+    {
+      name: "--armstrong-switch-nubbin-hover-colour",
+      value: hoveringNubbinColour
+    },
+    {
+      name: "--armstrong-switch-nubbin-active-colour",
+      value: activeNubbinColour
+    },
+    {
+      name: "--armstrong-switch-icon-size",
+      value: iconSize
     }
   ]);
 
-  const input = React.useRef(null);
+  const input = React.useRef<HTMLInputElement>(null);
 
   const refCallback = React.useCallback(() => {
     return {
@@ -131,13 +176,21 @@ const SwitchInputRef: React.RefForwardingComponent<
   );
 
   return (
-    <div className={classes} title={validationMessage} ref={inputWrapper}>
+    <div
+      className={classes}
+      title={validationMessage}
+      ref={inputWrapper}
+      data-icon-style={iconStyle}
+      data-bordered-nubbin={borderedNubbin}
+      data-render-shadows={renderShadows}
+      style={style}
+    >
       <input
+        {...attrs}
         ref={input}
         name={name}
         type="checkbox"
         id={autoId}
-        {...attrs}
         onClick={() => setClicked(true)}
         onMouseLeave={() => setClicked(false)}
         data-has-clicked={clicked}
@@ -145,12 +198,31 @@ const SwitchInputRef: React.RefForwardingComponent<
         data-disabled={disabled}
       />
 
-      {activeIcon && <Icon className="active-icon" icon={activeIcon} />}
-      {inactiveIcon && <Icon className="inactive-icon" icon={inactiveIcon} />}
+      {activeIcon && (
+        <Icon
+          className="active-icon"
+          icon={activeIcon}
+          data-icon-style={iconStyle}
+        />
+      )}
+      {inactiveIcon && (
+        <Icon
+          className="inactive-icon"
+          icon={inactiveIcon}
+          data-icon-style={iconStyle}
+        />
+      )}
 
       <ValidationLabel message={validationMessage} mode={validationMode} />
     </div>
   );
 };
 
+/** Renders a switch which behaves like a checkbox with many visual customisation options. Falls back to a checkbox in older browsers. */
+
 export const SwitchInput = React.forwardRef(SwitchInputRef);
+
+SwitchInput.defaultProps = {
+  iconStyle: "on-nubbin",
+  renderShadows: true
+};

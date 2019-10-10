@@ -176,6 +176,9 @@ export {
 } from "./components/form/validationWrapper";
 export { ArmstrongConfig };
 
+// Progress bar
+export { AutoProgressBar, ProgressBar } from "./components/display/progressBar";
+
 // Toast
 export {
   useToast,
@@ -224,3 +227,4 @@ export {
 } from "./hooks/observers/useIntersectionObserver";
 export { useMutationObserver } from "./hooks/observers/useMutationObserver";
 export { useMedia } from "./hooks/useMedia";
+export { useTemporaryState } from "./hooks/useTemporaryState";
