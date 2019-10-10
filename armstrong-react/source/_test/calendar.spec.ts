@@ -1,7 +1,7 @@
 import assert = require("assert");
 import * as moment from "moment";
 import { act, renderHook } from "react-hooks-testing-library"
-import { IMonth, IUseCalendar, useCalendar } from "../hooks/useCalendar";
+import { IUseCalendar, useCalendar } from "../hooks/useCalendar";
 
 function assertResult(result: IUseCalendar, expected: { month: number, year: number, date: string, dateInvalid?: boolean }) {
   assert.equal(result.month.number, expected.month)
@@ -14,22 +14,22 @@ function assertResult(result: IUseCalendar, expected: { month: number, year: num
   }
 }
 
-function printMonth(month: IMonth) {
-  // tslint:disable-next-line: no-console
-  console.log(`${month.name} - ${month.year} (${month.shortName} : ${month.number})`);
-  for (let week = 0; week < 6; week++) {
-    let weekDisplay = ""
-    for (let day = 0; day < 7; day++) {
-      const d = month.weeks[week].days[day]
-      weekDisplay += (d.outOfRange ? "x" : "") + (d.isCurrentDate ? "+" : "") + (!d.isCurrentMonth ? "(" + d.dayNumber + ")" : d.dayNumber) + (d.isToday ? "*" : "") + "|"
-    }
+// function printMonth(month: IMonth) {
+//   // tslint:disable-next-line: no-console
+//   console.log(`${month.name} - ${month.year} (${month.shortName} : ${month.number})`);
+//   for (let week = 0; week < 6; week++) {
+//     let weekDisplay = ""
+//     for (let day = 0; day < 7; day++) {
+//       const d = month.weeks[week].days[day]
+//       weekDisplay += (d.outOfRange ? "x" : "") + (d.isCurrentDate ? "+" : "") + (!d.isCurrentMonth ? "(" + d.dayNumber + ")" : d.dayNumber) + (d.isToday ? "*" : "") + "|"
+//     }
 
-    // tslint:disable-next-line: no-console
-    console.log(weekDisplay);
-  }
-  // tslint:disable-next-line: no-console
-  console.log()
-}
+//     // tslint:disable-next-line: no-console
+//     console.log(weekDisplay);
+//   }
+//   // tslint:disable-next-line: no-console
+//   console.log()
+// }
 
 const noDateExpected = { date: "", dateInvalid: true }
 

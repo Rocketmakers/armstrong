@@ -1,6 +1,4 @@
 import * as React from "react";
-import * as _ from "underscore";
-
 import { ClassHelpers, Icon } from "../..";
 
 type RefreshStatus = "required" | "refreshing" | "idle";

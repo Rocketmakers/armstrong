@@ -247,8 +247,7 @@ export class MomentDateUtils implements IDateUtils {
       case "day":
         return mom.date()
       default:
-        const n: never = unitOfTime
-        break;
+        throw new Error("Unsupported unit of time");
     }
   }
 

@@ -11,7 +11,7 @@ import * as React from "react";
 export const useEventListener = (
   type: string,
   eventHandler: (e: Event) => any,
-  element: Pick<HTMLElement, "addEventListener" | "removeEventListener"> = typeof window === undefined ? null : window,
+  element: Pick<HTMLElement, "addEventListener" | "removeEventListener"> = typeof window === "undefined" ? null : window,
 ) => {
   React.useEffect(() => {
     /// CHECK FOR SSR

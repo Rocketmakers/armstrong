@@ -90,7 +90,7 @@ export const CodeInput: React.FC<ICodeInputProps> = props => {
     }
     if (el) {
       el.focus();
-      if (el && el.value && !movingBack && !retFromStore) {
+      if (el.value && !movingBack && !retFromStore) {
         el.select()
         // el.value = "";
       }
@@ -107,7 +107,6 @@ export const CodeInput: React.FC<ICodeInputProps> = props => {
       const parsed = parseInt(pasted, 10);
       if (isNaN(parsed)) {
         e.preventDefault();
-        return false;
       }
     }
 

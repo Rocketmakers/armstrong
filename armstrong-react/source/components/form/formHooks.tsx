@@ -27,7 +27,7 @@ export function createFormContext<TDataBinder>() {
       }
       return (
         <ParentFormContext>
-          {props.children({ bind: new FormBinder<TDataBinder>(), dataBinder: ctx && ctx.dataBinder, notifyChange: ctx.notifyChange })}
+          {props.children({ bind: new FormBinder<TDataBinder>(), dataBinder: ctx.dataBinder, notifyChange: ctx.notifyChange })}
         </ParentFormContext>
       )
     },

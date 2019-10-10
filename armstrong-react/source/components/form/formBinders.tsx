@@ -4,7 +4,7 @@ import { utils } from "../../utilities/utils";
 import { FormBinderBase } from "./formBinderBase";
 import { IDataBinder, IFormBinder, IFormBinderInjector, updateFormBinderInjector } from "./formCore";
 import { CheckboxValueConverter, DefaultValueConverter, IInputValueConverter, INumericOptions, IValueConverter, MultipleNumericValueConverter, NumericValueConverter } from "./formValueConverters";
-import { IAutoCompleteInputProps } from "./inputs/autoCompleteInput_old";
+
 import { IAutoCompleteOption, IAutoCompleteProps } from "./inputs/autoCompleteOptionHooks";
 import { ICalendarInputProps } from "./inputs/calendarInput";
 import { ICodeInputProps } from "./inputs/codeInput";
@@ -174,37 +174,37 @@ export class AutoCompleteSingleFormBinder implements IFormBinder<IAutoCompletePr
   }
 }
 
-export class AutoCompleteLegacyFormBinder implements IFormBinder<IAutoCompleteInputProps, any> {
-  constructor(public dataPath: string, private getItemFromId?: (id: string) => IAutoCompleteOption) { }
-  setElementProperty(props: IAutoCompleteInputProps, dataBinder: IDataBinder<any>): void {
-    const value = dataBinder.getValue(this.dataPath);
-    if (utils.object.isArray(value)) {
-      if (this.getItemFromId) {
-        props.value = value.map(v => this.getItemFromId(v));
-        return;
-      }
-      props.value = props.options ? utils.array.filter(props.options, o => value.indexOf(o.id) > -1) : [];
-      return;
-    }
-    if (this.getItemFromId) {
-      props.value = this.getItemFromId(value);
-      return;
-    }
+// export class AutoCompleteLegacyFormBinder implements IFormBinder<IAutoCompleteInputProps, any> {
+//   constructor(public dataPath: string, private getItemFromId?: (id: string) => IAutoCompleteOption) { }
+//   setElementProperty(props: IAutoCompleteInputProps, dataBinder: IDataBinder<any>): void {
+//     const value = dataBinder.getValue(this.dataPath);
+//     if (utils.object.isArray(value)) {
+//       if (this.getItemFromId) {
+//         props.value = value.map(v => this.getItemFromId(v));
+//         return;
+//       }
+//       props.value = props.options ? utils.array.filter(props.options, o => value.indexOf(o.id) > -1) : [];
+//       return;
+//     }
+//     if (this.getItemFromId) {
+//       props.value = this.getItemFromId(value);
+//       return;
+//     }
 
-    props.value = props.options && utils.array.filter(props.options, o => value === o.id)[0];
-  }
+//     props.value = props.options && utils.array.filter(props.options, o => value === o.id)[0];
+//   }
 
-  handleValueChanged(props: IAutoCompleteInputProps, dataBinder: IDataBinder<any>, notifyChanged: () => void): void {
-    props.onSelected = c => {
-      if (utils.object.isArray(c)) {
-        dataBinder.setValue(this.dataPath, c.map(cc => cc.id));
-      } else {
-        dataBinder.setValue(this.dataPath, c.id);
-      }
-      notifyChanged();
-    };
-  }
-}
+//   handleValueChanged(props: IAutoCompleteInputProps, dataBinder: IDataBinder<any>, notifyChanged: () => void): void {
+//     props.onSelected = c => {
+//       if (utils.object.isArray(c)) {
+//         dataBinder.setValue(this.dataPath, c.map(cc => cc.id));
+//       } else {
+//         dataBinder.setValue(this.dataPath, c.id);
+//       }
+//       notifyChanged();
+//     };
+//   }
+// }
 
 export class TagInputFormBinder implements IFormBinder<ITagInputProps, any> {
   constructor(public dataPath: string) { }
@@ -292,9 +292,9 @@ export class FormBinder<TDataBinder> {
     return this.defaultInputFormBinder(dataName, "email", valueConverter);
   }
 
-  autoCompleteInputLegacy(dataName: FormBinderKey<TDataBinder>, getItemFromId?: (id: string) => IAutoCompleteOption) {
-    return this.custom(new AutoCompleteLegacyFormBinder(toDataPath(dataName, this.parentPath), getItemFromId));
-  }
+  // autoCompleteInputLegacy(dataName: FormBinderKey<TDataBinder>, getItemFromId?: (id: string) => IAutoCompleteOption) {
+  //   return this.custom(new AutoCompleteLegacyFormBinder(toDataPath(dataName, this.parentPath), getItemFromId));
+  // }
 
   autoCompleteSingleInput(dataName: FormBinderKey<TDataBinder>, getItemFromId?: (id: string) => IAutoCompleteOption) {
     return this.custom(new AutoCompleteSingleFormBinder(toDataPath(dataName, this.parentPath), getItemFromId));

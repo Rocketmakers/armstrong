@@ -1,6 +1,5 @@
 import * as React from "react"
 import { delay } from "../../utilities/async";
-import { utils } from "../../utilities/utils";
 import { Icon } from "../display/icon";
 import { Button } from "../interaction/button";
 

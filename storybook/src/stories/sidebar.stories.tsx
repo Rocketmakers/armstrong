@@ -1,6 +1,6 @@
 import * as React from "react"
 import { storiesOf } from '@storybook/react';
-import { Sidebar, Icon, Button, useSidebar } from "../_symlink";
+import { Sidebar, Icon, useSidebar } from "../_symlink";
 
 import "../theme/theme.scss";
 

@@ -3,7 +3,6 @@
 import * as moment from "moment";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import * as _ from "underscore";
 import { ClassHelpers, Icon } from "../../";
 
 export type DispatchToast = (...toast: IToastNotification[]) => void;
@@ -457,10 +456,8 @@ export const Toast: React.FC<IToastProps> = ({
       (settings as any).butItsActuallyToast
         ? {
             backgroundImage:
-              (settings as any).butItsActuallyToast &&
               "url(https://pngriver.com/wp-content/uploads/2018/04/Download-Toast-PNG-Photos.png)",
-            backgroundSize:
-              (settings as any).butItsActuallyToast && "100% 100%",
+            backgroundSize: "100% 100%",
             backgroundColor: "transparent",
             boxShadow: "none"
           }

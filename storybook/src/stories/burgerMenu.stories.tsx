@@ -1,6 +1,6 @@
 import * as React from "react"
 import { storiesOf } from '@storybook/react';
-import { Icon, BurgerMenu, useBurgerMenu, Button } from "../_symlink";
+import { Icon, BurgerMenu, useBurgerMenu } from "../_symlink";
 
 import "../theme/theme.scss";
 
@@ -108,15 +108,5 @@ const PageContentHooks: React.FC<{}> = p => {
       <div style={{ ...wowStyle, backgroundColor: transitioning ? 'pink' : 'white', color: transitioning ? 'white' : 'grey', transition: `0.3s` }}>TRANSITIONING</div>
       <div style={wowStyle}>isOpen: {isOpen ? "true" : "false"}</div>
     </div>
-  )
-}
-
-
-const Header: React.FC<{}> = p => {
-  const { toggle, isOpen } = useBurgerMenu()
-  return (
-    <>
-      <Button onClick={toggle}>{isOpen ? "CLOSE" : "OPEN"} MENU</Button>
-    </>
   )
 }

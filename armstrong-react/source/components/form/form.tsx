@@ -254,7 +254,7 @@ class FormElementProcessor {
         }
         if (formBinder.overrideChildren) {
           const newChildren = formBinder.overrideChildren(props, formProps.dataBinder)
-          if (typeof newChildren !== undefined) {
+          if (typeof newChildren !== "undefined") {
             children = FormElementProcessor.processChildren(formProps, newChildren, notifyChange);
           }
         }
