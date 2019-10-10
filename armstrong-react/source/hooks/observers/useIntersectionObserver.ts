@@ -19,7 +19,7 @@ export const useIntersectionObserver = (
   const io = React.useRef<IntersectionObserver>(null);
 
   React.useLayoutEffect(() => {
-    if (!!ref && !!ref.current) {
+    if (!!ref && !!ref.current && typeof window !== "undefined" && "IntersectionObserver" in window) {
       io.current = new IntersectionObserver(
         (entries, observer) =>
           callback(entries[0].isIntersecting, entries, observer),

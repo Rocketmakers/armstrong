@@ -115,7 +115,7 @@ const BurgerMenuComponent: React.FC<IBurgerMenuProps> = ({
         className="armstrong-menu-overlay"
         onClick={() => setIsOpen(false)}
         aria-label="Close the menu"
-        aria-hidden={!open}
+        aria-hidden={!isOpen}
         style={{ transition: `${transitionTime}ms` }}
         data-transition={transitioning ? isOpen ? "in" : "out" : isOpen ? "open" : "closed"}
       />}
