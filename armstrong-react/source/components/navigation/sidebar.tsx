@@ -48,8 +48,9 @@ const SidebarComponent: React.FC<ISidebarProps & { autoCollapse: boolean, autoBu
   autoCollapse,
   autoBurger
 }) => {
-  const { isOpen: open, setOpen, setTransitioning, transitioning } = React.useContext(SidebarContext)
+  const { isOpen: open, setOpen, setTransitioning, transitioning, close } = React.useContext(SidebarContext)
 
+  const sidebarContentRef = React.useRef<HTMLDivElement>()
   React.useEffect(() => {
     if (onChange) { onChange(open ? "open" : "closed") }
   }, [open])
@@ -69,6 +70,24 @@ const SidebarComponent: React.FC<ISidebarProps & { autoCollapse: boolean, autoBu
       setOpen(false)
     }
   }, [autoCollapse, autoBurger])
+
+  React.useEffect(() => {
+    if (sidebarContentRef.current) {
+      sidebarContentRef.current.querySelectorAll("a").forEach(tag => tag.addEventListener("click", autoClose))
+    }
+
+    return () => {
+      if (sidebarContentRef.current) {
+        sidebarContentRef.current.querySelectorAll("a").forEach(tag => tag.removeEventListener("click", autoClose))
+      }
+    }
+  }, [sidebarContentRef, autoCollapse])
+
+  const autoClose = React.useCallback(() => {
+    if (autoCollapse) {
+      close()
+    }
+  }, [autoCollapse])
 
   const width = React.useMemo(() => (open || autoBurger) ? openWidth : collaspedWidth, [open, openWidth, collaspedWidth, autoBurger])
 
@@ -99,7 +118,7 @@ const SidebarComponent: React.FC<ISidebarProps & { autoCollapse: boolean, autoBu
         >
           {closeButtonIcon && <Icon aria-hidden={true} icon={open ? closeButtonIcon : openButtonIcon} />}
         </Button>
-        <div className="armstrong-burger-content">{utils.object.isFunction(Content) ? <Content isOpen={autoBurger ? true : open} /> : Content}</div>
+        <div ref={sidebarContentRef} className="armstrong-burger-content">{utils.object.isFunction(Content) ? <Content isOpen={autoBurger ? true : open} /> : Content}</div>
       </nav>
       {autoBurger && <Button
         data-position={position}
