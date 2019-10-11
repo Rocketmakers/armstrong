@@ -49,7 +49,9 @@ storiesOf('Sidebar', module)
 
 
 const sideBarItemStyle: React.CSSProperties = {
-  margin: '30px 0'
+  margin: '30px 0',
+  display: 'block',
+  color: 'white'
 }
 const sideBarItemIconStyle: React.CSSProperties = {
   marginRight: '20px'
@@ -66,17 +68,17 @@ const SidebarContent: React.FC<{ isOpen: boolean }> = ({ isOpen }) => {
     <div>
       {isOpen ?
         <>
-          <div style={sideBarItemStyle} ><Icon style={sideBarItemIconStyle} icon={Icon.Icomoon.crown} />LINK ONE</div>
-          <div style={sideBarItemStyle} ><Icon style={sideBarItemIconStyle} icon={Icon.Icomoon.wallet} />LINK TWO</div>
-          <div style={sideBarItemStyle} ><Icon style={sideBarItemIconStyle} icon={Icon.Icomoon.feed} />LINK THREE</div>
-          <div style={sideBarItemStyle} ><Icon style={sideBarItemIconStyle} icon={Icon.Icomoon.hourGlass} />LINK FOUR</div>
+          <a href='#' style={sideBarItemStyle} ><Icon style={sideBarItemIconStyle} icon={Icon.Icomoon.crown} />LINK ONE</a>
+          <a href='#' style={sideBarItemStyle} ><Icon style={sideBarItemIconStyle} icon={Icon.Icomoon.wallet} />LINK TWO</a>
+          <a href='#' style={sideBarItemStyle} ><Icon style={sideBarItemIconStyle} icon={Icon.Icomoon.feed} />LINK THREE</a>
+          <a href='#' style={sideBarItemStyle} ><Icon style={sideBarItemIconStyle} icon={Icon.Icomoon.hourGlass} />LINK FOUR</a>
         </>
         :
         <>
-          <div style={closedSideBarItemStyle} ><Icon icon={Icon.Icomoon.crown} /></div>
-          <div style={closedSideBarItemStyle} ><Icon icon={Icon.Icomoon.wallet} /></div>
-          <div style={closedSideBarItemStyle} ><Icon icon={Icon.Icomoon.feed} /></div>
-          <div style={closedSideBarItemStyle} ><Icon icon={Icon.Icomoon.hourGlass} /></div>
+          <a href='#' style={closedSideBarItemStyle} ><Icon icon={Icon.Icomoon.crown} /></a>
+          <a href='#' style={closedSideBarItemStyle} ><Icon icon={Icon.Icomoon.wallet} /></a>
+          <a href='#' style={closedSideBarItemStyle} ><Icon icon={Icon.Icomoon.feed} /></a>
+          <a href='#' style={closedSideBarItemStyle} ><Icon icon={Icon.Icomoon.hourGlass} /></a>
         </>
       }
     </div>
