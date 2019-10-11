@@ -1,6 +1,6 @@
-import * as Color from "color";
 import * as React from "react";
 import { ClassHelpers } from "../../utilities/classHelpers";
+import { ColorHelper } from "../../utilities/colorHelper";
 
 interface IProgressBarProps {
   /** the progress of the bar from 0 to 100 */
@@ -19,13 +19,13 @@ interface IProgressBarProps {
   thickness?: string;
 
   /** initial colour when progress is at 0 - will fade to endColour (both must be set) */
-  startColour?: string;
+  startColor?: string;
 
   /** end colour as progress approaches 100 - will fade from startColour (both must be set) */
-  endColour?: string;
+  endColor?: string;
 
   /** colour when the progress has hit 100 */
-  completeColour?: string;
+  completeColor?: string;
 
   className?: string;
 }
@@ -39,9 +39,9 @@ export const ProgressBar: React.FunctionComponent<IProgressBarProps> = ({
   labelText,
   labelVariant,
   className,
-  startColour,
-  endColour,
-  completeColour
+  startColor,
+  endColor,
+  completeColor
 }) => {
   const outerStyle = React.useMemo<React.CSSProperties>(() => {
     switch (direction) {
@@ -117,48 +117,49 @@ export const ProgressBar: React.FunctionComponent<IProgressBarProps> = ({
     }
   }, [clampedProgress, direction, labelVariant]);
 
-  const startColourObj = React.useMemo(
-    () => startColour && new Color(startColour),
-    [startColour]
+  const startColorRGB = React.useMemo(
+    () => startColor && ColorHelper.hexToRgb(startColor),
+    [startColor]
   );
 
-  const endColourObj = React.useMemo(() => endColour && new Color(endColour), [
-    endColour
-  ]);
+  const endColorRGB = React.useMemo(
+    () => endColor && ColorHelper.hexToRgb(endColor),
+    [endColor]
+  );
 
   const getChannel = React.useCallback(
-    (channel: "red" | "green" | "blue") => {
-      if (startColourObj && endColourObj) {
-        const start = (startColourObj[channel]() as any) as number;
-        const end = (endColourObj[channel]() as any) as number;
+    (channel: "r" | "g" | "b") => {
+      if (startColorRGB && endColorRGB) {
+        const start = startColorRGB[channel];
+        const end = endColorRGB[channel];
 
         const current = start + ((end - start) / 100) * clampedProgress;
 
         return current;
       }
     },
-    [clampedProgress, startColourObj, endColourObj]
+    [clampedProgress, startColorRGB, endColorRGB]
   );
 
   const currentColour = React.useMemo(() => {
-    const r = getChannel("red");
-    const g = getChannel("green");
-    const b = getChannel("blue");
+    const r = getChannel("r");
+    const g = getChannel("g");
+    const b = getChannel("b");
     return { r, g, b };
   }, [getChannel]);
 
   const colourStyle = React.useMemo<React.CSSProperties>(
     () =>
-      completeColour && clampedProgress >= 100
+      completeColor && clampedProgress >= 100
         ? {
-            backgroundColor: completeColour
+            backgroundColor: completeColor
           }
-        : startColour && endColour
+        : startColor && endColor
         ? {
             backgroundColor: `rgb(${currentColour.r}, ${currentColour.g}, ${currentColour.b})`
           }
         : {},
-    [startColour, endColour, currentColour, completeColour]
+    [startColor, endColor, currentColour, completeColor]
   );
 
   return (
