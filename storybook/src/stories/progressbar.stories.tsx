@@ -73,8 +73,8 @@ storiesOf('Progress Bar', module)
 
     return (
       <ProgressBar
-        startColour='yellow'
-        endColour='green'
+        startColor='#FF0000'
+        endColor='#00FF00'
         progress={progress}
         direction='right'
         thickness='4px'
@@ -90,7 +90,7 @@ storiesOf('Progress Bar', module)
 
     return (
       <>
-        {!resetting && <AutoProgressBar loading={loading} startColour='red' endColour='yellowgreen' completeColour="green" thickness={'4px'} loaded={loaded} labelVariant='following' />}
+        {!resetting && <AutoProgressBar loading={loading} startColor='red' endColor='yellowgreen' completeColor="green" thickness={'4px'} loaded={loaded} labelVariant='following' />}
 
         <div style={{height:' 100px'}} />
 
