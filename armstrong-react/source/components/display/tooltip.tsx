@@ -102,7 +102,7 @@ export const Tooltip: React.FC<ITooltipProps> = props => {
         aria-hidden={ariaHideTooltip}
         data-retain={!!retain}
         data-position={positionPriority[currentPosition] ? positionPriority[currentPosition] : "hidden"}
-        data-displayNone={displayNone}
+        data-display-none={displayNone}
       >
         {tooltip}
       </div>
