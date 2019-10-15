@@ -5,6 +5,7 @@
   .tooltip-children:hover {
     +.tooltip:not([data-position=hidden]) {
       opacity: 1;
+      display: block;
       pointer-events: all;
     }
   }
@@ -18,8 +19,13 @@
     padding: 5px;
     pointer-events: none;
 
+    &[data-displayNone] {
+      display: none;
+    }
+
     &[data-retain=true]:not([data-position=hidden]):hover {
       opacity: 1;
+      display: block;
       pointer-events: all;
     }
 

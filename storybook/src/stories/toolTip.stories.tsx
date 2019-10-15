@@ -79,3 +79,8 @@ storiesOf('Tooltip', module)
     .tooltip[data-position=farBelow]<br/>
     .tooltip[data-position=bottomRight]
   </>)
+ .add('Display: none', () =>
+ <Tooltip tooltip="It is me. The tooltip." displayNone>
+   <span>Hover here</span>
+ </Tooltip>
+)
