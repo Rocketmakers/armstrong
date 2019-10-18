@@ -117,7 +117,7 @@ export const Image: React.FunctionComponent<IImageProps> = (
         <>
           {errored && renderError && !!errorElement && errorElement}
 
-          <picture ref={element} data-loaded={loaded}>
+          <picture className="armstrong-picture" ref={element} data-loaded={loaded}>
             {(enteredViewport || !lazy) &&
               (alternateSources || []).map(alternateSource => (
                 <source

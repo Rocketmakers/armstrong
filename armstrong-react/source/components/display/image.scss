@@ -1,10 +1,12 @@
-img.rounded {
-  border-radius: 50%;
+.armstrong-picture{
+  img.rounded {
+    border-radius: 50%;
+  }
 }
 
-picture {
+picture.armstrong-picture {
   opacity: 0;
-  
+
   &[data-loaded="true"] {
     animation: fade-in 0.3s forwards;
   }
