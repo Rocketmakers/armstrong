@@ -1,6 +1,6 @@
 import * as React from "react"
 import Shell from "../layout/shell"
-import { Grid, Row, Col, Button, Icon } from "armstrong-react"
+import { Grid, Row, Col, Button, Icon } from "@rocketmakers/armstrong"
 
 import "../theme/theme.scss";
 import "./index.scss";
