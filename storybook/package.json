@@ -1,48 +1,54 @@
 {
   "name": "@rocketmakers/armstrong-storybook",
   "version": "0.0.1-alpha.17",
-  "description": "",
+  "description": "Storybook for Armstrong",
   "main": "index.js",
   "scripts": {
     "postinstall": "node symlink.js",
     "start": "start-storybook -s ./static -p 6006",
     "build": "build-storybook -o ../public -s ./static --quiet"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Rocketmakers/armstrong-react.git"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@storybook/addon-storysource": "5.2.4",
     "moment": "2.24.0",
     "react": "16.10.2",
     "react-dom": "16.10.2",
-    "react-hooks-testing-library": "0.6.0",
     "underscore": "1.9.1"
   },
   "config": {
     "unsafe-perm": true
   },
   "devDependencies": {
-    "@babel/core": "7.6.3",
+    "@babel/core": "7.6.4",
     "@storybook/addon-a11y": "5.2.4",
     "@storybook/addon-actions": "5.2.4",
     "@storybook/addon-info": "5.2.4",
     "@storybook/addon-links": "5.2.4",
+    "@storybook/addon-storysource": "5.2.4",
     "@storybook/addons": "5.2.4",
     "@storybook/react": "5.2.4",
     "@types/mocha": "5.2.7",
-    "@types/react": "16.9.7",
+    "@types/react": "16.9.9",
     "@types/react-dom": "16.9.2",
     "@types/underscore": "1.9.3",
     "babel-loader": "8.0.6",
+    "fibers": "4.0.1",
     "mini-css-extract-plugin": "0.8.0",
     "mocha": "6.2.2",
     "node-sass": "4.12.0",
     "react-docgen-typescript-loader": "3.3.0",
+    "react-hooks-testing-library": "^0.6.0",
+    "sass": "1.23.0",
     "sass-loader": "8.0.0",
     "style-loader": "1.0.0",
     "ts-loader": "6.2.0",
     "tslib": "1.10.0",
-    "typescript": "3.6.3"
+    "typescript": "3.6.4"
   }
 }
