@@ -23,7 +23,7 @@
   "devDependencies": {
     "@types/node": "12.11.6",
     "@types/prompts": "2.0.2",
-    "@types/semver": "6.0.2",
+    "@types/semver": "6.2.0",
     "current-git-branch": "1.1.0",
     "prompts": "2.2.1",
     "@rocketmakers/log": "0.1.0",
