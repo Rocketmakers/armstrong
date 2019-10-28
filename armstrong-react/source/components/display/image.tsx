@@ -1,8 +1,8 @@
-import * as React from 'react';
-import { ClassHelpers } from '../../utilities/classHelpers';
-import { Icon } from './icon';
-import InViewport from './inViewport';
-import { Spinner } from './spinner';
+import * as React from "react";
+import { ClassHelpers } from "../../utilities/classHelpers";
+import { Icon } from "./icon";
+import InViewport from "./inViewport";
+import { Spinner } from "./spinner";
 
 export interface IImageProps
   extends React.ImgHTMLAttributes<HTMLPictureElement> {
@@ -42,7 +42,7 @@ export function useRandomUserImageSrc(sampleUserSeed?: string) {
 
   React.useEffect(() => {
     const url = `https://randomuser.me/api?exc=login,name,location,email,registered,dob,phone,cell,id,nat${
-      sampleUserSeed ? `&seed=${sampleUserSeed}` : ''
+      sampleUserSeed ? `&seed=${sampleUserSeed}` : ""
     }`;
 
     const xmlHttp = new XMLHttpRequest();
@@ -54,7 +54,7 @@ export function useRandomUserImageSrc(sampleUserSeed?: string) {
       }
     };
 
-    xmlHttp.open('GET', url, true);
+    xmlHttp.open("GET", url, true);
     xmlHttp.send(null);
   }, [sampleUserSeed]);
 
@@ -86,6 +86,7 @@ export const Image: React.FunctionComponent<IImageProps> = (
   const classes = ClassHelpers.classNames(className, { rounded });
 
   const [loaded, setLoaded] = React.useState(false);
+  const [cached, setCached] = React.useState(false);
   const [errored, setErrored] = React.useState(false);
 
   const imgRef = React.useRef<HTMLImageElement>(null);
@@ -101,8 +102,8 @@ export const Image: React.FunctionComponent<IImageProps> = (
 
   React.useLayoutEffect(() => {
     // check if image is cached and run onLoad if it is - (load event does not fire if image is already loaded in another img)
-    if (imgRef.current.complete) {
-      onLoad()
+    if (imgRef.current && imgRef.current.complete) {
+      onLoad();
     }
   }, [onLoad]);
 
@@ -117,23 +118,30 @@ export const Image: React.FunctionComponent<IImageProps> = (
         <>
           {errored && renderError && !!errorElement && errorElement}
 
-          <picture className="armstrong-picture" ref={element} data-loaded={loaded}>
-            {(enteredViewport || !lazy) &&
-              (alternateSources || []).map(alternateSource => (
-                <source
-                  {...alternateSource}
-                  key={JSON.stringify(alternateSource)}
-                />
-              ))}
+          <picture
+            className="armstrong-picture"
+            ref={element}
+            data-loaded={loaded}
+          >
+            {(enteredViewport || !lazy) && (
+              <>
+                {(alternateSources || []).map(alternateSource => (
+                  <source
+                    {...alternateSource}
+                    key={JSON.stringify(alternateSource)}
+                  />
+                ))}
 
-            <img
-              {...attrs}
-              onLoad={onLoad}
-              onError={onError}
-              className={classes}
-              src={enteredViewport || !lazy ? src : ''}
-              ref={imgRef}
-            />
+                <img
+                  {...attrs}
+                  onLoad={onLoad}
+                  onError={onError}
+                  className={classes}
+                  src={enteredViewport || !lazy ? src : ""}
+                  ref={imgRef}
+                />
+              </>
+            )}
           </picture>
 
           {!loaded && renderSpinner && !!spinnerElement && spinnerElement}
@@ -144,10 +152,10 @@ export const Image: React.FunctionComponent<IImageProps> = (
 };
 
 Image.defaultProps = {
-  rootMargin: '200px',
+  rootMargin: "200px",
   spinnerElement: <Spinner />,
   errorElement: (
-    <div className='image-not-found'>
+    <div className="image-not-found">
       <Icon icon={Icon.Icomoon.warning} />
       <p>Image not found</p>
     </div>
