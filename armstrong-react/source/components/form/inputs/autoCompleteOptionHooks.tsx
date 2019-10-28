@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useThrottle } from "../../../hooks/useThrottle";
+import { useThrottle } from "../../../hooks/timing/useThrottle";
 import { utils } from "../../../utilities/utils";
 
 export interface IAutoCompleteOption {

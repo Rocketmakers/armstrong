@@ -3,7 +3,7 @@ import * as React from "react";
 export function useThrottle<TValue>(
   value: TValue,
   limit: number,
-  onValueChange?: (value: TValue) => void,
+  onValueChange?: (value: TValue) => void
 ) {
   const [throttledValue, setThrottledValue] = React.useState(value);
   const lastRan = React.useRef(Date.now());

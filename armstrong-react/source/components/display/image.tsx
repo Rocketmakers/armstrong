@@ -35,6 +35,9 @@ export interface IImageProps
 
   /** the elemnt to render if renderError is set to true and there is an error loading the image */
   errorElement?: JSX.Element;
+
+  /** if renderSpinner is set to true, the amount of time to wait before rendering a spinner in ms (stops the spinner from flashing onto the screen quickly if the image is tiny) - defaults to 500 */
+  minimumTimeToSpinner?: number;
 }
 
 export function useRandomUserImageSrc(sampleUserSeed?: string) {
@@ -86,6 +89,10 @@ export const Image: React.FunctionComponent<IImageProps> = (
   const classes = ClassHelpers.classNames(className, { rounded });
 
   const [loaded, setLoaded] = React.useState(false);
+<<<<<<< Updated upstream
+=======
+  const [spinnerReady, setSpinnerReady] = React.useState();
+>>>>>>> Stashed changes
   const [errored, setErrored] = React.useState(false);
 
   const imgRef = React.useRef<HTMLImageElement>(null);
