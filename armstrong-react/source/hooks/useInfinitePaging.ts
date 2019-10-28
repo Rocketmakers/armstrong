@@ -73,12 +73,12 @@ export function useInfinitePaging<T>(settings: IUseInfinitePagingSettings<T>) {
               isInitial
                 ? itemsToDictionary(settings.initialItems, settings.key)
                 : currentItems,
-              response.data
+              response ? response.data : []
             );
 
         setState({
           items,
-          nextPageToken: response.nextPageToken,
+          nextPageToken: response && response.nextPageToken,
           hasFinished: noReturnedItems || !response.nextPageToken,
           hasData: true,
           error: undefined
