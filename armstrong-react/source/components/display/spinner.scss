@@ -33,6 +33,7 @@
     animation: spin 1s linear infinite;
 
     .icon {
+        animation: fade-in 300ms;
         font-size: 2rem;
     }
 

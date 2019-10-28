@@ -8,7 +8,7 @@ import {
   AutoProgressBar
 } from '../_symlink/components/display/progressBar';
 import { Button } from '../_symlink';
-import { useTemporaryState } from '../_symlink/hooks/useTemporaryState';
+import { useTemporaryState } from '../_symlink/hooks/timing/useTemporaryState';
 
 storiesOf('Progress Bar', module)
   .addParameters({

@@ -223,9 +223,9 @@ export { useDidMountEffect } from "./hooks/lifecycle/useDidMountEffect";
 export { useWillUnmountEffect } from "./hooks/lifecycle/useWillUnmountEffect";
 export { useTimeout } from "./hooks/timing/useTimeout";
 export { useInterval } from "./hooks/timing/useInterval";
-export { usePrevious } from "./hooks/usePrevious";
 export { useThrottle } from "./hooks/timing/useThrottle";
 export { useEventListener } from "./hooks/useEventListener";
+export { usePrevious } from "./hooks/usePrevious";
 export {
   useIntersectionObserver
 } from "./hooks/observers/useIntersectionObserver";

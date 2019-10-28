@@ -1,4 +1,6 @@
 import * as React from "react";
+
+import { useTimeout } from "../..";
 import { ClassHelpers } from "../../utilities/classHelpers";
 import { Icon } from "./icon";
 import InViewport from "./inViewport";
@@ -84,18 +86,18 @@ export const Image: React.FunctionComponent<IImageProps> = (
     spinnerElement,
     renderError,
     errorElement,
+    minimumTimeToSpinner,
     ...attrs
   } = props;
   const classes = ClassHelpers.classNames(className, { rounded });
 
   const [loaded, setLoaded] = React.useState(false);
-<<<<<<< Updated upstream
-=======
   const [spinnerReady, setSpinnerReady] = React.useState();
->>>>>>> Stashed changes
   const [errored, setErrored] = React.useState(false);
 
   const imgRef = React.useRef<HTMLImageElement>(null);
+
+  const { set } = useTimeout(() => setSpinnerReady(true), minimumTimeToSpinner);
 
   const onLoad = React.useCallback(() => {
     setLoaded(true);
@@ -117,7 +119,10 @@ export const Image: React.FunctionComponent<IImageProps> = (
     <InViewport
       once={true}
       IOProps={{ rootMargin }}
-      onEnter={onEnterViewport}
+      onEnter={entry => {
+        set();
+        onEnterViewport(entry);
+      }}
       onExit={onExitViewport}
     >
       {({ element, enteredViewport }) => (
@@ -150,7 +155,11 @@ export const Image: React.FunctionComponent<IImageProps> = (
             )}
           </picture>
 
-          {!loaded && renderSpinner && !!spinnerElement && spinnerElement}
+          {!loaded &&
+            renderSpinner &&
+            spinnerReady &&
+            !!spinnerElement &&
+            spinnerElement}
         </>
       )}
     </InViewport>
@@ -159,7 +168,7 @@ export const Image: React.FunctionComponent<IImageProps> = (
 
 Image.defaultProps = {
   rootMargin: "200px",
-  spinnerElement: <Spinner />,
+  spinnerElement: <Spinner className='armstrong-picture-spinner' />,
   errorElement: (
     <div className="image-not-found">
       <Icon icon={Icon.Icomoon.warning} />
@@ -167,5 +176,6 @@ Image.defaultProps = {
     </div>
   ),
   renderSpinner: false,
-  renderError: false
+  renderError: false,
+  minimumTimeToSpinner: 500
 };
