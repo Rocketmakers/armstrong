@@ -86,7 +86,6 @@ export const Image: React.FunctionComponent<IImageProps> = (
   const classes = ClassHelpers.classNames(className, { rounded });
 
   const [loaded, setLoaded] = React.useState(false);
-  const [cached, setCached] = React.useState(false);
   const [errored, setErrored] = React.useState(false);
 
   const imgRef = React.useRef<HTMLImageElement>(null);
