@@ -1,6 +1,7 @@
 import * as React from "react";
 
 export type PageToken = string | number;
+export type PageKey<T> = (keyof T) | ((item: T) => string | number);
 
 export interface IInfinitePagingResult<T> {
   data: T[];
@@ -12,7 +13,7 @@ export interface IUseInfinitePagingSettings<T> {
   fetch: (pageToken: PageToken) => Promise<IInfinitePagingResult<T>>;
 
   onFetched?: (item: T[]) => void | Promise<void>;
-  key: keyof T;
+  key: PageKey<T>;
   initialItems?: T[];
 }
 
@@ -20,9 +21,11 @@ interface IItems<T> {
   [key: string]: T;
 }
 
-const itemsToDictionary = <T>(items: T[], key: keyof T): IItems<T> =>
+const itemsToDictionary = <T>(items: T[], key: PageKey<T>): IItems<T> =>
   (items || []).reduce<IItems<T>>((previousItems, item) => {
-    previousItems[(item[key] as any) as string] = item;
+    const itemKey =
+      typeof key === "function" ? key(item) : ((item[key] as any) as string);
+    previousItems[itemKey] = item;
     return previousItems;
   }, {});
 
@@ -115,7 +118,7 @@ export function useInfinitePaging<T>(settings: IUseInfinitePagingSettings<T>) {
     });
 
     await fetcher({}, settings.firstPageToken);
-  }, [fetcher]);
+  }, [fetcher, settings.key]);
 
   /**
    * adds or replaces an array of new items, matched by a specified key
