@@ -21,7 +21,7 @@ export const useTimeout = (
   const [resolved, setResolved] = React.useState(false);
 
   const clear = React.useCallback(() => {
-    if (typeof window !== undefined) {
+    if (typeof window !== "undefined") {
       window.clearTimeout(timeout.current);
     } else {
       clearTimeout(timeout.current);
@@ -30,7 +30,7 @@ export const useTimeout = (
 
   const set = React.useCallback(() => {
     if (updating) {
-      if (typeof window !== undefined) {
+      if (typeof window !== "undefined") {
         timeout.current = window.setTimeout(() => setResolved(true), time);
       } else {
         timeout.current = (setTimeout(
@@ -39,7 +39,7 @@ export const useTimeout = (
         ) as any) as number;
       }
     } else {
-      if (typeof window !== undefined) {
+      if (typeof window !== "undefined") {
         timeout.current = window.setTimeout(callback, time);
       } else {
         timeout.current = (setTimeout(callback, time) as any) as number;
