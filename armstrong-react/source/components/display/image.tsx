@@ -121,7 +121,10 @@ export const Image: React.FunctionComponent<IImageProps> = (
       IOProps={{ rootMargin }}
       onEnter={entry => {
         set();
-        onEnterViewport(entry);
+
+        if (onEnterViewport) {
+          onEnterViewport(entry);
+        }
       }}
       onExit={onExitViewport}
     >
@@ -168,7 +171,7 @@ export const Image: React.FunctionComponent<IImageProps> = (
 
 Image.defaultProps = {
   rootMargin: "200px",
-  spinnerElement: <Spinner className='armstrong-picture-spinner' />,
+  spinnerElement: <Spinner className="armstrong-picture-spinner" />,
   errorElement: (
     <div className="image-not-found">
       <Icon icon={Icon.Icomoon.warning} />
