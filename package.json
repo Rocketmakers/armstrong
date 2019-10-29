@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "release": "ts-node _deploy/publish.ts",
-    "version": "(cd armstrong-react && npm version prerelease --preid=alpha --git-tag-version=false) && git add ."
+    "version": "(cd armstrong-react && npm version prerelease --preid=alpha --git-tag-version=false) && git add .",
+    "postinstall": "(cd armstrong-react && npm i) && (cd storybook && npm i) && (cd marketing && npm i)"
   },
   "repository": {
     "type": "git",
