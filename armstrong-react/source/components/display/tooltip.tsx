@@ -20,6 +20,8 @@ export interface ITooltipProps {
   ariaHideTooltip?: boolean
   /** (boolean) Retain tooltip when tooltip is hovered, default false */
   retain?: boolean
+  /** (boolean) Never show tooltip, default false */
+  disable?: boolean
   /** (Position) Priority order, or just top priority, for tooltip location, default ["right", "left", "bottom", "top", "fixed", "hidden"].  Only for use with preset positions, & appends unspecified positions to user defined list. */
   position?: ITooltipPositions
   /** (ITooltipCustomPositions) Priority order, or just top priority, for tooltip location.  Overrides position prop.  Can use custom user positions created in css, & preset positions. */
@@ -33,7 +35,7 @@ export interface ITooltipProps {
 }
 
 export const Tooltip: React.FC<ITooltipProps> = props => {
-  const {tooltip, children, ariaLabel, ariaHideTooltip, retain, position, customPosition, tooltipWrapperClass, tooltipChildrenClass, tooltipClass} = props
+  const {tooltip, children, ariaLabel, ariaHideTooltip, retain, disable, position, customPosition, tooltipWrapperClass, tooltipChildrenClass, tooltipClass} = props
   const defaultPositions: ITooltipPositionPriority = ["right", "left", "bottom", "top", "fixed", "hidden"]
   const tooltipElement = React.useRef<HTMLDivElement>(null)
   const [currentPosition, setCurrentPosition] = React.useState(0) // Index in position priority array currently being used
@@ -98,8 +100,8 @@ export const Tooltip: React.FC<ITooltipProps> = props => {
       <div className={"tooltip " + (tooltipClass ? tooltipClass : "")}
         ref={tooltipElement}
         aria-hidden={ariaHideTooltip}
-        data-retain={!!retain}
-        data-position={positionPriority[currentPosition] ? positionPriority[currentPosition] : "hidden"}
+        data-retain={retain}
+        data-position={positionPriority[currentPosition] && !disable ? positionPriority[currentPosition] : "hidden"}
       >
         {tooltip}
       </div>
@@ -110,5 +112,6 @@ export const Tooltip: React.FC<ITooltipProps> = props => {
 Tooltip.defaultProps = {
   ariaHideTooltip: true,
   retain: false,
+  disable: false,
   position: ["right", "left", "bottom", "top", "fixed", "hidden"]
 }

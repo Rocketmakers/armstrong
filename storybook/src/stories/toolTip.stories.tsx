@@ -24,6 +24,11 @@ storiesOf('Tooltip', module)
       <span>Hover here</span>
     </Tooltip>
   )
+  .add('Disable', () =>
+    <Tooltip tooltip="It is me. The tooltip.  I am forever hidden." disable={true}>
+      <span>Hover here</span>
+    </Tooltip>
+  )
   .add('Manually set aria-label', () =>
     <Tooltip tooltip="It is me. The tooltip." ariaLabel="The tooltip I am.">
       <span>Hover here</span>
