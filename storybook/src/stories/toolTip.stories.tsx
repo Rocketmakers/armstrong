@@ -25,7 +25,7 @@ storiesOf('Tooltip', module)
     </Tooltip>
   )
   .add('Manually set aria-label', () =>
-    <Tooltip tooltip="It is me. The tooltip." ariaLabel="The tooltip I am.">
+    <Tooltip tooltip="It is me. The tooltip." childrenAttributes={{"aria-label": "The tooltip I am."}}>
       <span>Hover here</span>
     </Tooltip>
   )
@@ -63,7 +63,7 @@ storiesOf('Tooltip', module)
       }
     `}} />
     {customPositionPriorities.map((customPositionPriority, i) => 
-      <Tooltip tooltip="It is me. The tooltip." customPosition={customPositionPriority} tooltipClass="tooltip-example-1" key={"customPositionTooltip" + i}>
+      <Tooltip tooltip="It is me. The tooltip." customPosition={customPositionPriority} tooltipAttributes={{className: "tooltip-example-1"}} key={"customPositionTooltip" + i}>
         <span>{
           typeof customPositionPriority ==="string" ?
             `"${customPositionPriority}"`
