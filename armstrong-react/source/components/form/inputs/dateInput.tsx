@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useDidUpdateEffect } from "../../../hooks/useDidUpdateEffect";
+import { useDidUpdateEffect } from "../../../hooks/lifecycle/useDidUpdateEffect";
 import { calendarUtils } from "../../../utilities/calendarUtils";
 import { ClassHelpers } from "../../../utilities/classHelpers";
 import { Formatting } from "../../../utilities/formatting";

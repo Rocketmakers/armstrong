@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useDidUpdateEffect } from "../../../hooks/useDidUpdateEffect";
+import { useDidUpdateEffect } from "../../../hooks/lifecycle/useDidUpdateEffect";
 import { ClassHelpers } from "../../../utilities/classHelpers";
 import { utils } from "../../../utilities/utils";
 import { DataValidationMessage, DataValidationMode } from "../formCore";

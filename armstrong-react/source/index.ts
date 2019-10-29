@@ -218,13 +218,17 @@ export {
   IUseCalendarSettings,
   IWeek
 } from "./hooks/useCalendar";
-export { useDidUpdateEffect } from "./hooks/useDidUpdateEffect";
-export { usePrevious } from "./hooks/usePrevious";
-export { useThrottle } from "./hooks/useThrottle";
+export { useDidUpdateEffect } from "./hooks/lifecycle/useDidUpdateEffect";
+export { useDidMountEffect } from "./hooks/lifecycle/useDidMountEffect";
+export { useWillUnmountEffect } from "./hooks/lifecycle/useWillUnmountEffect";
+export { useTimeout } from "./hooks/timing/useTimeout";
+export { useInterval } from "./hooks/timing/useInterval";
+export { useThrottle } from "./hooks/timing/useThrottle";
 export { useEventListener } from "./hooks/useEventListener";
+export { usePrevious } from "./hooks/usePrevious";
 export {
   useIntersectionObserver
 } from "./hooks/observers/useIntersectionObserver";
 export { useMutationObserver } from "./hooks/observers/useMutationObserver";
 export { useMedia } from "./hooks/useMedia";
-export { useTemporaryState } from "./hooks/useTemporaryState";
+export { useTemporaryState } from "./hooks/timing/useTemporaryState";
