@@ -12,6 +12,7 @@ export interface ISelectInput {
 export interface ISelectInputOption {
   id: number | string;
   name: string;
+  data?: any;
 }
 
 export interface ISelectInputProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
