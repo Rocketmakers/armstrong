@@ -16,6 +16,8 @@ export interface ITooltipProps {
   children: JSX.Element
   /** (boolean) Retain tooltip when tooltip is hovered, default false */
   retain?: boolean
+  /** (boolean) Never show tooltip, default false */
+  disable?: boolean
   /** (Position) Priority order, or just top priority, for tooltip location, default ["right", "left", "bottom", "top", "fixed", "hidden"].  Only for use with preset positions, & appends unspecified positions to user defined list. */
   position?: ITooltipPositions
   /** (ITooltipCustomPositions) Priority order, or just top priority, for tooltip location.  Overrides position prop.  Can use custom user positions created in css, & preset positions. */
@@ -29,7 +31,8 @@ export interface ITooltipProps {
 }
 
 export const Tooltip: React.FC<ITooltipProps> = props => {
-  const {tooltip, children, retain, position, customPosition, wrapperAttributes, childrenAttributes, tooltipAttributes} = props
+
+  const {tooltip, children, retain, disable, position, customPosition, wrapperAttributes, childrenAttributes, tooltipAttributes} = props
   const defaultPositions: ITooltipPositionPriority = ["right", "left", "bottom", "top", "fixed", "hidden"]
   const tooltipElement = React.useRef<HTMLDivElement>(null)
   const [currentPosition, setCurrentPosition] = React.useState(0) // Index in position priority array currently being used
@@ -96,9 +99,8 @@ export const Tooltip: React.FC<ITooltipProps> = props => {
       </div>
       <div {...tooltipAttr}
         ref={tooltipElement}
-        data-retain={!!retain}
-        data-position={positionPriority[currentPosition] ? positionPriority[currentPosition] : "hidden"}
-      >
+        data-retain={retain}
+        data-position={positionPriority[currentPosition] && !disable ? positionPriority[currentPosition] : "hidden"}>
         {tooltip}
       </div>
     </div>
@@ -107,6 +109,7 @@ export const Tooltip: React.FC<ITooltipProps> = props => {
 
 Tooltip.defaultProps = {
   retain: false,
+  disable: false,
   position: ["right", "left", "bottom", "top", "fixed", "hidden"],
   wrapperAttributes: {},
   childrenAttributes: {},
