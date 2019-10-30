@@ -32,7 +32,7 @@ export interface ITooltipProps {
 
 export const Tooltip: React.FC<ITooltipProps> = props => {
 
-  const {tooltip, children, ariaLabel, ariaHideTooltip, retain, disable, position, customPosition, wrapperAttributes, childrenAttributes, tooltipAttributes} = props
+  const {tooltip, children, retain, disable, position, customPosition, wrapperAttributes, childrenAttributes, tooltipAttributes} = props
   const defaultPositions: ITooltipPositionPriority = ["right", "left", "bottom", "top", "fixed", "hidden"]
   const tooltipElement = React.useRef<HTMLDivElement>(null)
   const [currentPosition, setCurrentPosition] = React.useState(0) // Index in position priority array currently being used
@@ -99,8 +99,7 @@ export const Tooltip: React.FC<ITooltipProps> = props => {
       </div>
       <div {...tooltipAttr}
         ref={tooltipElement}
-        aria-hidden={ariaHideTooltip}
-        data-retain={!!retain}
+        data-retain={retain}
         data-position={positionPriority[currentPosition] && !disable ? positionPriority[currentPosition] : "hidden"}>
         {tooltip}
       </div>
