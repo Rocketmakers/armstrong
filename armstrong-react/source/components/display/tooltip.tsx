@@ -14,10 +14,6 @@ export interface ITooltipProps {
   tooltip: JSX.Element | string
   /** (JSX.Element) The content that causes the tooltip to appear when hovered. */
   children: JSX.Element
-  /** (string) aria-label for children */
-  ariaLabel?: string
-  /** (boolean) Apples aria-hidden to tooltip, default true */
-  ariaHideTooltip?: boolean
   /** (boolean) Retain tooltip when tooltip is hovered, default false */
   retain?: boolean
   /** (boolean) Never show tooltip, default false */
@@ -26,16 +22,17 @@ export interface ITooltipProps {
   position?: ITooltipPositions
   /** (ITooltipCustomPositions) Priority order, or just top priority, for tooltip location.  Overrides position prop.  Can use custom user positions created in css, & preset positions. */
   customPosition?: ITooltipCustomPositions
-  /** (string) Appended to the className of the tooltip wrapper */
-  tooltipWrapperClass?: string
-  /** (string) Appended to the className of the tooltip children */
-  tooltipChildrenClass?: string
-  /** (string) Appended to the className of the tooltip */
-  tooltipClass?: string
+  /** (HtmlAttributes) HTML attributes of the tooltip wrapper */
+  wrapperAttributes?: React.HTMLAttributes<HTMLElement>
+  /** (HtmlAttributes) HTML attributes of the tooltip children */
+  childrenAttributes?: React.HTMLAttributes<HTMLElement>
+  /** (HtmlAttributes) HTML attributes of the tooltip */
+  tooltipAttributes?: React.HTMLAttributes<HTMLElement>
 }
 
 export const Tooltip: React.FC<ITooltipProps> = props => {
-  const {tooltip, children, ariaLabel, ariaHideTooltip, retain, disable, position, customPosition, tooltipWrapperClass, tooltipChildrenClass, tooltipClass} = props
+
+  const {tooltip, children, ariaLabel, ariaHideTooltip, retain, disable, position, customPosition, wrapperAttributes, childrenAttributes, tooltipAttributes} = props
   const defaultPositions: ITooltipPositionPriority = ["right", "left", "bottom", "top", "fixed", "hidden"]
   const tooltipElement = React.useRef<HTMLDivElement>(null)
   const [currentPosition, setCurrentPosition] = React.useState(0) // Index in position priority array currently being used
@@ -73,17 +70,6 @@ export const Tooltip: React.FC<ITooltipProps> = props => {
     )
   }, [])
 
-  // Determines aria-label for children props.
-  const actualAriaLabel = React.useMemo(() => {
-    if (ariaLabel) {
-      return ariaLabel
-    } else if (typeof tooltip === "string") {
-      return tooltip
-    } else {
-      return ""
-    }
-  }, [ariaLabel])
-
   // If current tooltip position is not visible, moves on to next position, unless already on last position
   React.useEffect(() => {
     if (tooltipElement.current && currentPosition + 1 < positionPriority.length && (currentPosition < 0 || !isInViewport(tooltipElement.current))) {
@@ -91,18 +77,31 @@ export const Tooltip: React.FC<ITooltipProps> = props => {
     }
   }, [tooltipElement, currentPosition])
 
+  // Appends default classes, & applies tooltip as aria-label to children
+  const createAttributes = React.useCallback((attributes: React.HTMLAttributes<HTMLElement>, className: string): React.HTMLAttributes<HTMLElement> => {
+    const attr = Object.assign({}, attributes)
+    attr.className = (attr.className ? attr.className : "") + " " + className
+    if (className === "tooltip-children" && !attr["aria-label"] && typeof tooltip === "string") {
+      attr["aria-label"] = tooltip
+    }
+    return attr
+  }, [])
+
+  const wrapperAttr = React.useMemo(() => createAttributes(wrapperAttributes, "tooltip-wrapper"), [wrapperAttributes])
+  const childrenAttr = React.useMemo(() => createAttributes(childrenAttributes, "tooltip-children"), [childrenAttributes])
+  const tooltipAttr = React.useMemo(() => createAttributes(tooltipAttributes, "tooltip"), [tooltipAttributes])
+
   return (
     // currentPosition set to -1, as setting to 0 doesn't trigger useEffect when it's already 0
-    <div className={"tooltip-wrapper " + (tooltipWrapperClass ? tooltipWrapperClass : "")} onMouseEnter={() => setCurrentPosition(-1)}>
-      <div className={"tooltip-children " + (tooltipChildrenClass ? tooltipChildrenClass : "")} aria-label={actualAriaLabel}>
+    <div {...wrapperAttr} onMouseEnter={() => setCurrentPosition(-1)}>
+      <div {...childrenAttr}>
         {children}
       </div>
-      <div className={"tooltip " + (tooltipClass ? tooltipClass : "")}
+      <div {...tooltipAttr}
         ref={tooltipElement}
         aria-hidden={ariaHideTooltip}
-        data-retain={retain}
-        data-position={positionPriority[currentPosition] && !disable ? positionPriority[currentPosition] : "hidden"}
-      >
+        data-retain={!!retain}
+        data-position={positionPriority[currentPosition] && !disable ? positionPriority[currentPosition] : "hidden"}>
         {tooltip}
       </div>
     </div>
@@ -110,8 +109,10 @@ export const Tooltip: React.FC<ITooltipProps> = props => {
 }
 
 Tooltip.defaultProps = {
-  ariaHideTooltip: true,
   retain: false,
   disable: false,
-  position: ["right", "left", "bottom", "top", "fixed", "hidden"]
+  position: ["right", "left", "bottom", "top", "fixed", "hidden"],
+  wrapperAttributes: {},
+  childrenAttributes: {},
+  tooltipAttributes: {}
 }
