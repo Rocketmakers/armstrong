@@ -21,7 +21,7 @@
   },
   "homepage": "https://github.com/Rocketmakers/armstrong#readme",
   "devDependencies": {
-    "@types/node": "12.12.1",
+    "@types/node": "12.12.4",
     "@types/prompts": "2.0.2",
     "@types/semver": "6.2.0",
     "current-git-branch": "1.1.0",
