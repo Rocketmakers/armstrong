@@ -22,6 +22,13 @@ export const getIcon = <T extends IconSet>({
   iconName
 }: IIconDefinition<T>) => icon || Icons[iconSet][iconName];
 
+export const getIconProps = <T extends IconSet>(
+  iconDefinition: IIconDefinition<T> | string
+) =>
+  typeof iconDefinition === "string"
+    ? { icon: iconDefinition }
+    : iconDefinition;
+
 export interface IIconProps<Set extends IconSet = "Icomoon">
   extends IIconDefinition<Set>,
     React.HTMLAttributes<HTMLElement> {
@@ -29,6 +36,7 @@ export interface IIconProps<Set extends IconSet = "Icomoon">
   className?: string;
 }
 
+// type IconComponent<Set extends IconSet> = React.FunctionComponent<IIconProps<Set>>
 type IconComponent = (<Set extends IconSet>(
   props: React.PropsWithChildren<IIconProps<Set>>
 ) => React.ReactElement) &

@@ -13,7 +13,7 @@ storiesOf("Icon", module)
   })
   .add("Icomoon", () => (
     <>
-      <Icon className="f-size-xlarge m-right-small" iconSet="Icomoon" iconName="screwdriver" />
+      <Icon className="f-size-xlarge m-right-small" iconSet='Icomoon' iconName='rocket' />
       <Icon className="f-size-xlarge m-right-small" iconSet="Icomoon" iconName="leaf" />
       <Icon className="f-size-xlarge m-right-small" iconSet="Icomoon" iconName="upload2" />
       <Icon className="f-size-xlarge m-right-small" iconSet="Icomoon" iconName="package" />
