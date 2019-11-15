@@ -196,7 +196,7 @@ export const DataList: React.FunctionComponent<IDataListProps> = props => {
       >
         {!props.refreshingComponent && (
           <>
-            <Spinner />
+            {refreshStatus === "refreshing" && <Spinner fill={false} />}
             {refreshStatus === "idle" && "Pull to refresh"}
             {refreshStatus === "required" && "Let go to refresh"}
             {refreshStatus === "refreshing" && "Refreshing"}

@@ -1,6 +1,6 @@
 import * as React from "react";
 import { delay } from "../../utilities/async";
-import { Icon, IconOrJsx, getIconOrJsx } from "../display/icon";
+import { getIconOrJsx, Icon, IconOrJsx } from "../display/icon";
 import { Button } from "../interaction/button";
 
 export interface IBurgerMenuProps {

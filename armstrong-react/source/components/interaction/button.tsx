@@ -88,9 +88,15 @@ const ButtonRef: React.RefForwardingComponent<IButton, IButtonProps> = (
       {...attrs}
       className={classes}
     >
-      {leftIcon && getIconOrJsx(leftIcon)}
+      {leftIcon &&
+        getIconOrJsx(leftIcon, { className: "left-icon" }, icon => (
+          <div className="left-icon">{icon}</div>
+        ))}
       {children}
-      {rightIcon && getIconOrJsx(rightIcon)}
+      {rightIcon &&
+        getIconOrJsx(rightIcon, { className: "right-icon" }, icon => (
+          <div className="right-icon">{icon}</div>
+        ))}
     </button>
   );
 };

@@ -5,24 +5,34 @@ import { IconOrJsx, getIconOrJsx, getIconProps } from "./icon";
 export interface IDialogProps extends React.HTMLAttributes<HTMLElement> {
   /** The title of the dialog */
   title?: string;
+
   /** The element to use to wrap the title of the dialog */
   headerTagName?: keyof React.ReactHTML;
+
   /** default: '#host' - The selector of the element you'd like to inject the dialog into */
   bodySelector?: string;
+
   /** An additional class for the dialog layer, normally used for forcing higher z-index values  */
   layerClass?: string;
+
   /** Setting this to true or false will open or close the dialog */
   isOpen: boolean;
+
   /** The width of the dialog */
   width?: number;
+
   /** The height of the dialog */
   height?: number;
+
   /** Event to fire when the dialog is closed */
   onClose: () => void;
+
   /** Event to fire when the x button is clicked. Use this to confirm (double dialogs) */
   onXClicked?: () => void;
+
   /**  Controls wether the dialog closes when the background overlay is clicked */
   closeOnBackgroundClick?: boolean;
+
   /** icon or element to render as the close button */
   closeButton?: IconOrJsx;
 }

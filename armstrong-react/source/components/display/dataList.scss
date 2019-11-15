@@ -26,9 +26,12 @@
     align-items: center;
     justify-content: center;
 
-    i {
-      display: inline-block;
+    .spinner {
       margin-right: 5px;
+
+      i.icon{
+        font-size: 1.4rem;
+      }
     }
   }
 

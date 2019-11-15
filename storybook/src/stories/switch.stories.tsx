@@ -7,6 +7,10 @@ import "../theme/theme.scss";
 import { SwitchInput } from "../_symlink";
 import { getIconProps } from "../_symlink/components/display/icon";
 
+const switchStyle: Pick<React.HTMLProps<HTMLDivElement>, "style"> = {
+  style: { margin: "20px" }
+};
+
 storiesOf("Switch", module)
   .addParameters({
     options: {
@@ -15,10 +19,12 @@ storiesOf("Switch", module)
   })
   .add("Simple Switch", () => (
     <div>
-      <SwitchInput style={{ margin: "40px" }} />
+      <pre>{`<SwitchInput width={120} height={90} padding={10} hoverNudgeAmount={10} />`}</pre>
+      <br />
+      <SwitchInput {...switchStyle} />
 
       <SwitchInput
-        style={{ margin: "40px" }}
+        {...switchStyle}
         width={120}
         height={90}
         padding={10}
@@ -26,7 +32,7 @@ storiesOf("Switch", module)
       />
 
       <SwitchInput
-        style={{ margin: "40px" }}
+        {...switchStyle}
         width={400}
         height={60}
         padding={3}
@@ -34,7 +40,7 @@ storiesOf("Switch", module)
       />
 
       <SwitchInput
-        style={{ margin: "40px" }}
+        {...switchStyle}
         width={80}
         height={50}
         padding={0}
@@ -46,7 +52,7 @@ storiesOf("Switch", module)
 
       <SwitchInput
         className="outlined-switch"
-        style={{ margin: "40px" }}
+        {...switchStyle}
         width={80}
         height={50}
         padding={4}
@@ -58,7 +64,7 @@ storiesOf("Switch", module)
       />
 
       <SwitchInput
-        style={{ margin: "40px" }}
+        {...switchStyle}
         width={50}
         height={10}
         padding={-10}
@@ -68,7 +74,7 @@ storiesOf("Switch", module)
       />
 
       <SwitchInput
-        style={{ margin: "40px" }}
+        {...switchStyle}
         width={80}
         height={45}
         padding={4}
@@ -80,7 +86,7 @@ storiesOf("Switch", module)
       />
 
       <SwitchInput
-        style={{ margin: "40px" }}
+        {...switchStyle}
         width={70}
         height={45}
         padding={-2}
@@ -98,38 +104,38 @@ storiesOf("Switch", module)
         handling them.
       </p>
       <br />
-      <p>
+      <pre>
         @mixin resize-switch($switch-width, $switch-height, $switch-padding,
         $switch-hover-nudge-amount)
-      </p>
-      <p>
+      </pre>
+      <pre>
         @mixin recolour-switch($switch-inactive-colour, $switch-hover-colour,
         $switch-active-colour)
-      </p>
+      </pre>
       <br />
       <br />
       <p>
         If you're only using css, the following vanilla css variables can be
         defined to style all switches
       </p>
-      <p>--armstrong-switch-height</p>
-      <p>--armstrong-switch-width</p>
-      <p>--armstrong-switch-padding</p>
-      <p>--armstrong-switch-hover-nudge-amount</p>
-      <p>--armstrong-switch-inactive-colour</p>
-      <p>--armstrong-switch-hover-colour</p>
-      <p>--armstrong-switch-active-colour</p>
-      <p>--armstrong-switch-nubbin-inactive-colour</p>
-      <p>--armstrong-switch-nubbin-hover-colour</p>
-      <p>--armstrong-switch-nubbin-active-colour</p>
+      <pre>--armstrong-switch-height</pre>
+      <pre>--armstrong-switch-width</pre>
+      <pre>--armstrong-switch-padding</pre>
+      <pre>--armstrong-switch-hover-nudge-amount</pre>
+      <pre>--armstrong-switch-inactive-colour</pre>
+      <pre>--armstrong-switch-hover-colour</pre>
+      <pre>--armstrong-switch-active-colour</pre>
+      <pre>--armstrong-switch-nubbin-inactive-colour</pre>
+      <pre>--armstrong-switch-nubbin-hover-colour</pre>
+      <pre>--armstrong-switch-nubbin-active-colour</pre>
     </div>
   ))
   .add("Switch with Icons", () => (
     <div>
       <p>Switches can work with icons in a few ways</p>
-      <h3>iconStyle="on-nubbin"</h3>
+      <pre>iconStyle="on-nubbin"</pre>
       <SwitchInput
-        style={{ margin: "40px" }}
+        {...switchStyle}
         width={80}
         height={50}
         padding={4}
@@ -142,7 +148,7 @@ storiesOf("Switch", module)
         inactiveIcon={getIconProps("Icomoon", "cross2")}
       />
       <SwitchInput
-        style={{ margin: "40px" }}
+        {...switchStyle}
         width={45}
         height={30}
         padding={2}
@@ -154,7 +160,7 @@ storiesOf("Switch", module)
         inactiveIcon={getIconProps("Icomoon", "eyeBlocked3")}
       />
       <SwitchInput
-        style={{ margin: "40px" }}
+        {...switchStyle}
         width={70}
         height={50}
         padding={1}
@@ -165,7 +171,7 @@ storiesOf("Switch", module)
         activeIcon={getIconProps("Icomoon", "warning")}
       />
       <SwitchInput
-        style={{ margin: "40px" }}
+        {...switchStyle}
         width={65}
         height={40}
         padding={1}
@@ -177,7 +183,7 @@ storiesOf("Switch", module)
         activeIcon={getIconProps("Icomoon", "mic")}
       />
       <SwitchInput
-        style={{ margin: "40px" }}
+        {...switchStyle}
         width={75}
         height={20}
         padding={-20}
@@ -190,9 +196,9 @@ storiesOf("Switch", module)
         borderedNubbin
       />
       <br />
-      <h3>iconStyle="is-nubbin"</h3>
+      <pre>iconStyle="is-nubbin"</pre>
       <SwitchInput
-        style={{ margin: "40px" }}
+        {...switchStyle}
         width={80}
         height={45}
         padding={4}
@@ -205,7 +211,7 @@ storiesOf("Switch", module)
         iconStyle="is-nubbin"
       />
       <SwitchInput
-        style={{ margin: "40px" }}
+        {...switchStyle}
         width={80}
         height={45}
         padding={4}
@@ -218,7 +224,7 @@ storiesOf("Switch", module)
         renderShadows={false}
       />
       <SwitchInput
-        style={{ margin: "40px" }}
+        {...switchStyle}
         width={80}
         height={45}
         padding={4}
@@ -232,9 +238,9 @@ storiesOf("Switch", module)
         inactiveIcon={getIconProps("Icomoon", "thumbsDown3")}
         iconStyle="is-nubbin"
       />
-      <h3>iconStyle="static"</h3>
+      <pre>iconStyle="static"</pre>
       <SwitchInput
-        style={{ margin: "40px" }}
+        {...switchStyle}
         width={85}
         height={45}
         padding={1}
@@ -248,7 +254,7 @@ storiesOf("Switch", module)
       />
       <h3>custom icons</h3>
       <SwitchInput
-        style={{ margin: "40px" }}
+        {...switchStyle}
         width={85}
         height={45}
         padding={1}
@@ -261,7 +267,7 @@ storiesOf("Switch", module)
         iconStyle="static"
       />
       <SwitchInput
-        style={{ margin: "40px" }}
+        {...switchStyle}
         width={85}
         height={45}
         padding={1}

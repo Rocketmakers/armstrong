@@ -8,6 +8,10 @@
 @import "../_symlink/navigation";
 @import "../_symlink/animation";
 
+* {
+  box-sizing: border-box;
+}
+
 .intro-view {
   padding: $spacing-xlarge;
 
@@ -42,4 +46,20 @@
       border-color: green;
     }
   }
+}
+
+a {
+  color: inherit;
+  text-decoration: inherit;
+
+  &:visited {
+    color: inherit;
+  }
+}
+
+pre {
+  color: $brand-primary;
+  background-color: $gray-very-light;
+  padding: $spacing-small;
+  border-radius: $spacing-xxsmall;
 }

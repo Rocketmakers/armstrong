@@ -1,7 +1,11 @@
-import * as React from "react"
+import * as React from "react";
 
-import { storiesOf } from '@storybook/react';
-import { ITooltipPositions, Tooltip, ITooltipCustomPositions } from "../_symlink";
+import { storiesOf } from "@storybook/react";
+import {
+  ITooltipPositions,
+  Tooltip,
+  ITooltipCustomPositions
+} from "../_symlink";
 
 import "../theme/theme.scss";
 
@@ -10,48 +14,95 @@ const positionPriorities: ITooltipPositions[] = [
   ["top", "bottom", "right"],
   ["top", "hidden"],
   "fixed"
-]
+];
 
 const customPositionPriorities: ITooltipCustomPositions[] = [
   "top",
   ["farBelow", "bottomRight"],
   ["farBelow", "bottom", "hidden"]
-]
+];
 
-storiesOf('Tooltip', module)
-  .add('Retain', () =>
-    <Tooltip tooltip="It is me. The tooltip." retain={true}>
-      <span>Hover here</span>
-    </Tooltip>
-  )
-  .add('Manually set aria-label', () =>
-    <Tooltip tooltip="It is me. The tooltip." ariaLabel="The tooltip I am.">
-      <span>Hover here</span>
-    </Tooltip>
-  )
-  .add('Position priority', () => <>
-    {positionPriorities.map((positionPrioritity, i) => 
-      <Tooltip tooltip="It is me. The tooltip." position={positionPrioritity} key={"tooltip" + i}>
-        <span>{
-          typeof positionPrioritity ==="string" ?
-            `"${positionPrioritity}"`
-          :
-            `[${positionPrioritity.map(position => `"${position}"`).join(", ")}]`
-        }</span>
+const tooltipInnerProps: Pick<React.HTMLProps<HTMLElement>, "style"> = {
+  style: {
+    padding: "10px",
+    borderRadius: "2px",
+    boxShadow: "1px 1px 10px rgba(0,0,0,0.05)",
+    margin: "10px 0",
+    border: "1px solid gray ",
+    fontWeight: 600
+  }
+};
+
+storiesOf("Tooltip", module)
+  .add("Retain", () => (
+    <>
+      <p>
+        Tooltip components will attempt to cause a tooltip to appear on hover
+        on the specified side, defaulting to right, falling back on other
+        directions if there's no space for it.
+      </p>
+      <br />
+      <pre>{'<Tooltip tooltip="It is me. The tooltip." retain={true}>'}</pre>
+      <br />
+      <Tooltip tooltip="It is me. The tooltip." retain={true}>
+        <div {...tooltipInnerProps}>Hover here</div>
       </Tooltip>
-      
-    )}
-    <Tooltip tooltip="It is me. The tooltip." position={["right", "left", "bottom", "top", "fixed", "hidden"]}>
-      <span>All preset positions in default order: ["right", "left", "bottom", "top", "fixed", "hidden"]</span>
+    </>
+  ))
+  .add("Manually set aria-label", () => (
+    <Tooltip tooltip="It is me. The tooltip." ariaLabel="The tooltip I am.">
+      <div {...tooltipInnerProps}>Hover here</div>
     </Tooltip>
-    <br/><br/>
-    NB: Unset preset positions will be used if no specified position works.
-    <br/><br/>
-    Preset positons can be overwritten with css:<br/>
-    e.g. .tooltip[data-position=left]
-  </>)
-  .add('Custom position priority', () => <>
-    <style dangerouslySetInnerHTML={{ __html: `
+  ))
+  .add("Position priority", () => (
+    <>
+      <p>Different positions can be set</p>
+      <pre>
+        {
+          '<Tooltip tooltip="It is me. The tooltip." retain={true} position={["right", "left", "bottom", "top", "fixed", "hidden"]} >'
+        }
+      </pre>
+      <br />
+      {positionPriorities.map((positionPrioritity, i) => (
+        <Tooltip
+          tooltip="It is me. The tooltip."
+          position={positionPrioritity}
+          key={"tooltip" + i}
+        >
+          <div {...tooltipInnerProps}>
+            {typeof positionPrioritity === "string"
+              ? `"${positionPrioritity}"`
+              : `[${positionPrioritity
+                  .map(position => `"${position}"`)
+                  .join(", ")}]`}
+          </div>
+        </Tooltip>
+      ))}
+      <Tooltip
+        tooltip="It is me. The tooltip."
+        position={["right", "left", "bottom", "top", "fixed", "hidden"]}
+      >
+        <div {...tooltipInnerProps}>
+          All preset positions in default order: ["right", "left", "bottom",
+          "top", "fixed", "hidden"]
+        </div>
+      </Tooltip>
+      <br />
+      <br />
+      NB: Unset preset positions will be used if no specified position works.
+      <br />
+      <br />
+      Preset positons can be overwritten with css:
+      <br />
+      <br />
+      <pre>.tooltip[data-position=left]</pre>
+    </>
+  ))
+  .add("Custom position priority", () => (
+    <>
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `
       .tooltip-example-1.tooltip[data-position=farBelow] {
         top: 1000%;
         left: 0;
@@ -61,21 +112,35 @@ storiesOf('Tooltip', module)
         top: 100%;
         left: 100%;
       }
-    `}} />
-    {customPositionPriorities.map((customPositionPriority, i) => 
-      <Tooltip tooltip="It is me. The tooltip." customPosition={customPositionPriority} tooltipClass="tooltip-example-1" key={"customPositionTooltip" + i}>
-        <span>{
-          typeof customPositionPriority ==="string" ?
-            `"${customPositionPriority}"`
-          :
-            `[${customPositionPriority.map(position => `"${position}"`).join(", ")}]`
-        }</span>
-      </Tooltip>
-    )}
-    <br/><br/>
-    NB: Final position can be used even if not fully within viewport.
-    <br/><br/>
-    Custom positons can be created with css:<br/>
-    .tooltip[data-position=farBelow]<br/>
-    .tooltip[data-position=bottomRight]
-  </>)
+    `
+        }}
+      />
+      {customPositionPriorities.map((customPositionPriority, i) => (
+        <Tooltip
+          tooltip="It is me. The tooltip."
+          customPosition={customPositionPriority}
+          tooltipClass="tooltip-example-1"
+          key={"customPositionTooltip" + i}
+        >
+          <div {...tooltipInnerProps}>
+            {typeof customPositionPriority === "string"
+              ? `"${customPositionPriority}"`
+              : `[${customPositionPriority
+                  .map(position => `"${position}"`)
+                  .join(", ")}]`}
+          </div>
+        </Tooltip>
+      ))}
+      <br />
+      <br />
+      NB: Final position can be used even if not fully within viewport.
+      <br />
+      <br />
+      Custom positons can be created with css:
+      <br />
+      <br />
+      <pre>.tooltip[data-position=farBelow]</pre>
+      <br />
+      <pre>.tooltip[data-position=bottomRight]</pre>
+    </>
+  ));

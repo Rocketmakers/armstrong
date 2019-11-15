@@ -9,8 +9,10 @@ export {
 
 // Display
 export {
-  IIconProps,
   Icon,
+  IcomoonIcon,
+  LinearIcon,
+  IIconProps,
   getIconProps,
   IconOrJsx,
   useIconOrJsx,

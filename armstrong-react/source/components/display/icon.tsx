@@ -88,3 +88,25 @@ Icon.defaultProps = {
 // Add icon sets to static Icon to allow old Icon.Icomoon.wrench pattern
 
 Object.keys(Icons).forEach(key => (Icon[key] = Icons[key]));
+
+interface ISpecificIconProps extends Omit<IIconProps, "iconSet" | "icon"> {}
+
+interface IIcomoonIconProps extends ISpecificIconProps {
+  iconName: IconName<"Icomoon">;
+}
+
+export const IcomoonIcon: React.FunctionComponent<IIcomoonIconProps> = ({
+  iconName,
+  ...props
+}) => <Icon {...props} iconSet="Icomoon" icon={Icon.Icomoon[iconName]} />;
+
+interface ILinearIconsIconProps extends ISpecificIconProps {
+  iconName: IconName<"LinearIcons">;
+}
+
+export const LinearIcon: React.FunctionComponent<ILinearIconsIconProps> = ({
+  iconName,
+  ...props
+}) => (
+  <Icon {...props} iconSet="LinearIcons" icon={Icon.LinearIcons[iconName]} />
+);
