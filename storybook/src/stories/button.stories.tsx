@@ -5,6 +5,7 @@ import { action } from "@storybook/addon-actions";
 import { Button, Icon } from "../_symlink";
 
 import "../theme/theme.scss";
+import { getIconProps } from "../_symlink/components/display/icon";
 
 storiesOf("Button", module)
   .addParameters({
@@ -22,7 +23,7 @@ storiesOf("Button", module)
   ))
   .add("Left icon", () => (
     <Button
-      leftIcon={<Icon iconSet="Icomoon" iconName="rocket" />}
+      leftIcon={getIconProps("Icomoon", "rocket")}
       onClick={action("clicked")}
     >
       Launch rocket
@@ -31,7 +32,7 @@ storiesOf("Button", module)
   .add("Icon button", () => (
     <>
       <Button
-        leftIcon={<Icon iconSet="Icomoon" iconName="rocket" />}
+        leftIcon={getIconProps("Icomoon", "rocket")}
         onClick={action("clicked")}
       />
 

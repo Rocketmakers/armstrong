@@ -5,74 +5,77 @@ import { Icons } from "./../../utilities/icons";
 export type IconSet = keyof typeof Icons;
 export type IconName<Set extends IconSet> = keyof typeof Icons[Set];
 
-export interface IIconDefinition<Set extends IconSet> {
-  /** (string) The icons 'className' eg Icon.Icomoon.Rocket, DEPRECATED IN FAVOUR OF USING ICONSET AND ICONNAME PROPS */
-  icon?: string;
+export const getIconProps = <Set extends IconSet>(
+  iconSet: Set,
+  iconName: IconName<Set>
+): IIcon => ({
+  icon: (Icons[iconSet][iconName] as any) as string,
+  iconSet
+});
 
+export interface IIcon {
   /** (string) The set of icons to use */
-  iconSet?: Set;
+  iconSet?: IconSet;
 
-  /** (string) the name of the icon in that set to use */
-  iconName?: IconName<Set>;
+  /** (string) The icons 'className' eg Icon.Icomoon.Rocket — WARNING: To use an icon set other than icomoon, iconSet must also be set */
+  icon: string;
 }
 
-export const getIcon = <T extends IconSet>({
-  icon,
-  iconSet,
-  iconName
-}: IIconDefinition<T>) => icon || Icons[iconSet][iconName];
+export type IconOrJsx = string | IIcon | JSX.Element;
 
-export const getIconProps = <T extends IconSet>(
-  iconDefinition: IIconDefinition<T> | string
-) =>
-  typeof iconDefinition === "string"
-    ? { icon: iconDefinition }
-    : iconDefinition;
+const isIIcon = (icon: IconOrJsx): icon is IIcon => !!(icon as IIcon).icon;
 
-export interface IIconProps<Set extends IconSet = "Icomoon">
-  extends IIconDefinition<Set>,
-    React.HTMLAttributes<HTMLElement> {
+/** get an icon element from a string, an icon object, or just JSX */
+
+export const getIconOrJsx = (
+  icon: IconOrJsx,
+  iconProps?: Omit<IIconProps, "iconSet" | "icon">,
+  wrapJsx?: (icon: JSX.Element) => JSX.Element
+): JSX.Element => {
+  if (!icon) {
+    return null;
+  }
+
+  if (typeof icon === "string") {
+    return <Icon icon={icon} iconSet="Icomoon" {...iconProps} />;
+  }
+
+  if (isIIcon(icon)) {
+    return <Icon {...iconProps} {...icon} />;
+  }
+
+  if (wrapJsx) {
+    return wrapJsx(icon);
+  }
+
+  return icon;
+};
+
+/** get an icon element from a string, an icon object, or just JSX */
+
+export const useIconOrJsx = (
+  icon: IconOrJsx,
+  iconProps?: Omit<IIconProps, "iconSet" | "icon">,
+  wrapJsx?: (icon: JSX.Element) => JSX.Element
+) => {
+  return React.useMemo(
+    () => (icon ? getIconOrJsx(icon, iconProps, wrapJsx) : null),
+    [icon, iconProps, wrapJsx]
+  );
+};
+
+export interface IIconProps extends React.HTMLAttributes<HTMLElement>, IIcon {
   /** (string) CSS className property */
   className?: string;
 }
 
-// type IconComponent<Set extends IconSet> = React.FunctionComponent<IIconProps<Set>>
-type IconComponent = (<Set extends IconSet>(
-  props: React.PropsWithChildren<IIconProps<Set>>
-) => React.ReactElement) &
-  Partial<
-    typeof Icons & {
-      defaultProps: Partial<IIconProps<IconSet>>;
-    }
-  >;
-
-export const Icon: IconComponent = props => {
-  const { icon, iconSet, iconName, className, ...attrs } = props;
-
-  const iconClass = React.useMemo(() => {
-    if (icon) {
-      return icon;
-    }
-
-    if (iconName || iconSet) {
-      if (iconName && iconSet) {
-        return getIcon({ iconName, iconSet });
-      }
-      // tslint:disable-next-line: no-console
-      console.error(
-        "WARNING: IconSet and IconName props must both be passed into an Armstrong Icon component"
-      );
-    }
-    // tslint:disable-next-line: no-console
-    console.error(
-      "WARNING: Either IconSet and IconName props OR the Icon prop must be passed into an Armstrong Icon component"
-    );
-  }, [icon, iconName, iconSet]);
+export const Icon: React.FunctionComponent<IIconProps> &
+  Partial<typeof Icons> = props => {
+  const { icon, iconSet, className, ...attrs } = props;
 
   const classes = React.useMemo(
-    () =>
-      ClassHelpers.classNames("armstrong-icon", "icon", className, iconClass),
-    [className, iconClass]
+    () => ClassHelpers.classNames("armstrong-icon", "icon", className, icon),
+    [className, icon]
   );
 
   return <i {...attrs} data-icon-set={iconSet} className={classes} />;

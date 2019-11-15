@@ -1,24 +1,24 @@
-import * as React from 'react';
+import * as React from "react";
 
-import { storiesOf } from '@storybook/react';
+import { storiesOf } from "@storybook/react";
 
-import '../theme/theme.scss';
+import "../theme/theme.scss";
 
-import { SwitchInput } from '../_symlink/components/form/inputs/switchInput';
-import { Icon } from '../_symlink';
+import { SwitchInput } from "../_symlink";
+import { getIconProps } from "../_symlink/components/display/icon";
 
-storiesOf('Switch', module)
+storiesOf("Switch", module)
   .addParameters({
     options: {
       showAddonPanel: true
     }
   })
-  .add('Simple Switch', () => (
+  .add("Simple Switch", () => (
     <div>
-      <SwitchInput style={{ margin: '40px' }} />
+      <SwitchInput style={{ margin: "40px" }} />
 
       <SwitchInput
-        style={{ margin: '40px' }}
+        style={{ margin: "40px" }}
         width={120}
         height={90}
         padding={10}
@@ -26,7 +26,7 @@ storiesOf('Switch', module)
       />
 
       <SwitchInput
-        style={{ margin: '40px' }}
+        style={{ margin: "40px" }}
         width={400}
         height={60}
         padding={3}
@@ -34,61 +34,61 @@ storiesOf('Switch', module)
       />
 
       <SwitchInput
-        style={{ margin: '40px' }}
+        style={{ margin: "40px" }}
         width={80}
         height={50}
         padding={0}
         hoverNudgeAmount={0}
-        inactiveColour='red'
-        activeColour='green'
-        hoveringColour='red'
+        inactiveColour="red"
+        activeColour="green"
+        hoveringColour="red"
       />
 
       <SwitchInput
-        className='outlined-switch'
-        style={{ margin: '40px' }}
+        className="outlined-switch"
+        style={{ margin: "40px" }}
         width={80}
         height={50}
         padding={4}
         hoverNudgeAmount={0}
-        inactiveColour='white'
-        activeColour='white'
-        inactiveNubbinColour='red'
-        activeNubbinColour='green'
+        inactiveColour="white"
+        activeColour="white"
+        inactiveNubbinColour="red"
+        activeNubbinColour="green"
       />
 
       <SwitchInput
-        style={{ margin: '40px' }}
+        style={{ margin: "40px" }}
         width={50}
         height={10}
         padding={-10}
-        activeColour='blue'
+        activeColour="blue"
         borderedNubbin
         renderShadows={false}
       />
 
       <SwitchInput
-        style={{ margin: '40px' }}
+        style={{ margin: "40px" }}
         width={80}
         height={45}
         padding={4}
         iconSize={0.8}
-        inactiveColour='white'
-        activeColour='white'
-        inactiveNubbinColour='red'
-        activeNubbinColour='green'
+        inactiveColour="white"
+        activeColour="white"
+        inactiveNubbinColour="red"
+        activeNubbinColour="green"
       />
 
       <SwitchInput
-        style={{ margin: '40px' }}
+        style={{ margin: "40px" }}
         width={70}
         height={45}
         padding={-2}
         iconSize={0.8}
-        inactiveColour='lightgray'
-        activeColour='lightgray'
-        inactiveNubbinColour='gray'
-        activeNubbinColour='green'
+        inactiveColour="lightgray"
+        activeColour="lightgray"
+        inactiveNubbinColour="gray"
+        activeNubbinColour="green"
         renderShadows={false}
       />
 
@@ -124,140 +124,154 @@ storiesOf('Switch', module)
       <p>--armstrong-switch-nubbin-active-colour</p>
     </div>
   ))
-  .add('Switch with Icons', () => (
+  .add("Switch with Icons", () => (
     <div>
       <p>Switches can work with icons in a few ways</p>
-
       <h3>iconStyle="on-nubbin"</h3>
-
       <SwitchInput
-        style={{ margin: '40px' }}
+        style={{ margin: "40px" }}
         width={80}
         height={50}
         padding={4}
         hoverNudgeAmount={5}
         iconSize={0.8}
-        inactiveColour='red'
-        activeColour='green'
-        hoveringColour='red'
-        activeIcon={Icon.Icomoon.checkmark3}
-        inactiveIcon={Icon.Icomoon.cross2}
+        inactiveColour="red"
+        activeColour="green"
+        hoveringColour="red"
+        activeIcon={getIconProps("Icomoon", "checkmark3")}
+        inactiveIcon={getIconProps("Icomoon", "cross2")}
       />
-
       <SwitchInput
-        style={{ margin: '40px' }}
+        style={{ margin: "40px" }}
         width={45}
         height={30}
         padding={2}
         iconSize={0.9}
-        inactiveColour='lightgray'
-        activeColour='purple'
-        hoveringColour='lightgray'
-        activeIcon={Icon.Icomoon.eye3}
-        inactiveIcon={Icon.Icomoon.eyeBlocked3}
+        inactiveColour="lightgray"
+        activeColour="purple"
+        hoveringColour="lightgray"
+        activeIcon={getIconProps("Icomoon", "eye3")}
+        inactiveIcon={getIconProps("Icomoon", "eyeBlocked3")}
       />
-
       <SwitchInput
-        style={{ margin: '40px' }}
+        style={{ margin: "40px" }}
         width={70}
         height={50}
         padding={1}
         iconSize={0.6}
-        inactiveColour='lightgray'
-        activeColour='red'
-        hoveringColour='lightgray'
-        activeIcon={Icon.Icomoon.warning}
+        inactiveColour="lightgray"
+        activeColour="red"
+        hoveringColour="lightgray"
+        activeIcon={getIconProps("Icomoon", "warning")}
       />
-
       <SwitchInput
-        style={{ margin: '40px' }}
+        style={{ margin: "40px" }}
         width={65}
         height={40}
         padding={1}
         iconSize={0.6}
-        inactiveColour='gray'
-        activeColour='blue'
-        hoveringColour='gray'
-        inactiveIcon={Icon.Icomoon.micOff}
-        activeIcon={Icon.Icomoon.mic}
+        inactiveColour="gray"
+        activeColour="blue"
+        hoveringColour="gray"
+        inactiveIcon={getIconProps("Icomoon", "micOff")}
+        activeIcon={getIconProps("Icomoon", "mic")}
       />
-
       <SwitchInput
-        style={{ margin: '40px' }}
+        style={{ margin: "40px" }}
         width={75}
         height={20}
         padding={-20}
         iconSize={0.6}
-        inactiveColour='gray'
-        activeColour='blue'
-        hoveringColour='gray'
-        inactiveIcon={Icon.Icomoon.glass2}
-        activeIcon={Icon.Icomoon.glass}
+        inactiveColour="gray"
+        activeColour="blue"
+        hoveringColour="gray"
+        inactiveIcon={getIconProps("Icomoon", "glass2")}
+        activeIcon={getIconProps("Icomoon", "glass")}
         borderedNubbin
       />
-
       <br />
-
       <h3>iconStyle="is-nubbin"</h3>
-
       <SwitchInput
-        style={{ margin: '40px' }}
+        style={{ margin: "40px" }}
         width={80}
         height={45}
         padding={4}
         iconSize={0.9}
-        inactiveColour='red'
-        activeColour='green'
-        hoveringColour='red'
-        activeIcon={Icon.Icomoon.checkmark3}
-        inactiveIcon={Icon.Icomoon.cross2}
-        iconStyle='is-nubbin'
+        inactiveColour="red"
+        activeColour="green"
+        hoveringColour="red"
+        activeIcon={getIconProps("Icomoon", "checkmark3")}
+        inactiveIcon={getIconProps("Icomoon", "cross2")}
+        iconStyle="is-nubbin"
       />
-
       <SwitchInput
-        style={{ margin: '40px' }}
+        style={{ margin: "40px" }}
         width={80}
         height={45}
         padding={4}
         iconSize={0.8}
-        inactiveColour='purple'
-        activeColour='gold'
-        activeIcon={Icon.Icomoon.sun}
-        inactiveIcon={Icon.Icomoon.moon}
-        iconStyle='is-nubbin'
+        inactiveColour="purple"
+        activeColour="gold"
+        activeIcon={getIconProps("Icomoon", "sun")}
+        inactiveIcon={getIconProps("Icomoon", "moon")}
+        iconStyle="is-nubbin"
         renderShadows={false}
       />
-
       <SwitchInput
-        style={{ margin: '40px' }}
+        style={{ margin: "40px" }}
         width={80}
         height={45}
         padding={4}
         iconSize={0.8}
-        inactiveColour='#dbdbdb'
-        activeColour='#ebebeb'
+        inactiveColour="#dbdbdb"
+        activeColour="#ebebeb"
         renderShadows={false}
-        inactiveNubbinColour='red'
-        activeNubbinColour='green'
-        activeIcon={Icon.Icomoon.thumbsUp3}
-        inactiveIcon={Icon.Icomoon.thumbsDown3}
-        iconStyle='is-nubbin'
+        inactiveNubbinColour="red"
+        activeNubbinColour="green"
+        activeIcon={getIconProps("Icomoon", "thumbsUp3")}
+        inactiveIcon={getIconProps("Icomoon", "thumbsDown3")}
+        iconStyle="is-nubbin"
       />
-
       <h3>iconStyle="static"</h3>
-
       <SwitchInput
-        style={{ margin: '40px' }}
+        style={{ margin: "40px" }}
         width={85}
         height={45}
         padding={1}
         iconSize={0.6}
-        inactiveColour='red'
-        activeColour='green'
-        hoveringColour='red'
-        activeIcon={Icon.Icomoon.checkmark3}
-        inactiveIcon={Icon.Icomoon.cross2}
-        iconStyle='static'
+        inactiveColour="red"
+        activeColour="green"
+        hoveringColour="red"
+        activeIcon={getIconProps("Icomoon", "checkmark3")}
+        inactiveIcon={getIconProps("Icomoon", "cross2")}
+        iconStyle="static"
+      />
+      <h3>custom icons</h3>
+      <SwitchInput
+        style={{ margin: "40px" }}
+        width={85}
+        height={45}
+        padding={1}
+        iconSize={0.6}
+        inactiveColour="red"
+        activeColour="green"
+        hoveringColour="red"
+        activeIcon={<p>ON</p>}
+        inactiveIcon={<p>OFF</p>}
+        iconStyle="static"
+      />
+      <SwitchInput
+        style={{ margin: "40px" }}
+        width={85}
+        height={45}
+        padding={1}
+        iconSize={0.6}
+        inactiveColour="gray"
+        activeColour="red"
+        hoveringColour="red"
+        activeIcon={<p>👺</p>}
+        inactiveIcon={<p>👽</p>}
+        iconStyle="static"
       />
     </div>
   ));

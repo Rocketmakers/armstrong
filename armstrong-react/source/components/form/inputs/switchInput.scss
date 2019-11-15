@@ -65,13 +65,19 @@ $switch-shadow: 0 0 8px rgba(black, 0.3) !default;
         }
     }
 
-    .icon {
+    >.icon {
         font-size: $icon-font-size;
 
         top: $switch-padding;
         left: $switch-padding;
         height: $nubbin-size;
         width: $nubbin-size;
+    }
+
+    >div.icon{
+        p{
+            font-size: calc(#{$icon-font-size} * 0.7);
+        }
     }
 
     &[data-icon-style="static"] {
@@ -226,6 +232,12 @@ $switch-shadow: 0 0 8px rgba(black, 0.3) !default;
 
             opacity: 0;
             transition: opacity $transition-time / 2, transform $transition-time;
+        }
+
+        >div.icon{
+            p{
+                margin-bottom: 0;
+            }
         }
 
         &[data-icon-style="is-nubbin"] {

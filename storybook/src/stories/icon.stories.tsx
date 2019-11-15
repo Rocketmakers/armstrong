@@ -4,6 +4,11 @@ import { storiesOf } from "@storybook/react";
 import { Icon } from "../_symlink";
 
 import "../theme/theme.scss";
+import { getIconProps } from "../_symlink/components/display/icon";
+
+const style: Pick<React.HTMLAttributes<HTMLElement>, "style"> = {
+  style: { margin: "20px", fontSize: "30px" }
+};
 
 storiesOf("Icon", module)
   .addParameters({
@@ -13,51 +18,39 @@ storiesOf("Icon", module)
   })
   .add("Icomoon", () => (
     <>
-      <Icon className="f-size-xlarge m-right-small" iconSet='Icomoon' iconName='rocket' />
-      <Icon className="f-size-xlarge m-right-small" iconSet="Icomoon" iconName="leaf" />
-      <Icon className="f-size-xlarge m-right-small" iconSet="Icomoon" iconName="upload2" />
-      <Icon className="f-size-xlarge m-right-small" iconSet="Icomoon" iconName="package" />
-      <Icon className="f-size-xlarge m-right-small" iconSet="Icomoon" iconName="fileVideo" />
+      <Icon {...style} {...getIconProps("Icomoon", "rocket")} />
+      <Icon {...style} {...getIconProps("Icomoon", "leaf")} />
+      <Icon {...style} {...getIconProps("Icomoon", "upload2")} />
+      <Icon {...style} {...getIconProps("Icomoon", "package")} />
+      <Icon {...style} {...getIconProps("Icomoon", "fileVideo")} />
       <br />
       <br />
       <p>
         Requires the IcoMoon-Ultimate.ttf pack available
         <a href="https://icomoon.io/#icons"> here</a>.
-        <br/><br/>
-        Must be defined in your project as a css @font-face called IcoMoon-Ultimate (cannot be done in Armstrong for licencing reasons)
+        <br />
+        <br />
+        Must be defined in your project as a css @font-face called
+        IcoMoon-Ultimate (cannot be done in Armstrong for licencing reasons)
       </p>
     </>
   ))
   .add("Linear Icon", () => (
     <>
-      <Icon className="f-size-xlarge m-right-small" iconSet="LinearIcons" iconName="sad" />
-      <Icon
-        className="f-size-xlarge m-right-small"
-        iconSet="LinearIcons"
-        iconName="satellite2"
-      />
-      <Icon
-        className="f-size-xlarge m-right-small"
-        iconSet="LinearIcons"
-        iconName="scissors"
-      />
-      <Icon
-        className="f-size-xlarge m-right-small"
-        iconSet="LinearIcons"
-        iconName="userLock"
-      />
-      <Icon
-        className="f-size-xlarge m-right-small"
-        iconSet="LinearIcons"
-        iconName="vault"
-      />
+      <Icon {...style} {...getIconProps("LinearIcons", "sad")} />
+      <Icon {...style} {...getIconProps("LinearIcons", "satellite2")} />
+      <Icon {...style} {...getIconProps("LinearIcons", "scissors")} />
+      <Icon {...style} {...getIconProps("LinearIcons", "userLock")} />
+      <Icon {...style} {...getIconProps("LinearIcons", "vault")} />
       <br />
       <br />
       <p>
         Requires the Linearicons.ttf pack available
         <a href="https://icomoon.io/#icons"> here</a>.
-        <br/><br/>
-        Must be defined in your project as a css @font-face called IcoMoon-Ultimate (cannot be done in Armstrong for licencing reasons)
+        <br />
+        <br />
+        Must be defined in your project as a css @font-face called
+        IcoMoon-Ultimate (cannot be done in Armstrong for licencing reasons)
       </p>
     </>
   ));

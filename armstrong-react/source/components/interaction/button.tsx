@@ -1,14 +1,14 @@
 import * as React from "react";
 import { ClassHelpers } from "../../utilities/classHelpers";
-import { Icon, IconSet, IIconDefinition } from "./../display/icon";
+import { getIconOrJsx, IconOrJsx } from "./../display/icon";
 
 export interface IButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   /** (string) An icon to show on the left of the buttons content */
-  leftIcon?: string | JSX.Element;
+  leftIcon?: IconOrJsx;
 
   /** (string) An icon to show on the right of the buttons content */
-  rightIcon?: string | JSX.Element;
+  rightIcon?: IconOrJsx;
 
   /** (boolean) Wether or not the button should have rounded edges */
   rounded?: boolean;
@@ -88,19 +88,9 @@ const ButtonRef: React.RefForwardingComponent<IButton, IButtonProps> = (
       {...attrs}
       className={classes}
     >
-      {leftIcon && (
-        <Icon
-          className="left-icon"
-          {...(typeof leftIcon === "string" ? { icon: leftIcon } : leftIcon)}
-        />
-      )}
+      {leftIcon && getIconOrJsx(leftIcon)}
       {children}
-      {rightIcon &&
-        (typeof rightIcon === "string" ? (
-          <Icon className="right-icon" icon={rightIcon} />
-        ) : (
-          rightIcon
-        ))}
+      {rightIcon && getIconOrJsx(rightIcon)}
     </button>
   );
 };

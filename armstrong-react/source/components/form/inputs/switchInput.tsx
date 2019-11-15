@@ -1,7 +1,7 @@
 import * as React from "react";
 import { ClassHelpers, generateUniqueId, ValidationLabel } from "../../..";
 import { useCSSVariables } from "../../../hooks/useCssVariables";
-import { Icon } from "../../display/icon";
+import { IconOrJsx, useIconOrJsx } from "../../display/icon";
 import { DataValidationMessage, DataValidationMode } from "../formCore";
 
 export interface ISwitchInput {
@@ -47,11 +47,11 @@ export interface ISwitchInputProps
   /** grey out the switch and stop it from being interactible */
   disabled?: boolean;
 
-  /** icon to show on the nubbin when the value of checked is true */
-  activeIcon?: string;
+  /** icon to show on the nubbin when the value of checked is true, accessed via Icon.[IconSet].[IconName] or by passing in some JSX */
+  activeIcon?: IconOrJsx;
 
-  /** icon to show on the nubbin when the value of checked is false */
-  inactiveIcon?: string;
+  /** icon to show on the nubbin when the value of checked is false, accessed via Icon.[IconSet].[IconName] or by passing in some JSX */
+  inactiveIcon?: IconOrJsx;
 
   /** where to render the icon - defalults to on-nubbin */
   iconStyle?: "on-nubbin" | "is-nubbin" | "static";
@@ -171,8 +171,36 @@ const SwitchInputRef: React.RefForwardingComponent<
   );
 
   const autoId = React.useMemo(
-    () => id || generateUniqueId(u => "checkbox_" + u),
+    () => id || generateUniqueId(u => "switch_" + u),
     [id]
+  );
+
+  const activeIconElement = useIconOrJsx(
+    activeIcon,
+    {
+      // @ts-ignore
+      "data-icon-style": iconStyle,
+      className: "active-icon"
+    },
+    icon => (
+      <div className="icon active-icon" data-icon-style="icon-style">
+        {icon}
+      </div>
+    )
+  );
+
+  const inactiveIconElement = useIconOrJsx(
+    inactiveIcon,
+    {
+      // @ts-ignore
+      "data-icon-style": iconStyle,
+      className: "inactive-icon"
+    },
+    icon => (
+      <div className="icon inactive-icon" data-icon-style="icon-style">
+        {icon}
+      </div>
+    )
   );
 
   return (
@@ -198,20 +226,8 @@ const SwitchInputRef: React.RefForwardingComponent<
         data-disabled={disabled}
       />
 
-      {activeIcon && (
-        <Icon
-          className="active-icon"
-          icon={activeIcon}
-          data-icon-style={iconStyle}
-        />
-      )}
-      {inactiveIcon && (
-        <Icon
-          className="inactive-icon"
-          icon={inactiveIcon}
-          data-icon-style={iconStyle}
-        />
-      )}
+      {activeIcon && activeIconElement}
+      {inactiveIcon && inactiveIconElement}
 
       <ValidationLabel message={validationMessage} mode={validationMode} />
     </div>

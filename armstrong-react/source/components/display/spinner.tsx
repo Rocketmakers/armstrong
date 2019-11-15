@@ -1,12 +1,12 @@
 import * as React from "react";
 import { ClassHelpers } from "../..";
-import { Icon } from "./icon";
+import { getIconOrJsx, Icon, IconOrJsx } from "./icon";
 
 interface ISpinnerProps extends React.HTMLProps<HTMLDivElement> {
   reversed?: boolean;
 
   /** icon to be rendered if there are no children - defaults to icomoons spinner2 */
-  icon?: string;
+  icon?: IconOrJsx;
 }
 
 export const Spinner: React.FunctionComponent<ISpinnerProps> = ({
@@ -21,7 +21,7 @@ export const Spinner: React.FunctionComponent<ISpinnerProps> = ({
     {...HTMLProps}
     data-reversed={reversed}
   >
-    {children || <Icon icon={icon} />}
+    {children || getIconOrJsx(icon)}
   </div>
 );
 
