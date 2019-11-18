@@ -2,7 +2,7 @@ import * as React from "react";
 import { useMedia } from "../../hooks/useMedia";
 import { delay } from "../../utilities/async";
 import { utils } from "../../utilities/utils";
-import { Icon, IconOrJsx, getIconOrJsx } from "../display/icon";
+import { getIconOrJsx, IconOrJsx } from "../display/icon";
 import { Button } from "../interaction/button";
 
 interface ISidebarContentProps {

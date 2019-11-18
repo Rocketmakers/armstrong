@@ -1,5 +1,5 @@
 import * as React from "react";
-import { ClassHelpers, Icon } from "../..";
+import { ClassHelpers } from "../..";
 import { Spinner } from "./spinner";
 
 type RefreshStatus = "required" | "refreshing" | "idle";
