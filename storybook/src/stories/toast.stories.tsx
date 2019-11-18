@@ -341,13 +341,27 @@ storiesOf("Toasts", module)
         Default rendering has been disabled for these toasts and they are
         rendered manually using the useToast hook.
       </p>
+      <pre>{`<ToastProvider renderInProvider={false} />`}</pre>
+      <br />
+      <pre>
+        {`const {toasts} = useToasts()`}
+        <br />
+        <br />
+        {`return toasts.map(toast => <p>My custom toast component</p>)`}
+      </pre>
+      <br />
 
       <CustomInner />
     </ToastProvider>
   ))
   .add("Portaled toasts", () => (
     <ToastProvider location="top right" hostElement="body">
-      <p>These toasts are portaled into the body using the hostElement prop</p>
+      <p>
+        These toasts are portaled into the body using the hostElement prop on
+        the ToastProvider component
+      </p>
+      <pre>{`<ToastProvider  hostElement="body"/>`}</pre>
+      <br />
 
       <BasicInner />
     </ToastProvider>
