@@ -37,8 +37,8 @@ storiesOf("Tooltip", module)
   .add("Retain", () => (
     <>
       <p>
-        Tooltip components will attempt to cause a tooltip to appear on hover
-        on the specified side, defaulting to right, falling back on other
+        Tooltip components will attempt to cause a tooltip to appear on hover on
+        the specified side, defaulting to right, falling back on other
         directions if there's no space for it.
       </p>
       <br />
@@ -50,8 +50,16 @@ storiesOf("Tooltip", module)
     </>
   ))
   .add("Manually set aria-label", () => (
-    <Tooltip tooltip="It is me. The tooltip." ariaLabel="The tooltip I am.">
+    <Tooltip tooltip="It is me. The tooltip.">
       <div {...tooltipInnerProps}>Hover here</div>
+    </Tooltip>
+  ))
+  .add("Disable", () => (
+    <Tooltip
+      tooltip="It is me. The tooltip.  I am forever hidden."
+      disable={true}
+    >
+      <span>Hover here</span>
     </Tooltip>
   ))
   .add("Position priority", () => (
@@ -119,7 +127,7 @@ storiesOf("Tooltip", module)
         <Tooltip
           tooltip="It is me. The tooltip."
           customPosition={customPositionPriority}
-          tooltipClass="tooltip-example-1"
+          tooltipAttributes={{ className: "tooltip-example-1" }}
           key={"customPositionTooltip" + i}
         >
           <div {...tooltipInnerProps}>

@@ -1,6 +1,6 @@
 {
   "name": "@rocketmakers/armstrong",
-  "version": "0.0.1-alpha.21",
+  "version": "0.0.1-alpha.22",
   "description": "Rocketmakers Armstrong library of React components",
   "main": "./dist/index.js",
   "style": "./dist/style.scss",
@@ -42,11 +42,11 @@
   },
   "devDependencies": {
     "@types/mocha": "5.2.7",
-    "@types/node": "12.11.6",
+    "@types/node": "12.12.4",
     "@types/react": "16.9.10",
-    "@types/react-dom": "16.9.3",
+    "@types/react-dom": "16.9.4",
     "@types/underscore": "1.9.3",
-    "chokidar": "3.2.2",
+    "chokidar": "3.3.0",
     "import-resolve": "0.4.0",
     "mocha": "6.2.2",
     "parallelshell": "3.0.2",
