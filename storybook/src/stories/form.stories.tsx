@@ -3,12 +3,8 @@ import * as React from "react";
 import { storiesOf } from "@storybook/react";
 
 import "../theme/theme.scss";
-import { Form, TextInput } from "../_symlink";
+import { TextInput } from "../_symlink";
 import { useForm } from "../_symlink/components/form/formHooks";
-
-const style: Pick<React.HTMLAttributes<HTMLElement>, "style"> = {
-  style: { margin: "20px", fontSize: "30px" }
-};
 
 storiesOf("Form", module)
   .addParameters({
@@ -37,8 +33,8 @@ storiesOf("Form", module)
           dataBinder to be used for (for example) API requests.
         </p>
         <p>
-          The returned object bind contains methods that return binding props for various types,
-          to be spread onto the Armstrong form components.
+          The returned object bind contains methods that return binding props
+          for various types, to be spread onto the Armstrong form components.
         </p>
         <pre>
           {`const initialData = React.useMemo(() => ({`}

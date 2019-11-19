@@ -5,7 +5,7 @@ import { action } from "@storybook/addon-actions";
 import { Button } from "../_symlink";
 
 import "../theme/theme.scss";
-import { getIconProps, Icon } from "../_symlink/components/display/icon";
+import { getIconProps } from "../_symlink/components/display/icon";
 
 storiesOf("Button", module)
   .addParameters({
