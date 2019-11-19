@@ -8,7 +8,18 @@ export {
 ************************************************************************************/
 
 // Display
-export { IIconProps, Icon } from "./components/display/icon";
+export {
+  Icon,
+  IcomoonIcon,
+  LinearIcon,
+  IIconProps,
+  getIconProps,
+  IconOrJsx,
+  useIconOrJsx,
+  getIconOrJsx as getIcon,
+  IconSet,
+  IconName
+} from "./components/display/icon";
 export {
   IImageProps,
   Image,
@@ -82,12 +93,8 @@ export {
   IAutoCompleteSelectProps,
   AutoCompleteInput
 } from "./components/form/inputs/autoCompleteInput";
-export {
-  AutoCompleteMultiInput
-} from "./components/form/inputs/autoCompleteMultiInput";
-export {
-  AutoCompleteSingleInput
-} from "./components/form/inputs/autoCompleteSingleInput";
+export { AutoCompleteMultiInput } from "./components/form/inputs/autoCompleteMultiInput";
+export { AutoCompleteSingleInput } from "./components/form/inputs/autoCompleteSingleInput";
 export {
   IAutoCompleteOption,
   IAutoCompleteProps,
@@ -226,9 +233,7 @@ export { useInterval } from "./hooks/timing/useInterval";
 export { useThrottle } from "./hooks/timing/useThrottle";
 export { useEventListener } from "./hooks/useEventListener";
 export { usePrevious } from "./hooks/usePrevious";
-export {
-  useIntersectionObserver
-} from "./hooks/observers/useIntersectionObserver";
+export { useIntersectionObserver } from "./hooks/observers/useIntersectionObserver";
 export { useMutationObserver } from "./hooks/observers/useMutationObserver";
 export { useMedia } from "./hooks/useMedia";
 export { useTemporaryState } from "./hooks/timing/useTemporaryState";

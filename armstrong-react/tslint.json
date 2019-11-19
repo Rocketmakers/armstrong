@@ -1,25 +1,19 @@
 {
   "defaultSeverity": "error",
-  "extends": [
-    "tslint:recommended"
-  ],
+  "extends": ["tslint:recommended"],
   "jsRules": {},
   "rules": {
-    "arrow-parens": [
-      true,
-      "ban-single-arg-parens"
-    ],
+    "arrow-parens": [true, "ban-single-arg-parens"],
     "max-line-length": false,
     "trailing-comma": false,
     "max-classes-per-file": false,
     "align": false,
-    "member-access": [
-      true,
-      "no-public"
-    ],
+    "member-access": [true, "no-public"],
     "member-ordering": false,
     "no-namespace": false,
     "object-literal-sort-keys": false,
+    "object-literal-key-quotes": false,
+    "interface-over-type-literal": false,
     "semicolon": false
   },
   "rulesDirectory": []

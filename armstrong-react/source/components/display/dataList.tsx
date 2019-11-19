@@ -1,5 +1,6 @@
 import * as React from "react";
-import { ClassHelpers, Icon } from "../..";
+import { ClassHelpers } from "../..";
+import { Spinner } from "./spinner";
 
 type RefreshStatus = "required" | "refreshing" | "idle";
 
@@ -39,7 +40,20 @@ export const DataList: React.FunctionComponent<IDataListProps> = props => {
     "idle"
   );
 
-  const { className, maxDistance, refreshThreshold, postRefreshDelayMs, refreshing, hideChildrenWhileRefreshing, refreshData, refreshingComponent, skipFirstFetch, onScrollToBottom, scrollToBottomRootMargin, ...attrs } = props;
+  const {
+    className,
+    maxDistance,
+    refreshThreshold,
+    postRefreshDelayMs,
+    refreshing,
+    hideChildrenWhileRefreshing,
+    refreshData,
+    refreshingComponent,
+    skipFirstFetch,
+    onScrollToBottom,
+    scrollToBottomRootMargin,
+    ...attrs
+  } = props;
 
   const handleDragStart = React.useCallback(
     (e: React.TouchEvent<HTMLDivElement>) => {
@@ -93,8 +107,8 @@ export const DataList: React.FunctionComponent<IDataListProps> = props => {
         const hasScrolledToBottom =
           top >=
           e.currentTarget.scrollHeight -
-          e.currentTarget.clientHeight -
-          props.scrollToBottomRootMargin;
+            e.currentTarget.clientHeight -
+            props.scrollToBottomRootMargin;
 
         if (hasScrolledToBottom !== scrolledToBottom) {
           setScrolledToBottom(hasScrolledToBottom);
@@ -165,7 +179,14 @@ export const DataList: React.FunctionComponent<IDataListProps> = props => {
   }, []);
 
   return (
-    <div className={ClassHelpers.classNames("data-list-container", refreshStatus, className)} {...attrs}>
+    <div
+      className={ClassHelpers.classNames(
+        "data-list-container",
+        refreshStatus,
+        className
+      )}
+      {...attrs}
+    >
       <div
         className="refresh-indicator"
         style={{
@@ -175,7 +196,7 @@ export const DataList: React.FunctionComponent<IDataListProps> = props => {
       >
         {!props.refreshingComponent && (
           <>
-            <Icon icon={Icon.Icomoon.spinner3} />
+            {refreshStatus === "refreshing" && <Spinner fill={false} />}
             {refreshStatus === "idle" && "Pull to refresh"}
             {refreshStatus === "required" && "Let go to refresh"}
             {refreshStatus === "refreshing" && "Refreshing"}

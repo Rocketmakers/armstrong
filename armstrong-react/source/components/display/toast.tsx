@@ -3,7 +3,8 @@
 import * as moment from "moment";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import { ClassHelpers, Icon } from "../../";
+import { ClassHelpers, Icon, IconOrJsx } from "../../";
+import { getIconOrJsx } from "./icon";
 
 export type DispatchToast = (...toast: IToastNotification[]) => void;
 export type DismissToast = (index: number) => void;
@@ -53,7 +54,7 @@ export interface IGlobalToastSettings {
   location?: ToastLocation;
 
   /** jsx to render as a dismiss button on each toast - an icomoon cross by default */
-  dismissButton?: JSX.Element;
+  dismissButton?: IconOrJsx;
 
   /** Amount of time in ms for a toast to dismiss - used to transition toasts out  */
   dismissTime?: number;
@@ -502,7 +503,7 @@ export const Toast: React.FC<IToastProps> = ({
 
             {allowManualDismiss && (
               <div className="toast-dismiss" onClick={dismiss}>
-                {settings.dismissButton}
+                {getIconOrJsx(settings.dismissButton)}
               </div>
             )}
           </div>

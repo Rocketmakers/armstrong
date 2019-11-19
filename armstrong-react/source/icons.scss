@@ -1,0 +1,25 @@
+.armstrong-icon {
+    font-family: 'IcoMoon-Ultimate';
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-decoration: none;
+    text-transform: none;
+    line-height: 1;
+
+    user-select: none;
+
+    -webkit-font-feature-settings: "liga";
+    -moz-font-feature-settings: "liga=1";
+    -moz-font-feature-settings: "liga";
+    -ms-font-feature-settings: "liga"1;
+    -o-font-feature-settings: "liga";
+    font-feature-settings: "liga";
+
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+@import './style/icons/icomoon.scss';
+@import './style/icons/linearicons.scss';
