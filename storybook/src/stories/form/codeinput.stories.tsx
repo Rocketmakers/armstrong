@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useForm, Button, TextInput, CodeInput } from "../../_symlink";
+import { useForm, CodeInput } from "../../_symlink";
 
 import { storiesOf } from "@storybook/react";
 
@@ -13,7 +13,7 @@ storiesOf("Form/CodeInput", module)
   })
   .add("Standard", () => {
     const initialValue = React.useMemo(() => ({ value1: "", value2: "" }), []);
-    const { bind, dataBinder, notifyChange, DataForm } = useForm(initialValue);
+    const { bind, dataBinder, DataForm } = useForm(initialValue);
 
     console.log(dataBinder.toJson());
 
