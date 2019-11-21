@@ -12,7 +12,7 @@ storiesOf("Form", module)
       showAddonPanel: true
     }
   })
-  .add("Binding", () => {
+  .add("Binding / useForm", () => {
     const initialData = React.useMemo(
       () => ({
         inputOne: "foo",
