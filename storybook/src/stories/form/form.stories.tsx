@@ -2,9 +2,9 @@ import * as React from "react";
 
 import { storiesOf } from "@storybook/react";
 
-import "../theme/theme.scss";
-import { TextInput } from "../_symlink";
-import { useForm } from "../_symlink/components/form/formHooks";
+import "../../theme/theme.scss";
+import { TextInput } from "../../_symlink";
+import { useForm } from "../../_symlink/components/form/formHooks";
 
 storiesOf("Form", module)
   .addParameters({
@@ -28,8 +28,8 @@ storiesOf("Form", module)
       <>
         <p>
           A stateless data bindable form - state is held within the 'dataBinder'
-          property. Triggers a rerender in the component containing the useForm
-          hook amd all child input elements, allowing the state returned in
+          property. It triggers a rerender in the component containing the useForm
+          hook upon each change in a bound form element, allowing the state returned in
           dataBinder to be used for (for example) API requests.
         </p>
         <p>
@@ -56,6 +56,7 @@ storiesOf("Form", module)
           {`    <TextInput {...bind.text("textValue")} />`}
           <br />
           {`    <TextInput {...bind.textNumeric("numValue")} />`}
+          <br />
           <br />
           {`    <p>`}
           <br />

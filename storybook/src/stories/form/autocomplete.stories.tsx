@@ -6,7 +6,7 @@ import { storiesOf } from '@storybook/react';
 
 import "../../theme/theme.scss";
 
-storiesOf('Form/Autocomplete', module)
+storiesOf('Form/AutocompleteInput', module)
   .addParameters({
     options: {
       showAddonPanel: true
