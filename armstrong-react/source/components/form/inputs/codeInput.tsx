@@ -14,6 +14,7 @@ export interface ICodeInputProps extends React.HTMLAttributes<HTMLElement> {
   type?: string;
   numeric?: boolean;
   readonly?: boolean;
+  autoFocus?: boolean;
 }
 
 function calcTabIndex(tabIndex: number | undefined, fieldIndex: number) {
@@ -30,81 +31,106 @@ const formData = {};
 export const CodeInput: React.FC<ICodeInputProps> = props => {
   const { DataForm, bind, dataBinder, notifyChange } = useForm(formData);
 
-  const {
-    onCodeChange,
-    lengthPerBox,
-    numeric,
-    type,
-    className,
-    tabIndex,
-    value,
-    placeholder,
-    readonly
-  } = props;
+  const { onCodeChange, lengthPerBox, numeric, type, className, tabIndex, value, placeholder, readonly, autoFocus } = props;
 
-  const codeLength = React.useMemo(
-    () => utils.array.reduce(lengthPerBox, (memo, num) => memo + num, 0),
-    [lengthPerBox]
+  /** the total length of the code, based on the total of lengthPerBox */
+
+  const codeLength = React.useMemo(() => utils.array.reduce(lengthPerBox, (runningTotal, boxLength) => runningTotal + boxLength, 0), [
+    lengthPerBox
+  ]);
+
+  /** Set values of the inputs */
+
+  const setValues = React.useCallback(
+    (newValue: string) => {
+      /** index of the start of each substring */
+
+      let currentIndex = 0;
+
+      // loop through lengthPerBox array, set substrings to values in binder
+
+      utils.array.each(lengthPerBox, (boxLength, idx) => {
+        const chunk = newValue.substr(currentIndex, boxLength);
+
+        currentIndex += boxLength;
+
+        dataBinder.setValue(getBindingName(idx), chunk);
+      });
+
+      notifyChange();
+    },
+    [lengthPerBox, notifyChange]
   );
 
   const [focusIndex, setFocusIndex] = React.useState<number>(null);
-  const [code, setCode] = React.useState<string>("");
 
   const storedKey = React.useRef<string>(null);
 
+  /** Get the current full value from the form inputs */
+
+  const getValue = React.useCallback(
+    () =>
+      lengthPerBox
+        .map((_, i) => {
+          const val = dataBinder.getValue(getBindingName(i));
+
+          return val || "";
+        })
+        .join(""),
+    []
+  );
+
+  /** Run onCodeChange callback with the combined values of each input */
+
   const buildValue = React.useCallback(() => {
-    let codeCandidate: string | number = "";
-    utils.array.each(lengthPerBox, (lpb, idx) => {
-      const val = dataBinder.getValue(getBindingName(idx));
-      codeCandidate += val ? val.toUpperCase() : "";
-    });
-    if (codeCandidate.length !== codeLength) {
-      return;
-    }
-    if (codeCandidate === code) {
-      return;
-    }
-    setCode(codeCandidate);
+    let codeCandidate: string | number = getValue();
+
     if (numeric) {
       codeCandidate = parseInt(codeCandidate, 10);
     }
+
     if (onCodeChange) {
       onCodeChange(codeCandidate);
     }
   }, [lengthPerBox, onCodeChange, numeric, codeLength]);
 
+  /** If necessary, move focus to next input element on key up */
+
   const onKeyUpFocusNext = React.useCallback(
     (e: React.KeyboardEvent<HTMLInputElement>) => {
-      let movingBack = false;
       const current = e.target as HTMLInputElement;
-      let el: HTMLInputElement;
-      let currentVal = current.value.trim();
-      const lpb = lengthPerBox[focusIndex];
+      const boxLength = lengthPerBox[focusIndex];
+      const currentVal = current.value.trim().slice(0, boxLength);
+      const movingBack = e.keyCode === KeyCodes.backspace;
+
+      let element: HTMLInputElement;
       let retFromStore = false;
-      currentVal = currentVal.slice(0, lpb);
-      if (e.keyCode === KeyCodes.backspace) {
-        movingBack = true;
+
+      if (movingBack) {
         if (currentVal.length === 0) {
-          el = current.previousSibling as HTMLInputElement;
+          element = current.previousSibling as HTMLInputElement;
         } else {
-          el = current;
+          element = current;
         }
       } else {
-        el = current.nextSibling as HTMLInputElement;
-        if (storedKey.current && el && !el.value) {
-          el.value = storedKey.current;
+        element = current.nextSibling as HTMLInputElement;
 
+        if (storedKey.current && element && !element.value) {
+          element.value = storedKey.current;
           storedKey.current = null;
           retFromStore = true;
         }
       }
-      if (currentVal.length < lpb && !movingBack) {
+
+      if (currentVal.length < boxLength && !movingBack) {
         return;
       }
-      if (el) {
-        el.focus();
-        if (el.value && !movingBack && !retFromStore) {
-          el.select();
+
+      if (element) {
+        element.focus();
+
+        if (element.value && !movingBack && !retFromStore) {
+          element.select();
           // el.value = "";
         }
       }
@@ -114,30 +140,23 @@ export const CodeInput: React.FC<ICodeInputProps> = props => {
     [lengthPerBox, focusIndex, storedKey, buildValue]
   );
 
+  /** On paste event, paste in value and move focus */
+
   const handlePaste = React.useCallback(
     (e: React.ClipboardEvent<HTMLInputElement>) => {
-      let pasted: string = e.clipboardData
-        .getData("text/plain")
-        .replace(/\s/g, "");
+      let pasted: string = e.clipboardData.getData("text/plain").replace(/\s/g, "");
+
       pasted = pasted.substr(0, codeLength).toUpperCase();
 
       if (numeric) {
         const parsed = parseInt(pasted, 10);
+
         if (isNaN(parsed)) {
           e.preventDefault();
         }
       }
 
-      const splitArray = [];
-      let currentIndex = 0;
-      utils.array.each(lengthPerBox, (lpb, idx) => {
-        const chunk = pasted.substr(currentIndex, lpb);
-        currentIndex += lpb;
-        splitArray.push(chunk);
-        dataBinder.setValue(getBindingName(idx), chunk);
-        // inputs.current[idx].value = chunk;
-      });
-
+      setValues(pasted);
       buildValue();
     },
     [lengthPerBox, buildValue, numeric, codeLength]
@@ -153,13 +172,14 @@ export const CodeInput: React.FC<ICodeInputProps> = props => {
 
   const keyDown = React.useCallback(
     (e: React.KeyboardEvent<HTMLInputElement>) => {
-      const lpb = lengthPerBox[focusIndex];
+      const boxLength = lengthPerBox[focusIndex];
       const selectionLength = window.getSelection().toString().length;
-      if (selectionLength === lpb) {
+
+      if (selectionLength === boxLength) {
         return;
       }
 
-      if (e.currentTarget.value.length === lpb) {
+      if (e.currentTarget.value.length === boxLength) {
         if (e.keyCode >= KeyCodes.key_0 && e.keyCode <= KeyCodes.key_9) {
           storedKey.current = e.key;
         }
@@ -171,14 +191,15 @@ export const CodeInput: React.FC<ICodeInputProps> = props => {
     [lengthPerBox, focusIndex, storedKey]
   );
 
-  const handleClick = React.useCallback(
-    (e: React.MouseEvent<HTMLInputElement>) => {
-      if (e.currentTarget.value) {
-        e.currentTarget.select();
-      }
-    },
-    []
-  );
+  /** Select contents of input on click */
+
+  const handleClick = React.useCallback((e: React.MouseEvent<HTMLInputElement>) => {
+    if (e.currentTarget.value) {
+      e.currentTarget.select();
+    }
+  }, []);
+
+  /** The current value as a string */
 
   const currentValue = React.useMemo(() => {
     if (typeof value === "string" || !value) {
@@ -187,20 +208,13 @@ export const CodeInput: React.FC<ICodeInputProps> = props => {
     return value.toString();
   }, [value]);
 
+  /** On changes to value set by prop, update the values of the form */
+
   React.useEffect(() => {
-    if (value) {
-      let currentIndex = 0;
-      utils.array.each(lengthPerBox, (lpb, idx) => {
-        dataBinder.setValue(
-          getBindingName(idx),
-          currentValue.substr(currentIndex, lpb)
-        );
-        // inputs.current[i].value = ;
-        currentIndex += lpb;
-      });
-      notifyChange();
+    if (currentValue !== getValue()) {
+      setValues(currentValue);
     }
-  }, []);
+  }, [currentValue, getValue]);
 
   const validationMessage = DataValidationMessage.get(props);
   const validationMode = DataValidationMode.get(props);
@@ -216,15 +230,16 @@ export const CodeInput: React.FC<ICodeInputProps> = props => {
   return (
     <div className={classes}>
       <DataForm onDataChanged={buildValue} className={classes}>
-        {lengthPerBox.map((lpb, i) => (
+        {lengthPerBox.map((boxLength, i) => (
           <input
+            autoFocus={i === 0 && autoFocus}
             {...bind.text(getBindingName(i) as any)}
             className="code-input-field"
             tabIndex={calcTabIndex(tabIndex, i)}
             key={i}
             type={type}
             placeholder={placeholder}
-            maxLength={lpb}
+            maxLength={boxLength}
             readOnly={readonly}
             onClick={handleClick}
             onFocus={handleFocus(i)}
