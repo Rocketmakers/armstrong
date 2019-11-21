@@ -71,7 +71,7 @@ export const CodeInput: React.FC<ICodeInputProps> = props => {
       // loop through lengthPerBox array, set substrings to values in binder
 
       utils.array.each(lengthPerBox, (boxLength, i) => {
-        const chunk = newValue ? newValue.substr(currentIndex, boxLength) : ''; 
+        const chunk = newValue ? newValue.substr(currentIndex, boxLength) : "";
 
         currentIndex += boxLength;
 
