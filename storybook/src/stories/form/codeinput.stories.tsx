@@ -15,7 +15,7 @@ storiesOf("Form/CodeInput", module)
     const initialValue = React.useMemo(() => ({ value1: "", value2: "" }), []);
     const { bind, dataBinder, notifyChange, DataForm } = useForm(initialValue);
 
-    console.log(dataBinder.toJson())
+    console.log(dataBinder.toJson());
 
     return (
       <DataForm>
@@ -44,7 +44,7 @@ storiesOf("Form/CodeInput", module)
         <br />
         <CodeInput
           lengthPerBox={[3, 3, 3]}
-          type="password"
+          hideValue={true}
           placeholder="000"
           {...bind.codeInput("value2")}
         />
@@ -55,8 +55,8 @@ storiesOf("Form/CodeInput", module)
           is complete.
         </p>
         <p>
-          Alternatively, the <strong>CodeInput</strong> can be attached to a
-          form binder using the bind object returned from{" "}
+          Alternatively, the <strong>CodeInput</strong> can be boudn to an
+          Armstrong form using the bind object returned from{" "}
           <strong>useForm</strong>
         </p>
         <pre>
@@ -65,15 +65,8 @@ storiesOf("Form/CodeInput", module)
           <br />
           {`<CodeInput {...bind.codeInput("value")} />`}
         </pre>
-
-        <Button
-          onClick={() => {
-            dataBinder.setKeyValue("value1", "1");
-            notifyChange();
-          }}
-        >
-          ASA
-        </Button>
+        <br />
+        <br />
         <p>{JSON.stringify(dataBinder.toJson())}</p>
       </DataForm>
     );

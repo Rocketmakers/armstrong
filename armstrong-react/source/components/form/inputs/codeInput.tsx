@@ -7,13 +7,31 @@ import { useForm } from "../formHooks";
 import { ValidationLabel } from "../validationWrapper";
 
 export interface ICodeInputProps extends React.HTMLAttributes<HTMLElement> {
+  /** An array of lengths of each input in the code */
   lengthPerBox?: number[];
+
+  /** Callback to fire when the value changes */
   onCodeChange?: (value: string | number) => void;
+
+  /** Current value of the code */
   value?: string | number;
+
+  /** A placeholder to display in each input */
   placeholder?: string;
+
+  /** Render the value of the input as a password */
+  hideValue?: boolean;
+
+  /** Override the type property of the input elements (overrides hideValue prop) */
   type?: string;
+
+  /** Restrict to numeric values */
   numeric?: boolean;
+
+  /** Disable the inputs */
   readonly?: boolean;
+
+  /** Automatically focus on the first input element */
   autoFocus?: boolean;
 }
 
@@ -28,10 +46,13 @@ function getBindingName(index: number) {
   return `code_${index}`;
 }
 const formData = {};
+
+/** An input which binds to a single string or numeric value, seperated into multiple inputs, with focus moving automatically between them. */
+
 export const CodeInput: React.FC<ICodeInputProps> = props => {
   const { DataForm, bind, dataBinder, notifyChange } = useForm(formData);
 
-  const { onCodeChange, lengthPerBox, numeric, type, className, tabIndex, value, placeholder, readonly, autoFocus } = props;
+  const { onCodeChange, lengthPerBox, numeric, hideValue, className, tabIndex, value, placeholder, readonly, autoFocus, type } = props;
 
   /** the total length of the code, based on the total of lengthPerBox */
 
@@ -49,12 +70,12 @@ export const CodeInput: React.FC<ICodeInputProps> = props => {
 
       // loop through lengthPerBox array, set substrings to values in binder
 
-      utils.array.each(lengthPerBox, (boxLength, idx) => {
+      utils.array.each(lengthPerBox, (boxLength, i) => {
         const chunk = newValue.substr(currentIndex, boxLength);
 
         currentIndex += boxLength;
 
-        dataBinder.setValue(getBindingName(idx), chunk);
+        dataBinder.setValue(getBindingName(i), chunk);
       });
 
       notifyChange();
@@ -73,7 +94,6 @@ export const CodeInput: React.FC<ICodeInputProps> = props => {
       lengthPerBox
         .map((_, i) => {
           const val = dataBinder.getValue(getBindingName(i));
-
           return val || "";
         })
         .join(""),
@@ -237,7 +257,7 @@ export const CodeInput: React.FC<ICodeInputProps> = props => {
             className="code-input-field"
             tabIndex={calcTabIndex(tabIndex, i)}
             key={i}
-            type={type}
+            type={type || (hideValue ? "password" : "text")}
             placeholder={placeholder}
             maxLength={boxLength}
             readOnly={readonly}
@@ -255,6 +275,5 @@ export const CodeInput: React.FC<ICodeInputProps> = props => {
 };
 
 CodeInput.defaultProps = {
-  lengthPerBox: [2, 2, 2],
-  type: "text"
+  lengthPerBox: [2, 2, 2]
 };
