@@ -16,8 +16,8 @@ export abstract class FormBinderBase<TComponentProps, TDataPropValue, TComponent
     /** The converter required to convert 'dataName' to 'propertySet' (TDataPropValue to TComponentPropValue) */
     private valueConverter?: IValueConverter<TDataPropValue, TComponentPropValue>,
     /** The name of the property being read from the change event currentTarget */
-    protected propertyGet = propertySet,
-  ) { }
+    protected propertyGet = propertySet
+  ) {}
 
   /** Sets the React elements properties required in binding */
   setElementProperty(props: TComponentProps, dataBinder: IDataBinder<any>) {
