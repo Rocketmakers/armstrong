@@ -33,6 +33,9 @@ export interface ICodeInputProps extends React.HTMLAttributes<HTMLElement> {
 
   /** Automatically focus on the first input element */
   autoFocus?: boolean;
+
+  /** Regex pattern to match on input */
+  pattern?: string;
 }
 
 function calcTabIndex(tabIndex: number | undefined, fieldIndex: number) {
@@ -52,7 +55,7 @@ const formData = {};
 export const CodeInput: React.FC<ICodeInputProps> = props => {
   const { DataForm, bind, dataBinder, notifyChange } = useForm(formData);
 
-  const { onCodeChange, lengthPerBox, numeric, hideValue, className, tabIndex, value, placeholder, readonly, autoFocus, type } = props;
+  const { onCodeChange, lengthPerBox, numeric, hideValue, className, tabIndex, value, placeholder, readonly, autoFocus, type, pattern } = props;
 
   /** the total length of the code, based on the total of lengthPerBox */
 
@@ -266,6 +269,7 @@ export const CodeInput: React.FC<ICodeInputProps> = props => {
             onKeyUp={onKeyUpFocusNext}
             onKeyDown={keyDown}
             onPaste={handlePaste}
+            pattern={pattern}
           />
         ))}
       </DataForm>
