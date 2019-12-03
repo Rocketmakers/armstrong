@@ -240,5 +240,5 @@ export const SwitchInput = React.forwardRef(SwitchInputRef);
 
 SwitchInput.defaultProps = {
   iconStyle: "on-nubbin",
-  renderShadows: true
+  // renderShadows: true
 };
