@@ -77,9 +77,9 @@ export const Dialog: React.FC<IDialogProps> = props => {
 
   return props.isOpen
     ? ReactDOM.createPortal(
-        dialog,
-        document.querySelector(props.bodySelector || "#host")
-      )
+      dialog,
+      document.querySelector(props.bodySelector || "#host")
+    )
     : null;
 };
 
@@ -153,9 +153,6 @@ export const DialogLayer: React.FC<IDialogLayerProps> = ({
   );
 };
 
-DialogLayer.defaultProps = {
-  closeButton: getIconProps("Icomoon", "cross3")
-};
 
 export interface IDialogPresenterProps {
   title?: string;
@@ -207,13 +204,17 @@ export const DialogPresenter: React.FC<IDialogPresenterProps> = ({
   );
 };
 
+DialogPresenter.defaultProps = {
+  closeButton: getIconProps("Icomoon", "cross3")
+}
+
 export interface IUseDialogProps {
   onClose: () => void;
 }
 
 export interface IUseDialogSettings
   extends IUsePortalSettings,
-    IDialogLayerPropsCore {
+  IDialogLayerPropsCore {
   beforeDialogClose?: (reason: DialogLayerCloseReason) => Promise<boolean>;
 }
 
