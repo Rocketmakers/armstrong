@@ -7,10 +7,12 @@ export interface IInfinitePagingResult<T> {
   nextPageToken?: PageToken;
 }
 
+export type InfinitePagingKey<T> = keyof T | ((item: T) => string);
+
 export interface IUseInfinitePagingSettings<T> {
   firstPageToken?: PageToken;
   onFetched?: (item: T[]) => void | Promise<void>;
-  key: keyof T;
+  key: InfinitePagingKey<T>;
   initialItems?: T[];
   pageSize?: number;
   fetch(pageToken: PageToken): Promise<IInfinitePagingResult<T>>;
@@ -20,9 +22,10 @@ interface IItems<T> {
   [key: string]: T;
 }
 
-const itemsToDictionary = <T>(items: T[], key: keyof T): IItems<T> =>
+const itemsToDictionary = <T>(items: T[], key: InfinitePagingKey<T>): IItems<T> =>
   (items || []).reduce<IItems<T>>((previousItems, item) => {
-    previousItems[(item[key] as any) as string] = item;
+    const dictionaryKey = typeof key === "function" ? key(item) : (item[key] as any as string);
+    previousItems[dictionaryKey] = item;
     return previousItems;
   }, {});
 
