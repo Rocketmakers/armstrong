@@ -1,6 +1,6 @@
 {
   "name": "@rocketmakers/armstrong-monorepo",
-  "version": "0.0.1-alpha.29",
+  "version": "0.0.1-alpha.30",
   "description": "<p align=\"center\"> <img src=\"http://armstrongcss.org/assets/logolarge.svg\" width=\"256\" height=\"256\" /> </p>",
   "main": "index.js",
   "scripts": {
