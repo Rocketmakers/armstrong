@@ -28,11 +28,15 @@ export interface ITooltipProps {
   childrenAttributes?: React.HTMLAttributes<HTMLElement>
   /** (HtmlAttributes) HTML attributes of the tooltip */
   tooltipAttributes?: React.HTMLAttributes<HTMLElement>
+  /** (boolean) centers the tooltip */
+  center?: boolean
+  /** (boolean) shows an arrow pointing to the child element */
+  withArrow?: boolean
 }
 
 export const Tooltip: React.FC<ITooltipProps> = props => {
 
-  const {tooltip, children, retain, disable, position, customPosition, wrapperAttributes, childrenAttributes, tooltipAttributes} = props
+  const { tooltip, children, retain, disable, position, customPosition, wrapperAttributes, childrenAttributes, tooltipAttributes, center, withArrow } = props
   const defaultPositions: ITooltipPositionPriority = ["right", "left", "bottom", "top", "fixed", "hidden"]
   const tooltipElement = React.useRef<HTMLDivElement>(null)
   const [currentPosition, setCurrentPosition] = React.useState(0) // Index in position priority array currently being used
@@ -100,6 +104,8 @@ export const Tooltip: React.FC<ITooltipProps> = props => {
       <div {...tooltipAttr}
         ref={tooltipElement}
         data-retain={retain}
+        data-center={!!center}
+        data-arrow={!!withArrow}
         data-position={positionPriority[currentPosition] && !disable ? positionPriority[currentPosition] : "hidden"}>
         {tooltip}
       </div>
@@ -110,7 +116,9 @@ export const Tooltip: React.FC<ITooltipProps> = props => {
 Tooltip.defaultProps = {
   retain: false,
   disable: false,
-  position: ["right", "left", "bottom", "top", "fixed", "hidden"],
+  center: true,
+  withArrow: true,
+  position: ["top", "right", "left", "bottom", "fixed", "hidden"],
   wrapperAttributes: {},
   childrenAttributes: {},
   tooltipAttributes: {}
