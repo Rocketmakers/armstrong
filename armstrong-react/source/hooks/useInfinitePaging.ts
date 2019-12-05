@@ -1,31 +1,31 @@
 import * as React from "react";
 
 export type PageToken = string | number;
-export type PageKey<T> = (keyof T) | ((item: T) => string | number);
 
 export interface IInfinitePagingResult<T> {
   data: T[];
   nextPageToken?: PageToken;
 }
 
+export type InfinitePagingKey<T> = keyof T | ((item: T) => string);
+
 export interface IUseInfinitePagingSettings<T> {
   firstPageToken?: PageToken;
-  fetch: (pageToken: PageToken) => Promise<IInfinitePagingResult<T>>;
-
   onFetched?: (item: T[]) => void | Promise<void>;
-  key: PageKey<T>;
+  key: InfinitePagingKey<T>;
   initialItems?: T[];
+  pageSize?: number;
+  fetch(pageToken: PageToken): Promise<IInfinitePagingResult<T>>;
 }
 
 interface IItems<T> {
   [key: string]: T;
 }
 
-const itemsToDictionary = <T>(items: T[], key: PageKey<T>): IItems<T> =>
+const itemsToDictionary = <T>(items: T[], key: InfinitePagingKey<T>): IItems<T> =>
   (items || []).reduce<IItems<T>>((previousItems, item) => {
-    const itemKey =
-      typeof key === "function" ? key(item) : ((item[key] as any) as string);
-    previousItems[itemKey] = item;
+    const dictionaryKey = typeof key === "function" ? key(item) : (item[key] as any as string);
+    previousItems[dictionaryKey] = item;
     return previousItems;
   }, {});
 
@@ -37,9 +37,7 @@ interface IUseInfinitePagingState<T> {
   error: any;
 }
 
-const initialState = <T>(
-  initialItems: IItems<T>
-): IUseInfinitePagingState<T> => ({
+const initialState = <T>(initialItems: IItems<T>): IUseInfinitePagingState<T> => ({
   items: initialItems,
   nextPageToken: undefined,
   hasFinished: false,
@@ -54,7 +52,7 @@ export function useInfinitePaging<T>(settings: IUseInfinitePagingSettings<T>) {
   const [isFetching, setIsFetching] = React.useState(false);
 
   const addItems = React.useCallback(
-    (currentItems: IItems<T>, newItems: T[]) => ({
+    (currentItems: IItems<T>, newItems: T[]): IItems<T> => ({
       ...currentItems,
       ...itemsToDictionary(newItems, settings.key)
     }),
@@ -62,27 +60,23 @@ export function useInfinitePaging<T>(settings: IUseInfinitePagingSettings<T>) {
   );
 
   const fetcher = React.useCallback(
-    async (currentItems: IItems<T>, fetchPageToken?: PageToken) => {
+    async (currentItems: IItems<T>, fetchPageToken?: PageToken, isReloading?: boolean) => {
       const isInitial = fetchPageToken === settings.firstPageToken;
       setIsFetching(true);
 
       try {
         const response = await settings.fetch(fetchPageToken);
-        const noReturnedItems =
-          !response || !response.data || response.data.length === 0;
-        const items = noReturnedItems
+        const noReturnedItems = !response || !response.data || response.data.length === 0;
+        const responseSmallerThanPageSize = settings.pageSize && response.data.length < settings.pageSize;
+
+        const items: IItems<T> = noReturnedItems
           ? currentItems
-          : addItems(
-              isInitial
-                ? itemsToDictionary(settings.initialItems, settings.key)
-                : currentItems,
-              response ? response.data : []
-            );
+          : addItems(isInitial ? (isReloading ? {} : itemsToDictionary(settings.initialItems, settings.key)) : currentItems, response.data);
 
         setState({
           items,
-          nextPageToken: response && response.nextPageToken,
-          hasFinished: noReturnedItems || !response.nextPageToken,
+          nextPageToken: response.nextPageToken,
+          hasFinished: noReturnedItems || responseSmallerThanPageSize || !response.nextPageToken,
           hasData: true,
           error: undefined
         });
@@ -93,7 +87,6 @@ export function useInfinitePaging<T>(settings: IUseInfinitePagingSettings<T>) {
           settings.onFetched(response.data);
         }
       } catch (error) {
-        // tslint:disable-next-line: no-console
         console.error(error);
         setState({ ...state, error });
         setIsFetching(false);
@@ -112,13 +105,10 @@ export function useInfinitePaging<T>(settings: IUseInfinitePagingSettings<T>) {
   /** reload the state  */
 
   const reload = React.useCallback(async () => {
-    setState({
-      ...initialState(itemsToDictionary(settings.initialItems, settings.key)),
-      items: state.items
-    });
+    setState({ ...initialState(itemsToDictionary(settings.initialItems, settings.key)), items: state.items });
 
-    await fetcher({}, settings.firstPageToken);
-  }, [fetcher, settings.key]);
+    await fetcher({}, settings.firstPageToken, true);
+  }, [fetcher]);
 
   /**
    * adds or replaces an array of new items, matched by a specified key
@@ -153,10 +143,7 @@ export function useInfinitePaging<T>(settings: IUseInfinitePagingSettings<T>) {
     fetcher({}, settings.firstPageToken);
   }, []);
 
-  const returnItems = React.useMemo(
-    () => Object.keys(state.items).map(key => state.items[key]),
-    [state]
-  );
+  const returnItems = React.useMemo(() => Object.keys(state.items).map(key => state.items[key]), [state]);
 
   return {
     items: returnItems,

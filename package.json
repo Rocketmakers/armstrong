@@ -1,6 +1,6 @@
 {
   "name": "@rocketmakers/armstrong-monorepo",
-  "version": "0.0.1-alpha.27",
+  "version": "0.0.1-alpha.32",
   "description": "<p align=\"center\"> <img src=\"http://armstrongcss.org/assets/logolarge.svg\" width=\"256\" height=\"256\" /> </p>",
   "main": "index.js",
   "scripts": {
@@ -21,7 +21,7 @@
   },
   "homepage": "https://github.com/Rocketmakers/armstrong#readme",
   "devDependencies": {
-    "@types/node": "12.12.8",
+    "@types/node": "12.12.13",
     "@types/prompts": "2.0.3",
     "@types/semver": "6.2.0",
     "current-git-branch": "1.1.0",

@@ -71,16 +71,16 @@ storiesOf("Tooltip", module)
         }
       </pre>
       <br />
-      {positionPriorities.map((positionPrioritity, i) => (
+      {positionPriorities.map((positionPriority, i) => (
         <Tooltip
           tooltip="It is me. The tooltip."
-          position={positionPrioritity}
+          position={positionPriority}
           key={"tooltip" + i}
         >
           <div {...tooltipInnerProps}>
-            {typeof positionPrioritity === "string"
-              ? `"${positionPrioritity}"`
-              : `[${positionPrioritity
+            {typeof positionPriority === "string"
+              ? `"${positionPriority}"`
+              : `[${positionPriority
                   .map(position => `"${position}"`)
                   .join(", ")}]`}
           </div>
@@ -115,7 +115,7 @@ storiesOf("Tooltip", module)
         top: 1000%;
         left: 0;
       }
-      
+
       .tooltip-example-1.tooltip[data-position=bottomRight] {
         top: 100%;
         left: 100%;

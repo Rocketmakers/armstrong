@@ -41,7 +41,7 @@ storiesOf("Icon", module)
         <br />
         <br />
         Must be defined in your project as a css @font-face called
-        IcoMoon-Ultimate (cannot be done in Armstrong for licencing reasons)
+        IcoMoon-Ultimate (the font cannot be in Armstrong for licencing reasons)
       </p>
     </>
   ))
@@ -65,8 +65,8 @@ storiesOf("Icon", module)
         <a href="https://icomoon.io/#icons"> here</a>.
         <br />
         <br />
-        Must be defined in your project as a css @font-face called
-        IcoMoon-Ultimate (cannot be done in Armstrong for licencing reasons)
+        Must be defined in your project as a css @font-face called LinearIcons
+        (the font cannot be in Armstrong for licencing reasons)
       </p>
     </>
   ))
