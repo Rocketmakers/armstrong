@@ -29,7 +29,7 @@ export interface IToastNotification {
   allowManualDismiss?: boolean;
 
   /** method to run when user clicks on notification */
-  onClick?: (e: React.MouseEvent<HTMLDivElement>) => void
+  onClick?: (e: React.MouseEvent<HTMLDivElement>, dismiss: () => void) => void
 
   /** jsx to render inside the toast notification - can optionally pass down a function to access the dismiss function and the timestamp */
   content?:
@@ -478,7 +478,7 @@ export const Toast: React.FC<IToastProps> = ({
       ref={ref}
       onMouseEnter={mouseEnter}
       onMouseLeave={mouseLeave}
-      onClick={onClick}
+      onClick={e => onClick(e, dismiss)}
       style={{
         transitionDelay: transitionStep,
         transitionDuration: transitionStep,
