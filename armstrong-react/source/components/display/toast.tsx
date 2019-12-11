@@ -28,6 +28,9 @@ export interface IToastNotification {
   /** whether to allow the user to manually dismiss the toast with a close button rendered at the top right - defaults to true */
   allowManualDismiss?: boolean;
 
+  /** method to run when user clicks on notification */
+  onClick?: (e: React.MouseEvent<HTMLDivElement>) => void
+
   /** jsx to render inside the toast notification - can optionally pass down a function to access the dismiss function and the timestamp */
   content?:
     | ((args: {
@@ -380,7 +383,8 @@ export const Toast: React.FC<IToastProps> = ({
   onDismiss,
   timestamp,
   className,
-  allowManualDismiss
+  allowManualDismiss,
+  onClick
 }) => {
   const autoDismissTimeout = React.useRef(null);
   const dismissingTimeout = React.useRef(null);
@@ -474,6 +478,7 @@ export const Toast: React.FC<IToastProps> = ({
       ref={ref}
       onMouseEnter={mouseEnter}
       onMouseLeave={mouseLeave}
+      onClick={onClick}
       style={{
         transitionDelay: transitionStep,
         transitionDuration: transitionStep,
