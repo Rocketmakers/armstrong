@@ -211,6 +211,7 @@ export const AutoCompleteSingleInput: React.FunctionComponent<IAutoCompleteProps
       title={validationMessage}
       onClick={e => focusInput(e)}
       className={classes}
+      data-open={open}
     >
       <Row>
         <Col className="drop-down-controls">
@@ -226,10 +227,10 @@ export const AutoCompleteSingleInput: React.FunctionComponent<IAutoCompleteProps
                       <div className="placeholder-value">{placeholder}</div>
                     </div>
                   ) : (
-                    <div className="selected-value-wrapper">
-                      {value && value.name}
-                    </div>
-                  )}
+                      <div className="selected-value-wrapper">
+                        {value && value.name}
+                      </div>
+                    )}
                 </Col>
                 {value && canClear && (
                   <Col
@@ -275,7 +276,7 @@ export const AutoCompleteSingleInput: React.FunctionComponent<IAutoCompleteProps
                 data-id="autocomplete-select-list"
                 className={`autocomplete-select-list${
                   showOnTop ? " on-top" : ""
-                }`}
+                  }`}
                 style={{
                   maxHeight: `${(visibleItems || 3) * itemHeight}px`,
                   marginTop: `${topOffset}px`
@@ -289,7 +290,7 @@ export const AutoCompleteSingleInput: React.FunctionComponent<IAutoCompleteProps
                       style={o.style}
                       className={`dd-list-item${
                         o.className ? ` ${o.className}` : ""
-                      }${i === selectedIndex ? " selected" : ""}`}
+                        }${i === selectedIndex ? " selected" : ""}`}
                       onClick={() => handleSelection(o)}
                     >
                       {o.prefixElement}
