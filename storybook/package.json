@@ -39,7 +39,7 @@
     "@types/underscore": "1.9.4",
     "babel-loader": "8.0.6",
     "fibers": "4.0.2",
-    "mini-css-extract-plugin": "0.8.1",
+    "mini-css-extract-plugin": "0.8.2",
     "mocha": "6.2.2",
     "node-sass": "4.13.0",
     "react-docgen-typescript-loader": "3.4.0",
