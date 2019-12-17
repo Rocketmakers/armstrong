@@ -193,7 +193,9 @@ export const AutoCompleteMultiInput: React.FunctionComponent<IAutoCompleteProps<
       ref={root}
       title={validationMessage}
       onClick={e => focusInput(e)}
-      className={classes}>
+      className={classes}
+      data-open={open}
+    >
       <Row>
         <Col className="drop-down-controls">
           <Grid className="autocomplete-value-display">
