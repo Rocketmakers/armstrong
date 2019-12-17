@@ -12,8 +12,12 @@ export interface IAutoCompleteOption {
   prefixElement?: React.ReactNode;
 }
 
-export function useOptions(allOptions: IAutoCompleteOption[]) {
-  const [options, setOptions] = React.useState<IAutoCompleteOption[]>([]);
+export interface IUseOptionsConfig {
+  emptyOnLoad?: boolean
+}
+
+export function useOptions(allOptions: IAutoCompleteOption[], config: IUseOptionsConfig = {}) {
+  const [options, setOptions] = React.useState<IAutoCompleteOption[]>(config.emptyOnLoad ? [] : allOptions);
   const [filter, onFilterChanged] = React.useState("");
   const setFilter = React.useCallback(
     (query: string) => {

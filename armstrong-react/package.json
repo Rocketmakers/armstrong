@@ -1,6 +1,6 @@
 {
   "name": "@rocketmakers/armstrong",
-  "version": "0.0.1-alpha.34",
+  "version": "0.0.1-alpha.38",
   "description": "Rocketmakers Armstrong library of React components",
   "main": "./dist/index.js",
   "style": "./dist/style.scss",
@@ -42,7 +42,7 @@
   },
   "devDependencies": {
     "@types/mocha": "5.2.7",
-    "@types/node": "12.12.13",
+    "@types/node": "12.12.15",
     "@types/react": "16.9.16",
     "@types/react-dom": "16.9.4",
     "@types/underscore": "1.9.4",

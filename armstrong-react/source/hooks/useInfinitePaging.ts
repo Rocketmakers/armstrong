@@ -87,6 +87,7 @@ export function useInfinitePaging<T>(settings: IUseInfinitePagingSettings<T>) {
           settings.onFetched(response.data);
         }
       } catch (error) {
+        // tslint:disable-next-line: no-console
         console.error(error);
         setState({ ...state, error });
         setIsFetching(false);
