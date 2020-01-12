@@ -25,7 +25,7 @@
     "unsafe-perm": true
   },
   "devDependencies": {
-    "@babel/core": "7.7.7",
+    "@babel/core": "7.8.0",
     "@storybook/addon-a11y": "5.2.7",
     "@storybook/addon-actions": "5.2.7",
     "@storybook/addon-info": "5.2.7",
