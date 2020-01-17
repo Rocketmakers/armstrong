@@ -2,7 +2,7 @@ import * as React from "react";
 
 import { storiesOf } from "@storybook/react";
 import { action } from "@storybook/addon-actions";
-import { Button } from "../_symlink";
+import { Button, Image } from "../_symlink";
 
 import "../theme/theme.scss";
 import { getIconProps } from "../_symlink/components/display/icon";
@@ -145,6 +145,28 @@ storiesOf("Button", module)
           onClick={() => alert("hi")}
         >
           Do the thing with a custom dialog
+        </Button>
+        <br />
+        <br />
+        <br />
+        <p>The confirmDialog prop also takes custom JSX</p>
+        <br />
+        <Button
+          confirmDialog={({ choose }) => (
+            <>
+              <p>Hey look custom content</p>
+              <Image
+                renderSpinner
+                lazy
+                src={require("../assets/images/frank2.jpg")}
+                onClick={() => choose(true)}
+              />
+              <p>Click the image to do the thing</p>
+            </>
+          )}
+          onClick={() => alert("hi")}
+        >
+          Do the thing with an even more custom dialog
         </Button>
       </div>
     </DialogProvider>

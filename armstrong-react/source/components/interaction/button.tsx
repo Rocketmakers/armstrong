@@ -1,6 +1,58 @@
 import * as React from "react";
 import { ClassHelpers } from "../../utilities/classHelpers";
 import { getIconOrJsx, IconOrJsx } from "./../display/icon";
+import {
+  useConfirmDialogProvider,
+  IDialogProviderProps
+} from "../display/dialogProvider";
+
+export interface IButtonConfirmDialog {
+  /** (string) Text to show in the body of the dialog - defaults to Are you sure? */
+  content: string;
+
+  /** (string) Content of the confirm button - defaults to confirm */
+  confirmText?: string;
+
+  /** (string) Content of the cancel button - defaults to cancel */
+  cancelText?: string;
+}
+
+type ButtonConfirmDialog =
+  | IButtonConfirmDialog
+  | React.FC<IDialogProviderProps<boolean, void>>;
+
+const isIButtonConfirmDialog = (
+  dialogProps: ButtonConfirmDialog
+): dialogProps is IButtonConfirmDialog =>
+  !!dialogProps && !!(dialogProps as IButtonConfirmDialog).content;
+
+export const useButtonConfirmDialog = (config: ButtonConfirmDialog) =>
+  useConfirmDialogProvider(
+    isIButtonConfirmDialog(config)
+      ? ({ choose }) => {
+          console.log(config);
+          if (!config) {
+            return;
+          }
+          return (
+            <>
+              <p>{config && config.content}</p>
+
+              <div className="confirm-dialog-buttons">
+                <Button onClick={() => choose(false)}>
+                  {(config && config.cancelText) || "cancel"}
+                </Button>
+
+                <Button onClick={() => choose(true)}>
+                  {(config && config.confirmText) || "confirm"}
+                </Button>
+              </div>
+            </>
+          );
+        }
+      : config,
+    { className: "button-confirm-dialog" }
+  );
 
 export interface IButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -15,6 +67,12 @@ export interface IButtonProps
 
   /** (boolean) If true, disables actions and puts button into a 'pending' state */
   pending?: boolean;
+
+  /** (objct) If defined, will pop up a confirmation dialog - must be within a DialogProvider for this to work */
+  confirmDialog?: boolean | ButtonConfirmDialog;
+
+  /** (boolean) If true, adds a data-danger attribute which by default styles the button with $color-negative  */
+  danger?: boolean;
 }
 
 export interface IButton {
@@ -36,6 +94,8 @@ const ButtonRef: React.RefForwardingComponent<IButton, IButtonProps> = (
     disabled,
     type,
     children,
+    confirmDialog,
+    danger,
     ...attrs
   } = props;
 
@@ -57,13 +117,21 @@ const ButtonRef: React.RefForwardingComponent<IButton, IButtonProps> = (
     [buttonRef.current]
   );
 
+  const openConfirmDialog = useButtonConfirmDialog(
+    typeof confirmDialog === "boolean"
+      ? { content: "Are you sure?" }
+      : confirmDialog
+  );
+
   const handleClick = React.useCallback(
-    e => {
+    async e => {
       if (onClick && !pending) {
-        onClick(e);
+        if (!confirmDialog || (await openConfirmDialog())) {
+          onClick(e);
+        }
       }
     },
-    [onClick, pending]
+    [onClick, pending, openConfirmDialog]
   );
 
   const classes = ClassHelpers.classNames("btn", className, {
@@ -82,6 +150,7 @@ const ButtonRef: React.RefForwardingComponent<IButton, IButtonProps> = (
     <button
       ref={buttonRef}
       data-is-icon-button={isIconButton}
+      data-danger={danger}
       disabled={pending || disabled}
       type={type || "button"}
       onClick={handleClick}

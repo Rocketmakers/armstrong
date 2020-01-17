@@ -81,15 +81,34 @@
     }
   }
 
-  &[data-is-icon-button="true"]{
+  &[data-is-icon-button="true"] {
     border-radius: 50%;
 
-    .left-icon{
+    .left-icon {
       margin-right: 0;
     }
 
-    .right-icon{
+    .right-icon {
       margin-left: 0;
+    }
+  }
+
+  &[data-danger="true"] {
+    background-color: $color-negative;
+  }
+}
+
+
+.dialog.button-confirm-dialog{
+  .confirm-dialog-buttons{
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+
+    margin-top: $spacing-small;
+
+    .btn{
+      margin-left: $spacing-small;
     }
   }
 }
