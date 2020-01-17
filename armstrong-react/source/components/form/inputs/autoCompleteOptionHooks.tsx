@@ -17,7 +17,7 @@ export interface IUseOptionsConfig {
 }
 
 export function useOptions(allOptions: IAutoCompleteOption[], config: IUseOptionsConfig = {}) {
-  const [options, setOptions] = React.useState<IAutoCompleteOption[]>(config.emptyOnLoad ? [] : allOptions);
+  const [options, setOptions] = React.useState<IAutoCompleteOption[]>((!config.emptyOnLoad && allOptions) || []);
   const [filter, onFilterChanged] = React.useState("");
   const setFilter = React.useCallback(
     (query: string) => {
@@ -29,8 +29,14 @@ export function useOptions(allOptions: IAutoCompleteOption[], config: IUseOption
         )
       );
     },
-    [allOptions]
-  );
+    [allOptions]);
+
+  React.useEffect(() => {
+    if (!config.emptyOnLoad && allOptions) {
+      setOptions(allOptions)
+    }
+  }, [allOptions])
+
   return { options, filter, setFilter };
 }
 
