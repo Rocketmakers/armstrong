@@ -30,21 +30,20 @@ export const useButtonConfirmDialog = (config: ButtonConfirmDialog) =>
   useConfirmDialogProvider(
     isIButtonConfirmDialog(config)
       ? ({ choose }) => {
-          console.log(config);
           if (!config) {
             return;
           }
           return (
             <>
-              <p>{config && config.content}</p>
+              <p>{config.content}</p>
 
               <div className="confirm-dialog-buttons">
                 <Button onClick={() => choose(false)}>
-                  {(config && config.cancelText) || "cancel"}
+                  {(config.cancelText) || "cancel"}
                 </Button>
 
                 <Button onClick={() => choose(true)}>
-                  {(config && config.confirmText) || "confirm"}
+                  {(config.confirmText) || "confirm"}
                 </Button>
               </div>
             </>
