@@ -14,7 +14,7 @@ export interface IButtonConfirmDialog {
   cancelText?: string;
 }
 
-type ButtonConfirmDialog = IButtonConfirmDialog | React.FC<IDialogProviderProps<boolean, void>>;
+export type ButtonConfirmDialog = IButtonConfirmDialog | React.FC<IDialogProviderProps<boolean, void>>;
 
 const isIButtonConfirmDialog = (dialogProps: ButtonConfirmDialog): dialogProps is IButtonConfirmDialog =>
   !!dialogProps && !!(dialogProps as IButtonConfirmDialog).content;

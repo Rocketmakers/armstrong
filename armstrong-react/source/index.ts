@@ -128,7 +128,10 @@ export {
 export {
   IButtonProps,
   Button,
-  IButton as IButtonRef
+  IButton as IButtonRef,
+  ButtonConfirmDialog,
+  IButtonConfirmDialog,
+  useButtonConfirmDialog
 } from "./components/interaction/button";
 
 // Layout
