@@ -13,7 +13,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@rocketmakers/armstrong": "0.0.1-alpha.39",
+    "@rocketmakers/armstrong": "0.0.1-alpha.41",
     "gatsby": "2.18.6",
     "gatsby-plugin-sass": "2.1.24",
     "gatsby-plugin-ts-loader": "0.1.0",
