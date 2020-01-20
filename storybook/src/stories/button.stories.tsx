@@ -2,10 +2,11 @@ import * as React from "react";
 
 import { storiesOf } from "@storybook/react";
 import { action } from "@storybook/addon-actions";
-import { Button } from "../_symlink";
+import { Button, Image } from "../_symlink";
 
 import "../theme/theme.scss";
 import { getIconProps } from "../_symlink/components/display/icon";
+import { DialogProvider } from "../_symlink/components/display/dialogProvider";
 
 storiesOf("Button", module)
   .addParameters({
@@ -108,4 +109,65 @@ storiesOf("Button", module)
         This button is pending
       </Button>
     </>
+  ))
+  .add("Confirm Dialog", () => (
+    <DialogProvider>
+      <div id="host">
+        <p>
+          Buttons can take a confirmDialog prop which, when defined, describes a
+          dialog which will pop up asking for confirmation before onClick
+          executes
+        </p>
+        <pre>{`<Button confirmDialog>Do the thing</Button>`}</pre>
+        <br />
+        <br />
+        <Button confirmDialog onClick={() => alert("hi")}>
+          Do the thing
+        </Button>
+        <br />
+        <br />
+        <br />
+        <p>The content of these buttons can then be customized</p>
+        <pre>{`<Button
+  confirmDialog={{
+    content: "Woah there buddy are you totally sure you wanna do this?",
+    confirmText: "Hell yes",
+    cancelText: "Actually on second thoughts..."
+  }}
+/>`}</pre>
+        <br />
+        <Button
+          confirmDialog={{
+            content: "Woah there buddy are you totally sure you wanna do this?",
+            confirmText: "Hell yes",
+            cancelText: "Actually on second thoughts..."
+          }}
+          onClick={() => alert("hi")}
+        >
+          Do the thing with a custom dialog
+        </Button>
+        <br />
+        <br />
+        <br />
+        <p>The confirmDialog prop also takes custom JSX</p>
+        <br />
+        <Button
+          confirmDialog={({ choose }) => (
+            <>
+              <p>Hey look custom content</p>
+              <Image
+                renderSpinner
+                lazy
+                src={require("../assets/images/frank2.jpg")}
+                onClick={() => choose(true)}
+              />
+              <p>Click the image to do the thing</p>
+            </>
+          )}
+          onClick={() => alert("hi")}
+        >
+          Do the thing with an even more custom dialog
+        </Button>
+      </div>
+    </DialogProvider>
   ));
