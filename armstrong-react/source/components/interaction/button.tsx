@@ -1,10 +1,7 @@
 import * as React from "react";
 import { ClassHelpers } from "../../utilities/classHelpers";
 import { getIconOrJsx, IconOrJsx } from "./../display/icon";
-import {
-  useConfirmDialogProvider,
-  IDialogProviderProps
-} from "../display/dialogProvider";
+import { useConfirmDialogProvider, IDialogProviderProps } from "../display/dialogProvider";
 
 export interface IButtonConfirmDialog {
   /** (string) Text to show in the body of the dialog - defaults to Are you sure? */
@@ -17,13 +14,9 @@ export interface IButtonConfirmDialog {
   cancelText?: string;
 }
 
-type ButtonConfirmDialog =
-  | IButtonConfirmDialog
-  | React.FC<IDialogProviderProps<boolean, void>>;
+type ButtonConfirmDialog = IButtonConfirmDialog | React.FC<IDialogProviderProps<boolean, void>>;
 
-const isIButtonConfirmDialog = (
-  dialogProps: ButtonConfirmDialog
-): dialogProps is IButtonConfirmDialog =>
+const isIButtonConfirmDialog = (dialogProps: ButtonConfirmDialog): dialogProps is IButtonConfirmDialog =>
   !!dialogProps && !!(dialogProps as IButtonConfirmDialog).content;
 
 export const useButtonConfirmDialog = (config: ButtonConfirmDialog) =>
@@ -38,13 +31,9 @@ export const useButtonConfirmDialog = (config: ButtonConfirmDialog) =>
               <p>{config.content}</p>
 
               <div className="confirm-dialog-buttons">
-                <Button onClick={() => choose(false)}>
-                  {(config.cancelText) || "cancel"}
-                </Button>
+                <Button onClick={() => choose(false)}>{config.cancelText || "cancel"}</Button>
 
-                <Button onClick={() => choose(true)}>
-                  {(config.confirmText) || "confirm"}
-                </Button>
+                <Button onClick={() => choose(true)}>{config.confirmText || "confirm"}</Button>
               </div>
             </>
           );
@@ -53,8 +42,7 @@ export const useButtonConfirmDialog = (config: ButtonConfirmDialog) =>
     { className: "button-confirm-dialog" }
   );
 
-export interface IButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+export interface IButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   /** (string) An icon to show on the left of the buttons content */
   leftIcon?: IconOrJsx;
 
@@ -70,8 +58,8 @@ export interface IButtonProps
   /** (objct) If defined, will pop up a confirmation dialog - must be within a DialogProvider for this to work */
   confirmDialog?: boolean | ButtonConfirmDialog;
 
-  /** (boolean) If true, adds a data-danger attribute which by default styles the button with $color-negative  */
-  danger?: boolean;
+  /** (1 | 2 | 3) Level of danger of this button, displayed through colour. 1 is normal, 2 colours with $color-warning, and 3 colours with $color-negative */
+  dangerLevel?: 1 | 2 | 3;
 }
 
 export interface IButton {
@@ -79,10 +67,7 @@ export interface IButton {
   blur: () => void;
 }
 
-const ButtonRef: React.RefForwardingComponent<IButton, IButtonProps> = (
-  props,
-  ref
-) => {
+const ButtonRef: React.RefForwardingComponent<IButton, IButtonProps> = (props, ref) => {
   const {
     onClick,
     leftIcon,
@@ -94,7 +79,7 @@ const ButtonRef: React.RefForwardingComponent<IButton, IButtonProps> = (
     type,
     children,
     confirmDialog,
-    danger,
+    dangerLevel,
     ...attrs
   } = props;
 
@@ -116,11 +101,7 @@ const ButtonRef: React.RefForwardingComponent<IButton, IButtonProps> = (
     [buttonRef.current]
   );
 
-  const openConfirmDialog = useButtonConfirmDialog(
-    typeof confirmDialog === "boolean"
-      ? { content: "Are you sure?" }
-      : confirmDialog
-  );
+  const openConfirmDialog = useButtonConfirmDialog(typeof confirmDialog === "boolean" ? { content: "Are you sure?" } : confirmDialog);
 
   const handleClick = React.useCallback(
     async e => {
@@ -140,33 +121,32 @@ const ButtonRef: React.RefForwardingComponent<IButton, IButtonProps> = (
     pending
   });
 
-  const isIconButton = React.useMemo(
-    () => !children && (!!leftIcon || !!rightIcon) && !(leftIcon && rightIcon),
-    [leftIcon, children, rightIcon]
-  );
+  const isIconButton = React.useMemo(() => !children && (!!leftIcon || !!rightIcon) && !(leftIcon && rightIcon), [
+    leftIcon,
+    children,
+    rightIcon
+  ]);
 
   return (
     <button
       ref={buttonRef}
       data-is-icon-button={isIconButton}
-      data-danger={danger}
+      data-danger-level={dangerLevel}
       disabled={pending || disabled}
       type={type || "button"}
       onClick={handleClick}
       {...attrs}
       className={classes}
     >
-      {leftIcon &&
-        getIconOrJsx(leftIcon, { className: "left-icon" }, icon => (
-          <div className="left-icon">{icon}</div>
-        ))}
+      {leftIcon && getIconOrJsx(leftIcon, { className: "left-icon" }, icon => <div className="left-icon">{icon}</div>)}
       {children}
-      {rightIcon &&
-        getIconOrJsx(rightIcon, { className: "right-icon" }, icon => (
-          <div className="right-icon">{icon}</div>
-        ))}
+      {rightIcon && getIconOrJsx(rightIcon, { className: "right-icon" }, icon => <div className="right-icon">{icon}</div>)}
     </button>
   );
 };
 
 export const Button = React.forwardRef(ButtonRef);
+
+Button.defaultProps = {
+  dangerLevel: 1
+};

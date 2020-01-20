@@ -5,11 +5,11 @@ import {
   AutoCompleteSingleInput,
   Icon
 } from "../../_symlink";
+import { AutoCompleteMultiInput } from "../../_symlink/components/form/inputs/autoCompleteMultiInput";
 
 import { storiesOf } from "@storybook/react";
 
 import "../../theme/theme.scss";
-import { AutoCompleteMultiInput } from "../../_symlink/components/form/inputs/autoCompleteMultiInput";
 
 storiesOf("Form/AutocompleteInput", module)
   .addParameters({

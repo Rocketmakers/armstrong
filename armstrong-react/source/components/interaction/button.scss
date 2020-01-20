@@ -93,11 +93,14 @@
     }
   }
 
-  &[data-danger="true"] {
+  &[data-danger-level="2"] {
+    background-color: $color-warning;
+  }
+
+  &[data-danger-level="3"] {
     background-color: $color-negative;
   }
 }
-
 
 .dialog.button-confirm-dialog{
   .confirm-dialog-buttons{
