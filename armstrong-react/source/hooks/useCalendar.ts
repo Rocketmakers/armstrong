@@ -145,7 +145,7 @@ export function useCalendar(settings: IUseCalendarSettings): IUseCalendar {
   }, [state.nextSeed, format, startDay, displayFormat, today, date, maxDate])
 
   const previousMonth = React.useCallback(() => {
-    if (!calendarUtils.date.fallsWithinRange(state.previousSeed, minDate, undefined)) {
+    if (!calendarUtils.date.fallsWithinRange(state.previousSeed, calendarUtils.date.startOf(minDate, "month"), undefined)) {
       return
     }
     setState(buildWeeks(state.previousSeed, format, startDay, displayFormat, today, date, minDate, maxDate))
