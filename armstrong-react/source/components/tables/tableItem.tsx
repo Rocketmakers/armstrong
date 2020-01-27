@@ -4,8 +4,10 @@ import { ClassHelpers } from "../..";
 export interface ITableItem<T> {
   data: T;
   columnKeys: Array<keyof T>;
-  columnFormatter?: { [P in keyof T]?: (value: T[P]) => React.ReactNode };
-  onClick?: (val: string) => void;
+  columnFormatter?: {
+    [P in keyof T]?: (value: T[P], row?: T) => React.ReactNode;
+  };
+  onClick?: (data: T) => void;
 }
 
 export function TableItem<T>({
@@ -15,12 +17,15 @@ export function TableItem<T>({
   onClick,
 }: React.PropsWithChildren<ITableItem<T>>) {
   return (
-    <tr className={ClassHelpers.classNames("table-row")}>
+    <tr
+      // onClick={() => onClick(data)}
+      className={ClassHelpers.classNames("table-row")}
+    >
       {columnKeys.map((col: keyof T, index: number) => {
         return (
           <td key={index}>
             {columnFormatter && columnFormatter[col]
-              ? columnFormatter[col](data[col])
+              ? columnFormatter[col](data[col], data)
               : data[col]}
           </td>
         );

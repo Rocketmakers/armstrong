@@ -1,0 +1,297 @@
+$default-height: 25px;
+$default-width: 50px;
+
+$default-padding: 2px;
+
+$default-hover-nudge-amount: 5px;
+
+$default-inactive-colour: $gray-light;
+$default-hover-colour: darken($gray-light, 5%);
+$default-active-colour: $color-positive;
+$default-icon-size: 0.7;
+$default-nubbin-colour: white;
+
+$transition-time: 0.3s;
+
+$switch-shadow: 0 0 8px rgba(black, 0.3) !default;
+
+@mixin nubbin-and-icon {
+
+    ~.icon[data-icon-style="on-nubbin"],
+    ~.icon[data-icon-style="is-nubbin"],
+    &::after {
+        @content;
+    }
+}
+
+@mixin resize-switch($switch-width, $switch-height, $switch-padding, $switch-hover-nudge-amount, $switch-icon-size) {
+    $nubbin-size: calc(#{$switch-height} - #{$switch-padding} * 2);
+    $checked-transform: calc(#{$switch-width} - #{$nubbin-size} - #{$switch-padding} * 2);
+
+    $icon-font-size: calc(#{$nubbin-size} * #{$switch-icon-size});
+
+    >input {
+        width: $switch-width;
+        height: $switch-height;
+        border-radius: calc(#{$switch-height} / 2);
+
+        &::after {
+            width: $nubbin-size;
+            height: $nubbin-size;
+
+            left: $switch-padding;
+            top: calc(50% - #{$nubbin-size} / 2);
+        }
+
+        &:checked {
+
+            @include nubbin-and-icon {
+                transform: translateX($checked-transform)
+            }
+        }
+
+        &:hover[data-hover-nudge-enabled="true"][data-has-clicked="false"] {
+
+            @include nubbin-and-icon {
+                transform: translateX($switch-hover-nudge-amount);
+            }
+
+            &:checked {
+
+                @include nubbin-and-icon {
+                    transform: translateX(calc(#{$checked-transform} - #{$switch-hover-nudge-amount}));
+                }
+            }
+        }
+    }
+
+    >.icon {
+        font-size: $icon-font-size;
+
+        top: $switch-padding;
+        left: $switch-padding;
+        height: $nubbin-size;
+        width: $nubbin-size;
+    }
+
+    >div.icon{
+        p{
+            font-size: calc(#{$icon-font-size} * 0.7);
+        }
+    }
+
+    &[data-icon-style="static"] {
+        .icon.active-icon {
+            left: auto;
+            right: $switch-padding;
+        }
+    }
+}
+
+@mixin recolour-switch($switch-inactive-colour, $switch-hover-colour, $switch-active-colour, $nubbin-inactive-colour, $nubbin-hover-colour, $nubbin-active-colour) {
+    >input {
+        background-color: $switch-inactive-colour;
+
+        &::after {
+            background-color: $nubbin-inactive-colour;
+        }
+
+        &:checked {
+            background-color: $switch-active-colour;
+
+            &::after {
+                background-color: $nubbin-active-colour;
+            }
+        }
+
+        &:hover[data-has-clicked="false"] {
+            &:not(:checked) {
+                background-color: $switch-hover-colour;
+
+                &::after {
+                    background-color: $nubbin-hover-colour;
+                }
+            }
+        }
+    }
+
+    &[data-bordered-nubbin="true"] {
+        >input {
+            &::after {
+                border-color: $switch-inactive-colour;
+            }
+
+            &:hover {
+                &::after {
+                    border-color: $switch-hover-colour;
+                }
+            }
+
+            &:checked {
+                &::after {
+                    border-color: $switch-active-colour;
+                }
+            }
+        }
+    }
+
+    .icon.active-icon {
+        color: $switch-active-colour;
+    }
+
+    .icon.inactive-icon {
+        color: $switch-inactive-colour;
+    }
+
+    &[data-icon-style="is-nubbin"] {
+        .icon.active-icon {
+            color: $nubbin-active-colour;
+        }
+
+        .icon.inactive-icon {
+            color: $nubbin-inactive-colour;
+        }
+    }
+
+    &[data-icon-style="static"] {
+        >input {
+            &:not(:checked) {
+                ~.icon.active-icon {
+                    color: white;
+                }
+            }
+
+            &:checked {
+                ~.icon.inactive-icon {
+                    color: white;
+                }
+            }
+        }
+    }
+}
+
+// Only renders a switch if the browser supports css variables
+
+@supports (color: var(--a)) {
+    .armstrong-input.switch-input {
+        @include resize-switch(var(--armstrong-switch-width, #{$default-width}), var(--armstrong-switch-height, #{$default-height}), var(--armstrong-switch-padding, #{$default-padding}), var(--armstrong-switch-hover-nudge-amount, #{$default-hover-nudge-amount}), var(--armstrong-switch-icon-size, #{$default-icon-size}));
+        @include recolour-switch(var(--armstrong-switch-inactive-colour, #{$default-inactive-colour}), var(--armstrong-switch-hover-colour, var(--armstrong-switch-inactive-colour, #{$default-hover-colour})), var(--armstrong-switch-active-colour, #{$default-active-colour}), var(--armstrong-switch-nubbin-inactive-colour, #{$default-nubbin-colour}), var(--armstrong-switch-nubbin-hover-colour, var(--armstrong-switch-nubbin-inactive-colour, #{$default-nubbin-colour})), var(--armstrong-switch-nubbin-active-colour, #{$default-nubbin-colour}));
+
+        position: relative;
+        display: inline-block;
+
+        >input {
+            position: relative;
+            transition: background-color $transition-time, opacity $transition-time;
+            cursor: pointer;
+            border: none;
+
+
+            &:focus {
+                border: none;
+            }
+
+            &::after {
+                content: '';
+                display: block;
+                position: absolute;
+
+                border-radius: 50%;
+
+                transition: transform $transition-time, border-color $transition-time, background-color $transition-time;
+            }
+
+            &[data-disabled="true"] {
+                opacity: 0.5;
+                pointer-events: none;
+            }
+
+            &:checked {
+                ~.icon.active-icon {
+                    opacity: 1;
+                    transition: opacity $transition-time / 2 $transition-time / 2, transform $transition-time;
+                }
+            }
+
+            &:not(:checked) {
+                ~.icon.inactive-icon {
+                    opacity: 1;
+                    transition: opacity $transition-time / 2 $transition-time / 2, transform $transition-time;
+                }
+            }
+        }
+
+        >.icon {
+            position: absolute;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            pointer-events: none;
+
+            opacity: 0;
+            transition: opacity $transition-time / 2, transform $transition-time;
+        }
+
+        >div.icon{
+            p{
+                margin-bottom: 0;
+            }
+        }
+
+        &[data-icon-style="is-nubbin"] {
+            >input {
+                &::after {
+                    display: none;
+                }
+            }
+
+            >.icon {
+                color: white;
+            }
+        }
+
+        &[data-icon-style="static"] {
+            >.icon {
+                opacity: 1;
+            }
+        }
+
+        &[data-bordered-nubbin="true"] {
+            >input {
+                &::after {
+                    border-width: 1px;
+                    border-style: solid;
+                }
+            }
+        }
+
+        &[data-render-shadows="true"] {
+            >input {
+                box-shadow: inset $switch-shadow;
+
+                &::after {
+                    box-shadow: $switch-shadow;
+
+                }
+            }
+
+            &[data-icon-style="is-nubbin"] {
+                >.icon {
+                    text-shadow: $switch-shadow;
+                }
+            }
+        }
+    }
+}
+
+// renders a normal switch if not
+
+@supports not (color: var(--a)) {
+    .armstrong-input.switch-input {
+        >.icon {
+            display: none;
+        }
+    }
+}

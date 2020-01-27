@@ -61,8 +61,22 @@ export class NumericValueConverter implements IInputValueConverter<number> {
   constructor(private options?: INumericOptions) {
   }
 
-  convert(data: number) {
-    const v = (utils.object.isNullOrUndefined(data) || data === "" as any) ? null : data.toFixed(this.options && this.options.decimals);
+  convert(data: number | string) {
+    let v;
+
+    if (utils.object.isNullOrUndefined(data)) {
+      v = null
+    }
+    if (typeof data === "string") {
+      if (data === "") {
+        v = null;
+      } else {
+        v = parseFloat(data);
+      }
+    }
+    if (typeof data === "number") {
+      v = data.toFixed(this.options && this.options.decimals);
+    }
     return v;
   }
 

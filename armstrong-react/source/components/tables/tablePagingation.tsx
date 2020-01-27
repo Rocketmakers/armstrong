@@ -24,7 +24,7 @@ export const TablePagination: React.FunctionComponent<ITablePagination> = ({
   currentPage,
   pageNeighbours = 1,
   render: Render,
-  totalPages,
+  totalPages
 }) => {
   const [pageNumbers, setPageNumbers] = React.useState<number[]>([]);
 
@@ -46,7 +46,7 @@ export const TablePagination: React.FunctionComponent<ITablePagination> = ({
             startPage - offset,
             startPage - 1,
             1,
-            true,
+            true
           );
           pages = _.flatten([GO_LEFT_PAGE_INDEX, extraPages, pages]);
         } else if (!hasLeftNeighbour && hasRightNeighbour) {
@@ -54,11 +54,9 @@ export const TablePagination: React.FunctionComponent<ITablePagination> = ({
             endPage + 1,
             endPage + offset,
             1,
-            true,
+            true
           );
           pages = _.flatten([pages, extraPages, GO_RIGHT_PAGE_INDEX]);
-        } else if (hasLeftNeighbour && hasRightNeighbour) {
-          pages = _.flatten([GO_LEFT_PAGE_INDEX, pages, GO_RIGHT_PAGE_INDEX]);
         } else {
           pages = _.flatten([GO_LEFT_PAGE_INDEX, pages, GO_RIGHT_PAGE_INDEX]);
         }
@@ -67,7 +65,7 @@ export const TablePagination: React.FunctionComponent<ITablePagination> = ({
       }
       return utils.array.range(1, totalPages, 1, true);
     },
-    [currentPage, totalPages],
+    [currentPage, totalPages]
   );
 
   React.useEffect(() => {
@@ -79,12 +77,18 @@ export const TablePagination: React.FunctionComponent<ITablePagination> = ({
   }, []);
 
   const goLeft = React.useCallback(() => {
-    return Math.max(0, Math.min(currentPage - pageNeighbours * 2 - 1));
-  }, [currentPage]);
+    return Math.max(
+      0,
+      Math.min(currentPage - pageNeighbours * 2 - 1, totalPages)
+    );
+  }, [currentPage, totalPages, pageNeighbours]);
 
   const goRight = React.useCallback(() => {
-    return Math.max(0, Math.min(currentPage + pageNeighbours * 2 + 1));
-  }, [currentPage]);
+    return Math.max(
+      0,
+      Math.min(currentPage + pageNeighbours * 2 + 1, totalPages)
+    );
+  }, [currentPage, totalPages, pageNeighbours]);
 
   return (
     <div>

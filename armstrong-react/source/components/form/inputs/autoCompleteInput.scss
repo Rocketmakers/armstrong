@@ -11,24 +11,24 @@
 .autocomplete-select {
   position: relative;
 
-
-
-  &.text-input-icon-left{
-    i{
+  &.text-input-icon-left {
+    i {
       position: absolute;
       top: 50%;
       left: 15px;
       z-index: 4;
       transform: translateY(-50%);
     }
-    input{
+
+    input {
       padding-left: 40px;
     }
-    .placeholder, .selected-value-wrapper{
+
+    .placeholder,
+    .selected-value-wrapper {
       padding-left: 23px;
     }
   }
-
 
   &.has-go-button {
     input {
@@ -103,12 +103,13 @@
     width: 100%;
     position: relative;
 
-    .spinner {
+    .autocomplete-spinner {
       animation: spin 0.3s forwards infinite linear;
       position: absolute;
       right: $spacing-small;
-      top: calc(#{$spacing-small}*0.75);
-      z-index: 2;
+      top: $spacing-small;
+      z-index: 3;
+      left: auto;
     }
 
     .autocomplete-select-list {
@@ -173,9 +174,9 @@
     }
   }
 
-  .autocomplete-select-list-wrapper.multi-select input{
-      position: absolute;
-    }
+  .autocomplete-select-list-wrapper.multi-select input {
+    position: absolute;
+  }
 
   input {
     position: relative;

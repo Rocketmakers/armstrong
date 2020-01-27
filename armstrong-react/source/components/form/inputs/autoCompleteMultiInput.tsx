@@ -193,7 +193,9 @@ export const AutoCompleteMultiInput: React.FunctionComponent<IAutoCompleteProps<
       ref={root}
       title={validationMessage}
       onClick={e => focusInput(e)}
-      className={classes}>
+      className={classes}
+      data-open={open}
+    >
       <Row>
         <Col className="drop-down-controls">
           <Grid className="autocomplete-value-display">
@@ -233,7 +235,7 @@ export const AutoCompleteMultiInput: React.FunctionComponent<IAutoCompleteProps<
                 onKeyUp={e => checkKey(e)}
                 onChange={e => checkToFilter(getEventTargetAs<HTMLInputElement>(e).value)}
                 placeholder={placeholder} />
-              {isSearching && <Icon className="spinner fg-info" icon={Icon.Icomoon.spinner2} />}
+              {isSearching && <Icon className="autocomplete-spinner fg-info" icon={Icon.Icomoon.spinner2} />}
               <div data-id="autocomplete-select-list"
                 className={`autocomplete-select-list${showOnTop ? " on-top" : ""}`}
                 style={{ maxHeight: `${(visibleItems || 3) * itemHeight}px`, marginTop: `${topOffset}px` }}>

@@ -1,0 +1,56 @@
+$transition-time: 0.2s;
+
+.progress-bar {
+    position: relative;
+    background-color: $gray-light;
+    border-radius: 9px;
+    user-select: none;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .progress-bar-inner {
+        transition: width $transition-time, height $transition-time, background-color $transition-time;
+        position: absolute;
+        background-color: $brand-primary;
+        border-radius: 9px;
+
+    }
+
+    p.label {
+        margin: 0;
+
+        &[data-variant="following"] {
+            position: absolute;
+            transition: left $transition-time, top $transition-time, bottom $transition-time, right $transition-time;
+            background-color: white;
+            box-shadow: 1px 1px 9px rgba(black , 0.2);
+            padding: $spacing-xsmall;
+            border-radius: 9px;
+            transform: translateY(50%);
+        }
+
+        &[data-variant="centre"] {
+            color: white;
+            text-align: center;
+            position: relative;
+            font-size: 0.8rem;
+        }
+
+    }
+
+    &[data-direction="down"],
+    &[data-direction="up"] {
+        p.label[data-variant="following"] {
+            left: $spacing-small;
+        }
+    }
+
+    &[data-direction="left"],
+    &[data-direction="right"] {
+        p.label[data-variant="following"] {
+            top: $spacing-small;
+        }
+    }
+}

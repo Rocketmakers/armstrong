@@ -1,9 +1,10 @@
-import * as React from 'react';
+import * as React from "react";
 
-import { storiesOf } from '@storybook/react';
-import { ToastProvider, useToast, Button, TextInput, Icon } from '../_symlink';
+import { storiesOf } from "@storybook/react";
+import { ToastProvider, useToast, Button, TextInput, Icon } from "../_symlink";
 
-import '../theme/theme.scss';
+import "../theme/theme.scss";
+import { getIconProps } from "../_symlink/components/display/icon";
 
 const BasicInner = () => {
   const { dispatch } = useToast();
@@ -11,11 +12,12 @@ const BasicInner = () => {
   return (
     <>
       <Button
+        style={{ margin: "10px" }}
         onClick={() =>
           dispatch({
-            title: 'Info',
+            title: "Info",
             message: "I'm a toast",
-            type: 'info',
+            type: "info",
             autodismiss: 6000
           })
         }
@@ -24,11 +26,12 @@ const BasicInner = () => {
       </Button>
 
       <Button
+        style={{ margin: "10px" }}
         onClick={() =>
           dispatch({
-            title: 'Warning',
+            title: "Warning",
             message: "I'm a warning",
-            type: 'warning',
+            type: "warning",
             autodismiss: 6000
           })
         }
@@ -37,11 +40,12 @@ const BasicInner = () => {
       </Button>
 
       <Button
+        style={{ margin: "10px" }}
         onClick={() =>
           dispatch({
-            title: 'Error',
+            title: "Error",
             message: "I'm an error.... ruh roh",
-            type: 'error',
+            type: "error",
             autodismiss: 6000
           })
         }
@@ -50,11 +54,12 @@ const BasicInner = () => {
       </Button>
 
       <Button
+        style={{ margin: "10px" }}
         onClick={() =>
           dispatch({
-            title: 'Success',
+            title: "Success",
             message: "I'm a success notification! Isn't that nice!",
-            type: 'success',
+            type: "success",
             autodismiss: 6000
           })
         }
@@ -63,13 +68,14 @@ const BasicInner = () => {
       </Button>
 
       <Button
+        style={{ margin: "10px" }}
         onClick={() =>
           dispatch({
-            title: 'Top left',
+            title: "Top left",
             message: "Look at me i'm in the top left...",
-            type: 'success',
+            type: "success",
             autodismiss: 6000,
-            location: 'top left'
+            location: "top left"
           })
         }
       >
@@ -84,16 +90,19 @@ const ComplexInner = () => {
 
   return (
     <Button
+      style={{ margin: "10px" }}
       onClick={() =>
         dispatch({
-          title: 'TOAST',
-          type: 'warning',
+          title: "TOAST",
+          type: "warning",
           allowManualDismiss: false,
           content: ({ dismiss }) => (
             <>
               <p>Look at this here</p>
               <TextInput />
-              <Button onClick={dismiss}>Dismiss</Button>
+              <Button style={{ margin: "10px" }} onClick={dismiss}>
+                Dismiss
+              </Button>
             </>
           )
         })
@@ -110,10 +119,11 @@ const CustomInner = () => {
   return (
     <div>
       <Button
+        style={{ margin: "10px" }}
         onClick={() =>
           dispatch({
-            title: 'TOAST',
-            type: 'warning',
+            title: "TOAST",
+            type: "warning",
             content: <p>This is a good toast</p>
           })
         }
@@ -121,25 +131,27 @@ const CustomInner = () => {
         Dispatch a Toast Notification
       </Button>
 
-      <Button onClick={dismissAll}>Clear all Toasts</Button>
+      <Button style={{ margin: "10px" }} onClick={dismissAll}>
+        Clear all Toasts
+      </Button>
 
-      <div className='toasts'>
+      <div className="toasts">
         {toasts.map((toast, i) => (
           <div
             style={{
-              border: '1px solid black',
-              margin: '15px',
-              padding: '10px'
+              border: "1px solid black",
+              margin: "15px",
+              padding: "10px"
             }}
             key={i}
           >
             <h3>{toast.title}</h3>
             <p>{toast.message}</p>
-            {typeof toast.content === 'function'
+            {typeof toast.content === "function"
               ? toast.content({
-                dismiss: () => dismiss(i),
-                timestamp: toast.timestamp
-              })
+                  dismiss: () => dismiss(i),
+                  timestamp: toast.timestamp
+                })
               : toast.content}
           </div>
         ))}
@@ -149,16 +161,17 @@ const CustomInner = () => {
 };
 
 const HistoryInner = () => {
-  const { dispatch, toastsHistory } = useToast();
+  const { dispatch, toastsHistory, clearToastHistory } = useToast();
 
   return (
     <>
       <Button
+        style={{ margin: "10px" }}
         onClick={() =>
           dispatch({
-            title: 'TOAST',
-            type: 'error',
-            message: 'look at this one!',
+            title: "TOAST",
+            type: "error",
+            message: "look at this one!",
             autodismiss: 5000
           })
         }
@@ -166,7 +179,11 @@ const HistoryInner = () => {
         Dispatch a Toast Notification
       </Button>
 
-      <div className='notifications'>
+      <Button style={{ margin: "10px" }} onClick={clearToastHistory}>
+        Clear Toast Notifications History
+      </Button>
+
+      <div className="notifications">
         {toastsHistory.map((toast, i) => (
           <p key={i}>
             {toast.title} — {toast.timestamp}
@@ -183,130 +200,189 @@ const BigDemoInner = () => {
   const onClick = React.useCallback(() => {
     dispatch(
       {
-        title: 'Info',
-        type: 'info',
-        message: 'Toasty time - look at it go!',
+        title: "Info",
+        type: "info",
+        message: "Toasty time - look at it go!",
         autodismiss: 5000
       },
       {
-        title: 'Look',
-        type: 'info',
-        message: 'Hi there!',
+        title: "Look",
+        type: "info",
+        message: "Hi there!",
         autodismiss: 5000,
-        location: 'bottom right'
+        location: "bottom right"
       },
       {
-        title: 'TOAST',
-        type: 'warning',
-        message: 'Toasty time - look at it go!',
+        title: "TOAST",
+        type: "warning",
+        message: "Toasty time - look at it go!",
         autodismiss: 5000
       },
       {
-        title: 'TOAST',
-        type: 'warning',
-        message: 'Toasty time - look at it go!',
+        title: "TOAST",
+        type: "warning",
+        message: "Toasty time - look at it go!",
         content: (
-          <img src='https://static.independent.co.uk/s3fs-public/thumbnails/image/2018/03/14/14/bread-waste.jpg?w968h681' />
+          <img src="https://static.independent.co.uk/s3fs-public/thumbnails/image/2018/03/14/14/bread-waste.jpg?w968h681" />
         ),
-        location: 'bottom left',
+        location: "bottom left",
         autodismiss: 10000
       },
       {
-        title: 'Look heres some more toast',
-        type: 'success',
-        message: 'Check out this cool video about my hero!',
+        title: "Look heres some more toast",
+        type: "success",
+        message: "Check out this cool video about my hero!",
         content: (
           <iframe
-            width='560'
-            height='315'
-            src='https://www.youtube.com/embed/P40sJOkxnac'
-            allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture'
+            width="560"
+            height="315"
+            src="https://www.youtube.com/embed/P40sJOkxnac"
+            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
           />
         ),
-        location: 'top left'
+        location: "top left"
       }
     );
   }, [dispatch]);
 
   return (
     <>
-      <Button onClick={onClick}>Dispatch a Toast Notification</Button>
+      <Button style={{ margin: "10px" }} onClick={onClick}>
+        Dispatch a Toast Notification
+      </Button>
     </>
   );
 };
 
-storiesOf('Toasts', module)
+storiesOf("Toasts", module)
   .addParameters({
     options: {
       showAddonPanel: true
     }
   })
-  .add('Simple Toast', () => (
+  .add("Simple Toast", () => (
     <ToastProvider>
       <p>
-        Armstrong toasts, dispatched by the useToast hook, and handled by the
-        ToastProvider component by default. Different types of notification are
-    </p>
+        Armstrong toasts are dispatched by the useToast hook, and handled by the
+        ToastProvider component by default.
+      </p>
+      <p>
+        Everything must be wrapped in the ToastProvider component, where config
+        can be passed, which provides context to its children
+      </p>
+      <br />
+      <pre>
+        {"<ToastProvider>"}
+        <br />
+        {"  CONTENT"}
+        <br />
+        {"</ToastProvider>"}
+        <br />
+      </pre>
+      <br />
+      <p>Toasts are then dispatched from the useToast hook</p>
+      <br />
+      <pre>
+        {"const { dispatch } = useToast()"}
+        <br />
+        <br />
+        {"dispatch({ title: 'My Toast', type: 'error' })"}
+      </pre>
+      <br />
+      <p>Different types of notification are dispatchable</p>
+      <br />
+      <br />
 
       <BasicInner />
     </ToastProvider>
   ))
-  .add('Toast with custom JSX content', () => (
-    <ToastProvider location='bottom left'>
+  .add("Toast with custom JSX content", () => (
+    <ToastProvider location="bottom left">
       <p>
         Custom JSX content can be rendered on a per toast basis, passed into the
         dispatch function returned by useToast
-    </p>
+      </p>
+      <br />
+      <pre>
+        {"const { dispatch } = useToast()"}
+        <br />
+        <br />
+        {
+          "dispatch({ title: 'My Toast', type: 'error', content: <p>My cool content</p> })"
+        }
+      </pre>
+      <br />
 
       <ComplexInner />
     </ToastProvider>
   ))
-  .add('Customised dismiss button', () => (
+  .add("Customised dismiss button", () => (
     <ToastProvider
-      location='top right'
-      dismissButton={<Icon icon={Icon.Icomoon.arrowRight3} />}
+      location="top right"
+      dismissButton={getIconProps("Icomoon", "arrowRight3")}
     >
-      <p>The dismiss button has been changed to an arrow</p>
+      <p>The dismiss button can be cusomtised</p>
+      <pre>
+        {
+          "<ToastProvider location='top right' dismissButton={getIconProps('Icomoon', 'arrowRight3')}/>"
+        }
+      </pre>
 
       <BasicInner />
     </ToastProvider>
   ))
-  .add('Custom toasts', () => (
+  .add("Custom toasts", () => (
     <ToastProvider
-      location='top right'
-      dismissButton={<Icon icon={Icon.Icomoon.arrowRight3} />}
+      location="top right"
+      dismissButton={getIconProps("Icomoon", "arrowRight3")}
       renderInProvider={false}
     >
       <p>
-        Default rendering has been disabled for these toasts and they are rendered
-        manually using the useToast hook.
-    </p>
+        Default rendering has been disabled for these toasts and they are
+        rendered manually using the useToast hook.
+      </p>
+      <pre>{`<ToastProvider renderInProvider={false} />`}</pre>
+      <br />
+      <pre>
+        {`const {toasts} = useToasts()`}
+        <br />
+        <br />
+        {`return toasts.map(toast => <p>My custom toast component</p>)`}
+      </pre>
+      <br />
 
       <CustomInner />
     </ToastProvider>
   ))
-  .add('Portaled toasts', () => (
-    <ToastProvider location='top right' hostElement='body'>
-      <p>These toasts are portaled into the body using the hostElement prop</p>
+  .add("Portaled toasts", () => (
+    <ToastProvider location="top right" hostElement="body">
+      <p>
+        These toasts are portaled into the body using the hostElement prop on
+        the ToastProvider component
+      </p>
+      <pre>{`<ToastProvider  hostElement="body"/>`}</pre>
+      <br />
 
       <BasicInner />
     </ToastProvider>
-  )).add('Toast history', () => (
+  ))
+  .add("Toast history", () => (
     <ToastProvider
-      location='top right'
+      location="top right"
       dismissButton={<Icon icon={Icon.Icomoon.arrowRight3} />}
-      hostElement='body'
+      hostElement="body"
       saveHistory
     >
       <p>
         These toasts are kept in a toast history state, and can be rendered
         elsewhere - ie in a notification centre
-    </p>
+      </p>
 
       <HistoryInner />
     </ToastProvider>
-  )).add('Big demo', () => (
-    <ToastProvider location='top right' hostElement='body' saveHistory>
+  ))
+  .add("Big demo", () => (
+    <ToastProvider location="top right" hostElement="body" saveHistory>
       <p>Here's a demo with a bunch of stuff happening</p>
 
       <BigDemoInner />

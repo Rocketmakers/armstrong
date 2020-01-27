@@ -19,7 +19,7 @@ describe("useInfinitePaging", () => {
   it("Basic", async () => {
     const pageSize = 5
     const totalRecords = 9
-    const { result, waitForNextUpdate } = renderHook(() => useInfinitePaging({ fetch: getFetcher(totalRecords, pageSize), firstPageToken: 1 }))
+    const { result, waitForNextUpdate } = renderHook(() => useInfinitePaging({ fetch: getFetcher(totalRecords, pageSize), firstPageToken: 1, key: item => item[0] }))
 
     assert(result.current.items.length === 0, "Should have an empty items array on first render")
     assert(result.current.isFetching, "Should indicate isFetching on first render")

@@ -1,6 +1,5 @@
 import assert = require("assert");
 import { act, renderHook } from "react-hooks-testing-library";
-import { IUseDataTableResult } from "../components/tables/tableTypes";
 import { useDataTable } from "../hooks/useDataTable";
 
 interface ITodos {
@@ -73,11 +72,11 @@ const localData: ITodos[] = [
   },
 ];
 
-async function loadTodoData() {
-  return async (): Promise<IUseDataTableResult<ITodos>> => {
-    return { data: localData };
-  };
-}
+// async function loadTodoData() {
+//   return async (): Promise<IUseDataTableResult<ITodos>> => {
+//     return { data: localData };
+//   };
+// }
 
 describe("useDataTable", () => {
   /**

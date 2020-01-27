@@ -1,5 +1,4 @@
 import * as React from "react";
-import * as _ from "underscore";
 import { ClassHelpers } from "../../";
 import { Dialog } from "../display/dialog";
 import { TableFiltersDialog } from "./tableFilterDialog";
@@ -19,8 +18,10 @@ import {
 } from "./tableTypes";
 
 export interface ITableProps<T> {
-  /** (React.ReactNode) Specify the formatting of the individual column */
-  columnFormatter?: { [P in keyof T]?: (value: T[P]) => React.ReactNode };
+  /** (React.ReactNode) Specify the formatting of the individual column, you have access to both the  */
+  columnFormatter?: {
+    [P in keyof T]?: (value: T[P], row?: T) => React.ReactNode;
+  };
   /** (T[]) The data to display */
   data?: T[];
   /** (IFilter[]) The active filter list  */
@@ -133,7 +134,7 @@ export function Table<T = any>({
           </thead>
         )}
         <tbody className={ClassHelpers.classNames("table-body")}>
-          {data.map((rows: T, idx: number) => {
+          {data && data.map((rows: T, idx: number) => {
             return (
               <TableItem
                 key={idx}

@@ -1,0 +1,46 @@
+@keyframes spin {
+    from {
+        transform: rotate(0);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes spin-reverse {
+    from {
+        transform: rotate(0);
+    }
+
+    to {
+        transform: rotate(-360deg);
+    }
+}
+
+.spinner {
+    align-self: stretch;
+    justify-self: stretch;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    animation: spin 1s linear infinite;
+
+    .icon {
+        animation: fade-in 300ms;
+        font-size: 2rem;
+    }
+
+    &[data-reversed="true"] {
+        animation-name: spin-reverse;
+    }
+
+    &[data-fill="true"] {
+        width: 100%;
+        height: 100%;
+
+        flex-grow: 1;
+    }
+}

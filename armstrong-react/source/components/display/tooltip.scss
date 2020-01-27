@@ -1,0 +1,117 @@
+.tooltip-wrapper {
+  position: relative;
+  width: max-content;
+
+  .tooltip-children:hover {
+    + .tooltip:not([data-position="hidden"]) {
+      opacity: 1;
+      pointer-events: all;
+    }
+  }
+
+  .tooltip {
+    opacity: 0;
+    position: absolute;
+    z-index: 1;
+    background-color: $brand-primary;
+    color: white;
+    box-shadow: 1px 1px 15px rgba(black, 0.1);
+    padding: $tooltip-spacing;
+    border-radius: $spacing-xsmall;
+    pointer-events: none;
+
+    width: max-content;
+    max-width: 200px;
+
+    font-weight: 600;
+
+    transition: opacity 0.3s;
+
+    margin-bottom: $spacing-xsmall;
+
+    &[data-arrow="true"] {
+      &:after {
+        display: block;
+        content: "";
+        width: $tooltip-spacing;
+        height: $tooltip-spacing;
+        background-color: $brand-primary;
+        position: absolute;
+        box-shadow: 1px 1px 15px rgba(black, 0.1);
+      }
+    }
+
+    &[data-retain="true"]:not([data-position="hidden"]):hover {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    &[data-position="left"],
+    &[data-position="right"] {
+      top: 0;
+      &[data-center="true"] {
+        top: 50%;
+        transform: translateY(-50%);
+      }
+      &[data-position="right"] {
+        left: calc(100%);
+        &[data-arrow="true"] {
+          &:after {
+            left: 0;
+            top: 50%;
+            transform: translate(-50%, -50%) rotate(45deg);
+          }
+          margin-left: $tooltip-spacing;
+        }
+      }
+      &[data-position="left"] {
+        right: calc(100%);
+        &[data-arrow="true"] {
+          &:after {
+            right: 0;
+            top: 50%;
+            transform: translate(50%, -50%) rotate(45deg);
+          }
+          margin-right: $tooltip-spacing;
+        }
+      }
+    }
+
+    &[data-position="top"],
+    &[data-position="bottom"] {
+      left: 0;
+      &[data-center="true"] {
+        left: 50%;
+        transform: translate(-50%, 0);
+      }
+      &[data-position="top"] {
+        bottom: calc(100%);
+        &[data-arrow="true"] {
+          &:after {
+            bottom: 0;
+            left: 50%;
+            transform: translate(-50%, 50%) rotate(45deg);
+          }
+          margin-bottom: $tooltip-spacing;
+        }
+      }
+      &[data-position="bottom"] {
+        top: calc(100%);
+        &[data-arrow="true"] {
+          &:after {
+            top: 0;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(45deg);
+          }
+          margin-top: $tooltip-spacing;
+        }
+      }
+    }
+
+    &[data-position="fixed"] {
+      position: fixed;
+      top: 0;
+      left: 0;
+    }
+  }
+}

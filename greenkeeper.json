@@ -1,0 +1,12 @@
+{
+  "groups": {
+    "default": {
+      "packages": [
+        "armstrong-react/package.json",
+        "marketing/package.json",
+        "package.json",
+        "storybook/package.json"
+      ]
+    }
+  }
+}

@@ -100,11 +100,6 @@ async function loadTodoData(): Promise<IUseDataTableResult<ITodos>> {
   };
 }
 
-async function fetchPhotosData() {
-  const res = await fetch(photosDataUrl);
-  return res.json();
-}
-
 async function loadPhotosData(): Promise<IUseDataTableResult<IPhotos>> {
   const res = await fetch(photosDataUrl, { method: "GET" });
   const data = ((await res.json()) as unknown) as IPhotos[];
@@ -138,6 +133,7 @@ function CompletedTableCell(value: boolean) {
     </div>
   );
 }
+
 
 function CompletedTableCellButton(value: boolean) {
   return <button>{value ? "true" : "false"}</button>;
@@ -369,6 +365,11 @@ storiesOf("Table", module)
           userId: TableHeaderCell,
         }}
         columnFormatter={{
+          title: (colValue: string, rowValue: ITodos) => (
+            <div onClick={() => alert(JSON.stringify(rowValue))}>
+              {colValue}
+            </div>
+          ),
           completed: CompletedTableCellButton,
         }}
         data={state}

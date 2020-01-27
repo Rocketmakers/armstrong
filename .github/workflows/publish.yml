@@ -1,0 +1,23 @@
+name: Publish
+
+on:
+  push:
+    tags:
+      - "*"
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@master
+
+      - name: Set Node.js 10.15.3
+        uses: actions/setup-node@master
+        with:
+          version: 10.15.3
+
+      - name: Publish
+        run: cd armstrong-react && npm i && npm run build && echo //registry.npmjs.org/:_authToken=$NPM_TOKEN > .npmrc && npm publish
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

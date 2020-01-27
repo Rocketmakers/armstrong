@@ -19,6 +19,8 @@
   border-radius: $corner-radius-small;
   outline: none;
   user-select: none;
+  display: flex;
+  align-items: center;
 
   &:active:not(:disabled) {
     transform: translateY(2px);
@@ -39,6 +41,7 @@
   &:disabled {
     opacity: 0.4;
     cursor: default;
+    pointer-events: none;
   }
 
   &.icon-button-left {
@@ -75,6 +78,40 @@
       border-bottom: 1px solid white;
       border-radius: 50%;
       animation: spin 0.75s linear infinite;
+    }
+  }
+
+  &[data-is-icon-button="true"] {
+    border-radius: 50%;
+
+    .left-icon {
+      margin-right: 0;
+    }
+
+    .right-icon {
+      margin-left: 0;
+    }
+  }
+
+  &[data-danger-level="2"] {
+    background-color: $color-warning;
+  }
+
+  &[data-danger-level="3"] {
+    background-color: $color-negative;
+  }
+}
+
+.dialog.button-confirm-dialog{
+  .confirm-dialog-buttons{
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+
+    margin-top: $spacing-small;
+
+    .btn{
+      margin-left: $spacing-small;
     }
   }
 }

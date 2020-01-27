@@ -1,3 +1,31 @@
-img.rounded{
-  border-radius: 50%;
+.armstrong-picture {
+  img.rounded {
+    border-radius: 50%;
+  }
+}
+
+picture.armstrong-picture {
+  >img {
+    opacity: 0;
+  }
+
+  &[data-loaded="true"]>img {
+    animation: fade-in forwards 0.3s;
+  }
+}
+
+.image-not-found {
+  text-align: center;
+
+  .icon {
+    font-size: 2rem;
+  }
+
+  p {
+    margin-top: $spacing-xsmall;
+  }
+
+  +picture img {
+    opacity: 0;
+  }
 }

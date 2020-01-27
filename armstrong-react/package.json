@@ -1,6 +1,6 @@
 {
-  "name": "armstrong-react",
-  "version": "4.0.0-pre29",
+  "name": "@rocketmakers/armstrong",
+  "version": "0.0.1-alpha.42",
   "description": "Rocketmakers Armstrong library of React components",
   "main": "./dist/index.js",
   "style": "./dist/style.scss",
@@ -16,6 +16,9 @@
     "lint": "tslint -c tslint.json 'source/**/*.ts{,x}'",
     "prepublishOnly": "npm run build"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/Rocketmakers/armstrong-react.git"
@@ -28,32 +31,32 @@
   "author": "developers@rocketmakers.com",
   "license": "MIT",
   "dependencies": {
-    "moment": "^2.24.0",
-    "prop-types": "^15.7.2",
-    "tslib": "^1.9.3",
-    "underscore": "^1.9.1"
+    "moment": "2.24.0",
+    "prop-types": "15.7.2",
+    "underscore": "1.9.1"
   },
   "peerDependencies": {
-    "@types/react": "16.x",
-    "react": "16.x",
-    "react-dom": "16.x"
+    "@types/react": "^16.9.17",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0"
   },
   "devDependencies": {
-    "@types/mocha": "^5.2.6",
-    "@types/node": "11.13.5",
-    "@types/react": "16.8.13",
-    "@types/react-dom": "^16.8.4",
-    "@types/underscore": "^1.8.14",
-    "chokidar": "^2.1.5",
-    "import-resolve": "^0.4.0",
-    "mocha": "^6.1.4",
-    "parallelshell": "^3.0.2",
-    "react": "^16.8.6",
-    "react-dom": "^16.8.6",
-    "react-hooks-testing-library": "^0.5.0",
-    "react-test-renderer": "^16.8.6",
-    "ts-loader": "^6.0.4",
-    "tslint": "^5.16.0",
-    "typescript": "~3.6.2"
+    "@types/mocha": "5.2.7",
+    "@types/node": "13.1.0",
+    "@types/react": "16.9.17",
+    "@types/react-dom": "16.9.4",
+    "@types/underscore": "1.9.4",
+    "chokidar": "3.3.1",
+    "import-resolve": "0.4.0",
+    "mocha": "7.0.1",
+    "parallelshell": "3.0.2",
+    "react": "16.12.0",
+    "react-dom": "16.12.0",
+    "react-hooks-testing-library": "0.6.0",
+    "react-test-renderer": "16.12.0",
+    "ts-loader": "6.0.4",
+    "tslib": "1.10.0",
+    "tslint": "5.20.0",
+    "typescript": "3.6.4"
   }
 }

@@ -3,16 +3,12 @@
 import * as moment from "moment";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import * as _ from "underscore";
-import { ClassHelpers, Icon } from "../../";
+import { ClassHelpers, Icon, IconOrJsx } from "../../";
+import { getIconOrJsx } from "./icon";
 
 export type DispatchToast = (...toast: IToastNotification[]) => void;
 export type DismissToast = (index: number) => void;
-export type ToastLocation =
-  | "top left"
-  | "top right"
-  | "bottom left"
-  | "bottom right";
+export type ToastLocation = "top left" | "top right" | "bottom left" | "bottom right";
 export type ToastType = "info" | "success" | "warning" | "error";
 
 export interface IToastNotification {
@@ -27,6 +23,9 @@ export interface IToastNotification {
 
   /** whether to allow the user to manually dismiss the toast with a close button rendered at the top right - defaults to true */
   allowManualDismiss?: boolean;
+
+  /** method to run when user clicks on notification */
+  onClick?: (e: React.MouseEvent<HTMLDivElement>, dismiss: () => void) => void;
 
   /** jsx to render inside the toast notification - can optionally pass down a function to access the dismiss function and the timestamp */
   content?:
@@ -54,7 +53,7 @@ export interface IGlobalToastSettings {
   location?: ToastLocation;
 
   /** jsx to render as a dismiss button on each toast - an icomoon cross by default */
-  dismissButton?: JSX.Element;
+  dismissButton?: IconOrJsx;
 
   /** Amount of time in ms for a toast to dismiss - used to transition toasts out  */
   dismissTime?: number;
@@ -68,8 +67,8 @@ export interface IGlobalToastSettings {
   /** Query selector for the element to portal the toast container into - if left undefined, will default to rendering where the Toast Provider is places in the tree without creating a portal */
   hostElement?: string;
 
-  /** Location to render the timestamp of a notification, set to undefined to not render timestamp at all — can alternatively be accessed in the content prop on a notification - below title by default */
-  renderTimestamp?: "below title" | "below content";
+  /** Location to render the timestamp of a notification, set to false to not render timestamp at all — can alternatively be accessed in the content prop on a notification - below title by default */
+  renderTimestamp?: "below title" | "below content" | false;
 
   /** Timestamp format as a moment format string — only relevant if renderTimestamp is not set to undefined */
   timestampFormat?: string;
@@ -104,15 +103,9 @@ interface IDismissToastAction {
 interface IDismissAllToastAction {
   type: "dismiss-all";
 }
-type ToastActions =
-  | IAddToastAction
-  | IDismissToastAction
-  | IDismissAllToastAction;
+type ToastActions = IAddToastAction | IDismissToastAction | IDismissAllToastAction;
 
-const toastReducer: React.Reducer<IToastNotification[], ToastActions> = (
-  state,
-  action,
-) => {
+const toastReducer: React.Reducer<IToastNotification[], ToastActions> = (state, action) => {
   switch (action.type) {
     case "add":
       return [...state, ...action.toasts];
@@ -128,16 +121,9 @@ const toastReducer: React.Reducer<IToastNotification[], ToastActions> = (
   }
 };
 
-export const ToastProvider: React.FC<IGlobalToastSettings> = ({
-  children,
-  renderInProvider,
-  saveHistory,
-  ...settings
-}) => {
+export const ToastProvider: React.FC<IGlobalToastSettings> = ({ children, renderInProvider, saveHistory, ...settings }) => {
   const [toasts, dispatchAction] = React.useReducer(toastReducer, []);
-  const [toastsHistory, setToastsHistory] = React.useState<
-    IToastNotification[]
-  >([]);
+  const [toastsHistory, dispatchToastsHistoryAction] = React.useReducer(toastReducer, []);
 
   /** Dispatch a new toast notification */
 
@@ -146,10 +132,10 @@ export const ToastProvider: React.FC<IGlobalToastSettings> = ({
       dispatchAction({ type: "add", toasts: newToasts });
       // setToasts([...toasts, ...newToasts]);
       if (saveHistory) {
-        setToastsHistory([...toastsHistory, ...newToasts]);
+        dispatchToastsHistoryAction({ type: "add", toasts: newToasts });
       }
     },
-    [dispatchAction],
+    [dispatchAction]
   );
 
   /** Dismiss a toast notification by index */
@@ -158,19 +144,16 @@ export const ToastProvider: React.FC<IGlobalToastSettings> = ({
     (index: number) => {
       dispatchAction({ type: "dismiss", index });
     },
-    [dispatchAction],
+    [dispatchAction]
   );
 
   /** Dismiss all toast notifications */
 
-  const dismissAll = React.useCallback(
-    () => dispatchAction({ type: "dismiss-all" }),
-    [dispatchAction],
-  );
+  const dismissAll = React.useCallback(() => dispatchAction({ type: "dismiss-all" }), [dispatchAction]);
 
   /** clear entire toast history */
 
-  const clearToastHistory = React.useCallback(() => setToastsHistory([]), []);
+  const clearToastHistory = React.useCallback(() => dispatchToastsHistoryAction({ type: "dismiss-all" }), []);
 
   return (
     <ToastContext.Provider
@@ -180,18 +163,12 @@ export const ToastProvider: React.FC<IGlobalToastSettings> = ({
         dismissAll,
         toasts,
         toastsHistory,
-        clearToastHistory,
+        clearToastHistory
       }}
     >
       {children}
 
-      {renderInProvider && !!toasts.length && (
-        <ToastContainer
-          settings={settings}
-          toasts={toasts}
-          dismissToast={dismiss}
-        />
-      )}
+      {renderInProvider && !!toasts.length && <ToastContainer settings={settings} toasts={toasts} dismissToast={dismiss} />}
     </ToastContext.Provider>
   );
 };
@@ -202,8 +179,7 @@ ToastProvider.defaultProps = {
   dismissTime: 500,
   disableAutodismissOnHover: true,
   renderInProvider: true,
-  renderTimestamp: "below title",
-  timestampFormat: "HH:mm",
+  timestampFormat: "HH:mm"
 };
 
 /// TOAST HOOK
@@ -235,25 +211,15 @@ export const useToast = (): IUseToastReturn => {
 
   if (!context) {
     // tslint:disable-next-line: no-console
-    console.error(
-      "You are trying to use a useToast hook outside a ToastProvider, this will not work.",
-    );
+    console.error("You are trying to use a useToast hook outside a ToastProvider, this will not work.");
 
     return;
   }
 
-  const {
-    dismiss,
-    dismissAll,
-    toasts,
-    toastsHistory,
-    clearToastHistory,
-  } = context;
+  const { dismiss, dismissAll, toasts, toastsHistory, clearToastHistory } = context;
 
-  const dispatch = (...toasts: IToastNotification[]) =>
-    context.dispatch(
-      ...toasts.map(toast => ({ timestamp: +moment(), ...toast })),
-    );
+  const dispatch = (...newToasts: IToastNotification[]) =>
+    context.dispatch(...newToasts.map(toast => ({ timestamp: +moment(), ...toast })));
 
   return {
     dispatch,
@@ -261,7 +227,7 @@ export const useToast = (): IUseToastReturn => {
     dismissAll,
     toasts,
     toastsHistory,
-    clearToastHistory,
+    clearToastHistory
   };
 };
 
@@ -277,29 +243,15 @@ interface IToastContainerInnerCornerProps extends IToastContainerProps {
   location: ToastLocation;
 }
 
-const ToastContainerInnerCorner: React.FC<IToastContainerInnerCornerProps> = ({
-  toasts,
-  dismissToast,
-  settings,
-  location,
-}) => (
+const ToastContainerInnerCorner: React.FC<IToastContainerInnerCornerProps> = ({ toasts, dismissToast, settings, location }) => (
   <div className={`toasts toasts-${location.replace(/ /g, "-")}`}>
     {toasts.map((toast, i) => (
-      <Toast
-        {...toast}
-        onDismiss={() => dismissToast(i)}
-        settings={settings}
-        key={JSON.stringify(toast)}
-      />
+      <Toast {...toast} onDismiss={() => dismissToast(i)} settings={settings} key={JSON.stringify(toast)} />
     ))}
   </div>
 );
 
-const ToastContainerInner: React.FC<IToastContainerProps> = ({
-  settings,
-  dismissToast,
-  toasts,
-}) => {
+const ToastContainerInner: React.FC<IToastContainerProps> = ({ settings, dismissToast, toasts }) => {
   const seperatedToasts = React.useMemo(() => {
     const allToasts: {
       [key in ToastLocation]: IToastNotification[];
@@ -307,7 +259,7 @@ const ToastContainerInner: React.FC<IToastContainerProps> = ({
       "top left": [],
       "top right": [],
       "bottom left": [],
-      "bottom right": [],
+      "bottom right": []
     };
 
     toasts.forEach(toast => {
@@ -336,14 +288,11 @@ const ToastContainerInner: React.FC<IToastContainerProps> = ({
 
 const ToastContainer: React.FC<IToastContainerProps> = props => {
   if (typeof document === "undefined") {
-    return null
+    return null;
   }
 
   if (props.settings.hostElement) {
-    return ReactDOM.createPortal(
-      <ToastContainerInner {...props} />,
-      document.querySelector(props.settings.hostElement),
-    );
+    return ReactDOM.createPortal(<ToastContainerInner {...props} />, document.querySelector(props.settings.hostElement));
   }
   return <ToastContainerInner {...props} />;
 };
@@ -361,11 +310,7 @@ const ToastDate: React.FC<{
   timestamp: number;
   settings: IGlobalToastSettings;
 }> = ({ timestamp, settings }) =>
-  settings.renderTimestamp ? (
-    <p className="toast-timestamp">
-      {moment.unix(timestamp / 1000).format(settings.timestampFormat)}
-    </p>
-  ) : null;
+  settings.renderTimestamp ? <p className="toast-timestamp">{moment.unix(timestamp / 1000).format(settings.timestampFormat)}</p> : null;
 
 export const Toast: React.FC<IToastProps> = ({
   title,
@@ -378,6 +323,7 @@ export const Toast: React.FC<IToastProps> = ({
   timestamp,
   className,
   allowManualDismiss,
+  onClick
 }) => {
   const autoDismissTimeout = React.useRef(null);
   const dismissingTimeout = React.useRef(null);
@@ -407,19 +353,17 @@ export const Toast: React.FC<IToastProps> = ({
 
   /** if set to, stop the autodismiss timeout on mouse enter */
 
-  const mouseEnter = React.useCallback(
-    () =>
-      settings.disableAutodismissOnHover &&
-      clearTimeout(autoDismissTimeout.current),
-    [autoDismissTimeout.current, settings.disableAutodismissOnHover],
-  );
+  const mouseEnter = React.useCallback(() => settings.disableAutodismissOnHover && clearTimeout(autoDismissTimeout.current), [
+    autoDismissTimeout.current,
+    settings.disableAutodismissOnHover
+  ]);
 
   /** if set to, retrigger the autodismiss timeout on mouse leave */
 
-  const mouseLeave = React.useCallback(
-    () => settings.disableAutodismissOnHover && initialiseAutodismiss(),
-    [initialiseAutodismiss, settings.disableAutodismissOnHover],
-  );
+  const mouseLeave = React.useCallback(() => settings.disableAutodismissOnHover && initialiseAutodismiss(), [
+    initialiseAutodismiss,
+    settings.disableAutodismissOnHover
+  ]);
 
   // set up autodismiss, and clear timeouts on cleanup
 
@@ -443,9 +387,7 @@ export const Toast: React.FC<IToastProps> = ({
 
   /** time for a step of the transition - one step is the time to disappear or reappear, the other is to expand or unexpand the space it's in */
 
-  const transitionStep = React.useMemo(() => settings.dismissTime / 2 + "ms", [
-    settings.dismissTime,
-  ]);
+  const transitionStep = React.useMemo(() => settings.dismissTime / 2 + "ms", [settings.dismissTime]);
 
   /** shhh */
 
@@ -453,16 +395,13 @@ export const Toast: React.FC<IToastProps> = ({
     () =>
       (settings as any).butItsActuallyToast
         ? {
-            backgroundImage:
-              (settings as any).butItsActuallyToast &&
-              "url(https://pngriver.com/wp-content/uploads/2018/04/Download-Toast-PNG-Photos.png)",
-            backgroundSize:
-              (settings as any).butItsActuallyToast && "100% 100%",
+            backgroundImage: "url(https://pngriver.com/wp-content/uploads/2018/04/Download-Toast-PNG-Photos.png)",
+            backgroundSize: "100% 100%",
             backgroundColor: "transparent",
-            boxShadow: "none",
+            boxShadow: "none"
           }
         : {},
-    [(settings as any).butItsActuallyToast],
+    [(settings as any).butItsActuallyToast]
   );
 
   return (
@@ -473,10 +412,11 @@ export const Toast: React.FC<IToastProps> = ({
       ref={ref}
       onMouseEnter={mouseEnter}
       onMouseLeave={mouseLeave}
+      onClick={e => onClick && onClick(e, dismiss)}
       style={{
         transitionDelay: transitionStep,
         transitionDuration: transitionStep,
-        animationDuration: transitionStep,
+        animationDuration: transitionStep
       }}
     >
       <div
@@ -485,22 +425,28 @@ export const Toast: React.FC<IToastProps> = ({
           transitionDuration: transitionStep,
           animationDelay: transitionStep,
           animationDuration: transitionStep,
-          ...actuallyToastStyles,
+          ...actuallyToastStyles
         }}
+        aria-live="assertive"
+        aria-role="alert"
       >
         {(allowManualDismiss || settings.renderTimestamp || title) && (
           <div className="toast-notification-top">
             <div>
               <h3>{title}</h3>
 
-              {settings.renderTimestamp === "below title" && (
-                <ToastDate timestamp={timestamp} settings={settings} />
-              )}
+              {settings.renderTimestamp === "below title" && <ToastDate timestamp={timestamp} settings={settings} />}
             </div>
 
             {allowManualDismiss && (
-              <div className="toast-dismiss" onClick={dismiss}>
-                {settings.dismissButton}
+              <div
+                className="toast-dismiss"
+                onClick={e => {
+                  e.stopPropagation();
+                  dismiss();
+                }}
+              >
+                {getIconOrJsx(settings.dismissButton)}
               </div>
             )}
           </div>
@@ -508,18 +454,14 @@ export const Toast: React.FC<IToastProps> = ({
 
         <p>{description}</p>
 
-        {typeof content === "function"
-          ? content({ dismiss, timestamp })
-          : content}
+        {typeof content === "function" ? content({ dismiss, timestamp }) : content}
 
-        {settings.renderTimestamp === "below content" && (
-          <ToastDate timestamp={timestamp} settings={settings} />
-        )}
+        {settings.renderTimestamp === "below content" && <ToastDate timestamp={timestamp} settings={settings} />}
       </div>
     </div>
   );
 };
 
 Toast.defaultProps = {
-  allowManualDismiss: true,
+  allowManualDismiss: true
 };

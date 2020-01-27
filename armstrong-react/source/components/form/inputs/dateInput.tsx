@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useDidUpdateEffect } from "../../../hooks/useDidUpdateEffect";
+import { useDidUpdateEffect } from "../../../hooks/lifecycle/useDidUpdateEffect";
 import { calendarUtils } from "../../../utilities/calendarUtils";
 import { ClassHelpers } from "../../../utilities/classHelpers";
 import { Formatting } from "../../../utilities/formatting";
@@ -36,6 +36,8 @@ export interface IDateInputProps extends React.Props<typeof DateInput> {
   dayLabel?: string;
   /** Control date part order (`day`, `month`, `year`) */
   datePartOrder?: DateParts[];
+  /** Autofocuses first input */
+  autoFocus?: boolean;
 }
 
 export interface IDateInputState {
