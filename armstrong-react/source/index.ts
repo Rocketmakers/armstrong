@@ -239,4 +239,5 @@ export { usePrevious } from "./hooks/usePrevious";
 export { useIntersectionObserver } from "./hooks/observers/useIntersectionObserver";
 export { useMutationObserver } from "./hooks/observers/useMutationObserver";
 export { useMedia } from "./hooks/useMedia";
+export { useStepper } from "./hooks/useStepper";
 export { useTemporaryState } from "./hooks/timing/useTemporaryState";
