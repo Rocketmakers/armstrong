@@ -1,8 +1,10 @@
-import * as React from 'react';
-import { ClassHelpers } from '../../utilities/classHelpers';
-import { Icon } from './icon';
-import InViewport from './inViewport';
-import { Spinner } from './spinner';
+import * as React from "react";
+
+import { useTimeout } from "../..";
+import { ClassHelpers } from "../../utilities/classHelpers";
+import { Icon } from "./icon";
+import InViewport from "./inViewport";
+import { Spinner } from "./spinner";
 
 export interface IImageProps
   extends React.ImgHTMLAttributes<HTMLPictureElement> {
@@ -35,6 +37,9 @@ export interface IImageProps
 
   /** the elemnt to render if renderError is set to true and there is an error loading the image */
   errorElement?: JSX.Element;
+
+  /** if renderSpinner is set to true, the amount of time to wait before rendering a spinner in ms (stops the spinner from flashing onto the screen quickly if the image is tiny) - defaults to 500 */
+  minimumTimeToSpinner?: number;
 }
 
 export function useRandomUserImageSrc(sampleUserSeed?: string) {
@@ -42,7 +47,7 @@ export function useRandomUserImageSrc(sampleUserSeed?: string) {
 
   React.useEffect(() => {
     const url = `https://randomuser.me/api?exc=login,name,location,email,registered,dob,phone,cell,id,nat${
-      sampleUserSeed ? `&seed=${sampleUserSeed}` : ''
+      sampleUserSeed ? `&seed=${sampleUserSeed}` : ""
     }`;
 
     const xmlHttp = new XMLHttpRequest();
@@ -54,7 +59,7 @@ export function useRandomUserImageSrc(sampleUserSeed?: string) {
       }
     };
 
-    xmlHttp.open('GET', url, true);
+    xmlHttp.open("GET", url, true);
     xmlHttp.send(null);
   }, [sampleUserSeed]);
 
@@ -81,14 +86,18 @@ export const Image: React.FunctionComponent<IImageProps> = (
     spinnerElement,
     renderError,
     errorElement,
+    minimumTimeToSpinner,
     ...attrs
   } = props;
   const classes = ClassHelpers.classNames(className, { rounded });
 
   const [loaded, setLoaded] = React.useState(false);
+  const [spinnerReady, setSpinnerReady] = React.useState();
   const [errored, setErrored] = React.useState(false);
 
   const imgRef = React.useRef<HTMLImageElement>(null);
+
+  const { set } = useTimeout(() => setSpinnerReady(true), minimumTimeToSpinner);
 
   const onLoad = React.useCallback(() => {
     setLoaded(true);
@@ -101,8 +110,8 @@ export const Image: React.FunctionComponent<IImageProps> = (
 
   React.useLayoutEffect(() => {
     // check if image is cached and run onLoad if it is - (load event does not fire if image is already loaded in another img)
-    if (imgRef.current.complete) {
-      onLoad()
+    if (imgRef.current && imgRef.current.complete) {
+      onLoad();
     }
   }, [onLoad]);
 
@@ -110,33 +119,50 @@ export const Image: React.FunctionComponent<IImageProps> = (
     <InViewport
       once={true}
       IOProps={{ rootMargin }}
-      onEnter={onEnterViewport}
+      onEnter={entry => {
+        set();
+
+        if (onEnterViewport) {
+          onEnterViewport(entry);
+        }
+      }}
       onExit={onExitViewport}
     >
       {({ element, enteredViewport }) => (
         <>
           {errored && renderError && !!errorElement && errorElement}
 
-          <picture ref={element} data-loaded={loaded}>
-            {(enteredViewport || !lazy) &&
-              (alternateSources || []).map(alternateSource => (
-                <source
-                  {...alternateSource}
-                  key={JSON.stringify(alternateSource)}
-                />
-              ))}
+          <picture
+            className="armstrong-picture"
+            ref={element}
+            data-loaded={loaded}
+          >
+            {(enteredViewport || !lazy) && (
+              <>
+                {(alternateSources || []).map(alternateSource => (
+                  <source
+                    {...alternateSource}
+                    key={JSON.stringify(alternateSource)}
+                  />
+                ))}
 
-            <img
-              {...attrs}
-              onLoad={onLoad}
-              onError={onError}
-              className={classes}
-              src={enteredViewport || !lazy ? src : ''}
-              ref={imgRef}
-            />
+                <img
+                  {...attrs}
+                  onLoad={onLoad}
+                  onError={onError}
+                  className={classes}
+                  src={enteredViewport || !lazy ? src : ""}
+                  ref={imgRef}
+                />
+              </>
+            )}
           </picture>
 
-          {!loaded && renderSpinner && !!spinnerElement && spinnerElement}
+          {!loaded &&
+            renderSpinner &&
+            spinnerReady &&
+            !!spinnerElement &&
+            spinnerElement}
         </>
       )}
     </InViewport>
@@ -144,14 +170,15 @@ export const Image: React.FunctionComponent<IImageProps> = (
 };
 
 Image.defaultProps = {
-  rootMargin: '200px',
-  spinnerElement: <Spinner />,
+  rootMargin: "200px",
+  spinnerElement: <Spinner className="armstrong-picture-spinner" />,
   errorElement: (
-    <div className='image-not-found'>
+    <div className="image-not-found">
       <Icon icon={Icon.Icomoon.warning} />
       <p>Image not found</p>
     </div>
   ),
   renderSpinner: false,
-  renderError: false
+  renderError: false,
+  minimumTimeToSpinner: 500
 };

@@ -8,6 +8,17 @@ export async function publish() {
   const branch = branchName();
   const preId = "alpha";
 
+  await exec("git",
+        [
+          "checkout",
+          "master"
+        ], false)
+
+  await exec("git",
+        [
+          "pull"
+        ], false)
+
   const currentVersion = await exec("node",
     [
       "-p",

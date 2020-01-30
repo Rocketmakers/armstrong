@@ -1,13 +1,13 @@
 {
   "name": "@rocketmakers/armstrong-monorepo",
-  "version": "0.0.1-alpha.16",
+  "version": "0.0.1-alpha.43",
   "description": "<p align=\"center\"> <img src=\"http://armstrongcss.org/assets/logolarge.svg\" width=\"256\" height=\"256\" /> </p>",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "release": "ts-node _deploy/publish.ts",
-    "postinstall": "(cd armstrong-react && npm i) && (cd storybook && npm i)",
-    "version": "(cd armstrong-react && npm version ${npm_package_version} --preid=alpha --git-tag-version=false) && (cd marketing && npm version ${npm_package_version} --preid=alpha --git-tag-version=false) && (cd storybook && npm version ${npm_package_version} --preid=alpha --git-tag-version=false) && git add ."
+    "version": "(cd armstrong-react && npm version prerelease --preid=alpha --git-tag-version=false) && git add .",
+    "postinstall": "(cd armstrong-react && npm i) && (cd storybook && npm i) && (cd marketing && npm i)"
   },
   "repository": {
     "type": "git",
@@ -21,14 +21,14 @@
   },
   "homepage": "https://github.com/Rocketmakers/armstrong#readme",
   "devDependencies": {
-    "@types/node": "12.7.12",
-    "@types/prompts": "2.0.1",
-    "@types/semver": "6.0.2",
+    "@types/node": "13.1.0",
+    "@types/prompts": "2.0.3",
+    "@types/semver": "6.2.0",
     "current-git-branch": "1.1.0",
-    "prompts": "2.2.1",
+    "prompts": "2.3.0",
     "@rocketmakers/log": "0.1.0",
-    "semver": "6.3.0",
-    "ts-node": "8.4.1",
+    "semver": "7.1.1",
+    "ts-node": "8.6.2",
     "typescript": "3.6.3"
   },
   "dependencies": {}

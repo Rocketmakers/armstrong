@@ -45,3 +45,10 @@ importResolve({
     "pathToMain": "./source/animation.scss",
     "output": "./dist/animation.scss"
 });
+
+// ICONS
+importResolve({
+    "ext": "scss",
+    "pathToMain": "./source/icons.scss",
+    "output": "./dist/icons.scss"
+});

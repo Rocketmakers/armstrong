@@ -41,6 +41,36 @@ storiesOf('Image', module)
       <div className='space' style={{ height: '1024px' }} />
 
       <Image renderSpinner lazy src={require('../assets/images/frank2.jpg')} />
+
+      <div className='space' style={{ height: '1024px' }} />
+
+      <div
+        style={{
+          width: '800px',
+          height: '600px',
+          backgroundColor: 'lightgray',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          position: 'relative'
+        }}
+      >
+        <Image
+          style={{
+            position: 'absolute',
+            left: 0,
+            top: 0,
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+            objectPosition: 'centre'
+          }}
+          renderSpinner
+          lazy
+          src='https://upload.wikimedia.org/wikipedia/commons/3/3f/Fronalpstock_big.jpg'
+          minimumTimeToSpinner={500}
+        />
+      </div>
     </>
   ))
   .add('Custom Loader', () => (
@@ -95,9 +125,7 @@ storiesOf('Image', module)
           objectFit: 'cover',
           objectPosition: 'centre'
         }}
-        src={
-          'THIS ISNT A URL'
-        }
+        src={'THIS ISNT A URL'}
         renderSpinner
         renderError
       />

@@ -1,41 +1,43 @@
-
-import * as React from "react"
+import * as React from "react";
 import { useMedia } from "../../hooks/useMedia";
 import { delay } from "../../utilities/async";
 import { utils } from "../../utilities/utils";
-import { Icon } from "../display/icon";
+import { getIconOrJsx, IconOrJsx } from "../display/icon";
 import { Button } from "../interaction/button";
 
 interface ISidebarContentProps {
-  isOpen: boolean
+  isOpen: boolean;
 }
 
 export interface ISidebarProps {
   /** Is the sidebar initally open */
-  openByDefault?: boolean
+  openByDefault?: boolean;
   /** Inner content of the sidebar */
-  content: JSX.Element | React.FC<ISidebarContentProps>
+  content: JSX.Element | React.FC<ISidebarContentProps>;
   /** Callback which passes the state of the sidebar */
-  onChange?: (state: "open" | "closed") => void
+  onChange?: (state: "open" | "closed") => void;
   /** Position of the sidebar */
-  position?: "left" | "right"
+  position?: "left" | "right";
   /** Icon for the open button */
-  openButtonIcon: string
+  openButtonIcon: IconOrJsx;
   /** Icon for the close button */
-  closeButtonIcon: string
+  closeButtonIcon: IconOrJsx;
   /** How long the transition takes in ms */
-  transitionTime?: number
+  transitionTime?: number;
   /** Sidebar width when open */
-  openWidth?: number
+  openWidth?: number;
   /** Sidebar width when closed */
-  collaspedWidth?: number
+  collaspedWidth?: number;
   /** A media query for when the sidebar should auto collapse */
-  autoCollapseMediaQuery?: string
+  autoCollapseMediaQuery?: string;
   /** A media query for when the sidebar should turn into a burger menu (mobile) */
-  turnToBurgerMediaQuery?: string
+  turnToBurgerMediaQuery?: string;
 }
 
-const SidebarComponent: React.FC<ISidebarProps & { autoCollapse: boolean, autoBurger: boolean }> = ({
+const SidebarComponent: React.FC<ISidebarProps & {
+  autoCollapse: boolean;
+  autoBurger: boolean;
+}> = ({
   openButtonIcon,
   closeButtonIcon,
   onChange,
@@ -48,63 +50,82 @@ const SidebarComponent: React.FC<ISidebarProps & { autoCollapse: boolean, autoBu
   autoCollapse,
   autoBurger
 }) => {
-  const { isOpen: open, setOpen, setTransitioning, transitioning, close } = React.useContext(SidebarContext)
+  const {
+    isOpen: open,
+    setOpen,
+    setTransitioning,
+    transitioning,
+    close
+  } = React.useContext(SidebarContext);
 
-  const sidebarContentRef = React.useRef<HTMLDivElement>()
+  const sidebarContentRef = React.useRef<HTMLDivElement>();
   React.useEffect(() => {
-    if (onChange) { onChange(open ? "open" : "closed") }
-  }, [open])
+    if (onChange) {
+      onChange(open ? "open" : "closed");
+    }
+  }, [open]);
 
   const transition = React.useCallback(async () => {
-    setTransitioning(true)
-    await delay(transitionTime)
-    setTransitioning(false)
-  }, [setTransitioning, transitionTime])
+    setTransitioning(true);
+    await delay(transitionTime);
+    setTransitioning(false);
+  }, [setTransitioning, transitionTime]);
 
   React.useEffect(() => {
-    transition()
-  }, [open, transitionTime])
+    transition();
+  }, [open, transitionTime]);
 
   React.useEffect(() => {
     if (autoCollapse || autoBurger) {
-      setOpen(false)
+      setOpen(false);
     }
-  }, [autoCollapse, autoBurger])
+  }, [autoCollapse, autoBurger]);
 
   React.useEffect(() => {
     if (sidebarContentRef.current) {
-      sidebarContentRef.current.querySelectorAll("a").forEach(tag => tag.addEventListener("click", autoClose))
+      sidebarContentRef.current
+        .querySelectorAll("a")
+        .forEach(tag => tag.addEventListener("click", autoClose));
     }
 
     return () => {
       if (sidebarContentRef.current) {
-        sidebarContentRef.current.querySelectorAll("a").forEach(tag => tag.removeEventListener("click", autoClose))
+        sidebarContentRef.current
+          .querySelectorAll("a")
+          .forEach(tag => tag.removeEventListener("click", autoClose));
       }
-    }
-  }, [sidebarContentRef, autoCollapse])
+    };
+  }, [sidebarContentRef, autoCollapse]);
 
   const autoClose = React.useCallback(() => {
     if (autoCollapse) {
-      close()
+      close();
     }
-  }, [autoCollapse])
+  }, [autoCollapse]);
 
-  const width = React.useMemo(() => (open || autoBurger) ? openWidth : collaspedWidth, [open, openWidth, collaspedWidth, autoBurger])
+  const width = React.useMemo(
+    () => (open || autoBurger ? openWidth : collaspedWidth),
+    [open, openWidth, collaspedWidth, autoBurger]
+  );
 
   const wrapperStyle = React.useMemo(() => {
     if (!(autoCollapse || autoBurger)) {
-      return position === "left" ? { paddingLeft: width } : { paddingRight: width }
+      return position === "left"
+        ? { paddingLeft: width }
+        : { paddingRight: width };
     } else if (autoCollapse && !autoBurger) {
-      return position === "left" ? { paddingLeft: collaspedWidth } : { paddingRight: collaspedWidth }
+      return position === "left"
+        ? { paddingLeft: collaspedWidth }
+        : { paddingRight: collaspedWidth };
     } else {
-      return {}
+      return {};
     }
-
-  }, [width, autoCollapse, autoBurger, collaspedWidth])
+  }, [width, autoCollapse, autoBurger, collaspedWidth]);
 
   return (
     <>
-      <nav className="armstrong-sidebar"
+      <nav
+        className="armstrong-sidebar"
         data-open={open}
         data-position={position}
         data-burger={autoBurger}
@@ -116,70 +137,103 @@ const SidebarComponent: React.FC<ISidebarProps & { autoCollapse: boolean, autoBu
           onClick={() => setOpen(!open)}
           aria-label={`${open ? `Close` : `Open`} the sidebar`}
         >
-          {closeButtonIcon && <Icon aria-hidden={true} icon={open ? closeButtonIcon : openButtonIcon} />}
+          {closeButtonIcon &&
+            getIconOrJsx(open ? closeButtonIcon : openButtonIcon, {
+              "aria-hidden": true
+            })}
         </Button>
-        <div ref={sidebarContentRef} className="armstrong-burger-content">{utils.object.isFunction(Content) ? <Content isOpen={autoBurger ? true : open} /> : Content}</div>
+        <div ref={sidebarContentRef} className="armstrong-burger-content">
+          {utils.object.isFunction(Content) ? (
+            <Content isOpen={autoBurger ? true : open} />
+          ) : (
+            Content
+          )}
+        </div>
       </nav>
-      {autoBurger && <Button
-        data-position={position}
-        className="armstrong-menu-button open"
-        onClick={() => setOpen(true)}
-        aria-label="Open the sidebar"
+      {autoBurger && (
+        <Button
+          data-position={position}
+          className="armstrong-menu-button open"
+          onClick={() => setOpen(true)}
+          aria-label="Open the sidebar"
+        >
+          {closeButtonIcon &&
+            getIconOrJsx(openButtonIcon, { "aria-hidden": true })}
+        </Button>
+      )}
+      {autoBurger && (
+        <div
+          className="armstrong-menu-overlay"
+          onClick={() => setOpen(false)}
+          style={{ transition: `${transitionTime}ms` }}
+          data-transition={
+            transitioning ? (open ? "in" : "out") : open ? "open" : "closed"
+          }
+          aria-label="Close the sidebar"
+          aria-hidden={!open}
+        />
+      )}
+      <div
+        className="armstrong-site-content-wrapper"
+        style={{ ...wrapperStyle, transition: `padding ${transitionTime}ms` }}
       >
-        {closeButtonIcon && <Icon aria-hidden={true} icon={openButtonIcon} />}
-      </Button>
-      }
-      {(autoBurger) && <div
-        className="armstrong-menu-overlay"
-        onClick={() => setOpen(false)}
-        style={{ transition: `${transitionTime}ms` }}
-        data-transition={transitioning ? open ? "in" : "out" : open ? "open" : "closed"}
-        aria-label="Close the sidebar"
-        aria-hidden={!open}
-      />}
-      <div className="armstrong-site-content-wrapper" style={{ ...wrapperStyle, transition: `padding ${transitionTime}ms` }}>
         {children}
       </div>
     </>
-  )
-}
+  );
+};
 
 export interface ISidebarContext {
-  isOpen: boolean
-  setOpen: (open: boolean) => void
-  transitioning: boolean
-  setTransitioning: (transitioning: boolean) => void
-  open: () => void
-  close: () => void
-  toggle: () => void
+  isOpen: boolean;
+  setOpen: (open: boolean) => void;
+  transitioning: boolean;
+  setTransitioning: (transitioning: boolean) => void;
+  open: () => void;
+  close: () => void;
+  toggle: () => void;
 }
 
-const SidebarContext = React.createContext<ISidebarContext>(undefined)
+const SidebarContext = React.createContext<ISidebarContext>(undefined);
 
 export const Sidebar: React.FC<ISidebarProps> = props => {
+  const autoCollapse = useMedia(props.autoCollapseMediaQuery);
+  const autoBurger = useMedia(props.turnToBurgerMediaQuery);
 
-  const autoCollapse = useMedia(props.autoCollapseMediaQuery)
-  const autoBurger = useMedia(props.turnToBurgerMediaQuery)
-
-  const [isOpen, setIsOpen] = React.useState((autoCollapse || autoBurger) ? false : props.openByDefault)
-  const [transitioning, setTransitioning] = React.useState(false)
+  const [isOpen, setIsOpen] = React.useState(
+    autoCollapse || autoBurger ? false : props.openByDefault
+  );
+  const [transitioning, setTransitioning] = React.useState(false);
 
   const toggle = React.useCallback(() => {
-    setIsOpen(!isOpen)
-  }, [isOpen])
+    setIsOpen(!isOpen);
+  }, [isOpen]);
   const open = React.useCallback(() => {
-    setIsOpen(true)
-  }, [])
+    setIsOpen(true);
+  }, []);
   const close = React.useCallback(() => {
-    setIsOpen(false)
-  }, [])
+    setIsOpen(false);
+  }, []);
 
   return (
-    <SidebarContext.Provider value={{ isOpen, setOpen: setIsOpen, transitioning, setTransitioning, toggle, open, close }}>
-      <SidebarComponent {...props} autoBurger={autoBurger} autoCollapse={autoCollapse} />
+    <SidebarContext.Provider
+      value={{
+        isOpen,
+        setOpen: setIsOpen,
+        transitioning,
+        setTransitioning,
+        toggle,
+        open,
+        close
+      }}
+    >
+      <SidebarComponent
+        {...props}
+        autoBurger={autoBurger}
+        autoCollapse={autoCollapse}
+      />
     </SidebarContext.Provider>
-  )
-}
+  );
+};
 
 Sidebar.defaultProps = {
   openByDefault: true,
@@ -188,10 +242,12 @@ Sidebar.defaultProps = {
   openWidth: 250,
   collaspedWidth: 80,
   autoCollapseMediaQuery: "(max-width: 900px)",
-  turnToBurgerMediaQuery: "(max-width: 500px)",
-}
+  turnToBurgerMediaQuery: "(max-width: 500px)"
+};
 
 export const useSidebar = () => {
-  const { toggle, transitioning, open, close, isOpen } = React.useContext(SidebarContext)
-  return { toggle, transitioning, open, close, isOpen }
-}
+  const { toggle, transitioning, open, close, isOpen } = React.useContext(
+    SidebarContext
+  );
+  return { toggle, transitioning, open, close, isOpen };
+};

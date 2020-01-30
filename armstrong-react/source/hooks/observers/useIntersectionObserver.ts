@@ -22,7 +22,7 @@ export const useIntersectionObserver = (
     if (!!ref && !!ref.current && typeof window !== "undefined" && "IntersectionObserver" in window) {
       io.current = new IntersectionObserver(
         (entries, observer) =>
-          callback(entries[0].isIntersecting, entries, observer),
+        callback && callback(entries[0].isIntersecting, entries, observer),
         options
       );
       io.current.observe(ref.current);

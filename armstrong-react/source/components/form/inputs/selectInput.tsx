@@ -5,73 +5,87 @@ import { ValidationLabel } from "../validationWrapper";
 import { buildOptions } from "./options";
 
 export interface ISelectInput {
-  focus: () => void
-  blur: () => void
+  focus: () => void;
+  blur: () => void;
 }
 
 export interface ISelectInputOption {
   id: number | string;
   name: string;
+  data?: any;
 }
 
 export interface ISelectInputProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
   options: ISelectInputOption[];
   onOptionChange?: (selected: ISelectInputOption) => void;
-  optionLabel?: string
-  enableOptionLabel?: boolean
+  optionLabel?: string;
+  enableOptionLabel?: boolean;
 }
 
 const SelectInputRef: React.RefForwardingComponent<ISelectInput, ISelectInputProps> = (props, ref) => {
-  const { options, onOptionChange, onChange, optionLabel, enableOptionLabel, className, ...attrs } = props
+  const { options, onOptionChange, onChange, optionLabel, enableOptionLabel, className, placeholder, ...attrs } = props;
 
-  const handleChange = React.useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
-    if (onOptionChange) { onOptionChange(options[e.target.selectedIndex - 1]); }
-    if (onChange) { onChange(e); }
-  }, [onOptionChange, onChange, options])
+  const handleChange = React.useCallback(
+    (e: React.ChangeEvent<HTMLSelectElement>) => {
+      if (onOptionChange) {
+        onOptionChange(options[e.target.selectedIndex - 1]);
+      }
+      if (onChange) {
+        onChange(e);
+      }
+    },
+    [onOptionChange, onChange, options]
+  );
 
-  const select = React.useRef<HTMLSelectElement>(undefined)
+  const select = React.useRef<HTMLSelectElement>(undefined);
 
   const refCallback = React.useCallback(() => {
     return {
       focus() {
         if (select.current) {
-          select.current.focus()
+          select.current.focus();
         }
       },
       blur() {
         if (select.current) {
-          select.current.blur()
+          select.current.blur();
         }
-      },
-    }
-  }, [select])
+      }
+    };
+  }, [select]);
 
-  React.useImperativeHandle(ref, refCallback, [refCallback])
+  React.useImperativeHandle(ref, refCallback, [refCallback]);
 
-  const validationMessage = DataValidationMessage.get(props)
-  const validationMode = DataValidationMode.get(props)
+  const validationMessage = DataValidationMessage.get(props);
+  const validationMode = DataValidationMode.get(props);
 
-  const classes = ClassHelpers.classNames(
-    "armstrong-input",
-    "select-input",
-    className,
-    {
-      "show-validation": (validationMode !== "none" && validationMessage),
-    },
-  );
+  const classes = ClassHelpers.classNames("armstrong-input", "select-input", className, {
+    "show-validation": validationMode !== "none" && validationMessage
+  });
 
   return (
     <div className={classes} title={validationMessage}>
       <select {...attrs} ref={select} onChange={handleChange}>
-        {buildOptions(optionLabel, options, o => o.id, o => o.name, !!enableOptionLabel)}
+        {placeholder && (
+          <option value="" disabled selected hidden>
+            {placeholder}
+          </option>
+        )}
+        {buildOptions(
+          optionLabel,
+          options,
+          o => o.id,
+          o => o.name,
+          !!enableOptionLabel
+        )}
       </select>
       <ValidationLabel message={validationMessage} mode={validationMode} />
     </div>
   );
-}
+};
 
-export const SelectInput = React.forwardRef(SelectInputRef)
+export const SelectInput = React.forwardRef(SelectInputRef);
 
 SelectInput.defaultProps = {
-  optionLabel: "[Select]",
-}
+  optionLabel: "[Select]"
+};

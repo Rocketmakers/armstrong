@@ -22,7 +22,7 @@ export const GlobalContextProvider: React.FunctionComponent = props => {
   // Watch for mobile
   React.useEffect(() => {
     console.log('hookin up')
-    var x = window.matchMedia("(min-width: 600px)");
+    const x = window.matchMedia("(min-width: 600px)");
     handleSizeChange(x);
     x.addListener(() => handleSizeChange(x));
 
