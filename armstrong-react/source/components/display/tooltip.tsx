@@ -1,4 +1,5 @@
 import * as React from "react";
+import { CSSProperties } from "react";
 import _ = require("underscore");
 
 export type ITooltipPosition = "left" | "right" | "top" | "bottom" | "fixed" | "hidden";
@@ -60,6 +61,7 @@ export const Tooltip: React.FC<ITooltipProps> = props => {
   } = props;
   const defaultPositions: ITooltipPositionPriority = ["right", "left", "bottom", "top", "fixed", "hidden"];
   const tooltipElement = React.useRef<HTMLDivElement>(null);
+  const tooltipChildrenElement = React.useRef<HTMLDivElement>(null);
   const [currentPosition, setCurrentPosition] = React.useState(0); // Index in position priority array currently being used
 
   // Creates full position priority array, by taking user specified positions, & adding unspecified positions onto the end
@@ -98,6 +100,8 @@ export const Tooltip: React.FC<ITooltipProps> = props => {
       (currentPosition < 0 || !isInViewport(tooltipElement.current))
     ) {
       setCurrentPosition(currentPosition + 1);
+    } else if (retain) {
+      updateBridgeStyle();
     }
   }, [tooltipElement, currentPosition]);
 
@@ -113,6 +117,67 @@ export const Tooltip: React.FC<ITooltipProps> = props => {
     return attr;
   }, []);
 
+  const [bridgeStyle, setBridgeStyle] = React.useState<CSSProperties>({});
+
+  // Calculates bridge size and position to detect hover when mouse is between tooltip & tooltipChildren
+  // tX, tY, tW, tH are tooltip x, y, width, height
+  // cX, cY, cW, cH are tooltip children x, y, width, height
+  // above, left, below, right are true if there is a gap between tooltip & tooltip children in that direction
+  const updateBridgeStyle = React.useCallback((): void => {
+    if (tooltipElement.current && tooltipChildrenElement.current) {
+      const { x: tX, y: tY, width: tW, height: tH } = tooltipElement.current.getBoundingClientRect() as DOMRect;
+      const { x: cX, y: cY, width: cW, height: cH } = tooltipChildrenElement.current.getBoundingClientRect() as DOMRect;
+      const above = tY + tH < cY;
+      const left = tX + tW < cX;
+      const below = tY > cH + cY;
+      const right = tX > cW + cX;
+      // Only continue if tooltip & tooltip children overlap on 1 axis only
+      if ([above, left, below, right].filter(Boolean).length !== 1) {
+        setBridgeStyle(undefined);
+        return;
+      }
+      const style: CSSProperties = {};
+      if (!above && !below) {
+        if (cH > tH) {
+          style.height = cH;
+          style.top = 0;
+        } else {
+          style.height = tH;
+          style.top = tY - cY;
+        }
+      }
+      if (!left && !right) {
+        if (cW > tW) {
+          style.width = cW;
+          style.left = 0;
+        } else {
+          style.width = tW;
+          style.left = tX - cX;
+        }
+      }
+      if (above) {
+        style.height = cY - tY - tH;
+        style.top = tH + tY - cY;
+      }
+      if (below) {
+        style.height = tY - cY - cH;
+        style.top = cH;
+      }
+      if (left) {
+        style.width = cX - tX - tW;
+        style.left = tW + tX - cX;
+      }
+      if (right) {
+        style.width = tX - cX - cW;
+        style.left = cW;
+      }
+      Object.entries(style).forEach(property => {
+        style[property[0]] = property[1] + "px";
+      });
+      setBridgeStyle(style);
+    }
+  }, [tooltipElement.current, tooltipChildrenElement.current]);
+
   const wrapperAttr = React.useMemo(() => createAttributes(wrapperAttributes, "tooltip-wrapper"), [wrapperAttributes]);
   const childrenAttr = React.useMemo(() => createAttributes(childrenAttributes, "tooltip-children"), [childrenAttributes]);
   const tooltipAttr = React.useMemo(() => createAttributes(tooltipAttributes, "tooltip"), [tooltipAttributes]);
@@ -120,13 +185,22 @@ export const Tooltip: React.FC<ITooltipProps> = props => {
   return (
     // currentPosition set to -1, as setting to 0 doesn't trigger useEffect when it's already 0
     <div {...wrapperAttr} onMouseEnter={() => setCurrentPosition(-1)}>
-      <div {...childrenAttr}>{children}</div>
+      <div {...childrenAttr} ref={tooltipChildrenElement}>
+        {children}
+      </div>
+      {retain && (
+        <div
+          className="bridge"
+          data-position={positionPriority[currentPosition] && !disable ? positionPriority[currentPosition] : "hidden"}
+          style={bridgeStyle}
+        ></div>
+      )}
       <div
         {...tooltipAttr}
         ref={tooltipElement}
         data-retain={retain}
-        data-center={!!center}
-        data-arrow={!!withArrow}
+        data-center={center}
+        data-arrow={withArrow}
         data-position={positionPriority[currentPosition] && !disable ? positionPriority[currentPosition] : "hidden"}
         data-display-none={displayNone}
       >

@@ -3,10 +3,35 @@
   width: max-content;
 
   .tooltip-children:hover {
-    + .tooltip:not([data-position="hidden"]) {
+    ~ .bridge:not([data-position="hidden"]) {
+      display: block;
+    }
+
+    ~ .tooltip:not([data-position="hidden"]) {
       opacity: 1;
       display: block;
       pointer-events: all;
+    }
+  }
+
+  .bridge {
+    display: none;
+    position: absolute;
+
+    &:hover:not([data-position="hidden"]) {
+      display: block;
+
+      + .tooltip {
+        opacity: 1;
+        display: block;
+        pointer-events: all;
+
+        &:hover {
+          opacity: 1;
+          display: block;
+          pointer-events: all;
+        }
+      }
     }
   }
 

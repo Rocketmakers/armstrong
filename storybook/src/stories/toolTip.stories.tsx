@@ -34,11 +34,21 @@ storiesOf("Tooltip", module)
   ))
   .add("Retain", () => (
     <>
-      <p>Tooltip components will attempt to cause a tooltip to appear on hover on the specified side, defaulting to right, falling back on other directions if there's no space for it.</p>
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `
+          .bridge {
+            background: lime;
+            opacity: 0.5;
+          }
+        `
+        }}
+      />
+      <p>Tooltip will still be displayed when hovering over the tooltip. If there is a gap between tooltipChildren & tooltip, this gap will be bridged (coloured green for this example), but only if tooltipChildren & tooltip overlap on 1 axis.</p>
       <br />
-      <pre>{'<Tooltip tooltip="It is me. The tooltip." retain={true}>'}</pre>
+      <pre>{'<Tooltip tooltip="It is me. The tooltip." retain>'}</pre>
       <br />
-      <Tooltip tooltip="It is me. The tooltip." retain={true}>
+      <Tooltip tooltip="It is me. The tooltip." retain>
         <div {...tooltipInnerProps}>Hover here</div>
       </Tooltip>
     </>
