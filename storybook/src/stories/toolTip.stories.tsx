@@ -41,6 +41,14 @@ storiesOf("Tooltip", module)
             background: lime;
             opacity: 0.5;
           }
+          .tooltip[data-position=bottom-right] {
+            top: 150%;
+            left: 70%;
+          }
+          .tooltip[data-position=bottom-very-right] {
+            top: 120%;
+            left: 120%;
+          }
         `
         }}
       />
@@ -49,7 +57,13 @@ storiesOf("Tooltip", module)
       <pre>{'<Tooltip tooltip="It is me. The tooltip." retain>'}</pre>
       <br />
       <Tooltip tooltip="It is me. The tooltip." retain>
-        <div {...tooltipInnerProps}>Hover here</div>
+        <div {...tooltipInnerProps}>Hover here (default positions)</div>
+      </Tooltip>
+      <Tooltip tooltip="It is me. The tooltip." customPosition={"bottom-right"} retain>
+        <div {...tooltipInnerProps}>Hover here (custom position)</div>
+      </Tooltip>
+      <Tooltip tooltip="It is me. The tooltip." customPosition={"bottom-very-right"} retain>
+        <div {...tooltipInnerProps}>Hover here (unbridgeable position)</div>
       </Tooltip>
     </>
   ))
@@ -102,12 +116,11 @@ storiesOf("Tooltip", module)
       <style
         dangerouslySetInnerHTML={{
           __html: `
-            .tooltip-example-1.tooltip[data-position=farBelow] {
+            .tooltip[data-position=farBelow] {
               top: 1000%;
               left: 0;
             }
-
-            .tooltip-example-1.tooltip[data-position=bottomRight] {
+            .tooltip[data-position=bottomRight] {
               top: 100%;
               left: 100%;
             }
@@ -119,7 +132,7 @@ storiesOf("Tooltip", module)
       <pre>{'<Tooltip tooltip="It is me. The tooltip." customPosition={["farBelow", "bottom", "hidden"]} >'}</pre>
       <br />
       {customPositionPriorities.map((customPositionPriority, i) => (
-        <Tooltip tooltip="It is me. The tooltip." customPosition={customPositionPriority} tooltipAttributes={{ className: "tooltip-example-1" }} key={"customPositionTooltip" + i}>
+        <Tooltip tooltip="It is me. The tooltip." customPosition={customPositionPriority} key={"customPositionTooltip" + i}>
           <div {...tooltipInnerProps}>{typeof customPositionPriority === "string" ? `"${customPositionPriority}"` : `[${customPositionPriority.map(position => `"${position}"`).join(", ")}]`}</div>
         </Tooltip>
       ))}
@@ -140,7 +153,7 @@ storiesOf("Tooltip", module)
       <pre>{'<Tooltip tooltip="It is me. The tooltip." center={false}>'}</pre>
       <br />
       <Tooltip tooltip="It is me. The tooltip.">
-        <div {...tooltipInnerProps}>Centred (default)</div>
+        <div {...tooltipInnerProps}>Centred (default for default positions)</div>
       </Tooltip>
       <Tooltip tooltip="It is me. The tooltip." center={false}>
         <div {...tooltipInnerProps}>Uncentred</div>
@@ -154,7 +167,7 @@ storiesOf("Tooltip", module)
       <pre>{'<Tooltip tooltip="It is me. The tooltip." withArrow={false}>'}</pre>
       <br />
       <Tooltip tooltip="It is me. The tooltip.">
-        <div {...tooltipInnerProps}>With arrow (default)</div>
+        <div {...tooltipInnerProps}>With arrow (default for default positions)</div>
       </Tooltip>
       <Tooltip tooltip="It is me. The tooltip." withArrow={false}>
         <div {...tooltipInnerProps}>Without arrow</div>

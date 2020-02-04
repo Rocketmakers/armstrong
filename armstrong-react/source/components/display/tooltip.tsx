@@ -121,8 +121,8 @@ export const Tooltip: React.FC<ITooltipProps> = props => {
 
   // Calculates bridge size and position to detect hover when mouse is between tooltip & tooltipChildren
   // tX, tY, tW, tH are tooltip x, y, width, height
-  // cX, cY, cW, cH are tooltip children x, y, width, height
-  // above, left, below, right are true if there is a gap between tooltip & tooltip children in that direction
+  // cX, cY, cW, cH are tooltipChildren x, y, width, height
+  // above, left, below, right are true if there is a gap between tooltip & tooltipChildren in that direction
   const updateBridgeStyle = React.useCallback((): void => {
     if (tooltipElement.current && tooltipChildrenElement.current) {
       const { x: tX, y: tY, width: tW, height: tH } = tooltipElement.current.getBoundingClientRect() as DOMRect;
@@ -131,28 +131,30 @@ export const Tooltip: React.FC<ITooltipProps> = props => {
       const left = tX + tW < cX;
       const below = tY > cH + cY;
       const right = tX > cW + cX;
-      // Only continue if tooltip & tooltip children overlap on 1 axis only
+
+      // Only continue if tooltip & tooltipChildren overlap on 1 axis only
       if ([above, left, below, right].filter(Boolean).length !== 1) {
         setBridgeStyle(undefined);
         return;
       }
       const style: CSSProperties = {};
-      if (!above && !below) {
-        if (cH > tH) {
-          style.height = cH;
-          style.top = 0;
-        } else {
-          style.height = tH;
-          style.top = tY - cY;
-        }
-      }
-      if (!left && !right) {
-        if (cW > tW) {
-          style.width = cW;
-          style.left = 0;
-        } else {
-          style.width = tW;
+
+      // When above or below, bridge width extends to furthest edges of tooltip & tooltipChildren, & height is the gap between them.
+      if (above || below) {
+        if (tX < cX) {
           style.left = tX - cX;
+          if (tX + tW < cX + cW) {
+            style.width = cX + cW - tX;
+          } else {
+            style.width = tW;
+          }
+        } else {
+          style.left = 0;
+          if (tX + tW < cX + cW) {
+            style.width = cW;
+          } else {
+            style.width = tW + tX - cX;
+          }
         }
       }
       if (above) {
@@ -163,6 +165,25 @@ export const Tooltip: React.FC<ITooltipProps> = props => {
         style.height = tY - cY - cH;
         style.top = cH;
       }
+
+      // When left or right, bridge height extends to furthest edges of tooltip & tooltipChildren, & width is the gap between them.
+      if (left || right) {
+        if (tY < cY) {
+          style.top = tY - cY;
+          if (tY + tH < cY + cH) {
+            style.height = cY + cH - tY;
+          } else {
+            style.height = tH;
+          }
+        } else {
+          style.top = 0;
+          if (tY + tH < cY + cH) {
+            style.height = cH;
+          } else {
+            style.height = tH + tY - cY;
+          }
+        }
+      }
       if (left) {
         style.width = cX - tX - tW;
         style.left = tW + tX - cX;
@@ -171,6 +192,7 @@ export const Tooltip: React.FC<ITooltipProps> = props => {
         style.width = tX - cX - cW;
         style.left = cW;
       }
+
       Object.entries(style).forEach(property => {
         style[property[0]] = property[1] + "px";
       });

@@ -17,6 +17,7 @@
   .bridge {
     display: none;
     position: absolute;
+    z-index: 1;
 
     &:hover:not([data-position="hidden"]) {
       display: block;
