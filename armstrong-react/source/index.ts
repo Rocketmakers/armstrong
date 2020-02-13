@@ -123,6 +123,10 @@ export {
   UseFormContext,
   IUseFormProps
 } from "./components/form/formHooks";
+export {
+  IThrottledTextInputProps,
+  ThrottledTextInput
+} from "./components/form/inputs/throttledTextInput"
 
 // Interaction
 export {
