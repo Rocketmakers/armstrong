@@ -1,5 +1,5 @@
 import * as React from "react"
-import { useForm, CodeInput, SelectInput, ThrottledTextInput, TextInput } from "../../_symlink"
+import { useForm, ThrottledTextInput, TextInput } from "../../_symlink"
 
 import { storiesOf } from "@storybook/react"
 
