@@ -139,6 +139,7 @@ export const CalendarInput: React.FC<ICalendarInputProps> = props => {
 
   const onInputFocus = React.useCallback(() => {
     disposal(() => document.removeEventListener("mousewheel", handleEvent, false));
+    disposal(() => document.removeEventListener("mousedown", handleEvent, false));
     document.addEventListener("mousewheel", handleEvent, false);
     document.addEventListener("mousedown", handleEvent, false);
     calcTop();
