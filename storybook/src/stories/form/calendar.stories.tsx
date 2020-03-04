@@ -13,7 +13,7 @@ storiesOf("Form/Calendar", module)
   })
   .add("Standard", () => {
     const initialValue = React.useMemo(() => ({ value1: undefined }), []);
-    const { bind, dataBinder, DataForm } = useForm(initialValue);
+    const { dataBinder, DataForm } = useForm(initialValue);
 
     console.log(dataBinder.toJson());
 
