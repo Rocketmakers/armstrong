@@ -41,13 +41,13 @@
     "react-dom": "^16.13.0"
   },
   "devDependencies": {
-    "@types/mocha": "7.0.0",
+    "@types/mocha": "7.0.2",
     "@types/node": "13.5.1",
     "@types/react": "16.9.20",
     "@types/react-dom": "16.9.4",
     "@types/underscore": "1.9.4",
     "chokidar": "3.3.1",
-    "import-resolve": "0.5.0",
+    "import-resolve": "0.5.1",
     "mocha": "7.1.0",
     "parallelshell": "3.0.2",
     "react": "16.13.0",
