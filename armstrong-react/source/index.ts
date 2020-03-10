@@ -123,6 +123,10 @@ export {
   UseFormContext,
   IUseFormProps
 } from "./components/form/formHooks";
+export {
+  IThrottledTextInputProps,
+  ThrottledTextInput
+} from "./components/form/inputs/throttledTextInput"
 
 // Interaction
 export {
@@ -133,6 +137,13 @@ export {
   IButtonConfirmDialog,
   useButtonConfirmDialog
 } from "./components/interaction/button";
+
+export {
+  IDropdownButtonProps,
+  DropdownButton,
+  IDropdownButton as IDropdownButtonRef
+} from "./components/interaction/dropdownButton";
+
 
 // Layout
 export {

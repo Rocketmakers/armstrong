@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useForm, CodeInput } from "../../_symlink";
+import { useForm, CodeInput, Button } from "../../_symlink";
 
 import { storiesOf } from "@storybook/react";
 
@@ -14,6 +14,8 @@ storiesOf("Form/CodeInput", module)
   .add("Standard", () => {
     const initialValue = React.useMemo(() => ({ value1: "", value2: "" }), []);
     const { bind, dataBinder, DataForm } = useForm(initialValue);
+
+    const codeInputRef = React.useRef(null);
 
     console.log(dataBinder.toJson());
 
@@ -31,7 +33,8 @@ storiesOf("Form/CodeInput", module)
         <pre>{`<CodeInput lengthPerBox={[1, 1, 1]} />`}</pre>
         <br />
         <br />
-        <CodeInput lengthPerBox={[1, 1, 1]} {...bind.codeInput("value1")} />
+        <CodeInput ref={codeInputRef} lengthPerBox={[1, 1, 1]} {...bind.codeInput("value1")} />
+        <Button onClick={() => codeInputRef.current.focus()}>Focus</Button>
         <br />
         <p>
           The <strong>CodeInput</strong> component takes a number of

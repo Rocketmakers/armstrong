@@ -6,6 +6,12 @@ import { DataValidationMessage, DataValidationMode } from "../formCore";
 import { useForm } from "../formHooks";
 import { ValidationLabel } from "../validationWrapper";
 
+export interface ICodeInput {
+  focus: () => void;
+  blur: () => void;
+}
+
+
 export interface ICodeInputProps extends React.HTMLAttributes<HTMLElement> {
   /** An array of lengths of each input in the code */
   lengthPerBox?: number[];
@@ -52,7 +58,7 @@ const formData = {};
 
 /** An input which binds to a single string or numeric value, seperated into multiple inputs, with focus moving automatically between them. */
 
-export const CodeInput: React.FC<ICodeInputProps> = props => {
+const CodeInputRef: React.RefForwardingComponent<ICodeInput, ICodeInputProps> = (props, ref) => {
   const { DataForm, bind, dataBinder, notifyChange } = useForm(formData);
 
   const { onCodeChange, lengthPerBox, numeric, hideValue, className, tabIndex, value, placeholder, readonly, autoFocus, type, pattern } = props;
@@ -62,6 +68,25 @@ export const CodeInput: React.FC<ICodeInputProps> = props => {
   const codeLength = React.useMemo(() => utils.array.reduce(lengthPerBox, (runningTotal, boxLength) => runningTotal + boxLength, 0), [
     lengthPerBox
   ]);
+  
+  const firstInput = React.useRef<HTMLInputElement>(undefined);
+
+  const refCallback = React.useCallback(() => {
+    return {
+      focus() {
+        if (firstInput.current) {
+          firstInput.current.focus();
+        }
+      },
+      blur() {
+        if (firstInput.current) {
+          firstInput.current.blur();
+        }
+      }
+    };
+  }, [firstInput]);
+
+  React.useImperativeHandle(ref, refCallback, [refCallback]);
 
   /** Set values of the inputs */
 
@@ -255,6 +280,7 @@ export const CodeInput: React.FC<ICodeInputProps> = props => {
       <DataForm onDataChanged={buildValue} className={classes}>
         {lengthPerBox.map((boxLength, i) => (
           <input
+            ref={i === 0 ? firstInput : null}
             autoFocus={i === 0 && autoFocus}
             {...bind.text(getBindingName(i) as any)}
             className="code-input-field"
@@ -277,6 +303,9 @@ export const CodeInput: React.FC<ICodeInputProps> = props => {
     </div>
   );
 };
+
+
+export const CodeInput = React.forwardRef(CodeInputRef);
 
 CodeInput.defaultProps = {
   lengthPerBox: [2, 2, 2]

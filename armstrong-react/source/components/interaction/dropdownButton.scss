@@ -1,0 +1,28 @@
+.dd-btn-list{
+  position: absolute;
+  z-index: 10;
+  border: 1px solid $gray-light;
+  min-width: 100%;
+  &[data-align="left"]{    
+    left: 0;
+  }
+  &[data-align="right"]{    
+    right: 0;
+  }
+  bottom: 0;
+  transform: translateY(100%);
+  background: white;
+  > div{
+    padding: $spacing-xsmall;
+    color: black;
+    text-align: left;
+    white-space: nowrap;
+    &:not(:first-of-type){
+      border-top: 1px solid $gray-very-light
+    }
+    &:hover{
+      background-color: $gray-medium;
+      color: white;
+    }
+  }
+}
