@@ -138,6 +138,13 @@ export {
   useButtonConfirmDialog
 } from "./components/interaction/button";
 
+export {
+  IDropdownButtonProps,
+  DropdownButton,
+  IDropdownButton as IDropdownButtonRef
+} from "./components/interaction/dropdownButton";
+
+
 // Layout
 export {
   IGridProps,
