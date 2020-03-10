@@ -92,7 +92,7 @@ export const Image: React.FunctionComponent<IImageProps> = (
   const classes = ClassHelpers.classNames(className, { rounded });
 
   const [loaded, setLoaded] = React.useState(false);
-  const [spinnerReady, setSpinnerReady] = React.useState();
+  const [spinnerReady, setSpinnerReady] = React.useState<boolean>();
   const [errored, setErrored] = React.useState(false);
 
   const imgRef = React.useRef<HTMLImageElement>(null);
