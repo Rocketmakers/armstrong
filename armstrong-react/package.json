@@ -1,6 +1,6 @@
 {
   "name": "@rocketmakers/armstrong",
-  "version": "0.0.1-alpha.47",
+  "version": "0.0.1-alpha.49",
   "description": "Rocketmakers Armstrong library of React components",
   "main": "./dist/index.js",
   "style": "./dist/style.scss",
@@ -36,26 +36,26 @@
     "underscore": "1.9.1"
   },
   "peerDependencies": {
-    "@types/react": "^16.9.17",
-    "react": "^16.12.0",
-    "react-dom": "^16.12.0"
+    "@types/react": "^16.9.20",
+    "react": "^16.13.0",
+    "react-dom": "^16.13.0"
   },
   "devDependencies": {
-    "@types/mocha": "5.2.7",
-    "@types/node": "13.1.0",
-    "@types/react": "16.9.17",
+    "@types/mocha": "7.0.0",
+    "@types/node": "13.5.1",
+    "@types/react": "16.9.20",
     "@types/react-dom": "16.9.4",
     "@types/underscore": "1.9.4",
     "chokidar": "3.3.1",
-    "import-resolve": "0.4.0",
-    "mocha": "7.0.1",
+    "import-resolve": "0.5.0",
+    "mocha": "7.1.0",
     "parallelshell": "3.0.2",
-    "react": "16.12.0",
-    "react-dom": "16.12.0",
+    "react": "16.13.0",
+    "react-dom": "16.13.0",
     "react-hooks-testing-library": "0.6.0",
-    "react-test-renderer": "16.12.0",
+    "react-test-renderer": "16.13.0",
     "ts-loader": "6.0.4",
-    "tslib": "1.10.0",
+    "tslib": "1.11.0",
     "tslint": "5.20.0",
     "typescript": "3.6.4"
   }
