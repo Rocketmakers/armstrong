@@ -14,7 +14,7 @@ export interface ITagInput {
 
 export interface ITagInputProps extends React.HTMLAttributes<HTMLElement> {
   suggestions?: string[];
-  onTagsChange?: (tags: string[]) => void;
+  onTagsChange?: (tags: string[], changedTag: string, changeType: "add" | "remove" | "set") => void;
   value?: string[];
 };
 
@@ -58,7 +58,7 @@ const TagInputRef: React.RefForwardingComponent<ITagInput, ITagInputProps> = (pr
     if (utils.object.isEqual(tags, newTags)) {
       return
     }
-    notifyTagsChange(newTags)
+    notifyTagsChange(newTags, "", "set")
   }, [value])
 
   const filterSuggestions = React.useCallback((newValue: string) => {
@@ -71,10 +71,12 @@ const TagInputRef: React.RefForwardingComponent<ITagInput, ITagInputProps> = (pr
     return utils.array.filter(filteredSuggestions, s => tags.indexOf(s) === -1);
   }, [props.suggestions, tags])
 
-  const notifyTagsChange = React.useCallback((newTags: string[]) => {
+  const notifyTagsChange = React.useCallback((newTags: string[], newTag: string, change: "add" | "remove" | "set") => {
     setTags(newTags)
     setSuggestions([])
-    onTagsChange(newTags)
+    if (onTagsChange){
+      onTagsChange(newTags, newTag, change)
+    }
   }, [onTagsChange])
 
   const notifySuggestionsChange = React.useCallback((newSuggestions: string[] = []) => {
@@ -83,7 +85,7 @@ const TagInputRef: React.RefForwardingComponent<ITagInput, ITagInputProps> = (pr
   }, [])
 
   const addTag = React.useCallback((tag: string) => {
-    notifyTagsChange([...tags, tag])
+    notifyTagsChange([...tags, tag], tag, "add")
     input.current.value = "";
     input.current.focus();
   }, [tags, notifyTagsChange, input])
@@ -91,7 +93,8 @@ const TagInputRef: React.RefForwardingComponent<ITagInput, ITagInputProps> = (pr
   const addTagCallback = React.useCallback((tag: string) => () => addTag(tag), [addTag])
 
   const removeTag = React.useCallback((index: number) => () => {
-    notifyTagsChange(utils.array.filter(tags, (__, idx) => idx !== index))
+    const tagToRemove = tags[index];
+    notifyTagsChange(utils.array.filter(tags, (__, idx) => idx !== index), tagToRemove, "remove")
     input.current.focus();
   }, [tags, notifyTagsChange, input])
 
@@ -107,7 +110,7 @@ const TagInputRef: React.RefForwardingComponent<ITagInput, ITagInputProps> = (pr
         if (targetValue) {
           if (tags.indexOf(targetValue) === -1) {
             const newTags = [...tags, targetValue];
-            notifyTagsChange(newTags)
+            notifyTagsChange(newTags, targetValue, "add")
           }
           // tslint:disable-next-line:no-string-literal
           target["value"] = "";
@@ -131,8 +134,9 @@ const TagInputRef: React.RefForwardingComponent<ITagInput, ITagInputProps> = (pr
       case 8: // delete
         if (tags.length !== 0 && !targetValue) {
           const newTags = [...tags];
-          newTags.splice(-1, 1);
-          notifyTagsChange(newTags)
+          const deletedTag = newTags.pop();
+          //newTags.splice(-1, 1);
+          notifyTagsChange(newTags, deletedTag, "remove")
         }
 
         break;
