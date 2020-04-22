@@ -3,15 +3,112 @@ import * as React from "react";
 import { storiesOf } from "@storybook/react";
 
 import "../../theme/theme.scss";
-import { TextInput } from "../../_symlink";
+import { TextInput, DateInput, CalendarInput, CheckboxInput, CodeInput, SelectInput, ISelectInputOption, TagInput, TimeInput, RadioInput, SwitchInput, Button } from "../../_symlink";
 import { useForm } from "../../_symlink/components/form/formHooks";
 import { IFormValidationResult } from "../../_symlink/components/form/formCore";
+import { useState } from "@storybook/addons";
 
 storiesOf("Form", module)
   .addParameters({
     options: {
       showAddonPanel: false
     }
+  })
+  .add("Kitchen Sink", () => {
+    const initialData = React.useMemo(
+      () => ({
+        inputOne: "foo",
+        inputTwo: "bar",
+        inputThree: false,
+        inputFour: "2020-02-15",
+        inputFive: "203040",
+        inputSix: 0,
+        inputSeven: ["hello", "world"],
+        inputEight: "14:30"
+      }),
+      []
+    );
+
+    const { dataBinder, DataForm, bind } = useForm(initialData);
+
+    const [showValidation, setShowValidation] = useState(false);
+
+    const options: ISelectInputOption[] = [{ id: 1, name: 'Item 1' }, { id: 2, name: 'Item 2' }];
+
+    
+    const validationErrors = React.useMemo<IFormValidationResult[]>(
+      () => [
+        {
+          attribute: "inputOne",
+          message: "Something was wrong with this value"
+        },
+        {
+          attribute: "inputTwo",
+          message: "Something was wrong with this value"
+        },
+        {
+          attribute: "inputThree",
+          message: "Something was wrong with this value"
+        },
+        {
+          attribute: "inputFour",
+          message: "Something was wrong with this value"
+        },
+        {
+          attribute: "inputFive",
+          message: "Something was wrong with this value"
+        },
+        {
+          attribute: "inputSix",
+          message: "Something was wrong with this value"
+        },
+        {
+          attribute: "inputSeven",
+          message: "Something was wrong with this value"
+        },
+        {
+          attribute: "inputEight",
+          message: "Something was wrong with this value"
+        }
+      ],
+      []
+    );
+    
+
+    return (
+      <DataForm validationResults={showValidation ? validationErrors: []} validationMode="both">
+        <Button onClick={() => setShowValidation(!showValidation)}>Toggle Validation</Button>
+        <TextInput {...bind.text("inputOne")}/>
+        <TextInput label="hello world" {...bind.text("inputOne")}/>
+        <br/>
+        <TextInput multiLine={true} {...bind.text("inputTwo")}/>
+        <TextInput multiLine={true} label="hello world" {...bind.text("inputTwo")}/>
+        <br/>
+        <DateInput  {...bind.text("inputFour")}/>
+        <br/>
+        <DateInput label="hello world" {...bind.dateInput("inputFour")}/>
+        <CalendarInput {...bind.calendarInput("inputFour")}/>
+        <CalendarInput label="hello world" {...bind.calendarInput("inputFour")}/>
+        <br/>
+        <CheckboxInput {...bind.checkbox("inputThree")} label="hello" labelContent="hello world"/>
+        <CheckboxInput {...bind.checkbox("inputThree")} labelContent="hello world"/>
+        <br/>
+        <CodeInput label="hello world" {...bind.codeInput("inputFive")} />
+        <CodeInput {...bind.codeInput("inputFive")} />
+        <br/>
+        <SelectInput {...bind.select("inputSix")} options={options} />
+        <SelectInput {...bind.select("inputSix")} label="hello world" options={options} />
+        <br/>
+        <TagInput label="hello world" {...bind.tagInput("inputSeven")}  />
+        <TagInput {...bind.tagInput("inputSeven")} />
+        <br/>
+        <TimeInput {...bind.timeInput("inputEight")} />
+        <TimeInput label="hello world" {...bind.timeInput("inputEight")} />
+
+        <SwitchInput label="hello world"  />
+      </DataForm>
+
+    )
   })
   .add("Binding / useForm", () => {
     const initialData = React.useMemo(

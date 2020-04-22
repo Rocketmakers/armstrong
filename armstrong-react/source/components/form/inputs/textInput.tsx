@@ -21,6 +21,7 @@ export type ITextInputProps = (
   type?: string;
   leftIcon?: IconOrJsx;
   rightIcon?: IconOrJsx;
+  label?: string;
   componentDidMount?: (self: ITextInput) => void;
 };
 
@@ -35,6 +36,7 @@ const TextInputRef: React.RefForwardingComponent<
     rightOverlayText,
     leftOverlayText,
     type,
+    label,
     leftIcon,
     rightIcon,
     multiLine,
@@ -93,12 +95,13 @@ const TextInputRef: React.RefForwardingComponent<
       leftIcon,
       rightIcon,
       validationMode,
-      validationMessage
+      validationMessage,
     ]
   );
 
   return (
     <div className={classes} title={validationMessage}>
+      {label && <label className="armstrong-label">{label}</label>}
       {leftIcon && getIconOrJsx(leftIcon, { className: "left-icon" })}
       {leftOverlayText && (
         <div className="input-overlay-text-left">{leftOverlayText}</div>

@@ -11,6 +11,7 @@ export interface ICheckboxInput {
 
 export interface ICheckboxInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   labelContent: React.ReactNode;
+  label?: string;
 }
 
 const CheckboxInputRef: React.RefForwardingComponent<ICheckboxInput, ICheckboxInputProps> = (props, ref) => {
@@ -37,7 +38,7 @@ const CheckboxInputRef: React.RefForwardingComponent<ICheckboxInput, ICheckboxIn
   const validationMessage = DataValidationMessage.get(props)
   const validationMode = DataValidationMode.get(props)
 
-  const { labelContent, id, ...attrs } = props
+  const { labelContent, id, label, ...attrs } = props
 
   const autoId = React.useMemo(() => id || generateUniqueId(u => "checkbox_" + u), [id]);
 
@@ -52,10 +53,20 @@ const CheckboxInputRef: React.RefForwardingComponent<ICheckboxInput, ICheckboxIn
 
   return (
     <div className={classes} title={validationMessage}>
-      <input {...attrs} ref={input} id={autoId} type="checkbox" />
-      <label htmlFor={autoId} />
-      <label className="checkbox-label" htmlFor={autoId}>{labelContent}</label>
+      {label && <label className="armstrong-label">{label}</label>}
+      <div className="armstrong-checkbox">
+
+        <input {...attrs} ref={input} id={autoId} type="checkbox" />
+        <label className="armstrong-checkmark" htmlFor={autoId} />
+
+        <label className="checkbox-label" htmlFor={autoId}>{labelContent}</label>
+
+      </div>
+
+      {/* <label htmlFor={autoId} />
+      <label className="checkbox-label" htmlFor={autoId}>{labelContent}</label> */}
       <ValidationLabel message={validationMessage} mode={validationMode} />
+
     </div>
   )
 }

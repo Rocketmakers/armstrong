@@ -74,18 +74,25 @@ textarea {
       }
     }
   }
+  
+  .armstrong-label{
+    display: block;
+    margin-bottom: $spacing-xsmall;
+  }
 
   .validation-message {
     display: block;
     color: $color-negative;
     margin-top: $form-field-bottom-spacing / 2;
     font-size: 0.8rem;
+    position: relative;
 
     &.validation-message-both,
     &.validation-message-icon {
       &:after {
         position: absolute;
-        top: $field-padding-vertical+1;
+        // This calculates the center of the input above taking into account all margins and spacing
+        top: -($field-padding-vertical * 2) - ($form-field-bottom-spacing / 2) - (7.5 / 2);
         right: $field-padding-horizontal+1;
         content: '!';
         background-color: $color-negative;
@@ -94,6 +101,7 @@ textarea {
         border-radius: 50%;
         height: 15px;
         width: 15px;
+        line-height: 14px;
         text-align: center;
       }
     }
