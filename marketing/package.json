@@ -7,7 +7,9 @@
     "start": "gatsby develop",
     "build": "gatsby build",
     "serve": "gatsby serve",
-    "clean": "rm -rf .cache public"
+    "clean": "rm -rf .cache public",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
   "keywords": [],
   "author": "",
@@ -19,7 +21,8 @@
     "gatsby-plugin-ts-loader": "0.1.0",
     "react": "16.13.0",
     "react-dom": "16.13.0",
-    "react-helmet": "5.2.1"
+    "react-helmet": "5.2.1",
+    "snyk": "^1.316.1"
   },
   "devDependencies": {
     "@types/react": "16.9.23",
@@ -27,5 +30,6 @@
     "@types/react-helmet": "5.0.15",
     "node-sass": "4.13.1",
     "typescript": "3.8.3"
-  }
+  },
+  "snyk": true
 }
