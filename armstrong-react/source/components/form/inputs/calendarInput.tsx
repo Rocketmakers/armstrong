@@ -4,18 +4,12 @@ import { IDay, useCalendar } from "../../../hooks/useCalendar";
 import { useDidUpdateEffect } from "../../../hooks/lifecycle/useDidUpdateEffect";
 import { ClassHelpers } from "../../../utilities/classHelpers";
 import { utils } from "../../../utilities/utils";
-import {
-  Icon,
-  IconOrJsx,
-  getIconProps,
-  getIconOrJsx
-} from "../../display/icon";
+import { Icon, IconOrJsx, getIconProps, getIconOrJsx } from "../../display/icon";
 import { Col, Grid, Row } from "../../layout/grid";
 import { DataValidationMessage, DataValidationMode } from "../formCore";
 import { ValidationLabel } from "../validationWrapper";
 
-export interface ICalendarInputProps
-  extends React.InputHTMLAttributes<HTMLInputElement> {
+export interface ICalendarInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   /** The current date */
   date?: string;
   /** The 'wire' format of the date */
@@ -36,20 +30,12 @@ export interface ICalendarInputProps
   disableClear?: boolean;
   /** Callback when the selected date has changed */
   onDateChanged?: (date: string) => void;
+  /** Adds a label above the input */
+  label?: string;
 }
 
 export const CalendarInput: React.FC<ICalendarInputProps> = props => {
-  const {
-    icon,
-    placeholder,
-    alwaysShowCalendar,
-    disableClear,
-    className,
-    disabled,
-    min,
-    max,
-    date
-  } = props;
+  const { icon, placeholder, alwaysShowCalendar, disableClear, className, disabled, min, max, date, label } = props;
 
   const mouseWheelDispose = React.useRef<() => void>(undefined);
 
@@ -57,9 +43,7 @@ export const CalendarInput: React.FC<ICalendarInputProps> = props => {
   const bodyElement = React.useRef<HTMLDivElement>();
   const rootElement = React.useRef<HTMLDivElement>();
 
-  const [pickerBodyVisible, setPickerBodyVisible] = React.useState<boolean>(
-    false
-  );
+  const [pickerBodyVisible, setPickerBodyVisible] = React.useState<boolean>(false);
   const [showOnTop, setShowOnTop] = React.useState<boolean>(false);
   const [calendarOffset, setCalendarOffset] = React.useState<number>(0);
 
@@ -73,15 +57,7 @@ export const CalendarInput: React.FC<ICalendarInputProps> = props => {
     [props.onDateChanged, setPickerBodyVisible]
   );
 
-  const {
-    month,
-    clearSelectedDate,
-    nextMonth,
-    previousMonth,
-    selectDate,
-    selectedDate,
-    selectedDateDisplay
-  } = useCalendar({
+  const { month, clearSelectedDate, nextMonth, previousMonth, selectDate, selectedDate, selectedDateDisplay } = useCalendar({
     format: props.format,
     displayFormat: props.displayFormat,
     minDate: min,
@@ -133,17 +109,14 @@ export const CalendarInput: React.FC<ICalendarInputProps> = props => {
         return;
       }
 
-      if (
-        domNode.contains(e.target as Node) &&
-        e.type !== "mousewheel" &&
-        e.type !== "keydown"
-      ) {
+      if (domNode.contains(e.target as Node) && e.type !== "mousewheel" && e.type !== "keydown") {
         return;
       }
       // tslint:disable-next-line:no-string-literal
       if (e.type === "keydown" && e["keyCode"] !== 9) {
         return;
       }
+
       disposal();
       setPickerBodyVisible(false);
     },
@@ -167,10 +140,10 @@ export const CalendarInput: React.FC<ICalendarInputProps> = props => {
   }, [inputElement, bodyElement, setShowOnTop]);
 
   const onInputFocus = React.useCallback(() => {
-    disposal(() =>
-      document.removeEventListener("mousewheel", handleEvent, false)
-    );
+    disposal(() => document.removeEventListener("mousewheel", handleEvent, false));
+    disposal(() => document.removeEventListener("mousedown", handleEvent, false));
     document.addEventListener("mousewheel", handleEvent, false);
+    document.addEventListener("mousedown", handleEvent, false);
     calcTop();
     setPickerBodyVisible(true);
     shouldShowOnTop();
@@ -220,6 +193,7 @@ export const CalendarInput: React.FC<ICalendarInputProps> = props => {
   );
   return (
     <div ref={rootElement} className={rootClasses}>
+      {label && <label className="armstrong-label">{label}</label>}
       {getIconOrJsx(icon)}
 
       {!alwaysShowCalendar && (
@@ -244,11 +218,7 @@ export const CalendarInput: React.FC<ICalendarInputProps> = props => {
           <Icon icon={Icon.Icomoon.cross} />
         </div>
       )}
-      <div
-        ref={bodyElement}
-        className={classes}
-        style={{ top: `${calendarOffset}px` }}
-      >
+      <div ref={bodyElement} className={classes} style={{ top: `${calendarOffset}px` }}>
         <div className="date-picker-body-wrapper">
           <Grid className="date-picker-header">
             <Row>
@@ -265,7 +235,7 @@ export const CalendarInput: React.FC<ICalendarInputProps> = props => {
           </div>
         </div>
       </div>
-      <ValidationLabel message={validationMessage} mode={validationMode} />
+      <ValidationLabel className={!!selectedDateDisplay && !disableClear && 'with-clear'} message={validationMessage} mode={validationMode} />
     </div>
   );
 };

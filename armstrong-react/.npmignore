@@ -7,6 +7,9 @@ storybook/
 playground/
 marketing/
 sass_concat.js
+sass_copy.js
+tslint.json
+prettier.config.js
 .node-version
 IcoMoon-Ultimate.ttf
 .vscode

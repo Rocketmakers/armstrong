@@ -123,6 +123,10 @@ export {
   UseFormContext,
   IUseFormProps
 } from "./components/form/formHooks";
+export {
+  IThrottledTextInputProps,
+  ThrottledTextInput
+} from "./components/form/inputs/throttledTextInput"
 
 // Interaction
 export {
@@ -133,6 +137,13 @@ export {
   IButtonConfirmDialog,
   useButtonConfirmDialog
 } from "./components/interaction/button";
+
+export {
+  IDropdownButtonProps,
+  DropdownButton,
+  IDropdownButton as IDropdownButtonRef
+} from "./components/interaction/dropdownButton";
+
 
 // Layout
 export {
@@ -239,4 +250,5 @@ export { usePrevious } from "./hooks/usePrevious";
 export { useIntersectionObserver } from "./hooks/observers/useIntersectionObserver";
 export { useMutationObserver } from "./hooks/observers/useMutationObserver";
 export { useMedia } from "./hooks/useMedia";
+export { useStepper } from "./hooks/useStepper";
 export { useTemporaryState } from "./hooks/timing/useTemporaryState";
