@@ -33,10 +33,7 @@ export const useTimeout = (
       if (typeof window !== "undefined") {
         timeout.current = window.setTimeout(() => setResolved(true), time);
       } else {
-        timeout.current = (setTimeout(
-          () => setResolved(true),
-          time
-        ) as any) as number;
+        timeout.current = (setTimeout(() => setResolved(true), time) as any) as number;
       }
     } else {
       if (typeof window !== "undefined") {
@@ -47,7 +44,11 @@ export const useTimeout = (
     }
   }, [callback, time, updating]);
 
-  useDidUpdateEffect(() => updating && resolved && callback(), [resolved]);
+  useDidUpdateEffect(() => {
+    if (updating && resolved) {
+      callback();
+    }
+  }, [resolved]);
   useWillUnmountEffect(clear);
 
   return {
@@ -55,6 +56,6 @@ export const useTimeout = (
     clear,
 
     /** set the timeout callback */
-    set
+    set,
   };
 };
