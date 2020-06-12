@@ -124,7 +124,6 @@ export const AutoCompleteMultiInput: React.FunctionComponent<IAutoCompleteProps<
         autocompleteSelectList.current.scrollTop = (selectedIdx - 2) * itemHeight;
       }
 
-      const selectedItem = options[selectedIdx]
       setSelectedIndex(selectedIdx)
       e.preventDefault();
       return false;
@@ -142,7 +141,6 @@ export const AutoCompleteMultiInput: React.FunctionComponent<IAutoCompleteProps<
         autocompleteSelectList.current.scrollTop = (selectedIdx) * itemHeight;
       }
 
-      const selectedItem = options[selectedIdx]
       setSelectedIndex(selectedIdx)
       e.preventDefault();
       return false;
