@@ -132,7 +132,6 @@ export const AutoCompleteSingleInput: React.FunctionComponent<IAutoCompleteProps
 
       const selectedItem = options[selectedIdx];
       setSelectedIndex(selectedIdx);
-      onFilterChange(selectedItem.name);
       e.preventDefault();
       return false;
     }
@@ -151,7 +150,6 @@ export const AutoCompleteSingleInput: React.FunctionComponent<IAutoCompleteProps
 
       const selectedItem = options[selectedIdx];
       setSelectedIndex(selectedIdx);
-      onFilterChange(selectedItem.name);
       e.preventDefault();
       return false;
     }
