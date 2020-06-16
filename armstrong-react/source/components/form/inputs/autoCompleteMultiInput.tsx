@@ -93,9 +93,9 @@ export const AutoCompleteMultiInput: React.FunctionComponent<IAutoCompleteProps<
   function handleSelection(selected: IAutoCompleteOption) {
     if (onValueChange) {
       if (utils.array.some(value, ddo => ddo.id === selected.id)) {
-        onValueChange(utils.array.reject(value, ddo => ddo.id === selected.id));
+        onValueChange(utils.array.reject(value, ddo => ddo.id === selected.id), selected, 'remove');
       } else {
-        onValueChange([...value, selected])
+        onValueChange([...value, selected], selected, 'add');
       }
     }
 
@@ -124,9 +124,7 @@ export const AutoCompleteMultiInput: React.FunctionComponent<IAutoCompleteProps<
         autocompleteSelectList.current.scrollTop = (selectedIdx - 2) * itemHeight;
       }
 
-      const selectedItem = options[selectedIdx]
       setSelectedIndex(selectedIdx)
-      onFilterChange(selectedItem.name)
       e.preventDefault();
       return false;
     }
@@ -143,9 +141,7 @@ export const AutoCompleteMultiInput: React.FunctionComponent<IAutoCompleteProps<
         autocompleteSelectList.current.scrollTop = (selectedIdx) * itemHeight;
       }
 
-      const selectedItem = options[selectedIdx]
       setSelectedIndex(selectedIdx)
-      onFilterChange(selectedItem.name)
       e.preventDefault();
       return false;
     }
@@ -215,7 +211,7 @@ export const AutoCompleteMultiInput: React.FunctionComponent<IAutoCompleteProps<
               </Col>
               {value.length !== 0 && canClear &&
                 <Col width="auto" className="clear-selected p-right-xsmall" onClick={() => {
-                  onValueChange([]);
+                  onValueChange([], null, null);
                   onFilterChange("");
                   setOpen(false);
                 }}>

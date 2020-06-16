@@ -12,10 +12,15 @@ export interface ITagInput {
   select: () => void
 }
 
-export interface ITagInputProps extends React.HTMLAttributes<HTMLElement> {
+export interface ITagInputProps extends React.HTMLAttributes<HTMLElement> {  
+  /** Preset list of tags to pick from */
   suggestions?: string[];
+  /** Event that fires when tag collection changes */
   onTagsChange?: (tags: string[], changedTag: string, changeType: "add" | "remove" | "set") => void;
+  /** The current array of tags */
   value?: string[];
+  /** Adds a label above the input */
+  label?: string;
 };
 
 function makeComparison(value: string) {
@@ -24,7 +29,7 @@ function makeComparison(value: string) {
 
 const TagInputRef: React.RefForwardingComponent<ITagInput, ITagInputProps> = (props, ref) => {
 
-  const { value, className, onTagsChange } = props
+  const { value, className, onTagsChange, label } = props
 
   const [suggestionIndex, setSuggestionIndex] = React.useState(-1)
   const [tags, setTags] = React.useState<string[]>(value || [])
@@ -183,6 +188,8 @@ const TagInputRef: React.RefForwardingComponent<ITagInput, ITagInputProps> = (pr
 
   return (
     <div className={classes}>
+      {label && <label className="armstrong-label">{label}</label>}
+      <div className="armstrong-tags">
       {tags.map((t, i) => (
         <div key={t} className="tag">
           {t}
@@ -191,6 +198,7 @@ const TagInputRef: React.RefForwardingComponent<ITagInput, ITagInputProps> = (pr
       ))}
       <input onKeyDown={onKeyDown} ref={input} onKeyUp={onKeyUp} type="text" />
       {renderSuggestions(suggestions)}
+      </div>
       <ValidationLabel message={validationMessage} mode={validationMode} />
     </div>
   );

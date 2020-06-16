@@ -295,3 +295,9 @@ $switch-shadow: 0 0 8px rgba(black, 0.3) !default;
         }
     }
 }
+
+.switch-input{
+    .armstrong-label{
+        display: block;
+    }
+}

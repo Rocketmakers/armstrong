@@ -13,14 +13,14 @@ export const ValidationWrapper: React.FC<{ message: string } & HTMLAttributes<HT
   );
 }
 
-export const ValidationLabel: React.FC<{ message: string, mode: ValidationModes, wrapper?: React.StatelessComponent<{}> }> = props => {
+export const ValidationLabel: React.FC<{ className?: string, message: string, mode: ValidationModes, wrapper?: React.StatelessComponent<{}> }> = props => {
   const { message, mode, wrapper: Wrapper } = props
   if (!message || mode === "none") {
     return null;
   }
 
   const validationLabel = (
-    <label className={ClassHelpers.classNames("validation-message", `validation-message-${mode}`)} title={message}>
+    <label className={ClassHelpers.classNames(props.className, "validation-message", `validation-message-${mode}`)} title={message}>
       {(mode === "both" || mode === "below") && message}
     </label>
   )

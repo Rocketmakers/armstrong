@@ -15,15 +15,21 @@ export interface ISelectInputOption {
   data?: any;
 }
 
-export interface ISelectInputProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
+export interface ISelectInputProps extends React.SelectHTMLAttributes<HTMLSelectElement> {  
+  /** The options to select from */
   options: ISelectInputOption[];
+  /** Fires when dropdown item is selected */
   onOptionChange?: (selected: ISelectInputOption) => void;
+  /** The placeholder label when nothing is selected */
   optionLabel?: string;
+  /** Turns a placeholder label on or off */
   enableOptionLabel?: boolean;
+  /** Adds a label above the input */
+  label?: string;
 }
 
 const SelectInputRef: React.RefForwardingComponent<ISelectInput, ISelectInputProps> = (props, ref) => {
-  const { options, onOptionChange, onChange, optionLabel, enableOptionLabel, className, placeholder, ...attrs } = props;
+  const { options, onOptionChange, onChange, optionLabel, enableOptionLabel, className, placeholder, label, ...attrs } = props;
 
   const handleChange = React.useCallback(
     (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -65,6 +71,7 @@ const SelectInputRef: React.RefForwardingComponent<ISelectInput, ISelectInputPro
 
   return (
     <div className={classes} title={validationMessage}>
+      {label && <label className="armstrong-label">{label}</label>}
       <select {...attrs} ref={select} onChange={handleChange}>
         {placeholder && (
           <option value="" disabled selected hidden>

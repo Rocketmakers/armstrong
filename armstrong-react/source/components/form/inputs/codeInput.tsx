@@ -15,33 +15,26 @@ export interface ICodeInput {
 export interface ICodeInputProps extends React.HTMLAttributes<HTMLElement> {
   /** An array of lengths of each input in the code */
   lengthPerBox?: number[];
-
   /** Callback to fire when the value changes */
   onCodeChange?: (value: string | number) => void;
-
   /** Current value of the code */
   value?: string | number;
-
   /** A placeholder to display in each input */
   placeholder?: string;
-
   /** Render the value of the input as a password */
   hideValue?: boolean;
-
   /** Override the type property of the input elements (overrides hideValue prop) */
   type?: string;
-
   /** Restrict to numeric values */
   numeric?: boolean;
-
   /** Disable the inputs */
   readonly?: boolean;
-
   /** Automatically focus on the first input element */
   autoFocus?: boolean;
-
   /** Regex pattern to match on input */
   pattern?: string;
+  /** Adds a label above the input */
+  label?: string;
 }
 
 function calcTabIndex(tabIndex: number | undefined, fieldIndex: number) {
@@ -61,7 +54,7 @@ const formData = {};
 const CodeInputRef: React.RefForwardingComponent<ICodeInput, ICodeInputProps> = (props, ref) => {
   const { DataForm, bind, dataBinder, notifyChange } = useForm(formData);
 
-  const { onCodeChange, lengthPerBox, numeric, hideValue, className, tabIndex, value, placeholder, readonly, autoFocus, type, pattern } = props;
+  const { onCodeChange, lengthPerBox, numeric, hideValue, className, tabIndex, value, placeholder, readonly, autoFocus, type, pattern, label } = props;
 
   /** the total length of the code, based on the total of lengthPerBox */
 
@@ -277,6 +270,7 @@ const CodeInputRef: React.RefForwardingComponent<ICodeInput, ICodeInputProps> = 
 
   return (
     <div className={classes}>
+      {label && <label className="armstrong-label">{label}</label>}
       <DataForm onDataChanged={buildValue} className={classes}>
         {lengthPerBox.map((boxLength, i) => (
           <input

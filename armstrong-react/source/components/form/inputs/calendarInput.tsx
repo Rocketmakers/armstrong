@@ -30,10 +30,12 @@ export interface ICalendarInputProps extends React.InputHTMLAttributes<HTMLInput
   disableClear?: boolean;
   /** Callback when the selected date has changed */
   onDateChanged?: (date: string) => void;
+  /** Adds a label above the input */
+  label?: string;
 }
 
 export const CalendarInput: React.FC<ICalendarInputProps> = props => {
-  const { icon, placeholder, alwaysShowCalendar, disableClear, className, disabled, min, max, date } = props;
+  const { icon, placeholder, alwaysShowCalendar, disableClear, className, disabled, min, max, date, label } = props;
 
   const mouseWheelDispose = React.useRef<() => void>(undefined);
 
@@ -191,6 +193,7 @@ export const CalendarInput: React.FC<ICalendarInputProps> = props => {
   );
   return (
     <div ref={rootElement} className={rootClasses}>
+      {label && <label className="armstrong-label">{label}</label>}
       {getIconOrJsx(icon)}
 
       {!alwaysShowCalendar && (
@@ -232,7 +235,7 @@ export const CalendarInput: React.FC<ICalendarInputProps> = props => {
           </div>
         </div>
       </div>
-      <ValidationLabel message={validationMessage} mode={validationMode} />
+      <ValidationLabel className={!!selectedDateDisplay && !disableClear && 'with-clear'} message={validationMessage} mode={validationMode} />
     </div>
   );
 };

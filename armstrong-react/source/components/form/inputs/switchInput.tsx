@@ -61,6 +61,9 @@ export interface ISwitchInputProps
 
   /** renders shadows around the nubbin and inset into the track — true by default */
   renderShadows?: boolean;
+
+  /** Adds a label above the input */
+  label?: string;
 }
 
 const SwitchInputRef: React.RefForwardingComponent<
@@ -80,6 +83,7 @@ const SwitchInputRef: React.RefForwardingComponent<
     hoveringNubbinColour,
     activeNubbinColour,
     id,
+    label,
     disabled,
     activeIcon,
     inactiveIcon,
@@ -213,6 +217,7 @@ const SwitchInputRef: React.RefForwardingComponent<
       data-render-shadows={renderShadows}
       style={style}
     >
+      {label && <label className="armstrong-label">{label}</label>}
       <input
         {...attrs}
         ref={input}

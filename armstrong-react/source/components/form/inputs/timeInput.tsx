@@ -33,6 +33,8 @@ export interface ITimeInputProps extends React.Props<typeof TimeInput> {
   minuteLabel?: string;
   /** (boolean) If true, when you select any hour, the minutes will be automatically set to 0 */
   zeroMinutesOnHourSelected?: boolean;
+  /** Adds a label above the input */
+  label?: string;
 }
 
 export interface ITimerInputState {
@@ -41,7 +43,7 @@ export interface ITimerInputState {
 }
 
 export const TimeInput: React.FC<ITimeInputProps> = props => {
-  const { className, disabled, hourLabel, minuteLabel, minuteFilter, hourFilter, minuteStep, onChange, tabIndex, time, zeroMinutesOnHourSelected } = props
+  const { className, disabled, hourLabel, minuteLabel, minuteFilter, hourFilter, minuteStep, onChange, tabIndex, time, zeroMinutesOnHourSelected, label } = props
 
   const [timeState, setTimeState] = React.useState<ITimerInputState>({})
 
@@ -111,29 +113,19 @@ export const TimeInput: React.FC<ITimeInputProps> = props => {
       className={ClassHelpers.classNames("time-input", "armstrong-input", className, disabled ? "input-disabled" : null, { "show-validation": validationMode !== "none" && validationMessage })}
       onDataChanged={handleDataChanged}
       title={validationMessage}>
-      <Grid>
-        <Row>
-          <Col>
-            <select tabIndex={tabIndex} {...bind.selectNumeric("hours")} disabled={disabled} {...DataValidationMessage.spread(validationMessage)} >
-              {hourOptions}
-            </select>
-          </Col>
-          <Col>
-            <select tabIndex={tabIndex} {...bind.selectNumeric("minutes")} disabled={disabled} {...DataValidationMessage.spread(validationMessage)} >
-              {minuteOptions}
-            </select>
-          </Col>
-        </Row>
-        <ValidationLabel
-          message={validationMessage}
-          mode={validationMode}
-          wrapper={p => (
-            <Row height="auto">
-              <Col {...p} />
-            </Row>
-          )}
-        />
-      </Grid>
+      {label && <label className="armstrong-label">{label}</label>}
+      <div>
+        <select tabIndex={tabIndex} {...bind.selectNumeric("hours")} disabled={disabled} {...DataValidationMessage.spread(validationMessage)} >
+          {hourOptions}
+        </select>
+        <select tabIndex={tabIndex} {...bind.selectNumeric("minutes")} disabled={disabled} {...DataValidationMessage.spread(validationMessage)} >
+          {minuteOptions}
+        </select>
+      </div>
+      <ValidationLabel
+        message={validationMessage}
+        mode={validationMode}
+      />
     </DataForm>
   );
 }
