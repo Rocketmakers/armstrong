@@ -7,11 +7,12 @@ $header-height: 40px;
   display: inline-block;
   width: 100%;
 
+
   .clear-date-button{
     cursor: pointer;
-    top: calc(#{$field-padding-vertical} + 8px);
     position: absolute;
     right: calc(#{$field-padding-horizontal} + 1.6em);
+    transform: translateY(-50px);
   }
 
   &.disabled {
@@ -33,7 +34,7 @@ $header-height: 40px;
       position: absolute;
       z-index: 2;
       transform: translateY(-50%);
-      top: 50%;
+      top: 25px;
       left: $field-padding-horizontal;
     }
   }
@@ -132,5 +133,14 @@ $header-height: 40px;
 .date-picker {
   .date-picker-body.always-show-calendar {
     box-shadow: none;
+  }
+  
+  .armstrong-label + i{
+    top: calc(#{$field-padding-vertical} + 40px);
+  }
+  &.show-validation{
+    .validation-message.with-clear:after{
+      right: 35px;
+    }
   }
 }

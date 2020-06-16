@@ -38,6 +38,8 @@ export interface IDateInputProps extends React.Props<typeof DateInput> {
   datePartOrder?: DateParts[];
   /** Autofocuses first input */
   autoFocus?: boolean;
+  /** Adds a label above the input */
+  label?: string;
 }
 
 export interface IDateInputState {
@@ -48,7 +50,7 @@ export interface IDateInputState {
 }
 
 export const DateInput: React.FC<IDateInputProps> = props => {
-  const { dayLabel, monthLabel, yearLabel, yearsFromNow, className, disabled, datePartOrder, tabIndex, date, minDate, maxDate, onChange } = props
+  const { dayLabel, monthLabel, yearLabel, yearsFromNow, className, disabled, datePartOrder, tabIndex, date, minDate, maxDate, onChange, label } = props
 
   const [dateState, setDateState] = React.useState<IDateInputState>({ day: null, month: null, year: null, date: null })
 
@@ -151,20 +153,17 @@ export const DateInput: React.FC<IDateInputProps> = props => {
       className={classes}
       title={validationMessage}
       onDataChanged={handleDataChanged}>
-      <Grid>
-        <Row>
-          {datePartOrder.map((key, idx) => {
-            return (
-              <Col key={idx}>
-                <select tabIndex={tabIndex} {...bind.selectNumeric(key)} disabled={disabled}>
-                  {options[key]}
-                </select>
-              </Col>
-            )
-          })}
-        </Row>
-        <ValidationLabel message={validationMessage} mode={validationMode} wrapper={p => <Row height="auto"><Col {...p} /></Row>} />
-      </Grid>
+      {label && <label className="armstrong-label">{label}</label>}
+      <div>
+        {datePartOrder.map((key, idx) => {
+          return (
+            <select key={idx} tabIndex={tabIndex} {...bind.selectNumeric(key)} disabled={disabled}>
+              {options[key]}
+            </select>
+          )
+        })}
+      </div>
+      <ValidationLabel message={validationMessage} mode={validationMode} />
     </DataForm>
   )
 }

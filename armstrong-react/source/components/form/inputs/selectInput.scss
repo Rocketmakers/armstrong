@@ -11,10 +11,16 @@
     }
 }
 
+.select-input{
+    .validation-message:after{
+        right: 35px !important;
+    }
+}
+
 .armstrong-input select{
     -moz-appearance: none;
     text-indent: 0.01px;
-    text-overflow: '';
+    text-overflow: '';    
 }
 
 .armstrong-input select::-ms-expand {
