@@ -70,8 +70,8 @@ export interface IAutoCompleteProps<TValue> {
   filter: string;
   onFilterChange: (v: string) => void;
   options: IAutoCompleteOption[];
-  value: TValue;
-  onValueChange: (o: TValue, changedItem?: IAutoCompleteOption, changeType?: 'add' | 'remove') => void;
+  value?: TValue;
+  onValueChange?: (o: TValue, changedItem?: IAutoCompleteOption, changeType?: 'add' | 'remove') => void;
   placeholder?: string;
   visibleItems?: number;
   noResultsMessage?: string;
