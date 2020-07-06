@@ -118,6 +118,7 @@ export const CalendarInput: React.FC<ICalendarInputProps> = props => {
       }
 
       disposal();
+      document.activeElement.blur();
       setPickerBodyVisible(false);
     },
     [rootElement, setPickerBodyVisible]
@@ -140,9 +141,9 @@ export const CalendarInput: React.FC<ICalendarInputProps> = props => {
   }, [inputElement, bodyElement, setShowOnTop]);
 
   const onInputFocus = React.useCallback(() => {
-    disposal(() => document.removeEventListener("mousewheel", handleEvent, false));
+    disposal(() => document.removeEventListener("wheel", handleEvent, false));
     disposal(() => document.removeEventListener("mousedown", handleEvent, false));
-    document.addEventListener("mousewheel", handleEvent, false);
+    document.addEventListener("wheel", handleEvent, false);
     document.addEventListener("mousedown", handleEvent, false);
     calcTop();
     setPickerBodyVisible(true);
