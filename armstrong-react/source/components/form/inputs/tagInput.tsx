@@ -111,6 +111,7 @@ const TagInputRef: React.RefForwardingComponent<ITagInput, ITagInputProps> = (pr
       case 40: // ArrowDown
       case 38: // ArrowUp}
         return
+      case 9:
       case 13:
         if (targetValue) {
           if (tags.indexOf(targetValue) === -1) {
@@ -157,6 +158,10 @@ const TagInputRef: React.RefForwardingComponent<ITagInput, ITagInputProps> = (pr
         }
         e.preventDefault()
         break
+      case 9:
+          if(targetValue){
+              e.preventDefault()
+          }
       case 13:
         const suggestion = suggestions[suggestionIndex]
         if (suggestion) {
