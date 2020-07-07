@@ -111,6 +111,7 @@ const TagInputRef: React.RefForwardingComponent<ITagInput, ITagInputProps> = (pr
       case 40: // ArrowDown
       case 38: // ArrowUp}
         return
+      case 9:
       case 13:
         if (targetValue) {
           if (tags.indexOf(targetValue) === -1) {
@@ -130,6 +131,13 @@ const TagInputRef: React.RefForwardingComponent<ITagInput, ITagInputProps> = (pr
       notifySuggestionsChange();
     }
   }, [tags, filterSuggestions, notifySuggestionsChange])
+
+  const addSuggestion = React.useCallback(() => {
+    const suggestion = suggestions[suggestionIndex]
+        if (suggestion) {
+          addTag(suggestion)
+        }
+  }, [addTag, suggestionIndex, suggestions]) 
 
   const onKeyDown = React.useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
     // tslint:disable-next-line:no-string-literal
@@ -157,14 +165,17 @@ const TagInputRef: React.RefForwardingComponent<ITagInput, ITagInputProps> = (pr
         }
         e.preventDefault()
         break
+      case 9:
+          if (targetValue) {
+              e.preventDefault()
+          }
+          addSuggestion()
+          break
       case 13:
-        const suggestion = suggestions[suggestionIndex]
-        if (suggestion) {
-          addTag(suggestion)
-        }
+        addSuggestion()
         break;
     }
-  }, [tags, suggestionIndex, suggestions, notifyTagsChange, addTag])
+  }, [tags, suggestionIndex, suggestions, notifyTagsChange, addTag, addSuggestion])
 
   const renderSuggestions = React.useCallback((newSuggestions: string[]) => {
     if (!newSuggestions || !newSuggestions.length) {
