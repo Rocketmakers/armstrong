@@ -137,7 +137,7 @@ const TagInputRef: React.RefForwardingComponent<ITagInput, ITagInputProps> = (pr
         if (suggestion) {
           addTag(suggestion)
         }
-  }, [addTag, suggestions]) 
+  }, [addTag, suggestionIndex, suggestions]) 
 
   const onKeyDown = React.useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
     // tslint:disable-next-line:no-string-literal
