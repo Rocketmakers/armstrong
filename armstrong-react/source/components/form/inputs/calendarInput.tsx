@@ -118,7 +118,10 @@ export const CalendarInput: React.FC<ICalendarInputProps> = props => {
       }
 
       disposal();
-      document.activeElement.blur();
+
+      if(document.activeElement instanceof HTMLElement){
+        document.activeElement.blur();
+      }
       setPickerBodyVisible(false);
     },
     [rootElement, setPickerBodyVisible]
