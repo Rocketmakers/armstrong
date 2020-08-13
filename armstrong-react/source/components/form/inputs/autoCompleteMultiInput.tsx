@@ -3,7 +3,7 @@ import { usePrevious } from "../../../hooks/usePrevious";
 import { ClassHelpers } from "../../../utilities/classHelpers";
 import { KeyCodes } from "../../../utilities/keyCodes";
 import { utils } from "../../../utilities/utils";
-import { Icon } from "../../display/icon";
+import { Icon, getIconOrJsx } from "../../display/icon";
 import { Col, Grid, Row } from "../../layout/grid";
 import { DataValidationMessage, DataValidationMode, getEventTargetAs } from "../formCore";
 import { ValidationLabel } from "../validationWrapper";
@@ -181,6 +181,7 @@ export const AutoCompleteMultiInput: React.FunctionComponent<IAutoCompleteProps<
       "has-go-button": hasGoButton,
       "disabled": disabled,
       "show-validation": (validationMode !== "none" && validationMessage),
+      "text-input-icon-left": props.leftIcon !== undefined
     },
   );
 
@@ -194,6 +195,8 @@ export const AutoCompleteMultiInput: React.FunctionComponent<IAutoCompleteProps<
     >
       <Row>
         <Col className="drop-down-controls">
+          {props.leftIcon &&
+              getIconOrJsx(props.leftIcon, { className: "left-icon" })}
           <Grid className="autocomplete-value-display">
             <Row>
               <Col>
