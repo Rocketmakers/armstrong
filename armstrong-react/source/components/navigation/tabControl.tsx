@@ -66,11 +66,12 @@ export const TabControl = (props: ITabControlProps) => {
   return (
     <div {...attrs} className={classes}>
       <div className="tab-control-header">
-        {filteredChildren.map((c: React.ReactElement<ITabItemProps>, i: number) =>
-          <div key={i} className={`tab-item-header${selectedIndex === i ? " selected" : ""}`} onClick={changeTab(i)}>
-            {c.props.icon ? <Icon className="m-right-xsmall" icon={c.props.icon} /> : null}{c.props.title}
-          </div>,
-        )}
+        {filteredChildren.map((c: React.ReactElement<ITabItemProps>, i: number) => (
+          <button key={i} className={`tab-item-header${selectedIndex === i ? " selected" : ""}`} onClick={changeTab(i)}>
+            {c.props.icon ? <Icon className="m-right-xsmall" icon={c.props.icon} /> : null}
+            {c.props.title}
+          </button>
+        ))}
       </div>
       {filteredChildren[selectedIndex]}
     </div>
