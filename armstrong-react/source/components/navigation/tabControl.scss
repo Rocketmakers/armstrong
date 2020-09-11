@@ -6,6 +6,9 @@
     padding: $field-padding-vertical $field-padding-horizontal;
     background-color: $gray-light;
 
+    // Removes user agent stylesheet styling gained from converting from div to button
+    border: unset;
+
     &.selected {
       background-color: $gray-medium;
       color: $white;

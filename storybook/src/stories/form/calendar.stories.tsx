@@ -13,13 +13,21 @@ storiesOf("Form/Calendar", module)
   })
   .add("Standard", () => {
     const initialValue = React.useMemo(() => ({ value1: undefined }), []);
-    const { dataBinder, DataForm } = useForm(initialValue);
-
-    console.log(dataBinder.toJson());
+    const { DataForm } = useForm(initialValue);
 
     return (
       <DataForm>
-          <CalendarInput />
+        <CalendarInput />
+      </DataForm>
+    );
+  })
+  .add("AlwaysShow", () => {
+    const initialValue = React.useMemo(() => ({ value1: undefined }), []);
+    const { DataForm } = useForm(initialValue);
+
+    return (
+      <DataForm>
+        <CalendarInput alwaysShowCalendar />
       </DataForm>
     );
   });

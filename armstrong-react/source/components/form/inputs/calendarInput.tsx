@@ -198,7 +198,7 @@ export const CalendarInput: React.FC<ICalendarInputProps> = props => {
   return (
     <div ref={rootElement} className={rootClasses}>
       {label && <label className="armstrong-label">{label}</label>}
-      {getIconOrJsx(icon)}
+      {!alwaysShowCalendar && getIconOrJsx(icon)}
 
       {!alwaysShowCalendar && (
         <input
@@ -226,9 +226,9 @@ export const CalendarInput: React.FC<ICalendarInputProps> = props => {
         <div className="date-picker-body-wrapper">
           <Grid className="date-picker-header">
             <Row>
-              <Col onClick={previousMonth} width="auto">{`<`}</Col>
+              <Col tagName="button" onClick={previousMonth} width="auto">{`<`}</Col>
               <Col>{currentDisplayDate}</Col>
-              <Col onClick={nextMonth} width="auto">{`>`}</Col>
+              <Col tagName="button" onClick={nextMonth} width="auto">{`>`}</Col>
             </Row>
           </Grid>
           <div className="date-picker-days">
@@ -270,8 +270,8 @@ const CalendarDay: React.FC<ICalendarDayProps> = props => {
   const onClick = React.useCallback(() => dayClicked(day.date), [day]);
 
   return (
-    <div className={classes} onClick={onClick}>
+    <button className={classes} disabled={day.outOfRange} onClick={onClick}>
       {day.dayNumber}
-    </div>
+    </button>
   );
 };

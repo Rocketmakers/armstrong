@@ -54,11 +54,14 @@ $header-height: 40px;
         text-align: center;
       }
 
-      .col:first-of-type,
-      .col:last-of-type {
+      button {
         padding: 0 15px;
         cursor: pointer;
         background-color: rgba(0, 0, 0, 0.1);
+
+        // Removes user agent stylesheet styling gained from converting from div to button
+        color: unset;
+        border: unset;
       }
     }
   }
@@ -75,14 +78,15 @@ $header-height: 40px;
     display: none;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 
-    &.always-show-calendar {
-      display: block;
-    }
     position: fixed;
     width: 100%;
     background-color: white;
     z-index: 10;
 
+    &.always-show-calendar {
+      display: block;
+      position: static;
+    }
     &.date-picker-body-visible {
       display: block;
     }
@@ -103,12 +107,18 @@ $header-height: 40px;
     display: flex;
     flex-flow: row wrap;
 
-    > div {
+    > div,
+    button {
       box-sizing: border-box;
       cursor: pointer;
       text-align: center;
       padding: 5px;
       flex-basis: percentage(1 / 7);
+
+      // Removes user agent stylesheet styling gained from converting from div to button
+      background: unset;
+      border: unset;
+      color: unset;
 
       &:hover {
         background-color: rgba(0, 0, 0, 0.1);
