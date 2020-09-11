@@ -15,8 +15,6 @@ storiesOf("Form/Calendar", module)
     const initialValue = React.useMemo(() => ({ value1: undefined }), []);
     const { dataBinder, DataForm } = useForm(initialValue);
 
-    console.log(dataBinder.toJson());
-
     return (
       <DataForm>
         <CalendarInput />
@@ -26,8 +24,6 @@ storiesOf("Form/Calendar", module)
   .add("AlwaysShow", () => {
     const initialValue = React.useMemo(() => ({ value1: undefined }), []);
     const { dataBinder, DataForm } = useForm(initialValue);
-
-    console.log(dataBinder.toJson());
 
     return (
       <DataForm>
