@@ -13,7 +13,7 @@ storiesOf("Form/Calendar", module)
   })
   .add("Standard", () => {
     const initialValue = React.useMemo(() => ({ value1: undefined }), []);
-    const { dataBinder, DataForm } = useForm(initialValue);
+    const { DataForm } = useForm(initialValue);
 
     return (
       <DataForm>
@@ -23,7 +23,7 @@ storiesOf("Form/Calendar", module)
   })
   .add("AlwaysShow", () => {
     const initialValue = React.useMemo(() => ({ value1: undefined }), []);
-    const { dataBinder, DataForm } = useForm(initialValue);
+    const { DataForm } = useForm(initialValue);
 
     return (
       <DataForm>
