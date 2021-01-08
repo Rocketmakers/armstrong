@@ -139,7 +139,7 @@ const BurgerMenuComponent: React.FC<IBurgerMenuProps> = ({
         >
           {openButtonIcon &&
             getIconOrJsx(openButtonIcon, { "aria-hidden": true })}
-          }
+          
         </Button>
       )}
       {mode === "slide" && (
