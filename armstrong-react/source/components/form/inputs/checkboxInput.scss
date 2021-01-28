@@ -89,6 +89,7 @@
 .armstrong-checkbox > .armstrong-checkmark {
   height: 100%;
   width: 44px;
+  height: 44px;
   position: absolute;
   pointer-events: none;
 }
@@ -105,6 +106,7 @@
   cursor: pointer;
   height: 44px;
   width: 44px;
+  flex: none;
 }
 
 .armstrong-checkbox > input:checked + .armstrong-checkmark::before {

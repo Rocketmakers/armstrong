@@ -90,8 +90,13 @@ storiesOf("Form", module)
         <CalendarInput {...bind.calendarInput("inputFour")}/>
         <CalendarInput label="hello world" {...bind.calendarInput("inputFour")}/>
         <br/>
+        <div style={{ width: '200px'}}>
         <CheckboxInput {...bind.checkbox("inputThree")} label="hello" labelContent="hello world"/>
         <CheckboxInput {...bind.checkbox("inputThree")} labelContent="hello world"/>
+        <CheckboxInput {...bind.checkbox("inputThree")} labelContent="hello world it is me the checkbox. I am a very long label that will hopefully wrap lol"/>
+        
+        <CheckboxInput {...bind.checkbox("inputThree")} labelContent="hello world"/>
+        </div>
         <br/>
         <CodeInput label="hello world" {...bind.codeInput("inputFive")} />
         <CodeInput {...bind.codeInput("inputFive")} />
