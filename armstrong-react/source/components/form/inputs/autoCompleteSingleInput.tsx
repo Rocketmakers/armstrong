@@ -211,56 +211,38 @@ export const AutoCompleteSingleInput: React.FunctionComponent<IAutoCompleteProps
     >
       <Row>
         <Col className="drop-down-controls">
+          <input
+            type="text"
+            ref={input}
+            {...DataValidationMessage.spread(validationMessage)}
+            value={open ? filter : (value ? value.name : '')}
+            onKeyUp={e => checkKey(e)}
+            onChange={e =>
+              checkToFilter(getEventTargetAs<HTMLInputElement>(e).value)
+            }
+            placeholder={placeholder}
+          />
+          {value && canClear && (
+            <div
+              className="clear-selected p-right-xsmall"
+              onClick={() => {
+                onValueChange(null);
+                onFilterChange("");
+                setOpen(false);
+              }}
+            >
+              <Icon icon={Icon.Icomoon.cross} />
+            </div>
+          )}
           {props.leftIcon &&
             getIconOrJsx(props.leftIcon, { className: "left-icon" })}
-          {!open && (
-            <Grid className="autocomplete-value-display">
-              <Row>
-                <Col>
-                  {utils.object.isNullOrUndefined(value) ? (
-                    <div className="placeholder">
-                      &nbsp;
-                      <div className="placeholder-value">{placeholder}</div>
-                    </div>
-                  ) : (
-                      <div className="selected-value-wrapper">
-                        {value && value.name}
-                      </div>
-                    )}
-                </Col>
-                {value && canClear && (
-                  <Col
-                    width="auto"
-                    className="clear-selected p-right-xsmall"
-                    onClick={() => {
-                      onValueChange(null);
-                      onFilterChange("");
-                      setOpen(false);
-                    }}
-                  >
-                    <Icon icon={Icon.Icomoon.cross} />
-                  </Col>
-                )}
-              </Row>
-            </Grid>
-          )}
           {open && (
             <div
               className={ClassHelpers.classNames(
                 "autocomplete-select-list-wrapper"
               )}
             >
-              <input
-                type="text"
-                ref={input}
-                {...DataValidationMessage.spread(validationMessage)}
-                value={filter}
-                onKeyUp={e => checkKey(e)}
-                onChange={e =>
-                  checkToFilter(getEventTargetAs<HTMLInputElement>(e).value)
-                }
-                placeholder={placeholder}
-              />
+
               {isSearching && (
                 <Icon
                   className="autocomplete-spinner fg-info"
@@ -270,8 +252,7 @@ export const AutoCompleteSingleInput: React.FunctionComponent<IAutoCompleteProps
               <div
                 ref={autocompleteSelectList}
                 data-id="autocomplete-select-list"
-                className={`autocomplete-select-list${
-                  showOnTop ? " on-top" : ""
+                className={`autocomplete-select-list${showOnTop ? " on-top" : ""
                   }`}
                 style={{
                   maxHeight: `${(visibleItems || 3) * itemHeight}px`,
@@ -284,8 +265,7 @@ export const AutoCompleteSingleInput: React.FunctionComponent<IAutoCompleteProps
                       data-index={i}
                       key={`dd-item-${i}`}
                       style={o.style}
-                      className={`dd-list-item${
-                        o.className ? ` ${o.className}` : ""
+                      className={`dd-list-item${o.className ? ` ${o.className}` : ""
                         }${i === selectedIndex ? " selected" : ""}`}
                       onClick={() => handleSelection(o)}
                     >
