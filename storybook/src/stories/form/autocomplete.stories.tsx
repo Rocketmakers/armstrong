@@ -1,6 +1,5 @@
 import * as React from "react";
 import {
-  useOptions,
   IAutoCompleteOption,
   AutoCompleteSingleInput,
   Icon
@@ -14,44 +13,51 @@ import "../../theme/theme.scss";
 storiesOf("Form/AutocompleteInput", module)
   .addParameters({
     options: {
-      showAddonPanel: true
+      showAddonPanel: false
     }
   })
   .add("Standard", () => {
-    const { options, filter, setFilter } = useOptions([
-      { id: 1, name: "1" },
-      { id: 2, name: "2" },
-      { id: 3, name: "3" }
-    ]);
     const [value, onValueChange] = React.useState<IAutoCompleteOption>(
       undefined
     );
+
+    const [filter, setFilter] = React.useState<string>();
+
+    const opts = [
+      { id: 1, name: "1" },
+      { id: 2, name: "2" },
+      { id: 3, name: "3" }
+    ];
     return (
       <AutoCompleteSingleInput
+      value={value}
+      onValueChange={onValueChange}
         leftIcon={Icon.Icomoon.search}
-        value={value}
-        onValueChange={onValueChange}
-        options={options}
+        options={opts}
         filter={filter}
-        onFilterChange={setFilter}
+        onFilterChange={f => setFilter(f)}
+        canClear={true}
       />
     );
   })
   .add("Multiple", () => {
-    const { options, filter, setFilter } = useOptions([
-      { id: 1, name: "1" },
-      { id: 2, name: "2" },
-      { id: 3, name: "3" }
-    ]);
     const [value, onValueChange] = React.useState<IAutoCompleteOption[]>(
       []
     );
+
+    const [filter, setFilter] = React.useState<string>();
+
+    const opts = [
+      { id: 1, name: "1" },
+      { id: 2, name: "2" },
+      { id: 3, name: "3" }
+    ];
     return (
       <AutoCompleteMultiInput
         leftIcon={Icon.Icomoon.search}
         value={value}
         onValueChange={onValueChange}
-        options={options}
+        options={opts}
         filter={filter}
         onFilterChange={setFilter}
       />

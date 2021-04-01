@@ -92,6 +92,7 @@
     i {
       font-size: 9pt;
       margin-left: $spacing-xsmall;
+      position: static;
     }
   }
 
@@ -189,12 +190,12 @@
     right: 1rem;
     top: 0;
     height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
     i {
-      pointer-events: none;
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
+      position: static
     }
   }
 
