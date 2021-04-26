@@ -1,5 +1,4 @@
 import * as React from "react";
-import { utils } from "../../utilities/utils";
 import { Dialog, IDialogLayerPropsCore } from "./dialog";
 
 const DialogProviderContext = React.createContext<IDialogStackRef>(undefined)
