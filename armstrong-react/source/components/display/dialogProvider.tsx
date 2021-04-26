@@ -49,27 +49,27 @@ interface IDialogStackRef {
 function DialogStackRef(props: {}, ref: React.Ref<IDialogStackRef>) {
   const [dialogContent, setDialogContent] = React.useState<IDialogContent[]>([])
 
-  const closeDialog = React.useCallback(() => {
-    setDialogContent([...utils.array.first(dialogContent, dialogContent.length - 1)])
+  const setPreviousDialogContentState = React.useCallback((previousDialogContentState: IDialogContent[]) => {
+    setDialogContent(previousDialogContentState);
   }, [dialogContent, setDialogContent])
 
   React.useImperativeHandle(ref, () => ({
     useDialogPromise<TResult, TArg>(Body: React.FC<IDialogProviderProps<TResult, TArg>>, argument: TArg, settings?: IDialogSettings) {
-      return new Promise<TResult>(async resolve => {
+      return new Promise(async (resolve: ((value?: TResult) => void)) => {
         const choose = (d?: TResult) => {
-          closeDialog()
+          setPreviousDialogContentState(dialogContent)
           resolve(d)
         }
 
         const close = () => {
-          closeDialog()
+          setPreviousDialogContentState(dialogContent)
           resolve()
         }
 
         setDialogContent([...dialogContent, { body: <Body argument={argument} close={close} choose={choose} />, close, ...(settings || {}) }])
       })
     },
-  }), [dialogContent, closeDialog, setDialogContent])
+  }), [dialogContent, setPreviousDialogContentState, setDialogContent])
 
   return (
     <>
