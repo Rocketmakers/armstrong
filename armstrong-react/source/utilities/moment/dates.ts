@@ -1,6 +1,6 @@
 import { DayOfWeek, IDateParts, IDatePartUtils, IDateUtils, IDayUtils, ILocaleUtils, IMonthUtils, IMonthValue, IYearUtils, UnitOfDate } from "../definitions";
 import { utils } from "../utils";
-import { parse, startOfDay, isValid, format, getMonth, setMonth, getDate, getDaysInMonth, getYear, startOfMonth, startOfYear, isBefore, startOfHour, startOfMinute, startOfSecond, getDay, add, addDays, addMonths, addYears, subDays, subMonths, subYears, isAfter } from 'date-fns';
+import { parse, startOfDay, isValid, format, getMonth, setMonth, getDate, getDaysInMonth, getYear, startOfMonth, startOfYear, isBefore, addDays, addMonths, addYears, subDays, subMonths, subYears, isAfter } from 'date-fns';
 import { enGB } from 'date-fns/locale';
 
 namespace DateFormats {
@@ -217,9 +217,6 @@ export class MomentDateUtils implements IDateUtils {
   }
 
   fallsWithinRange(date: Date, minDate: Date, maxDate: Date) {
-    const start = this.startOf(date, "day");
-    const min = this.startOf(minDate, "day");
-    const max = this.startOf(maxDate, "day");
 
     if (minDate && isValid(minDate) && this.isBefore(date, minDate, "day")) {
       return false;
