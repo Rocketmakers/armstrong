@@ -1,5 +1,5 @@
 import * as React from "react";
-import _ = require('underscore');
+import * as _ from "lodash";
 
 export type ITooltipPosition = "left" | "right" | "top" | "bottom" | "fixed" | "hidden"
 

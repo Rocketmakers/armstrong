@@ -11,7 +11,8 @@ function getFetcher(totalRecords: number, pageSize: number) {
     if (nextPageToken > maxPage) {
       nextPageToken = undefined
     }
-    return { data: utils.array.getPage(results, page, pageSize), nextPageToken }
+    const result = { data: utils.array.getPage(results, page, pageSize), nextPageToken };
+    return result;
   }
 }
 
@@ -27,7 +28,7 @@ describe("useInfinitePaging", () => {
     assert(result.current.fetchError === undefined, "Should indicate no fetch error on first render")
     assert(!result.current.hasFinished, "Should indicate not finished on first render")
 
-    await waitForNextUpdate()
+    await waitForNextUpdate();
 
     assert(result.current.items.length === pageSize, "Should have an items array on first update")
     assert(!result.current.isFetching, "Should indicate not isFetching on first update")

@@ -1,9 +1,8 @@
 // TODO: Butter
-
-import * as moment from "moment";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 import { ClassHelpers, Icon, IconOrJsx } from "../../";
+import { getUnixTime, fromUnixTime, format } from 'date-fns'
 import { getIconOrJsx } from "./icon";
 
 export type DispatchToast = (...toast: IToastNotification[]) => void;
@@ -219,7 +218,7 @@ export const useToast = (): IUseToastReturn => {
   const { dismiss, dismissAll, toasts, toastsHistory, clearToastHistory } = context;
 
   const dispatch = (...newToasts: IToastNotification[]) =>
-    context.dispatch(...newToasts.map(toast => ({ timestamp: +moment(), ...toast })));
+    context.dispatch(...newToasts.map(toast => ({ timestamp: getUnixTime(new Date()), ...toast })));
 
   return {
     dispatch,
@@ -310,7 +309,7 @@ const ToastDate: React.FC<{
   timestamp: number;
   settings: IGlobalToastSettings;
 }> = ({ timestamp, settings }) =>
-  settings.renderTimestamp ? <p className="toast-timestamp">{moment.unix(timestamp / 1000).format(settings.timestampFormat)}</p> : null;
+  settings.renderTimestamp ? <p className="toast-timestamp">{format(fromUnixTime(timestamp / 1000),settings.timestampFormat)}</p> : null;
 
 export const Toast: React.FC<IToastProps> = ({
   title,

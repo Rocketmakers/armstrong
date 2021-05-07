@@ -1,5 +1,5 @@
 import * as React from "react";
-import * as _ from "underscore";
+import * as _ from "lodash";
 import { utils } from "../../utilities/utils";
 
 export const GO_LEFT_PAGE_INDEX = -1;

@@ -1,6 +1,6 @@
 import * as React from "react";
 import { calendarUtils } from "../utilities/calendarUtils";
-import { DayOfWeek, IDateType, IMonthValue } from "../utilities/definitions";
+import { DayOfWeek, IMonthValue } from "../utilities/definitions";
 
 export interface IUseCalendarSettings {
   /**
@@ -40,6 +40,9 @@ export interface IUseCalendarSettings {
 
   /** Callback when date changes */
   onDateChanged?: (date: string) => void
+
+  /** Sets the locale */
+  locale?: Locale;
 }
 
 export interface IDay {
@@ -101,125 +104,129 @@ export interface IUseCalendar {
 
 interface ICalendarState {
   month: IMonth
-  seed: IDateType
-  previousSeed: IDateType
-  nextSeed: IDateType
+  seed: Date
+  previousSeed: Date
+  nextSeed: Date
 }
 
 export function useCalendar(settings: IUseCalendarSettings): IUseCalendar {
-  const format = React.useMemo(() => settings.format || calendarUtils.date.formats.wireDate, [settings.format])
+  const stringFormat = React.useMemo(() => settings.format || calendarUtils.date.formats.wireDate, [settings.format])
   const startDay = React.useMemo(() => settings.beginOnDay || "Sun", [settings.beginOnDay])
   const displayFormat = React.useMemo(() => settings.displayFormat || calendarUtils.date.formats.wireDate, [settings.displayFormat])
-  const seedDate = React.useMemo(() => calendarUtils.date.parseOrToday(settings.selectedDate || settings.seedDate, format), []);
-  const minDate = React.useMemo(() => calendarUtils.date.parseOrUndefined(settings.minDate, format), [settings.minDate]);
-  const maxDate = React.useMemo(() => calendarUtils.date.parseOrUndefined(settings.maxDate, format), [settings.maxDate]);
-  const [date, setCurrentDate] = React.useState(settings.selectedDate ? calendarUtils.date.formatOrEmpty(settings.selectedDate, format) : "")
+  const seedDate = React.useMemo(() => calendarUtils.date.parseOrToday(settings.selectedDate || settings.seedDate, stringFormat), []);
+  const minDate = React.useMemo(() => calendarUtils.date.parseOrUndefined(settings.minDate, stringFormat), [settings.minDate]);
+  const maxDate = React.useMemo(() => calendarUtils.date.parseOrUndefined(settings.maxDate, stringFormat), [settings.maxDate]);
+  const [date, setCurrentDate] = React.useState(settings.selectedDate ? calendarUtils.date.formatOrEmpty(settings.selectedDate, stringFormat, settings.locale) : "")
 
   const isSelectedDateValid = React.useMemo(() => {
-    const dateType = calendarUtils.date.parseOrUndefined(date, format)
+    const dateType = calendarUtils.date.parseOrUndefined(date, stringFormat)
     if (!dateType) {
       return false
     }
 
     return calendarUtils.date.fallsWithinRange(dateType, minDate, maxDate)
-  }, [date, minDate, maxDate, format]);
+  }, [date, minDate, maxDate, stringFormat]);
 
   const selectedDateDisplay = React.useMemo(() => {
-    const dateType = calendarUtils.date.parseOrUndefined(date, format)
-    if (!dateType) {
+    const dt = calendarUtils.date.parseOrUndefined(date, stringFormat)
+    if (!dt) {
       return ""
     }
-
-    return calendarUtils.date.format(dateType, displayFormat)
+    return calendarUtils.date.format(dt, displayFormat, settings.locale)
   }, [date, isSelectedDateValid]);
 
-  const today = calendarUtils.date.format(calendarUtils.date.today(), format)
+  const today = calendarUtils.date.format(calendarUtils.date.today(), stringFormat, settings.locale)
 
-  const [state, setState] = React.useState<ICalendarState>(buildWeeks(seedDate, format, startDay, displayFormat, today, date, minDate, maxDate))
+  const [state, setState] = React.useState<ICalendarState>(buildWeeks(seedDate, stringFormat, startDay, displayFormat, today, date, minDate, maxDate, settings.locale))
 
   const nextMonth = React.useCallback(() => {
     if (!calendarUtils.date.fallsWithinRange(state.nextSeed, undefined, maxDate)) {
       return
     }
-    setState(buildWeeks(state.nextSeed, format, startDay, displayFormat, today, date, minDate, maxDate))
-  }, [state.nextSeed, format, startDay, displayFormat, today, date, maxDate])
+    setState(buildWeeks(state.nextSeed, stringFormat, startDay, displayFormat, today, date, minDate, maxDate, settings.locale))
+  }, [state.nextSeed, stringFormat, startDay, displayFormat, today, date, maxDate])
 
   const previousMonth = React.useCallback(() => {
     if (minDate && !calendarUtils.date.fallsWithinRange(state.previousSeed, calendarUtils.date.startOf(minDate, "month"), undefined)) {
       return
     }
-    setState(buildWeeks(state.previousSeed, format, startDay, displayFormat, today, date, minDate, maxDate))
-  }, [state.previousSeed, format, startDay, displayFormat, today, date, minDate])
+    setState(buildWeeks(state.previousSeed, stringFormat, startDay, displayFormat, today, date, minDate, maxDate, settings.locale))
+  }, [state.previousSeed, stringFormat, startDay, displayFormat, today, date, minDate])
 
   const nextYear = React.useCallback(() => {
     const nextSeed = calendarUtils.date.add(state.seed, 1, "year")
     if (!calendarUtils.date.fallsWithinRange(nextSeed, undefined, maxDate)) {
       return
     }
-    setState(buildWeeks(nextSeed, format, startDay, displayFormat, today, date, minDate, maxDate))
-  }, [state.seed, format, startDay, displayFormat, today, date, maxDate])
+    setState(buildWeeks(nextSeed, stringFormat, startDay, displayFormat, today, date, minDate, maxDate, settings.locale))
+  }, [state.seed, stringFormat, startDay, displayFormat, today, date, maxDate])
 
   const previousYear = React.useCallback(() => {
-    const previousSeed = calendarUtils.date.add(state.seed, -1, "year")
+    const previousSeed = calendarUtils.date.subtract(state.seed, 1, "year")
     if (!calendarUtils.date.fallsWithinRange(previousSeed, minDate, undefined)) {
       return
     }
-    setState(buildWeeks(previousSeed, format, startDay, displayFormat, today, date, minDate, maxDate))
-  }, [state.seed, format, startDay, displayFormat, today, date, minDate])
+    setState(buildWeeks(previousSeed, stringFormat, startDay, displayFormat, today, date, minDate, maxDate, settings.locale))
+  }, [state.seed, stringFormat, startDay, displayFormat, today, date, minDate])
 
   const gotoDate = React.useCallback((newDate: string) => {
-    const dateType = calendarUtils.date.parseOrToday(newDate, format)
+    const dateType = calendarUtils.date.parseOrToday(newDate, stringFormat)
     if (!calendarUtils.date.fallsWithinRange(dateType, minDate, maxDate)) {
       return
     }
 
-    setState(buildWeeks(dateType, format, startDay, displayFormat, today, date, minDate, maxDate))
-  }, [format, startDay, displayFormat, today, date, minDate, maxDate])
+    setState(buildWeeks(dateType, stringFormat, startDay, displayFormat, today, date, minDate, maxDate, settings.locale))
+  }, [stringFormat, startDay, displayFormat, today, date, minDate, maxDate])
 
   const setDate = React.useCallback((newDate: string) => {
-    newDate = calendarUtils.date.formatOrEmpty(newDate, format)
+    newDate = calendarUtils.date.formatOrEmpty(newDate, stringFormat)
     if (!newDate) {
       return
     }
-    const dateType = calendarUtils.date.parseOrToday(newDate, format)
+    const dateType = calendarUtils.date.parseOrToday(newDate, stringFormat)
     if (!calendarUtils.date.fallsWithinRange(dateType, minDate, maxDate)) {
       return
     }
 
     setCurrentDate(newDate)
-    setState(buildWeeks(dateType, format, startDay, displayFormat, today, newDate, minDate, maxDate))
+    setState(buildWeeks(dateType, stringFormat, startDay, displayFormat, today, newDate, minDate, maxDate, settings.locale))
     if (settings.onDateChanged) {
       settings.onDateChanged(newDate)
     }
-  }, [format, startDay, displayFormat, today, minDate, maxDate, settings.onDateChanged, setCurrentDate])
+  }, [stringFormat, startDay, displayFormat, today, minDate, maxDate, settings.onDateChanged, setCurrentDate])
 
   const clearSelectedDate = React.useCallback(() => {
     const newDate = ""
     setCurrentDate(newDate)
-    setState(buildWeeks(state.seed, format, startDay, displayFormat, today, newDate, minDate, maxDate))
+    setState(buildWeeks(state.seed, stringFormat, startDay, displayFormat, today, newDate, minDate, maxDate, settings.locale))
     if (settings.onDateChanged) {
       settings.onDateChanged(newDate)
     }
-  }, [settings.onDateChanged, setCurrentDate, state.seed, format, startDay, displayFormat, today, minDate, maxDate])
+  }, [settings.onDateChanged, setCurrentDate, state.seed, stringFormat, startDay, displayFormat, today, minDate, maxDate])
 
   return { month: state.month, nextMonth, nextYear, previousMonth, previousYear, selectedDateDisplay, selectedDate: date, selectDate: setDate, gotoDate, isSelectedDateValid, clearSelectedDate }
 }
 
-function buildWeeks(seed: IDateType, format: string, startDay: DayOfWeek, displayFormat: string, today: string, selectedDate: string, minDate: IDateType, maxDate: IDateType): ICalendarState {
+function buildWeeks(seed: Date, stringFormat: string, startDay: DayOfWeek, displayFormat: string, today: string, selectedDate: string, minDate: Date, maxDate: Date, locale?: Locale): ICalendarState {
   let start = calendarUtils.date.startOf(seed, "month");
   const monthValue = calendarUtils.month.getMonthValue(start)
   const year = calendarUtils.date.get(start, "year")
   const previousSeed = calendarUtils.date.add(start, -1, "month")
   const nextSeed = calendarUtils.date.add(start, 1, "month")
   while (!calendarUtils.date.isDayOfWeek(start, startDay)) {
-    start = calendarUtils.date.add(start, -1, "day");
+    start = calendarUtils.date.subtract(start, 1, "day");
   }
   const weeks: IWeek[] = [];
   for (let weekNo = 0; weekNo < 6; weekNo++) {
     const week: IWeek = { days: [] };
     weeks.push(week);
     for (let dayNo = 0; dayNo < 7; dayNo++) {
-      const day: IDay = { date: calendarUtils.date.format(start, format), dayOfWeek: calendarUtils.date.getDayOfWeek(start), display: calendarUtils.date.format(start, displayFormat), dayNumber: calendarUtils.date.get(start, "day") }
+      const day: IDay = { 
+        date: calendarUtils.date.format(start, stringFormat, locale), 
+        dayOfWeek: calendarUtils.date.getDayOfWeek(start), 
+        display: calendarUtils.date.format(start, displayFormat, locale), 
+        dayNumber: calendarUtils.date.get(start, "day") 
+      }
       if (day.date === today) {
         day.isToday = true
       }
