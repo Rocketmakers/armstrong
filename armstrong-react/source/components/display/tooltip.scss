@@ -3,9 +3,36 @@
   width: max-content;
 
   .tooltip-children:hover {
-    + .tooltip:not([data-position="hidden"]) {
+    ~ .bridge:not([data-position="hidden"]) {
+      display: block;
+    }
+
+    ~ .tooltip:not([data-position="hidden"]) {
       opacity: 1;
+      display: block;
       pointer-events: all;
+    }
+  }
+
+  .bridge {
+    display: none;
+    position: absolute;
+    z-index: 1;
+
+    &:hover:not([data-position="hidden"]) {
+      display: block;
+
+      + .tooltip {
+        opacity: 1;
+        display: block;
+        pointer-events: all;
+
+        &:hover {
+          opacity: 1;
+          display: block;
+          pointer-events: all;
+        }
+      }
     }
   }
 
@@ -19,15 +46,15 @@
     padding: $tooltip-spacing;
     border-radius: $spacing-xsmall;
     pointer-events: none;
-
     width: max-content;
     max-width: 200px;
-
     font-weight: 600;
-
     transition: opacity 0.3s;
-
     margin-bottom: $spacing-xsmall;
+
+    &[data-display-none="true"] {
+      display: none;
+    }
 
     &[data-arrow="true"] {
       &:after {
@@ -43,6 +70,7 @@
 
     &[data-retain="true"]:not([data-position="hidden"]):hover {
       opacity: 1;
+      display: block;
       pointer-events: all;
     }
 
