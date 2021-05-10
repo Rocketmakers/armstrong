@@ -15,13 +15,11 @@ export const GlobalContextProvider: React.FunctionComponent = props => {
   const [isMobileSize, setisMobileSize] = React.useState<boolean>(false);
 
   const handleSizeChange = React.useCallback((x: MediaQueryList) => {
-    console.log('size change')
     setisMobileSize(!x.matches);
   }, []);
 
   // Watch for mobile
   React.useEffect(() => {
-    console.log('hookin up')
     const x = window.matchMedia("(min-width: 600px)");
     handleSizeChange(x);
     x.addListener(() => handleSizeChange(x));

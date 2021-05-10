@@ -245,7 +245,7 @@ export const CalendarInput: React.FC<ICalendarInputProps> = props => {
 };
 
 CalendarInput.defaultProps = {
-  displayFormat: "L",
+  displayFormat: "P",
   icon: getIconProps("Icomoon", "calendar")
 };
 

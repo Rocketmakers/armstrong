@@ -87,8 +87,8 @@ storiesOf("Form", module)
         <DateInput  {...bind.text("inputFour")}/>
         <br/>
         <DateInput label="hello world" {...bind.dateInput("inputFour")}/>
-        <CalendarInput {...bind.calendarInput("inputFour")}/>
-        <CalendarInput label="hello world" {...bind.calendarInput("inputFour")}/>
+        <CalendarInput {...bind.calendarInput("inputFour")} max="2021-05-10"/>
+        {/* <CalendarInput label="hello world" {...bind.calendarInput("inputFour")}/> */}
         <br/>
         <div style={{ width: '200px'}}>
         <CheckboxInput {...bind.checkbox("inputThree")} label="hello" labelContent="hello world"/>

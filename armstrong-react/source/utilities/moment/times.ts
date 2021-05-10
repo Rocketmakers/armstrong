@@ -1,14 +1,14 @@
-import * as moment from "moment";
 import { ITimeParts, ITimeUtils } from "../definitions";
 import { utils } from "../utils";
+import { parse, isValid, getHours, getMinutes } from 'date-fns';
 
 export class MomentTimeUtils implements ITimeUtils {
   getParts(time: string): ITimeParts {
-    const d = moment(time, "HH:mm", false);
-    if (!d.isValid()) {
+    const d = parse(time, "HH:mm", new Date());
+    if (!isValid(d)) {
       return
     }
-    return { hours: d.hour(), minutes: d.minute() };
+    return { hours: getHours(d), minutes: getMinutes(d) };
   }
 
   getMinutes(minuteStep = 1) {

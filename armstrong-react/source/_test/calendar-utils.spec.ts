@@ -1,19 +1,19 @@
 import assert = require("assert");
-import * as moment from "moment";
 import { calendarUtils } from "../utilities/calendarUtils";
 import { utils } from "../utilities/utils";
+import { getYear, isValid } from 'date-fns';
 
 describe("calendarUtils.year", () => {
   it("Range", () => {
     const years = calendarUtils.year.generate({ range: 2 })
-    const currentYear = moment().year()
+    const currentYear = getYear(new Date());
     assert(years.length === 5, "Should have 5 years")
     assert(years[0] === currentYear - 2, "Should have min year of currentYear - 2")
     assert(years[4] === currentYear + 2, "Should have min year of currentYear + 2")
   })
 
   it("Min", () => {
-    const currentYear = moment().year()
+    const currentYear = getYear(new Date());
     const years = calendarUtils.year.generate({ range: 2, minDate: `${currentYear}-01-01` })
     assert(years.length === 3, "Should have 3 years")
     assert(years[0] === currentYear, "Should have min year of currentYear")
@@ -21,14 +21,14 @@ describe("calendarUtils.year", () => {
   })
 
   it("Max", () => {
-    const currentYear = moment().year()
+    const currentYear = getYear(new Date());
     const years = calendarUtils.year.generate({ range: 2, maxDate: `${currentYear}-01-01` })
     assert(years.length === 3, "Should have 3 years")
     assert(years[0] === currentYear - 2, "Should have min year of currentYear - 2")
     assert(years[2] === currentYear, "Should have min year of currentYear")
   })
   it("Min + Max", () => {
-    const currentYear = moment().year()
+    const currentYear = getYear(new Date());
     const years = calendarUtils.year.generate({ range: 2, minDate: `${currentYear}-01-01`, maxDate: `${currentYear}-12-31` })
     assert(years.length === 1, "Should have 1 years")
     assert(years[0] === currentYear, "Should have year of currentYear")
@@ -58,13 +58,13 @@ describe("calendarUtils.month", () => {
   })
 
   it("getMonthsInYear", () => {
-    const currentYear = moment().year()
+    const currentYear = getYear(new Date());
     const monthValues = calendarUtils.month.getMonthsInYear(currentYear, undefined, undefined)
     assert(monthValues.length === 12, "Should have 12 values")
   })
 
   it("getMonthsInYear - Min", () => {
-    const currentYear = moment().year()
+    const currentYear = getYear(new Date());
     const monthValues = calendarUtils.month.getMonthsInYear(currentYear, `${currentYear}-03-01`, undefined)
     assert(monthValues.length === 10, "Should have 10 values")
     assert(monthValues[0].number === 2, "Should have first month of 2")
@@ -72,7 +72,7 @@ describe("calendarUtils.month", () => {
   })
 
   it("getMonthsInYear - Max", () => {
-    const currentYear = moment().year()
+    const currentYear = getYear(new Date());
     const monthValues = calendarUtils.month.getMonthsInYear(currentYear, undefined, `${currentYear}-03-01`)
     assert(monthValues.length === 3, "Should have 3 values")
     assert(monthValues[0].number === 0, "Should have first month of 0")
@@ -128,13 +128,13 @@ describe("calendarUtils.day", () => {
 describe("calendarUtils.date", () => {
   it("today", () => {
     const today = calendarUtils.date.today()
-    assert(today.isValid(), "Should get today as valid value")
+    assert(isValid(today), "Should get today as valid value")
   })
 
   it("parse/format", () => {
     const parseDate = "2020-03-19"
     const parsed = calendarUtils.date.parse(parseDate, calendarUtils.date.formats.wireDate)
-    assert(parsed.isValid(), "Should get a valid value")
+    assert(isValid(parsed), "Should get a valid value")
     const format = calendarUtils.date.format(parsed, calendarUtils.date.formats.wireDate)
     assert(format === parseDate, "Should get back same value")
   })
@@ -142,7 +142,7 @@ describe("calendarUtils.date", () => {
   it("parse/format - invalid", () => {
     const parseDate = "202x-03-19"
     const parsed = calendarUtils.date.parse(parseDate, calendarUtils.date.formats.wireDate)
-    assert(!parsed.isValid(), "Should get an invalid value")
+    assert(!isValid(parsed), "Should get an invalid value")
     const format = calendarUtils.date.format(parsed, calendarUtils.date.formats.wireDate)
     assert(format === "", "Should get back empty value")
   })
@@ -150,7 +150,7 @@ describe("calendarUtils.date", () => {
   it("parseOrUndefined", () => {
     const parseDate = "2020-03-19"
     const parsed = calendarUtils.date.parseOrUndefined(parseDate, calendarUtils.date.formats.wireDate)
-    assert(parsed.isValid(), "Should get back valid value")
+    assert(isValid(parsed), "Should get back valid value")
   })
 
   it("parseOrUndefined - invalid", () => {
@@ -162,7 +162,7 @@ describe("calendarUtils.date", () => {
   it("parseOrToday", () => {
     const parseDate = "2020-03-19"
     const parsed = calendarUtils.date.parseOrToday(parseDate, calendarUtils.date.formats.wireDate)
-    assert(parsed.isValid(), "Should get back valid value")
+    assert(isValid(parsed), "Should get back valid value")
     const format = calendarUtils.date.format(parsed, calendarUtils.date.formats.wireDate)
     assert(format === parseDate, "Should get back same value")
   })
@@ -170,7 +170,7 @@ describe("calendarUtils.date", () => {
   it("parseOrToday - invalid", () => {
     const parseDate = "202x-03-19"
     const parsed = calendarUtils.date.parseOrToday(parseDate, calendarUtils.date.formats.wireDate)
-    assert(parsed.isValid(), "Should get back valid value")
+    assert(isValid(parsed), "Should get back valid value")
     const format = calendarUtils.date.format(parsed, calendarUtils.date.formats.wireDate)
     const today = calendarUtils.date.format(calendarUtils.date.today(), calendarUtils.date.formats.wireDate)
     assert(format === today, "Should get back today")

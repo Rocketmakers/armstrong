@@ -1,7 +1,3 @@
-/** An Opaque Date Time type */
-export interface IDateType {
-  isValid(): boolean;
-}
 
 /** The Day Of Week */
 export type DayOfWeek = "Mon" | "Tue" | "Wed" | "Thu" | "Fri" | "Sat" | "Sun";
@@ -73,7 +69,7 @@ export interface IMonthUtils {
   /** Get months in year */
   getMonthValues(): IMonthValue[];
   /** Get month value for date type */
-  getMonthValue(dateType: IDateType): IMonthValue;
+  getMonthValue(date: Date): IMonthValue;
 }
 
 export interface IDayUtils {
@@ -89,56 +85,56 @@ export interface IDateUtils {
   /** Describes the basic formats */
   readonly formats: { readonly wireDate: string };
   /** Date at start of today */
-  today(): IDateType;
+  today(): Date;
   /** Date Time at start of unit */
-  startOf(dateType: IDateType, unitOfTime: UnitOfDate): IDateType;
+  startOf(date: Date, unitOfTime: UnitOfDate): Date;
   /** Is dateType before minDate (using unit - default day) */
   isBefore(
-    dateType: IDateType,
-    minDate: IDateType,
+    date: Date,
+    minDate: Date,
     unitOfTime?: UnitOfDate,
   ): boolean;
   /** Is dateType before minDate (using unit - default day) */
   isAfter(
-    dateType: IDateType,
-    minDate: IDateType,
+    date: Date,
+    minDate: Date,
     unitOfTime?: UnitOfDate,
   ): boolean;
   /** Is dateType within range */
   fallsWithinRange(
-    dateType: IDateType,
-    minDate: IDateType,
-    maxDate: IDateType,
+    date: Date,
+    minDate: Date,
+    maxDate: Date,
   ): boolean;
   /** Parse the date string into the provided format */
-  parse(date: string, dateFormat: string): IDateType;
+  parse(date: string, dateFormat: string, locale?: Locale): Date;
   /** Parse the date string into the provided format - If invalid return today */
-  parseOrToday(date: string, formatString: string): IDateType;
+  parseOrToday(date: string, formatString: string): Date;
   /** Parse the date string into the provided format - If invalid return undefined */
-  parseOrUndefined(date: string, formatString: string): IDateType | undefined;
+  parseOrUndefined(date: string, formatString: string): Date | undefined;
   /** Get a unit of date */
-  get(dateType: IDateType, unitOfTime: UnitOfDate): number;
+  get(date: Date, unitOfTime: UnitOfDate): number;
   /** Format the dateType into a string */
-  format(dateType: IDateType, formatString: string): string;
+  format(date: Date, formatString: string, locale?: Locale): string;
   /** Format the date string into a string, or empty string if date invalid */
-  formatOrEmpty(date: string, formatString: string): string;
+  formatOrEmpty(date: string, formatString: string, locale?: Locale): string;
   /** Add a unit of time to the date */
   add(
-    dateType: IDateType,
+    date: Date,
     increment: number,
     unitOfTime: UnitOfDate,
-  ): IDateType;
+  ): Date;
   /** Subtract a unit of time to the date */
   subtract(
-    dateType: IDateType,
+    date: Date,
     increment: number,
     unitOfTime: UnitOfDate,
-  ): IDateType;
+  ): Date;
 
   /** Get the day of week of the dateType */
-  getDayOfWeek(dateType: IDateType): DayOfWeek;
+  getDayOfWeek(dateType: Date): DayOfWeek;
   /** Is the dateType a dayOfWeek */
-  isDayOfWeek(dateType: IDateType, dayOfWeek: DayOfWeek): boolean;
+  isDayOfWeek(dateType: Date, dayOfWeek: DayOfWeek): boolean;
 }
 
 export interface IDatePartUtils {
@@ -147,10 +143,10 @@ export interface IDatePartUtils {
   /** Parse the date to date parts */
   parse(
     date: string,
-    settings?: { includeDate?: boolean; dateFormat?: string },
+    settings?: { includeDate?: boolean; dateFormat?: string, locale?: Locale },
   ): IDateParts & { date?: string };
   /** Format the date parts into the specified format */
-  format(dateParts: Partial<IDateParts>, dateFormat?: string): string;
+  format(dateParts: Partial<IDateParts>, dateFormat?: string, locale?: Locale): string;
 }
 
 export interface IObjectUtils {

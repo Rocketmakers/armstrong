@@ -1,7 +1,7 @@
 import assert = require("assert");
-import * as moment from "moment";
 import { act, renderHook } from "react-hooks-testing-library"
 import { IUseCalendar, useCalendar } from "../hooks/useCalendar";
+import { getMonth, getYear } from 'date-fns';
 
 function assertResult(result: IUseCalendar, expected: { month: number, year: number, date: string, dateInvalid?: boolean }) {
   assert.equal(result.month.number, expected.month)
@@ -14,27 +14,11 @@ function assertResult(result: IUseCalendar, expected: { month: number, year: num
   }
 }
 
-// function printMonth(month: IMonth) {
-//   // tslint:disable-next-line: no-console
-//   console.log(`${month.name} - ${month.year} (${month.shortName} : ${month.number})`);
-//   for (let week = 0; week < 6; week++) {
-//     let weekDisplay = ""
-//     for (let day = 0; day < 7; day++) {
-//       const d = month.weeks[week].days[day]
-//       weekDisplay += (d.outOfRange ? "x" : "") + (d.isCurrentDate ? "+" : "") + (!d.isCurrentMonth ? "(" + d.dayNumber + ")" : d.dayNumber) + (d.isToday ? "*" : "") + "|"
-//     }
-
-//     // tslint:disable-next-line: no-console
-//     console.log(weekDisplay);
-//   }
-//   // tslint:disable-next-line: no-console
-//   console.log()
-// }
-
 const noDateExpected = { date: "", dateInvalid: true }
 
 function currentYearMonth() {
-  return { month: moment().month(), year: moment().year() }
+  const date = new Date();
+  return { month: getMonth(date), year: getYear(date) }
 }
 
 describe("useCalendar", () => {
@@ -84,30 +68,30 @@ describe("useCalendar", () => {
   })
 
   it("Alternative format Settings", () => {
-    const { result } = renderHook(() => useCalendar({ selectedDate: "31-03-19", format: "DD-MM-YY" }))
+    const { result } = renderHook(() => useCalendar({ selectedDate: "31-03-19", format: "dd-MM-yy" }))
     assertResult(result.current, { month: 2, year: 2019, date: "31-03-19" })
   })
 
   it("Alternative format Settings - Next Month", () => {
-    const { result } = renderHook(() => useCalendar({ selectedDate: "31-03-19", format: "DD-MM-YY" }))
+    const { result } = renderHook(() => useCalendar({ selectedDate: "31-03-19", format: "dd-MM-yy" }))
     act(() => result.current.nextMonth())
     assertResult(result.current, { month: 3, year: 2019, date: "31-03-19" })
   })
 
   it("Alternative format Settings - Previous Month", () => {
-    const { result } = renderHook(() => useCalendar({ selectedDate: "31-03-19", format: "DD-MM-YY" }))
+    const { result } = renderHook(() => useCalendar({ selectedDate: "31-03-19", format: "dd-MM-yy" }))
     act(() => result.current.previousMonth())
     assertResult(result.current, { month: 1, year: 2019, date: "31-03-19" })
   })
 
   it("Alternative format Settings - Goto Date", () => {
-    const { result } = renderHook(() => useCalendar({ selectedDate: "31-03-19", format: "DD-MM-YY" }))
+    const { result } = renderHook(() => useCalendar({ selectedDate: "31-03-19", format: "dd-MM-yy" }))
     act(() => result.current.gotoDate("07-11-19"))
     assertResult(result.current, { month: 10, year: 2019, date: "31-03-19" })
   })
 
   it("Alternative format Settings - Set Date", () => {
-    const { result } = renderHook(() => useCalendar({ selectedDate: "31-03-19", format: "DD-MM-YY" }))
+    const { result } = renderHook(() => useCalendar({ selectedDate: "31-03-19", format: "dd-MM-yy" }))
     act(() => result.current.selectDate("07-09-19"))
     assertResult(result.current, { month: 8, year: 2019, date: "07-09-19" })
   })

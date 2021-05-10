@@ -1,4 +1,4 @@
-import * as _ from "underscore";
+import * as _ from "lodash";
 import { IObjectUtils } from "../definitions";
 
 export class UnderscoreObjectUtils implements IObjectUtils {

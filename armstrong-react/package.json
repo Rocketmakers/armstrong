@@ -1,6 +1,6 @@
 {
   "name": "@rocketmakers/armstrong",
-  "version": "0.0.1-alpha.66",
+  "version": "0.0.1-alpha.67",
   "description": "Rocketmakers Armstrong library of React components",
   "main": "./dist/index.js",
   "style": "./dist/style.scss",
@@ -12,7 +12,7 @@
     "build": "npm run build-ts && npm run build-scss",
     "watch-scss": "node sass_copy.js",
     "watch-ts": "tsc -p source -d -w",
-    "watch": "parallelshell -v \"npm run watch-ts\" \"npm run watch-scss\"",
+    "watch": "concurrently \"npm run watch-ts\" \"npm run watch-scss\"",
     "lint": "tslint -c tslint.json 'source/**/*.ts{,x}'",
     "prepublishOnly": "npm run build"
   },
@@ -31,9 +31,9 @@
   "author": "developers@rocketmakers.com",
   "license": "MIT",
   "dependencies": {
-    "moment": "2.24.0",
-    "prop-types": "15.7.2",
-    "underscore": "1.10.2"
+    "date-fns": "^2.21.2",
+    "lodash": "^4.17.21",
+    "prop-types": "15.7.2"
   },
   "peerDependencies": {
     "@types/react": "^16.9.23",
@@ -45,8 +45,8 @@
     "@types/node": "13.13.2",
     "@types/react": "16.9.34",
     "@types/react-dom": "16.9.6",
-    "@types/underscore": "1.9.4",
     "chokidar": "3.3.1",
+    "concurrently": "^6.0.2",
     "import-resolve": "0.5.1",
     "mocha": "7.1.1",
     "parallelshell": "3.0.2",
