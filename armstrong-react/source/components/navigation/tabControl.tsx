@@ -69,7 +69,7 @@ export const TabControl = (props: ITabControlProps) => {
         {filteredChildren.map((c: React.ReactElement<ITabItemProps>, i: number) => (
           <button key={i} className={`tab-item-header${selectedIndex === i ? " selected" : ""}`} onClick={changeTab(i)}>
             {c.props.icon ? <Icon className="m-right-xsmall" icon={c.props.icon} /> : null}
-            {c.props.title}
+            {c.props.tabTitle || c.props.title}
           </button>
         ))}
       </div>
@@ -82,9 +82,11 @@ export const TabControl = (props: ITabControlProps) => {
 export interface ITabItemProps extends React.HTMLAttributes<HTMLDivElement> {
   /** (string (Icomoon)) An optional icon to show to the left of the title in the tab header */
   icon?: string;
+  /** (string) An optional title to show in the tab header, will fall back to use the native `title` attribute */
+  tabTitle?: string;
 }
 
 export const TabItem: React.FC<ITabItemProps> = props => {
-  const { className, children, ...attrs } = props
+  const { className, children, tabTitle, ...attrs } = props
   return <div {...attrs} className={`tab-content${className ? ` ${className}` : ""}`}>{children}</div>
 }
