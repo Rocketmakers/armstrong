@@ -22,7 +22,7 @@ export async function publish() {
   const currentVersion = await exec("node",
     [
       "-p",
-      "require('./package.json').version"
+      "require('./armstrong-react/package.json').version"
     ],
     false,
     { output: true })
