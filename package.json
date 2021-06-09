@@ -1,12 +1,11 @@
 {
   "name": "@rocketmakers/armstrong-monorepo",
-  "version": "0.2.0",
+  "version": "0.1.0",
   "description": "<p align=\"center\"> <img src=\"http://armstrongcss.org/assets/logolarge.svg\" width=\"256\" height=\"256\" /> </p>",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "release": "ts-node _deploy/publish.ts",
-    "version": "(cd armstrong-react && npm version prerelease --preid=alpha --git-tag-version=false) && git add .",
     "postinstall": "(cd armstrong-react && npm i) && (cd storybook && npm i) && (cd marketing && npm i)"
   },
   "repository": {
