@@ -68,13 +68,6 @@ export async function publish() {
         `--preid=${preId}`
       ], false, { cwd: 'armstrong-react', output: true });
 
-    await exec("npm",
-      [
-        "version",
-        releaseType,
-        `--preid=${preId}`,
-      ], false)
-
     const pushConfirmation = await prompts([
       {
         type: 'confirm',
