@@ -69,18 +69,21 @@ export async function publish() {
         `--git-tag-version=false`
       ], false, { cwd: 'armstrong-react', output: true });
 
-    await exec("git",
-    [
-      "tag",
-      `v${newVersion}`
-    ], false)
-
+      
     await exec("git",
     [
       "commit",
       "-a",
-      `-m='Release of version ${newVersion}'`
-    ], false)
+      '-m',
+      `Release of version ${newVersion}`
+    ], false);
+
+
+    await exec("git",
+    [
+      "tag",
+      `v${newVersion}`
+    ], false);
 
     const pushConfirmation = await prompts([
       {
@@ -89,7 +92,7 @@ export async function publish() {
         message: `Everything looks good. Would you like to push everything for publish now?`,
         initial: 'y'
       }
-    ])
+    ]);
 
     if (pushConfirmation.confirm) {
       await exec("git",
