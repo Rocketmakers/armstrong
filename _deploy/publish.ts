@@ -66,7 +66,7 @@ export async function publish() {
         "version",
         releaseType,
         `--preid=${preId}`
-      ], false)
+      ], false, { cwd: 'armstrong-react', output: true })
 
     const pushConfirmation = await prompts([
       {
