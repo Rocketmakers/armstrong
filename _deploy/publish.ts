@@ -65,7 +65,8 @@ export async function publish() {
       [
         "version",
         releaseType,
-        `--preid=${preId}`
+        `--preid=${preId}`,
+        `git-tag-version=false`
       ], false, { cwd: 'armstrong-react', output: true });
 
     await exec("npm",
