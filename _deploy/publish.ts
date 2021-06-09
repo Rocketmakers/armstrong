@@ -8,16 +8,16 @@ export async function publish() {
   const branch = branchName();
   const preId = "alpha";
 
-  await exec("git",
-        [
-          "checkout",
-          "master"
-        ], false)
+  // await exec("git",
+  //       [
+  //         "checkout",
+  //         "master"
+  //       ], false)
 
-  await exec("git",
-        [
-          "pull"
-        ], false)
+  // await exec("git",
+  //       [
+  //         "pull"
+  //       ], false)
 
   const currentVersion = await exec("node",
     [
@@ -65,8 +65,22 @@ export async function publish() {
       [
         "version",
         releaseType,
-        `--preid=${preId}`
+        `--preid=${preId}`,
+        `--git-tag-version=false`
       ], false, { cwd: 'armstrong-react', output: true });
+
+    await exec("git",
+    [
+      "tag",
+      `v${newVersion}`
+    ], false)
+
+    await exec("git",
+    [
+      "commit",
+      "-a",
+      `-m='Release of version ${newVersion}'`
+    ], false)
 
     const pushConfirmation = await prompts([
       {
