@@ -83,7 +83,7 @@ textarea {
   .validation-message {
     display: block;
     color: $color-negative;
-    margin-top: $form-field-bottom-spacing / 2;
+    margin-top: math.div($form-field-bottom-spacing, 2);
     font-size: 0.8rem;
     position: relative;
 
@@ -92,7 +92,7 @@ textarea {
       &:after {
         position: absolute;
         // This calculates the center of the input above taking into account all margins and spacing
-        top: -($field-padding-vertical * 2) - ($form-field-bottom-spacing / 2) - (7.5 / 2);
+        top: -($field-padding-vertical * 2) - (math.div($form-field-bottom-spacing, 2)) - (math.div(7.5, 2));
         right: $field-padding-horizontal+1;
         content: '!';
         background-color: $color-negative;

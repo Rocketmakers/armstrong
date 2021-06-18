@@ -33,14 +33,14 @@ $switch-shadow: 0 0 8px rgba(black, 0.3) !default;
     >input {
         width: $switch-width;
         height: $switch-height;
-        border-radius: calc(#{$switch-height} / 2);
+        border-radius: calc(#{math.div($switch-height, 2)});
 
         &::after {
             width: $nubbin-size;
             height: $nubbin-size;
 
             left: $switch-padding;
-            top: calc(50% - #{$nubbin-size} / 2);
+            top: calc(50% - #{math.div($nubbin-size, 2)});
         }
 
         &:checked {
@@ -209,14 +209,14 @@ $switch-shadow: 0 0 8px rgba(black, 0.3) !default;
             &:checked {
                 ~.icon.active-icon {
                     opacity: 1;
-                    transition: opacity $transition-time / 2 $transition-time / 2, transform $transition-time;
+                    transition: opacity math.div($transition-time, 2) math.div($transition-time, 2), transform $transition-time;
                 }
             }
 
             &:not(:checked) {
                 ~.icon.inactive-icon {
                     opacity: 1;
-                    transition: opacity $transition-time / 2 $transition-time / 2, transform $transition-time;
+                    transition: opacity math.div($transition-time, 2) math.div($transition-time, 2), transform $transition-time;
                 }
             }
         }
@@ -231,7 +231,7 @@ $switch-shadow: 0 0 8px rgba(black, 0.3) !default;
             pointer-events: none;
 
             opacity: 0;
-            transition: opacity $transition-time / 2, transform $transition-time;
+            transition: opacity math.div($transition-time, 2), transform $transition-time;
         }
 
         >div.icon{

@@ -84,10 +84,10 @@
     background-color: $gray-medium;
     color: $white;
     border-radius: 0;
-    padding: calc(#{$spacing-xsmall} / 2) $spacing-xsmall;
+    padding: calc(#{math.div($spacing-xsmall, 2)}) $spacing-xsmall;
     line-height: normal;
-    margin-right: calc(#{$field-padding-horizontal} / 5);
-    margin-bottom: calc(#{$field-padding-horizontal} / 5);
+    margin-right: calc(#{math.div($field-padding-horizontal,5)});
+    margin-bottom: calc(#{math.div($field-padding-horizontal,5)});
 
     i {
       font-size: 9pt;

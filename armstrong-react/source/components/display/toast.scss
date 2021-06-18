@@ -42,7 +42,7 @@ $max-width: 280px;
     flex-direction: column;
     width: 100%;
     max-width: $max-width;
-    padding: $spacing-small / 2 $spacing-small;
+    padding: math.div($spacing-small, 2) $spacing-small;
 
     &[class*="top"] {
       top: 0;
@@ -83,7 +83,7 @@ $max-width: 280px;
       width: 100%;
       max-height: 300px;
       box-sizing: border-box;
-      margin: $spacing-small / 2 0;
+      margin: math.div($spacing-small, 2) 0;
       transition-property: max-height;
       color: white;
       will-change: transform;
