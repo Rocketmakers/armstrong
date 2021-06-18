@@ -1,3 +1,5 @@
+@use "sass:math";
+
 @keyframes spin {
   0% {
     transform: rotateZ(0deg);

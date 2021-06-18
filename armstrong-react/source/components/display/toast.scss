@@ -1,3 +1,5 @@
+@use "sass:math";
+
 $max-width: 280px;
 
 @keyframes animate-toast-outer {
