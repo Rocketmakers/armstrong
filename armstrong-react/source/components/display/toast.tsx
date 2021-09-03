@@ -2,8 +2,7 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 import { getUnixTime, fromUnixTime, format } from 'date-fns'
-import { getIconOrJsx } from "./icon";
-import * as _ from "underscore";
+import { getIconOrJsx, IconOrJsx } from "./icon";
 import { ClassHelpers } from "../../utilities/classHelpers";
 import { Icon } from "./icon";
 
