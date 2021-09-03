@@ -1,9 +1,11 @@
 // TODO: Butter
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import { ClassHelpers, Icon, IconOrJsx } from "../../";
 import { getUnixTime, fromUnixTime, format } from 'date-fns'
 import { getIconOrJsx } from "./icon";
+import * as _ from "underscore";
+import { ClassHelpers } from "../../utilities/classHelpers";
+import { Icon } from "./icon";
 
 export type DispatchToast = (...toast: IToastNotification[]) => void;
 export type DismissToast = (index: number) => void;
