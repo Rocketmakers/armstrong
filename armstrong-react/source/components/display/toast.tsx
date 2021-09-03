@@ -4,7 +4,8 @@ import * as moment from "moment";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 import * as _ from "underscore";
-import { ClassHelpers, Icon } from "../../";
+import { ClassHelpers } from "../../utilities/classHelpers";
+import { Icon } from "./icon";
 
 export type DispatchToast = (...toast: IToastNotification[]) => void;
 export type DismissToast = (index: number) => void;
