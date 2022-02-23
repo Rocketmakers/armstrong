@@ -6,7 +6,7 @@ import { FormBinderKey, IArrayProp, IObjectProp, PropType, toDataPath } from "./
 
 export interface IUseParentForm<T> {
   bind: FormBinder<T>
-  DataForm: React.FunctionComponent<{}>
+  DataForm: React.FunctionComponent<IHookFormProps<T>>
 }
 
 export function createFormContext<TDataBinder>() {
