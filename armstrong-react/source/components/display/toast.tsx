@@ -3,7 +3,7 @@
 import * as moment from "moment";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import { ClassHelpers, Icon, IconOrJsx } from "../../";
+import { ClassHelpers, IconOrJsx } from "../../";
 import { getIconOrJsx } from "./icon";
 
 export type DispatchToast = (...toast: IToastNotification[]) => void;
@@ -52,7 +52,7 @@ export interface IGlobalToastSettings {
   /** Area of the screen for toasts to render in - can be overidden individually */
   location?: ToastLocation;
 
-  /** jsx to render as a dismiss button on each toast - an icomoon cross by default */
+  /** jsx to render as a dismiss button on each toast - a div with an 'X' by default */
   dismissButton?: IconOrJsx;
 
   /** Amount of time in ms for a toast to dismiss - used to transition toasts out  */
@@ -163,7 +163,7 @@ export const ToastProvider: React.FC<IGlobalToastSettings> = ({ children, render
         dismissAll,
         toasts,
         toastsHistory,
-        clearToastHistory
+        clearToastHistory,
       }}
     >
       {children}
@@ -175,11 +175,11 @@ export const ToastProvider: React.FC<IGlobalToastSettings> = ({ children, render
 
 ToastProvider.defaultProps = {
   location: "top right",
-  dismissButton: <Icon icon={Icon.Icomoon.cross} />,
+  dismissButton: <div>X</div>,
   dismissTime: 500,
   disableAutodismissOnHover: true,
   renderInProvider: true,
-  timestampFormat: "HH:mm"
+  timestampFormat: "HH:mm",
 };
 
 /// TOAST HOOK
@@ -219,7 +219,7 @@ export const useToast = (): IUseToastReturn => {
   const { dismiss, dismissAll, toasts, toastsHistory, clearToastHistory } = context;
 
   const dispatch = (...newToasts: IToastNotification[]) =>
-    context.dispatch(...newToasts.map(toast => ({ timestamp: +moment(), ...toast })));
+    context.dispatch(...newToasts.map((toast) => ({ timestamp: Date.now(), ...toast })));
 
   return {
     dispatch,
@@ -227,7 +227,7 @@ export const useToast = (): IUseToastReturn => {
     dismissAll,
     toasts,
     toastsHistory,
-    clearToastHistory
+    clearToastHistory,
   };
 };
 
@@ -259,10 +259,10 @@ const ToastContainerInner: React.FC<IToastContainerProps> = ({ settings, dismiss
       "top left": [],
       "top right": [],
       "bottom left": [],
-      "bottom right": []
+      "bottom right": [],
     };
 
-    toasts.forEach(toast => {
+    toasts.forEach((toast) => {
       allToasts[toast.location || settings.location].push(toast);
     });
 
@@ -271,7 +271,7 @@ const ToastContainerInner: React.FC<IToastContainerProps> = ({ settings, dismiss
 
   return (
     <div className="toast-container">
-      {Object.keys(seperatedToasts).map(key => (
+      {Object.keys(seperatedToasts).map((key) => (
         <ToastContainerInnerCorner
           toasts={seperatedToasts[key]}
           location={key as ToastLocation}
@@ -286,7 +286,7 @@ const ToastContainerInner: React.FC<IToastContainerProps> = ({ settings, dismiss
 
 /** Renders the toasts in a list in a fixed element overlaying everything */
 
-const ToastContainer: React.FC<IToastContainerProps> = props => {
+const ToastContainer: React.FC<IToastContainerProps> = (props) => {
   if (typeof document === "undefined") {
     return null;
   }
@@ -323,7 +323,7 @@ export const Toast: React.FC<IToastProps> = ({
   timestamp,
   className,
   allowManualDismiss,
-  onClick
+  onClick,
 }) => {
   const autoDismissTimeout = React.useRef(null);
   const dismissingTimeout = React.useRef(null);
@@ -353,17 +353,17 @@ export const Toast: React.FC<IToastProps> = ({
 
   /** if set to, stop the autodismiss timeout on mouse enter */
 
-  const mouseEnter = React.useCallback(() => settings.disableAutodismissOnHover && clearTimeout(autoDismissTimeout.current), [
-    autoDismissTimeout.current,
-    settings.disableAutodismissOnHover
-  ]);
+  const mouseEnter = React.useCallback(
+    () => settings.disableAutodismissOnHover && clearTimeout(autoDismissTimeout.current),
+    [autoDismissTimeout.current, settings.disableAutodismissOnHover]
+  );
 
   /** if set to, retrigger the autodismiss timeout on mouse leave */
 
-  const mouseLeave = React.useCallback(() => settings.disableAutodismissOnHover && initialiseAutodismiss(), [
-    initialiseAutodismiss,
-    settings.disableAutodismissOnHover
-  ]);
+  const mouseLeave = React.useCallback(
+    () => settings.disableAutodismissOnHover && initialiseAutodismiss(),
+    [initialiseAutodismiss, settings.disableAutodismissOnHover]
+  );
 
   // set up autodismiss, and clear timeouts on cleanup
 
@@ -398,7 +398,7 @@ export const Toast: React.FC<IToastProps> = ({
             backgroundImage: "url(https://pngriver.com/wp-content/uploads/2018/04/Download-Toast-PNG-Photos.png)",
             backgroundSize: "100% 100%",
             backgroundColor: "transparent",
-            boxShadow: "none"
+            boxShadow: "none",
           }
         : {},
     [(settings as any).butItsActuallyToast]
@@ -412,11 +412,11 @@ export const Toast: React.FC<IToastProps> = ({
       ref={ref}
       onMouseEnter={mouseEnter}
       onMouseLeave={mouseLeave}
-      onClick={e => onClick && onClick(e, dismiss)}
+      onClick={(e) => onClick && onClick(e, dismiss)}
       style={{
         transitionDelay: transitionStep,
         transitionDuration: transitionStep,
-        animationDuration: transitionStep
+        animationDuration: transitionStep,
       }}
     >
       <div
@@ -425,7 +425,7 @@ export const Toast: React.FC<IToastProps> = ({
           transitionDuration: transitionStep,
           animationDelay: transitionStep,
           animationDuration: transitionStep,
-          ...actuallyToastStyles
+          ...actuallyToastStyles,
         }}
         aria-live="assertive"
         aria-role="alert"
@@ -441,7 +441,7 @@ export const Toast: React.FC<IToastProps> = ({
             {allowManualDismiss && (
               <div
                 className="toast-dismiss"
-                onClick={e => {
+                onClick={(e) => {
                   e.stopPropagation();
                   dismiss();
                 }}
@@ -463,5 +463,5 @@ export const Toast: React.FC<IToastProps> = ({
 };
 
 Toast.defaultProps = {
-  allowManualDismiss: true
+  allowManualDismiss: true,
 };
