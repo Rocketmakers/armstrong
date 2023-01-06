@@ -15,7 +15,7 @@ export interface ISelectInputOption {
   data?: any;
 }
 
-export interface ISelectInputProps extends React.SelectHTMLAttributes<HTMLSelectElement> {  
+export interface ISelectInputProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
   /** The options to select from */
   options: ISelectInputOption[];
   /** Fires when dropdown item is selected */
@@ -28,7 +28,7 @@ export interface ISelectInputProps extends React.SelectHTMLAttributes<HTMLSelect
   label?: string;
 }
 
-const SelectInputRef: React.RefForwardingComponent<ISelectInput, ISelectInputProps> = (props, ref) => {
+const SelectInputRef: React.ForwardRefRenderFunction<ISelectInput, ISelectInputProps> = (props, ref) => {
   const { options, onOptionChange, onChange, optionLabel, enableOptionLabel, className, placeholder, label, ...attrs } = props;
 
   const handleChange = React.useCallback(
@@ -56,7 +56,7 @@ const SelectInputRef: React.RefForwardingComponent<ISelectInput, ISelectInputPro
         if (select.current) {
           select.current.blur();
         }
-      }
+      },
     };
   }, [select]);
 
@@ -66,7 +66,7 @@ const SelectInputRef: React.RefForwardingComponent<ISelectInput, ISelectInputPro
   const validationMode = DataValidationMode.get(props);
 
   const classes = ClassHelpers.classNames("armstrong-input", "select-input", className, {
-    "show-validation": validationMode !== "none" && validationMessage
+    "show-validation": validationMode !== "none" && validationMessage,
   });
 
   return (
@@ -81,8 +81,8 @@ const SelectInputRef: React.RefForwardingComponent<ISelectInput, ISelectInputPro
         {buildOptions(
           optionLabel,
           options,
-          o => o.id,
-          o => o.name,
+          (o) => o.id,
+          (o) => o.name,
           !!enableOptionLabel
         )}
       </select>
@@ -94,5 +94,5 @@ const SelectInputRef: React.RefForwardingComponent<ISelectInput, ISelectInputPro
 export const SelectInput = React.forwardRef(SelectInputRef);
 
 SelectInput.defaultProps = {
-  optionLabel: "[Select]"
+  optionLabel: "[Select]",
 };

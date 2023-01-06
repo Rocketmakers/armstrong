@@ -26,7 +26,7 @@ export interface IBurgerMenuProps {
   closeOnNavigate?: boolean;
 }
 
-const BurgerMenuComponent: React.FC<IBurgerMenuProps> = ({
+const BurgerMenuComponent: React.FC<React.PropsWithChildren<IBurgerMenuProps>> = ({
   openButtonIcon,
   closeButtonIcon,
   onChange,

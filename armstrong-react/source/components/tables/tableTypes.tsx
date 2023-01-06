@@ -75,5 +75,5 @@ export interface IUseDataTableSettings<T> {
 
 export interface IFilterParameters<T> {
   name: keyof T;
-  values: React.ReactNode[];
+  values: any[];
 }

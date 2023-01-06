@@ -103,7 +103,7 @@ export interface IDialogLayerProps extends IDialogLayerPropsCore {
   onClose: (e: DialogLayerCloseReason) => void;
 }
 
-export const DialogLayer: React.FC<IDialogLayerProps> = ({
+export const DialogLayer: React.FC<React.PropsWithChildren<IDialogLayerProps>> = ({
   title,
   headerTagName,
   children,
@@ -164,7 +164,7 @@ export interface IDialogPresenterProps {
   closeButton?: IconOrJsx;
 }
 
-export const DialogPresenter: React.FC<IDialogPresenterProps> = ({
+export const DialogPresenter: React.FC<React.PropsWithChildren<IDialogPresenterProps>> = ({
   title,
   headerTagName,
   children,

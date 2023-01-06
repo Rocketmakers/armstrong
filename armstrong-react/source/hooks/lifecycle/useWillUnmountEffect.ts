@@ -1,5 +1,6 @@
 import * as React from "react";
 
-export function useWillUnmountEffect(fn: React.EffectCallback) {
-  React.useEffect(() => fn, []);
+/** A useEffect which only runs on the cleanup of the last effect */
+export function useWillUnmountEffect(callback: ReturnType<React.EffectCallback>) {
+  return React.useEffect(() => callback, []);
 }

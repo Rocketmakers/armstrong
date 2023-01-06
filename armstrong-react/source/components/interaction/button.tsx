@@ -67,7 +67,7 @@ export interface IButton {
   blur: () => void;
 }
 
-const ButtonRef: React.RefForwardingComponent<IButton, IButtonProps> = (props, ref) => {
+const ButtonRef: React.ForwardRefRenderFunction<IButton, IButtonProps> = (props, ref) => {
   const {
     onClick,
     leftIcon,

@@ -10,7 +10,7 @@ import { useForm } from "../formHooks";
 import { ValidationLabel } from "../validationWrapper";
 import { buildOptions } from "./options";
 
-export interface ITimeInputProps extends React.Props<typeof TimeInput> {
+export interface ITimeInputProps {
   /** (string) CSS className property */
   className?: string;
   /** (number) The tab index of the first select */

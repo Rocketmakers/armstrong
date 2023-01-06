@@ -3,7 +3,7 @@ import { Dialog, IDialogLayerPropsCore } from "./dialog";
 
 const DialogProviderContext = React.createContext<IDialogStackRef>(undefined)
 
-export const DialogProvider: React.FC<{}> = p => {
+export const DialogProvider: React.FC<React.PropsWithChildren<{}>> = p => {
   const ref = React.useRef<IDialogStackRef>()
   return (
     <DialogProviderContext.Provider value={{ useDialogPromise: (component, argument, settings) => ref.current && ref.current.useDialogPromise(component, argument, settings) }}>

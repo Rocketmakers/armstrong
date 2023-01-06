@@ -23,7 +23,7 @@ export interface IDropdownButton {
   blur: () => void;
 }
 
-const DropdownButtonRef: React.RefForwardingComponent<IDropdownButton, IDropdownButtonProps> = (props, ref) => {
+const DropdownButtonRef: React.ForwardRefRenderFunction<IDropdownButton, IDropdownButtonProps> = (props, ref) => {
   const {
     leftIcon,
     rightIcon,

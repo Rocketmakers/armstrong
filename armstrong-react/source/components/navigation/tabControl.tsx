@@ -86,7 +86,7 @@ export interface ITabItemProps extends React.HTMLAttributes<HTMLDivElement> {
   tabTitle?: string;
 }
 
-export const TabItem: React.FC<ITabItemProps> = props => {
+export const TabItem: React.FC<React.PropsWithChildren<ITabItemProps>> = props => {
   const { className, children, tabTitle, ...attrs } = props
   return <div {...attrs} className={`tab-content${className ? ` ${className}` : ""}`}>{children}</div>
 }

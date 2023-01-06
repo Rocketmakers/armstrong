@@ -249,7 +249,7 @@ CalendarInput.defaultProps = {
   icon: getIconProps("Icomoon", "calendar")
 };
 
-interface ICalendarDayProps extends React.Props<typeof CalendarDay> {
+interface ICalendarDayProps {
   day: IDay;
   dayClicked: (date: string) => void;
 }
