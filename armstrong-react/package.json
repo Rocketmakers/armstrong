@@ -48,7 +48,7 @@
     "chokidar": "3.3.1",
     "concurrently": "^6.0.2",
     "import-resolve": "0.5.1",
-    "mocha": "7.1.1",
+    "mocha": "10.2.0",
     "parallelshell": "3.0.2",
     "react": "18.2.0",
     "react-dom": "18.2.0",
