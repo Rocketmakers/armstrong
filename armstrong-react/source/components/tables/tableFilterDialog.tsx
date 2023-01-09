@@ -9,7 +9,7 @@ export interface ITableFilters<T> {
   onUpdateFilter: (
     action: TFilterAction,
     key?: any,
-    value?: any,
+    value?: React.ReactNode,
   ) => void;
 }
 
