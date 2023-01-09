@@ -12,7 +12,7 @@ export interface IRadioInputProps extends React.InputHTMLAttributes<HTMLInputEle
   labelContent: React.ReactNode;
 }
 
-const RadioInputRef: React.RefForwardingComponent<IRadioInput, IRadioInputProps> = (props, ref) => {
+const RadioInputRef: React.ForwardRefRenderFunction<IRadioInput, IRadioInputProps> = (props, ref) => {
   const { labelContent, id, ...attrs } = props;
 
   const input = React.useRef<HTMLInputElement>(undefined);
@@ -28,7 +28,7 @@ const RadioInputRef: React.RefForwardingComponent<IRadioInput, IRadioInputProps>
         if (input.current) {
           input.current.blur();
         }
-      }
+      },
     };
   }, [input]);
 
@@ -37,11 +37,11 @@ const RadioInputRef: React.RefForwardingComponent<IRadioInput, IRadioInputProps>
   const validationMessage = DataValidationMessage.get(props);
   const validationMode = DataValidationMode.get(props);
 
-  const autoId = React.useMemo(() => id || generateUniqueId(u => "radio_" + u), [id]);
+  const autoId = React.useMemo(() => id || generateUniqueId((u) => "radio_" + u), [id]);
   const classes = React.useMemo(
     () =>
       ClassHelpers.classNames("armstrong-input", "radio", props.className, {
-        "show-validation": validationMode !== "none" && validationMessage
+        "show-validation": validationMode !== "none" && validationMessage,
       }),
     [props.className, validationMode, validationMessage]
   );

@@ -34,10 +34,10 @@ export interface ISidebarProps {
   turnToBurgerMediaQuery?: string;
 }
 
-const SidebarComponent: React.FC<ISidebarProps & {
+const SidebarComponent: React.FC<React.PropsWithChildren<ISidebarProps & {
   autoCollapse: boolean;
   autoBurger: boolean;
-}> = ({
+}>> = ({
   openButtonIcon,
   closeButtonIcon,
   onChange,

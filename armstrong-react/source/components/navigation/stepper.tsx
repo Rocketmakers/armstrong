@@ -9,7 +9,7 @@ export interface IStepperProps {
 }
 
 const StepperContent = React.createContext<IStepperProps>(undefined);
-export const Stepper: React.FunctionComponent<IStepperProps> = ({
+export const Stepper: React.FunctionComponent<React.PropsWithChildren<IStepperProps>> = ({
   children,
   direction,
 }) => {
@@ -29,7 +29,7 @@ export interface IStepProps {
   spacer?: boolean;
 }
 
-export const Step: React.FunctionComponent<IStepProps> = ({
+export const Step: React.FunctionComponent<React.PropsWithChildren<IStepProps>> = ({
   children,
   customSpacer,
   spacer,

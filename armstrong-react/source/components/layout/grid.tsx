@@ -19,7 +19,7 @@ export interface IGridProps extends React.HTMLAttributes<HTMLDivElement> {
   children?: React.ReactElement<IRowProps> | Array<React.ReactElement<IRowProps>>;
 }
 
-export const GridRef: React.RefForwardingComponent<{}, IGridProps> = (props, ref) => {
+export const GridRef: React.ForwardRefRenderFunction<{}, IGridProps> = (props, ref) => {
   const { className, debugMode, fillContainer, tagName, ...attrs } = props;
 
   const grid = React.useRef<HTMLElement>(undefined);

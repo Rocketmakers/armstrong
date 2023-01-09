@@ -28,10 +28,10 @@ export function TableFiltersDialog<T>({
           Clear
         </Button>
       </div>
-      {filterValues.map((f: IFilterParameters<T>, index: number) => {
+      {filterValues.map((f, index) => {
         return (
           <div key={index}>
-            {f.name}
+            <>{f.name}</>
             <select
               onChange={e => onUpdateFilter("add", f.name, e.target.value)}
             >
@@ -47,7 +47,7 @@ export function TableFiltersDialog<T>({
                   }
                 }
               })}
-              }
+              
               </select>
           </div>
         );

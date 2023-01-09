@@ -4,7 +4,7 @@ import { TSortDirection } from "./tableTypes";
 
 export interface ITableHeading<T> {
   name: keyof T;
-  cell: (name: keyof T) => React.ReactNode;
+  cell: (name: keyof T) => any;
   sortBy?: (header: keyof T, direction: TSortDirection) => void;
   initSort?: TSortDirection;
 }

@@ -11,7 +11,7 @@ import { buildOptions } from "./options";
 
 export type DateParts = "day" | "month" | "year"
 
-export interface IDateInputProps extends React.Props<typeof DateInput> {
+export interface IDateInputProps {
   /** (string) CSS className property */
   className?: string;
   /** (number) The tab index of the first select */

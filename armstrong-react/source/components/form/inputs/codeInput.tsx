@@ -11,7 +11,6 @@ export interface ICodeInput {
   blur: () => void;
 }
 
-
 export interface ICodeInputProps extends React.HTMLAttributes<HTMLElement> {
   /** An array of lengths of each input in the code */
   lengthPerBox?: number[];
@@ -51,17 +50,32 @@ const formData = {};
 
 /** An input which binds to a single string or numeric value, seperated into multiple inputs, with focus moving automatically between them. */
 
-const CodeInputRef: React.RefForwardingComponent<ICodeInput, ICodeInputProps> = (props, ref) => {
+const CodeInputRef: React.ForwardRefRenderFunction<ICodeInput, ICodeInputProps> = (props, ref) => {
   const { DataForm, bind, dataBinder, notifyChange } = useForm(formData);
 
-  const { onCodeChange, lengthPerBox, numeric, hideValue, className, tabIndex, value, placeholder, readonly, autoFocus, type, pattern, label } = props;
+  const {
+    onCodeChange,
+    lengthPerBox,
+    numeric,
+    hideValue,
+    className,
+    tabIndex,
+    value,
+    placeholder,
+    readonly,
+    autoFocus,
+    type,
+    pattern,
+    label,
+  } = props;
 
   /** the total length of the code, based on the total of lengthPerBox */
 
-  const codeLength = React.useMemo(() => utils.array.reduce(lengthPerBox, (runningTotal, boxLength) => runningTotal + boxLength, 0), [
-    lengthPerBox
-  ]);
-  
+  const codeLength = React.useMemo(
+    () => utils.array.reduce(lengthPerBox, (runningTotal, boxLength) => runningTotal + boxLength, 0),
+    [lengthPerBox]
+  );
+
   const firstInput = React.useRef<HTMLInputElement>(undefined);
 
   const refCallback = React.useCallback(() => {
@@ -75,7 +89,7 @@ const CodeInputRef: React.RefForwardingComponent<ICodeInput, ICodeInputProps> = 
         if (firstInput.current) {
           firstInput.current.blur();
         }
-      }
+      },
     };
   }, [firstInput]);
 
@@ -263,7 +277,7 @@ const CodeInputRef: React.RefForwardingComponent<ICodeInput, ICodeInputProps> = 
   const classes = React.useMemo(
     () =>
       ClassHelpers.classNames("armstrong-input", "code-input", className, {
-        "show-validation": validationMode !== "none" && validationMessage
+        "show-validation": validationMode !== "none" && validationMessage,
       }),
     [className, validationMode, validationMessage]
   );
@@ -298,9 +312,8 @@ const CodeInputRef: React.RefForwardingComponent<ICodeInput, ICodeInputProps> = 
   );
 };
 
-
 export const CodeInput = React.forwardRef(CodeInputRef);
 
 CodeInput.defaultProps = {
-  lengthPerBox: [2, 2, 2]
+  lengthPerBox: [2, 2, 2],
 };

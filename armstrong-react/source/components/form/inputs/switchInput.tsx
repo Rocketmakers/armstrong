@@ -66,7 +66,7 @@ export interface ISwitchInputProps
   label?: string;
 }
 
-const SwitchInputRef: React.RefForwardingComponent<
+const SwitchInputRef: React.ForwardRefRenderFunction<
   ISwitchInput,
   ISwitchInputProps
 > = (props, ref) => {
@@ -92,6 +92,7 @@ const SwitchInputRef: React.RefForwardingComponent<
     borderedNubbin,
     renderShadows,
     style,
+    name,
     ...attrs
   } = props;
 

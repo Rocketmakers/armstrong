@@ -25,7 +25,7 @@ export type ITextInputProps = (
   componentDidMount?: (self: ITextInput) => void;
 };
 
-const TextInputRef: React.RefForwardingComponent<
+const TextInputRef: React.ForwardRefRenderFunction<
   ITextInput,
   ITextInputProps
 > = (props, ref) => {

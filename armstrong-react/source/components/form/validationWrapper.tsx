@@ -3,7 +3,7 @@ import { HTMLAttributes } from "react";
 import { ClassHelpers } from "../../utilities/classHelpers";
 import { ValidationModes } from "./formCore";
 
-export const ValidationWrapper: React.FC<{ message: string } & HTMLAttributes<HTMLDivElement> & { validationMode?: ValidationModes }> = props => {
+export const ValidationWrapper: React.FC<React.PropsWithChildren<{ message: string } & HTMLAttributes<HTMLDivElement> & { validationMode?: ValidationModes }>> = props => {
   const { message, validationMode, className, children, ...attrs } = props
   return (
     <div {...attrs} className={ClassHelpers.classNames(className, { "show-validation": (validationMode !== "none" && !!message) })} title={message}>
@@ -13,7 +13,7 @@ export const ValidationWrapper: React.FC<{ message: string } & HTMLAttributes<HT
   );
 }
 
-export const ValidationLabel: React.FC<{ className?: string, message: string, mode: ValidationModes, wrapper?: React.StatelessComponent<{}> }> = props => {
+export const ValidationLabel: React.FC<{ className?: string, message: string, mode: ValidationModes, wrapper?: React.FC<React.PropsWithChildren<{}>> }> = props => {
   const { message, mode, wrapper: Wrapper } = props
   if (!message || mode === "none") {
     return null;

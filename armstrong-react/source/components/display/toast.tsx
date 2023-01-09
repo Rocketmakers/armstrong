@@ -121,7 +121,7 @@ const toastReducer: React.Reducer<IToastNotification[], ToastActions> = (state, 
   }
 };
 
-export const ToastProvider: React.FC<IGlobalToastSettings> = ({ children, renderInProvider, saveHistory, ...settings }) => {
+export const ToastProvider: React.FC<React.PropsWithChildren<IGlobalToastSettings>> = ({ children, renderInProvider, saveHistory, ...settings }) => {
   const [toasts, dispatchAction] = React.useReducer(toastReducer, []);
   const [toastsHistory, dispatchToastsHistoryAction] = React.useReducer(toastReducer, []);
 

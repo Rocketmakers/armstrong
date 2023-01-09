@@ -12,8 +12,6 @@ export type ITooltipPositionPriority = [ITooltipPosition, ITooltipPosition, IToo
 export interface ITooltipProps {
   /** (JSX.Element | string) The content to appear on hover.  Passing a string will apply it as an aria-label to children, if ariaLabel not passed */
   tooltip: JSX.Element | string
-  /** (JSX.Element) The content that causes the tooltip to appear when hovered. */
-  children: JSX.Element
   /** (boolean) Retain tooltip when tooltip is hovered, default false */
   retain?: boolean
   /** (boolean) Never show tooltip, default false */
@@ -34,9 +32,9 @@ export interface ITooltipProps {
   withArrow?: boolean
 }
 
-export const Tooltip: React.FC<ITooltipProps> = props => {
+export const Tooltip: React.FC<React.PropsWithChildren<ITooltipProps>> = props => {
 
-  const { tooltip, children, retain, disable, position, customPosition, wrapperAttributes, childrenAttributes, tooltipAttributes, center, withArrow } = props
+  const { tooltip, retain, disable, position, customPosition, wrapperAttributes, childrenAttributes, tooltipAttributes, center, withArrow, children } = props
   const defaultPositions: ITooltipPositionPriority = ["right", "left", "bottom", "top", "fixed", "hidden"]
   const tooltipElement = React.useRef<HTMLDivElement>(null)
   const [currentPosition, setCurrentPosition] = React.useState(0) // Index in position priority array currently being used
