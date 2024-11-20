@@ -16,7 +16,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "moment": "2.25.1",
+    "moment": "2.26.0",
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "underscore": "1.10.2"
