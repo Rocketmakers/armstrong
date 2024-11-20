@@ -19,7 +19,7 @@
     "moment": "2.25.1",
     "react": "16.13.1",
     "react-dom": "16.13.1",
-    "underscore": "1.10.2"
+    "underscore": "1.12.1"
   },
   "config": {
     "unsafe-perm": true
