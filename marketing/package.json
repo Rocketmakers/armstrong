@@ -16,7 +16,7 @@
   "license": "ISC",
   "dependencies": {
     "@rocketmakers/armstrong": "0.0.1-alpha.51",
-    "gatsby": "2.18.10",
+    "gatsby": "3.13.0",
     "gatsby-plugin-sass": "2.3.12",
     "gatsby-plugin-ts-loader": "0.1.0",
     "react": "16.13.1",
